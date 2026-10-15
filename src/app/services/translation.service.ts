@@ -3,6 +3,7 @@ import { Injectable, signal, computed } from '@angular/core';
 export interface LanguageOption {
   code: string;
   name: string;
+  nativeName?: string;
   flag: string;
   dir?: 'ltr' | 'rtl';
 }
@@ -14,13 +15,16 @@ export class TranslationService {
   currentLanguage = signal<string>('EN');
 
   languages: LanguageOption[] = [
-    { code: 'EN', name: 'English (US)', flag: '🇺🇸', dir: 'ltr' },
-    { code: 'AR', name: 'العربية (Arabic)', flag: '🇦🇪', dir: 'rtl' },
-    { code: 'UR', name: 'اردو (Urdu)', flag: '🇵🇰', dir: 'rtl' },
-    { code: 'HI', name: 'हिन्दी (Hindi)', flag: '🇮🇳', dir: 'ltr' },
-    { code: 'ES', name: 'Español (Spanish)', flag: '🇪🇸', dir: 'ltr' },
-    { code: 'FR', name: 'Français (French)', flag: '🇫🇷', dir: 'ltr' },
-    { code: 'DE', name: 'Deutsch (German)', flag: '🇩🇪', dir: 'ltr' },
+    { code: 'EN', name: 'English', nativeName: 'English', flag: '🇺🇸', dir: 'ltr' },
+    { code: 'AR', name: 'Arabic', nativeName: 'العربية', flag: '🇦🇪', dir: 'rtl' },
+    { code: 'ZH', name: 'Chinese (Mandarin)', nativeName: '中文', flag: '🇨🇳', dir: 'ltr' },
+    { code: 'HI', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳', dir: 'ltr' },
+    { code: 'UR', name: 'Urdu', nativeName: 'اردو', flag: '🇵🇰', dir: 'rtl' },
+    { code: 'ES', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸', dir: 'ltr' },
+    { code: 'FR', name: 'French', nativeName: 'Français', flag: '🇫🇷', dir: 'ltr' },
+    { code: 'DE', name: 'German', nativeName: 'Deutsch', flag: '🇩🇪', dir: 'ltr' },
+    { code: 'TR', name: 'Turkish', nativeName: 'Türkçe', flag: '🇹🇷', dir: 'ltr' },
+    { code: 'RU', name: 'Russian', nativeName: 'Русский', flag: '🇷🇺', dir: 'ltr' },
   ];
 
   // 1. Modules Dictionary (all 41 modules)

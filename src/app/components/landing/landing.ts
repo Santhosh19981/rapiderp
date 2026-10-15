@@ -39,6 +39,33 @@ export class Landing {
   // Languages list
   languages = this.navService.translation.languages;
 
+  // Search filter signals for Language & Favorites dropdowns (Matching reference Image 4)
+  languageSearch = signal<string>('');
+  favoritesSearch = signal<string>('');
+
+  filteredLanguages = computed(() => {
+    const q = this.languageSearch().trim().toLowerCase();
+    const list = this.navService.translation.languages;
+    if (!q) return list;
+    return list.filter(
+      (l) =>
+        l.name.toLowerCase().includes(q) ||
+        (l.nativeName && l.nativeName.toLowerCase().includes(q)) ||
+        l.code.toLowerCase().includes(q)
+    );
+  });
+
+  filteredFavorites = computed(() => {
+    const q = this.favoritesSearch().trim().toLowerCase();
+    const list = this.navService.favorites();
+    if (!q) return list;
+    return list.filter(
+      (f) =>
+        f.title.toLowerCase().includes(q) ||
+        f.moduleId.toLowerCase().includes(q)
+    );
+  });
+
   // Most used / quick access modules
   mostUsedItems = [
     { title: 'Invoices & Billing', category: 'Sales', moduleId: 'sales', subModuleId: 'invoices', icon: 'file-invoice' },
