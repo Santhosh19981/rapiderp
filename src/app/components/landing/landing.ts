@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, signal, computed, HostListener, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './landing.html',
   styleUrl: './landing.css',
 })
-export class Landing {
+export class Landing implements OnInit {
   private router = inject(Router);
   public navService = inject(NavigationService);
   private authService = inject(AuthService);
@@ -21,6 +21,11 @@ export class Landing {
   @ViewChild('fileInput') fileInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('cameraInput') cameraInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('searchInput') searchInputRef?: ElementRef<HTMLInputElement>;
+
+  // Ensure all dropdowns & profile cards are closed by default on landing
+  ngOnInit(): void {
+    this.closeAll();
+  }
 
   // Search input state
   searchQuery = signal<string>('');
@@ -121,6 +126,21 @@ export class Landing {
     if (!target.closest('.search-popover-container') && !target.closest('.search-trigger-btn')) {
       if (this.navService.isSearchOpen()) {
         this.navService.isSearchOpen.set(false);
+      }
+    }
+    if (!target.closest('.profile-dropdown-container') && !target.closest('.profile-trigger-btn')) {
+      if (this.navService.isProfileOpen()) {
+        this.navService.isProfileOpen.set(false);
+      }
+    }
+    if (!target.closest('.favorites-dropdown-container') && !target.closest('.favorites-trigger-btn')) {
+      if (this.navService.isFavoritesOpen()) {
+        this.navService.isFavoritesOpen.set(false);
+      }
+    }
+    if (!target.closest('.language-dropdown-container') && !target.closest('.language-trigger-btn')) {
+      if (this.navService.isLanguageOpen()) {
+        this.navService.isLanguageOpen.set(false);
       }
     }
   }
@@ -420,6 +440,15 @@ export class Landing {
   setDashboardPeriod(period: string): void {
     this.dashboardPeriod.set(period);
     this.isDashboardDateOpen.set(false);
+  }
+
+  // Cash Flow & Operations Time Filter (Image 4 Reference: 9M, 6M, 3M)
+  cashFlowPeriod = signal<'9M' | '6M' | '3M'>('9M');
+  cashFlowPeriods = ['9M', '6M', '3M'] as const;
+
+  setCashFlowPeriod(period: '9M' | '6M' | '3M'): void {
+    this.cashFlowPeriod.set(period);
+    this.showToast(`Updated Cash Flow & Operations telemetry for ${period}`);
   }
 
   toastMessage = signal<string | null>(null);

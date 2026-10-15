@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 export class Login {
   private router = inject(Router);
   private authService = inject(AuthService);
+  private navService = inject(NavigationService);
 
   username = signal<string>('');
   password = signal<string>('');
@@ -92,6 +94,7 @@ export class Login {
       this.isLoading.set(false);
 
       if (isValid) {
+        this.navService.closeAllPanels();
         this.router.navigate(['/landing']);
       } else {
         if (u !== 'admin@gcc.com') {
