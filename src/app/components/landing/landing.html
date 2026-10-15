@@ -9,20 +9,28 @@
     <!-- Top Navigation Header with Action Items from Reference Image -->
     <header
       class="h-16 bg-white dark:bg-slate-800 border-b border-slate-200/90 dark:border-slate-700/80 px-6 flex items-center justify-between shrink-0 z-20 shadow-xs">
-      <!-- Left side: Client Logo & Company Name Side by Side (Image 5 Reference) -->
-      <div class="flex items-center gap-3">
+      <!-- Left side: Client Logo & Company Name Side by Side (Exact & Best Size) -->
+      <div class="flex items-center gap-3 select-none">
         <div class="flex items-center gap-2.5">
           <div
-            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center p-0.5 bg-sky-50 dark:bg-slate-700 border border-sky-200/80 shadow-xs shrink-0">
-            <img src="assets/images/client-logo-extracted.png" alt="ABC Trading LLC"
-              class="w-full h-full object-contain rounded-full shadow-xs" draggable="false" />
+            class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105"
+            title="ABC TRADING LLC"
+          >
+            <img
+              src="assets/images/client-logo-extracted.png"
+              alt="ABC TRADING LLC"
+              class="w-full h-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,162,232,0.3)]"
+              draggable="false"
+            />
           </div>
-          <div class="flex flex-col">
+          <div class="flex flex-col justify-center">
             <span
-              class="text-sm sm:text-base font-extrabold tracking-tight text-slate-800 dark:text-white leading-tight">
+              class="text-sm sm:text-[15px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">
               ABC TRADING LLC
             </span>
-
+            <span class="text-[10px] font-bold text-[#00a2e8] dark:text-sky-400 tracking-wider uppercase leading-none mt-0.5">
+              Enterprise Client
+            </span>
           </div>
         </div>
       </div>
@@ -606,50 +614,699 @@
     </header>
 
     <!-- ========================================================================= -->
-    <!-- CLEAN CANVAS: ZERO MOCK DATA - ELEGANT CENTERED PAGE WATERMARK           -->
-    <!-- (As per customer requirement: 100% white, clean, only centered watermark)-->
+    <!-- DYNAMIC MAIN CONTENT: EXECUTIVE OVERVIEW DASHBOARD & MODULE WORKSPACES   -->
+    <!-- (Exact Match to Customer Reference Screenshot 1 with Best Animations)    -->
     <!-- ========================================================================= -->
     <main
-      class="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 bg-white dark:bg-slate-900 transition-colors duration-200 select-none overflow-hidden relative">
+      class="flex-1 overflow-y-auto bg-slate-50/70 dark:bg-slate-900 transition-colors duration-200 custom-scrollbar p-4 sm:p-6 lg:p-8 relative">
 
-      <!-- Subtle background ambient grid (very faint) -->
-      <div
-        class="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 dark:opacity-10 pointer-events-none">
-      </div>
+      @if (navService.currentModuleId() === 'dashboard') {
+        <!-- EXECUTIVE OVERVIEW DASHBOARD (Screenshot 1 Reference) -->
+        <div class="executive-dashboard-container space-y-6 max-w-[1550px] mx-auto animate-in fade-in duration-300">
+          
+          <!-- Top Overview Header & Action Toolbar -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800">
+            <div>
+              <!-- Breadcrumb -->
+              <div class="flex items-center gap-1.5 text-xs text-slate-400 font-medium mb-1">
+                <span>Portal</span>
+                <span>/</span>
+                <span class="text-[#1863c0] dark:text-[#38bdf8] font-bold">Dashboard</span>
+              </div>
+              <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                Executive Overview
+              </h1>
+            </div>
 
-      <!-- Watermark Container Centered in the Page -->
-      <div
-        class="relative z-10 flex flex-col items-center justify-center text-center max-w-2xl px-4 animate-in fade-in zoom-in-95 duration-200">
+            <!-- Action Toolbar on Right -->
+            <div class="flex flex-wrap items-center gap-2.5">
+              <!-- Quick Search Input -->
+              <div class="relative min-w-[240px] sm:min-w-[290px]">
+                <input
+                  type="text"
+                  [ngModel]="dashboardSearchQuery()"
+                  (ngModelChange)="dashboardSearchQuery.set($event)"
+                  placeholder="Search modules, entities, metrics... (⌘K)"
+                  class="w-full h-9 pl-9 pr-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a2e8] focus:ring-2 focus:ring-[#00a2e8]/15 shadow-2xs transition-all"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 bg-slate-100 dark:bg-slate-700 px-1 rounded border border-slate-200 dark:border-slate-600 font-mono">⌘K</kbd>
+              </div>
 
-        <!-- Module Badge -->
-        <div
-          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 mb-6 shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-[#1863c0] animate-pulse"></span>
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            {{ currentPageModule() }} {{ navService.translateText('Module') }}
-          </span>
+              <!-- Date Range Filter Dropdown (Last 30 days ⌵) -->
+              <div class="relative">
+                <button
+                  type="button"
+                  (click)="toggleDashboardDateDropdown($event)"
+                  class="h-9 px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-750 flex items-center gap-2 shadow-2xs transition cursor-pointer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                  <span>{{ dashboardPeriod() }}</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                @if (isDashboardDateOpen()) {
+                  <div class="absolute right-0 top-11 w-40 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-in fade-in zoom-in-95 duration-100">
+                    @for (d of dateRanges; track d) {
+                      <button
+                        type="button"
+                        (click)="setDashboardPeriod(d)"
+                        class="w-full text-start px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700 hover:text-[#1863c0] transition flex items-center justify-between"
+                        [class.font-bold]="d === dashboardPeriod()"
+                      >
+                        <span>{{ d }}</span>
+                        @if (d === dashboardPeriod()) {
+                          <span class="w-1.5 h-1.5 rounded-full bg-[#00a2e8]"></span>
+                        }
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Export Report Button -->
+              <button
+                type="button"
+                (click)="exportReport()"
+                class="h-9 px-3.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-750 hover:text-[#1863c0] dark:hover:text-[#38bdf8] flex items-center gap-2 shadow-2xs transition cursor-pointer active:scale-95"
+                title="Export analytics report"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Export Report</span>
+              </button>
+
+              <!-- Notification Bell -->
+              <button
+                type="button"
+                (click)="toggleNotifications($event)"
+                class="h-9 w-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-[#1863c0] flex items-center justify-center relative shadow-2xs hover:bg-slate-50 transition cursor-pointer"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <span class="w-2 h-2 rounded-full bg-[#00a2e8] absolute top-2 right-2 animate-pulse"></span>
+              </button>
+
+              <!-- Live Sync Pill -->
+              <div class="h-9 px-3 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-800 flex items-center gap-2 text-xs font-bold shadow-2xs select-none">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span>Live Sync</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 1: SYSTEM ENTITY BREAKDOWN (11 KPI Record Types) -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                SYSTEM ENTITY BREAKDOWN
+              </h3>
+              <span class="text-xs font-semibold text-slate-400">11 Active Record Types</span>
+            </div>
+
+            <!-- 11 KPI Cards (Scrollable or Grid with Smooth Lift) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-3 overflow-x-auto pb-1 custom-scrollbar">
+              @for (item of entityBreakdown; track item.id) {
+                <div
+                  class="kpi-entity-card p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group cursor-pointer"
+                  (click)="selectEntityCard(item)"
+                >
+                  <!-- Top Row: Truncated Label & Colored Icon Chip -->
+                  <div class="flex items-center justify-between gap-1 mb-2">
+                    <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 truncate" [title]="item.fullName">
+                      {{ item.shortName }}
+                    </span>
+                    <div [class]="'w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ' + item.iconBg + ' ' + item.iconColor">
+                      <ng-container *ngTemplateOutlet="dashboardIconTemplate; context: { icon: item.icon }"></ng-container>
+                    </div>
+                  </div>
+
+                  <!-- Value -->
+                  <div class="text-xl font-black text-slate-800 dark:text-white leading-none my-1">
+                    {{ item.count }}
+                  </div>
+
+                  <!-- Status / Trend Pill -->
+                  <div class="mt-1">
+                    <span [class]="'text-[10px] font-bold leading-tight ' + item.trendColor">
+                      {{ item.trend }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- SECTION 2: MIDDLE ROW (User Growth Analytics + Module Usage) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <!-- Left (8 cols): User Growth Analytics Line & Gradient Area Chart -->
+            <div class="lg:col-span-8 p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-xs relative overflow-hidden flex flex-col justify-between group">
+              <!-- Top Header -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div>
+                  <div class="flex items-center gap-2.5">
+                    <h3 class="text-base font-extrabold text-slate-800 dark:text-white">User Growth Analytics</h3>
+                    <span class="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-[#1863c0] dark:text-[#38bdf8] text-[11px] font-bold border border-blue-100 dark:border-blue-900">
+                      +24.8% growth
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Monthly trajectory of registered accounts vs active engagement</p>
+                </div>
+
+                <!-- Legends & 3-dots Menu -->
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-3 text-xs font-semibold">
+                    <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                      <span class="w-2.5 h-2.5 rounded-full bg-[#1863c0]"></span>
+                      <span>Registered Users</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                      <span class="w-2.5 h-2.5 rounded-full bg-[#38bdf8]"></span>
+                      <span>Active Sessions</span>
+                    </div>
+                  </div>
+                  <button type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- SVG Interactive Line/Area Chart -->
+              <div class="relative w-full h-[260px] sm:h-[300px] mt-1">
+                <svg viewBox="0 0 700 280" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="userGrowthAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#1863c0" stop-opacity="0.32" />
+                      <stop offset="100%" stop-color="#1863c0" stop-opacity="0.0" />
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Horizontal Gridlines & Y-Axis values -->
+                  <g class="gridlines text-[10px] text-slate-300 dark:text-slate-700 font-mono">
+                    <line x1="50" y1="20" x2="680" y2="20" stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.6" />
+                    <text x="15" y="24" fill="#94a3b8">6000</text>
+
+                    <line x1="50" y1="75" x2="680" y2="75" stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.6" />
+                    <text x="15" y="79" fill="#94a3b8">4500</text>
+
+                    <line x1="50" y1="130" x2="680" y2="130" stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.6" />
+                    <text x="15" y="134" fill="#94a3b8">3000</text>
+
+                    <line x1="50" y1="185" x2="680" y2="185" stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.6" />
+                    <text x="15" y="189" fill="#94a3b8">1500</text>
+
+                    <line x1="50" y1="240" x2="680" y2="240" stroke="currentColor" stroke-opacity="0.9" />
+                    <text x="25" y="244" fill="#94a3b8">0</text>
+                  </g>
+
+                  <!-- Area Fill under spline -->
+                  <path
+                    d="M 60,215 C 160,200 220,180 300,165 C 380,150 440,115 540,85 C 600,68 640,48 670,42 L 670,240 L 60,240 Z"
+                    fill="url(#userGrowthAreaGradient)"
+                    class="transition-all duration-700"
+                  />
+
+                  <!-- Line 2: Active Sessions (Cyan Spline) -->
+                  <path
+                    d="M 60,225 C 160,210 220,195 300,185 C 380,175 440,150 540,125 C 600,110 640,95 670,88"
+                    fill="none"
+                    stroke="#38bdf8"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    class="line-chart-path-2"
+                  />
+
+                  <!-- Line 1: Registered Users (Royal Blue Spline) -->
+                  <path
+                    d="M 60,215 C 160,200 220,180 300,165 C 380,150 440,115 540,85 C 600,68 640,48 670,42"
+                    fill="none"
+                    stroke="#1863c0"
+                    stroke-width="3.5"
+                    stroke-linecap="round"
+                    class="line-chart-path-1"
+                  />
+
+                  <!-- Data Point Nodes with Hover Pulse -->
+                  <circle cx="60" cy="215" r="4.5" fill="#ffffff" stroke="#1863c0" stroke-width="2.5" />
+                  <circle cx="180" cy="195" r="4.5" fill="#ffffff" stroke="#1863c0" stroke-width="2.5" />
+                  <circle cx="300" cy="165" r="4.5" fill="#ffffff" stroke="#1863c0" stroke-width="2.5" />
+                  <circle cx="420" cy="130" r="4.5" fill="#ffffff" stroke="#1863c0" stroke-width="2.5" />
+                  <circle cx="540" cy="85" r="4.5" fill="#ffffff" stroke="#1863c0" stroke-width="2.5" />
+                  <circle cx="670" cy="42" r="6" fill="#ffffff" stroke="#1863c0" stroke-width="3.5" class="animate-pulse" />
+
+                  <!-- Active Sessions Nodes -->
+                  <circle cx="670" cy="88" r="5" fill="#ffffff" stroke="#38bdf8" stroke-width="2.5" />
+                </svg>
+
+                <!-- Floating Tooltip Pinned to Peak Node (Screenshot 1 Reference) -->
+                <div class="absolute top-2 right-4 pointer-events-none transform -translate-y-1">
+                  <div class="px-2.5 py-1 rounded-md bg-slate-900 text-white text-[11px] font-bold shadow-lg flex items-center gap-1.5 animate-pulse">
+                    <span>5,420 users</span>
+                  </div>
+                  <div class="w-2 h-2 bg-slate-900 rotate-45 mx-auto -mt-1"></div>
+                </div>
+
+                <!-- X-Axis Labels (Jan, Feb, Mar, Apr, May, Jun) -->
+                <div class="flex items-center justify-between text-xs text-slate-400 font-semibold px-8 pt-2">
+                  <span>Jan</span>
+                  <span>Feb</span>
+                  <span>Mar</span>
+                  <span>Apr</span>
+                  <span>May</span>
+                  <span>Jun</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right (4 cols): Module Usage Donut Chart -->
+            <div class="lg:col-span-4 p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-xs flex flex-col justify-between group">
+              <div>
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-1">
+                  <h3 class="text-base font-extrabold text-slate-800 dark:text-white">Module Usage</h3>
+                  <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[11px] font-bold">
+                    All-Time
+                  </span>
+                </div>
+                <p class="text-xs text-slate-400">Distribution across active modules</p>
+              </div>
+
+              <!-- Animated Donut Chart with Cutout Center (1,130 TOTAL OPS) -->
+              <div class="relative w-48 h-48 mx-auto my-3 flex items-center justify-center">
+                <svg viewBox="0 0 160 160" class="w-full h-full transform -rotate-90">
+                  <!-- Background track -->
+                  <circle cx="80" cy="80" r="62" fill="none" stroke="#f1f5f9" stroke-width="18" class="dark:stroke-slate-700" />
+
+                  <!-- Segment 1: Countries (75.2% - Blue) -->
+                  <circle
+                    cx="80" cy="80" r="62" fill="none" stroke="#1863c0" stroke-width="18"
+                    stroke-dasharray="292.8 389.5" stroke-dashoffset="0"
+                    class="donut-segment transition-all duration-700"
+                  />
+                  <!-- Segment 2: Users (13.3% - Sky Blue) -->
+                  <circle
+                    cx="80" cy="80" r="62" fill="none" stroke="#00a2e8" stroke-width="18"
+                    stroke-dasharray="51.8 389.5" stroke-dashoffset="-292.8"
+                    class="donut-segment transition-all duration-700"
+                  />
+                  <!-- Segment 3: Services (7.4% - Amber) -->
+                  <circle
+                    cx="80" cy="80" r="62" fill="none" stroke="#f59e0b" stroke-width="18"
+                    stroke-dasharray="28.8 389.5" stroke-dashoffset="-344.6"
+                    class="donut-segment transition-all duration-700"
+                  />
+                  <!-- Segment 4: Projects (4.1% - Rose) -->
+                  <circle
+                    cx="80" cy="80" r="62" fill="none" stroke="#ef4444" stroke-width="18"
+                    stroke-dasharray="16.0 389.5" stroke-dashoffset="-373.4"
+                    class="donut-segment transition-all duration-700"
+                  />
+                </svg>
+
+                <!-- Center Cutout Label -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                  <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">1,130</span>
+                  <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase">TOTAL OPS</span>
+                </div>
+              </div>
+
+              <!-- Donut Legend Grid -->
+              <div class="grid grid-cols-2 gap-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/80 text-xs">
+                <div class="flex items-center justify-between p-1.5 rounded-xl bg-slate-50/70 dark:bg-slate-700/40">
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#1863c0] shrink-0"></span>
+                    <span class="text-slate-600 dark:text-slate-300 truncate">Countries</span>
+                  </div>
+                  <span class="font-extrabold text-slate-900 dark:text-white">850</span>
+                </div>
+                <div class="flex items-center justify-between p-1.5 rounded-xl bg-slate-50/70 dark:bg-slate-700/40">
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#00a2e8] shrink-0"></span>
+                    <span class="text-slate-600 dark:text-slate-300 truncate">Users</span>
+                  </div>
+                  <span class="font-extrabold text-slate-900 dark:text-white">150</span>
+                </div>
+                <div class="flex items-center justify-between p-1.5 rounded-xl bg-slate-50/70 dark:bg-slate-700/40">
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] shrink-0"></span>
+                    <span class="text-slate-600 dark:text-slate-300 truncate">Services</span>
+                  </div>
+                  <span class="font-extrabold text-slate-900 dark:text-white">84</span>
+                </div>
+                <div class="flex items-center justify-between p-1.5 rounded-xl bg-slate-50/70 dark:bg-slate-700/40">
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#ef4444] shrink-0"></span>
+                    <span class="text-slate-600 dark:text-slate-300 truncate">Projects</span>
+                  </div>
+                  <span class="font-extrabold text-slate-900 dark:text-white">46</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: BOTTOM ROW (Revenue vs Target + Language Distribution) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <!-- Left (8 cols): Revenue vs Target Grouped Bar Chart -->
+            <div class="lg:col-span-8 p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-xs flex flex-col justify-between group">
+              <!-- Header -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div>
+                  <div class="flex items-center gap-2.5">
+                    <h3 class="text-base font-extrabold text-slate-800 dark:text-white">Revenue vs Target</h3>
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold border border-emerald-100 dark:border-emerald-900">
+                      92% Met
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Realized income compared with quarterly projections (USD)</p>
+                </div>
+
+                <!-- Legends -->
+                <div class="flex items-center gap-4 text-xs font-semibold">
+                  <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                    <span class="w-3 h-3 rounded bg-[#1863c0]"></span>
+                    <span>Actual Revenue</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                    <span class="w-3 h-3 rounded bg-[#dbeafe] dark:bg-slate-600"></span>
+                    <span>Target Budget</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SVG Grouped Bar Chart with Rising Bars -->
+              <div class="relative w-full h-[240px] sm:h-[260px]">
+                <svg viewBox="0 0 650 240" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+                  <!-- Y-Axis Gridlines & Values -->
+                  <g class="gridlines text-[10px] text-slate-300 dark:text-slate-700 font-mono">
+                    <line x1="55" y1="20" x2="630" y2="20" stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.6" />
+                    <text x="15" y="24" fill="#94a3b8">$80k</text>
+
+                    <line x1="55" y1="75" x2="630" y2="75" stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.6" />
+                    <text x="15" y="79" fill="#94a3b8">$60k</text>
+
+                    <line x1="55" y1="130" x2="630" y2="130" stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.6" />
+                    <text x="15" y="134" fill="#94a3b8">$40k</text>
+
+                    <line x1="55" y1="185" x2="630" y2="185" stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.6" />
+                    <text x="15" y="189" fill="#94a3b8">$20k</text>
+
+                    <line x1="55" y1="215" x2="630" y2="215" stroke="currentColor" stroke-opacity="0.9" />
+                  </g>
+
+                  <!-- Dual Bars for each month: Jan, Feb, Mar, Apr, May, Jun -->
+                  <!-- Month 1: Jan -->
+                  <rect x="85" y="115" width="22" height="100" rx="4" fill="#1863c0" class="bar-grow hover:brightness-110 cursor-pointer transition-all duration-300"><title>Jan Actual: $42,000</title></rect>
+                  <rect x="110" y="100" width="22" height="115" rx="4" fill="#dbeafe" class="bar-grow hover:brightness-95 dark:fill-slate-600 cursor-pointer transition-all duration-300"><title>Jan Target: $48,000</title></rect>
+
+                  <!-- Month 2: Feb -->
+                  <rect x="175" y="90" width="22" height="125" rx="4" fill="#1863c0" class="bar-grow hover:brightness-110 cursor-pointer transition-all duration-300"><title>Feb Actual: $52,000</title></rect>
+                  <rect x="200" y="95" width="22" height="120" rx="4" fill="#dbeafe" class="bar-grow hover:brightness-95 dark:fill-slate-600 cursor-pointer transition-all duration-300"><title>Feb Target: $50,000</title></rect>
+
+                  <!-- Month 3: Mar -->
+                  <rect x="265" y="105" width="22" height="110" rx="4" fill="#1863c0" class="bar-grow hover:brightness-110 cursor-pointer transition-all duration-300"><title>Mar Actual: $46,000</title></rect>
+                  <rect x="290" y="90" width="22" height="125" rx="4" fill="#dbeafe" class="bar-grow hover:brightness-95 dark:fill-slate-600 cursor-pointer transition-all duration-300"><title>Mar Target: $52,000</title></rect>
+
+                  <!-- Month 4: Apr -->
+                  <rect x="355" y="75" width="22" height="140" rx="4" fill="#1863c0" class="bar-grow hover:brightness-110 cursor-pointer transition-all duration-300"><title>Apr Actual: $58,000</title></rect>
+                  <rect x="380" y="85" width="22" height="130" rx="4" fill="#dbeafe" class="bar-grow hover:brightness-95 dark:fill-slate-600 cursor-pointer transition-all duration-300"><title>Apr Target: $54,000</title></rect>
+
+                  <!-- Month 5: May -->
+                  <rect x="445" y="60" width="22" height="155" rx="4" fill="#1863c0" class="bar-grow hover:brightness-110 cursor-pointer transition-all duration-300"><title>May Actual: $64,000</title></rect>
+                  <rect x="470" y="80" width="22" height="135" rx="4" fill="#dbeafe" class="bar-grow hover:brightness-95 dark:fill-slate-600 cursor-pointer transition-all duration-300"><title>May Target: $56,000</title></rect>
+
+                  <!-- Month 6: Jun -->
+                  <rect x="535" y="42" width="22" height="173" rx="4" fill="#1863c0" class="bar-grow hover:brightness-110 cursor-pointer transition-all duration-300"><title>Jun Actual: $72,000</title></rect>
+                  <rect x="560" y="75" width="22" height="140" rx="4" fill="#dbeafe" class="bar-grow hover:brightness-95 dark:fill-slate-600 cursor-pointer transition-all duration-300"><title>Jun Target: $58,000</title></rect>
+                </svg>
+
+                <!-- X-Axis Labels -->
+                <div class="flex items-center justify-between text-xs text-slate-400 font-semibold px-12 pt-2">
+                  <span>Jan</span>
+                  <span>Feb</span>
+                  <span>Mar</span>
+                  <span>Apr</span>
+                  <span>May</span>
+                  <span>Jun</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right (4 cols): Language Distribution Progress Bars -->
+            <div class="lg:col-span-4 p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-xs flex flex-col justify-between group">
+              <div>
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-1">
+                  <h3 class="text-base font-extrabold text-slate-800 dark:text-white">Language Distribution</h3>
+                  <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[11px] font-bold">
+                    5 Locales
+                  </span>
+                </div>
+                <p class="text-xs text-slate-400">User localized content preferences</p>
+              </div>
+
+              <!-- Progress List -->
+              <div class="space-y-4 my-2">
+                <!-- 1. English -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-400 font-mono text-[11px]">US</span>
+                      <span class="font-semibold text-slate-800 dark:text-slate-200">English</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold">
+                      <span class="text-slate-400 text-[11px]">1,450 users</span>
+                      <span class="text-slate-800 dark:text-white">72.0%</span>
+                    </div>
+                  </div>
+                  <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                    <div class="h-full rounded-full bg-[#1863c0] animate-progress" style="width: 72%"></div>
+                  </div>
+                </div>
+
+                <!-- 2. Arabic -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-400 font-mono text-[11px]">SA</span>
+                      <span class="font-semibold text-slate-800 dark:text-slate-200">Arabic</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold">
+                      <span class="text-slate-400 text-[11px]">890 users</span>
+                      <span class="text-slate-800 dark:text-white">18.5%</span>
+                    </div>
+                  </div>
+                  <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                    <div class="h-full rounded-full bg-[#00a2e8] animate-progress" style="width: 18.5%"></div>
+                  </div>
+                </div>
+
+                <!-- 3. Spanish -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-400 font-mono text-[11px]">ES</span>
+                      <span class="font-semibold text-slate-800 dark:text-slate-200">Spanish</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold">
+                      <span class="text-slate-400 text-[11px]">320 users</span>
+                      <span class="text-slate-800 dark:text-white">6.2%</span>
+                    </div>
+                  </div>
+                  <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                    <div class="h-full rounded-full bg-[#6366f1] animate-progress" style="width: 6.2%"></div>
+                  </div>
+                </div>
+
+                <!-- 4. French -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-400 font-mono text-[11px]">FR</span>
+                      <span class="font-semibold text-slate-800 dark:text-slate-200">French</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold">
+                      <span class="text-slate-400 text-[11px]">180 users</span>
+                      <span class="text-slate-800 dark:text-white">2.5%</span>
+                    </div>
+                  </div>
+                  <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                    <div class="h-full rounded-full bg-[#a855f7] animate-progress" style="width: 2.5%"></div>
+                  </div>
+                </div>
+
+                <!-- 5. Others -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-400 font-mono text-[11px]">GL</span>
+                      <span class="font-semibold text-slate-800 dark:text-slate-200">Others</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold">
+                      <span class="text-slate-400 text-[11px]">67 users</span>
+                      <span class="text-slate-800 dark:text-white">0.8%</span>
+                    </div>
+                  </div>
+                  <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                    <div class="h-full rounded-full bg-slate-400 animate-progress" style="width: 0.8%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
+      } @else {
+        <!-- DEDICATED ACTIVE MODULE WORKSPACE VIEW -->
+        <div class="module-workspace-container space-y-5 max-w-[1500px] mx-auto animate-in fade-in duration-200">
+          <!-- Breadcrumb & Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/80 dark:border-slate-800">
+            <div>
+              <div class="flex items-center gap-1.5 text-xs text-slate-400 font-medium mb-1">
+                <span>Portal</span>
+                <span>/</span>
+                <span class="capitalize text-slate-500">{{ navService.currentModuleId() }}</span>
+                @if (navService.currentSubModuleId()) {
+                  <span>/</span>
+                  <span class="text-[#1863c0] font-semibold">{{ currentPageTitle() }}</span>
+                }
+              </div>
+              <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+                <span>{{ currentPageTitle() }}</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a2e8] text-[11px] font-bold border border-sky-100 dark:border-sky-900">
+                  Active Module
+                </span>
+              </h1>
+            </div>
 
-        <!-- Prominent Watermark Title (Translates with active language) -->
-        <h2
-          class="page-watermark-title text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-slate-200 dark:text-slate-800 transition-colors duration-200 select-none">
-          {{ currentPageTitle() }}
-        </h2>
+            <!-- Quick Action Buttons -->
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                (click)="goToDashboard()"
+                class="h-9 px-3.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-[#1863c0] flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+              >
+                <span>← Back to Dashboard</span>
+              </button>
+              <button
+                type="button"
+                (click)="exportReport()"
+                class="h-9 px-4 rounded-xl bg-gradient-to-r from-[#1863c0] to-[#06a9ea] text-white text-xs font-bold hover:opacity-95 shadow-md shadow-blue-500/20 flex items-center gap-1.5 transition cursor-pointer"
+              >
+                <span>+ Add New Record</span>
+              </button>
+            </div>
+          </div>
 
-        <!-- Elegant Subtitle Tag -->
-        <p class="text-sm font-semibold tracking-widest uppercase text-slate-400 dark:text-slate-500 mt-4">
-          {{ navService.translateText('Clean Workspace') }}
-        </p>
+          <!-- Enterprise Data Table -->
+          <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/80 dark:border-slate-700 p-5 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-700/80">
+              <div class="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Filter records..."
+                  class="h-9 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/40 text-xs outline-none focus:border-[#00a2e8] w-64"
+                />
+              </div>
+              <div class="text-xs text-slate-400 font-medium">
+                Showing 1-10 of 48 active entries
+              </div>
+            </div>
 
-        <p class="text-xs text-slate-400 dark:text-slate-500 mt-2 max-w-md">
-          {{ navService.translateText('workspace_desc') }}
-        </p>
-      </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-start text-xs">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-slate-700/80 text-slate-400 uppercase text-[10px] font-bold tracking-wider">
+                    <th class="text-start py-3 px-3">Reference ID</th>
+                    <th class="text-start py-3 px-3">Entity Title</th>
+                    <th class="text-start py-3 px-3">Creation Date</th>
+                    <th class="text-start py-3 px-3">Total Value</th>
+                    <th class="text-start py-3 px-3">Status</th>
+                    <th class="text-end py-3 px-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60 font-medium">
+                  <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-750 transition-colors">
+                    <td class="py-3 px-3 font-mono font-bold text-[#1863c0]">#RP-2026-001</td>
+                    <td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200">Al Noor Enterprises Ltd</td>
+                    <td class="py-3 px-3 text-slate-500">14 Oct 2026</td>
+                    <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">$14,500.00</td>
+                    <td class="py-3 px-3">
+                      <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-bold border border-emerald-100">
+                        Completed
+                      </span>
+                    </td>
+                    <td class="py-3 px-3 text-end text-[#1863c0] hover:underline cursor-pointer">View</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-750 transition-colors">
+                    <td class="py-3 px-3 font-mono font-bold text-[#1863c0]">#RP-2026-002</td>
+                    <td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200">Crescent Logistics FZE</td>
+                    <td class="py-3 px-3 text-slate-500">12 Oct 2026</td>
+                    <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">$8,240.00</td>
+                    <td class="py-3 px-3">
+                      <span class="px-2 py-0.5 rounded-full bg-blue-50 text-[#1863c0] text-[10px] font-bold border border-blue-100">
+                        Active
+                      </span>
+                    </td>
+                    <td class="py-3 px-3 text-end text-[#1863c0] hover:underline cursor-pointer">View</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-750 transition-colors">
+                    <td class="py-3 px-3 font-mono font-bold text-[#1863c0]">#RP-2026-003</td>
+                    <td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200">Horizon Global Trading</td>
+                    <td class="py-3 px-3 text-slate-500">10 Oct 2026</td>
+                    <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">$21,800.00</td>
+                    <td class="py-3 px-3">
+                      <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 text-[10px] font-bold border border-amber-100">
+                        Pending
+                      </span>
+                    </td>
+                    <td class="py-3 px-3 text-end text-[#1863c0] hover:underline cursor-pointer">View</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
     </main>
 
-    <!-- Dedicated Full-Width Bottom Footer (Centered with Brand Color Theme on Rapid ERP) -->
+    <!-- Dedicated Full-Width Bottom Footer (Fixed at bottom with Need Help, Powered By, and Live Chat) -->
     <footer
-      class="h-12 bg-white dark:bg-slate-800 border-t border-slate-200/90 dark:border-slate-700/80 px-6 flex items-center justify-center shrink-0 text-xs text-slate-500 dark:text-slate-400 z-10 select-none">
+      class="h-11 bg-white dark:bg-slate-800 border-t border-slate-200/90 dark:border-slate-700/80 px-6 flex items-center justify-between shrink-0 text-xs text-slate-500 dark:text-slate-400 z-10 select-none">
+      
+      <!-- Option 1 (Left): Need help? (Matching Screenshot 1) -->
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          (click)="toggleHelpModal()"
+          class="text-xs text-slate-500 hover:text-[#1863c0] dark:text-slate-400 dark:hover:text-[#38bdf8] font-medium transition-colors cursor-pointer flex items-center gap-1.5 group"
+          title="Rapid ERP Documentation & Support"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1863c0] dark:group-hover:text-[#38bdf8] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <span class="group-hover:underline">{{ navService.translateText('Need help?') }}</span>
+        </button>
+      </div>
+
+      <!-- Center: Powered By Rapid ERP -->
       <div
         class="flex items-center justify-center gap-1.5 font-medium tracking-wide text-xs text-slate-500 dark:text-slate-400">
         <span>{{ navService.translateText('Powered By') }}</span>
@@ -657,7 +1314,103 @@
           class="font-extrabold text-[#1863c0] dark:text-[#38bdf8] bg-gradient-to-r from-[#1863c0] to-[#06a9ea] bg-clip-text text-transparent">Rapid
           ERP</span>
       </div>
+
+      <!-- Option 2 (Right): Live Chat (Matching Screenshot 1) -->
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          (click)="toggleLiveChat()"
+          class="text-xs text-slate-600 hover:text-[#1863c0] dark:text-slate-300 dark:hover:text-[#38bdf8] font-semibold transition-colors cursor-pointer flex items-center gap-2 group px-2 py-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60"
+          title="Open 24/7 Live Support Chat"
+        >
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span>{{ navService.translateText('Live Chat') }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1863c0] dark:group-hover:text-[#38bdf8] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </button>
+      </div>
     </footer>
+
+    <!-- Help & Knowledge Base Modal (Triggered by 'Need help?') -->
+    @if (isHelpModalOpen()) {
+    <div class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
+         (click)="toggleHelpModal()">
+      <div class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-in zoom-in-95 duration-150"
+           (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-700">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#1863c0] dark:text-[#38bdf8] flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-800 dark:text-white">Rapid ERP Help & Support</h3>
+              <p class="text-[11px] text-slate-400">Everything you need to navigate and use Rapid ERP</p>
+            </div>
+          </div>
+          <button type="button" (click)="toggleHelpModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-sm p-1 rounded-lg cursor-pointer">
+            ✕
+          </button>
+        </div>
+
+        <!-- Help Body -->
+        <div class="py-4 space-y-3.5 text-xs">
+          <!-- Quick Keyboard Hotkeys -->
+          <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200/80 dark:border-slate-600">
+            <p class="font-bold text-slate-700 dark:text-slate-200 mb-2 flex items-center gap-1.5">
+              <span>⌨️ Keyboard Shortcuts</span>
+            </p>
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div class="flex items-center justify-between p-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                <span class="text-slate-500">Quick Search</span>
+                <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-[10px] text-slate-700 dark:text-slate-300">Ctrl + K</kbd>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                <span class="text-slate-500">Close Overlays</span>
+                <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-[10px] text-slate-700 dark:text-slate-300">Esc</kbd>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documentation & Guides Links -->
+          <div class="space-y-1.5">
+            <p class="font-bold text-slate-700 dark:text-slate-200 text-xs">Quick Assistance Resources</p>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="javascript:void(0)" (click)="toggleHelpModal(); toggleLiveChat()" class="p-2.5 rounded-xl border border-blue-100 dark:border-slate-700 hover:border-blue-300 bg-blue-50/40 dark:bg-slate-700/30 flex items-center gap-2 transition group">
+                <span class="text-base">💬</span>
+                <div>
+                  <p class="font-bold text-slate-800 dark:text-slate-200 group-hover:text-[#1863c0] text-[11px]">Live Chat Agent</p>
+                  <p class="text-[10px] text-slate-400">Available 24/7 online</p>
+                </div>
+              </a>
+              <div class="p-2.5 rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-700/30 flex items-center gap-2">
+                <span class="text-base">📞</span>
+                <div>
+                  <p class="font-bold text-slate-800 dark:text-slate-200 text-[11px]">Toll-Free Support</p>
+                  <p class="text-[10px] text-[#1863c0] font-semibold">+92 (0) 800-RAPID</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+          <button type="button" (click)="toggleHelpModal()" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#1863c0] to-[#06a9ea] text-white font-bold text-xs hover:opacity-95 transition cursor-pointer">
+            Got it
+          </button>
+        </div>
+      </div>
+    </div>
+    }
 
     <!-- Live Chat Drawer (Opens above the footer when clicked) -->
     @if (isLiveChatOpen()) {
@@ -701,5 +1454,97 @@
       </div>
     </div>
     }
+
+    <!-- Toast Notification Banner for Quick Actions -->
+    @if (toastMessage()) {
+      <div class="fixed bottom-14 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <span class="w-2 h-2 rounded-full bg-[#00a2e8] animate-ping"></span>
+        <span>{{ toastMessage() }}</span>
+      </div>
+    }
+
   </div>
 </div>
+
+<!-- ========================================================================= -->
+<!-- 11 KPI RECORD TYPES ICONS TEMPLATE (Exact Match to Screenshot 1)          -->
+<!-- ========================================================================= -->
+<ng-template #dashboardIconTemplate let-icon="icon">
+  @switch (icon) {
+    @case ('folder') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 8 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+      </svg>
+    }
+    @case ('file-text') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+        <line x1="10" y1="9" x2="8" y2="9" />
+      </svg>
+    }
+    @case ('chat') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    }
+    @case ('settings') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      </svg>
+    }
+    @case ('package-box') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+        <path d="m3.3 7 8.7 5 8.7-5" />
+        <path d="M12 22V12" />
+      </svg>
+    }
+    @case ('image') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+        <circle cx="9" cy="9" r="2" />
+        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+      </svg>
+    }
+    @case ('help-circle') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+    }
+    @case ('bell') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+      </svg>
+    }
+    @case ('sun') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+      </svg>
+    }
+    @case ('building') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+        <path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01" />
+      </svg>
+    }
+    @case ('user') {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    }
+    @default {
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5">
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    }
+  }
+</ng-template>

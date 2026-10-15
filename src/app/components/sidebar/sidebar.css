@@ -90,14 +90,14 @@
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .module-icon-badge.inactive-badge {
-  background-color: #f8fafc;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background-color: rgba(0, 162, 232, 0.08);
+  color: var(--secondary-color, #00a2e8);
+  border: 1px solid rgba(0, 162, 232, 0.22);
 }
 :host-context(.dark) .module-icon-badge.inactive-badge {
-  background-color: #1e293b;
-  color: #94a3b8;
-  border-color: #334155;
+  background-color: rgba(0, 162, 232, 0.14);
+  color: #38bdf8;
+  border-color: rgba(0, 162, 232, 0.3);
 }
 .module-icon-badge.hover-badge {
   background-color: #eff6ff;
@@ -189,4 +189,37 @@
 }
 .subpage-btn:hover {
   background-color: #ffffff;
+}
+
+.tree-hitbox-bridge {
+  position: absolute;
+  left: -20px;
+  right: auto;
+  top: 0;
+  bottom: 0;
+  width: 25px;
+  pointer-events: auto;
+}
+:host-context([dir="rtl"]) .tree-hitbox-bridge,
+[dir="rtl"] .tree-hitbox-bridge {
+  right: -20px !important;
+  left: auto !important;
+}
+
+.tree-popover-card {
+  box-shadow: 0 20px 45px -10px rgba(15, 82, 164, 0.28), 0 4px 16px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+  animation: techozeSlideInLTR 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+:host-context([dir="rtl"]) .tree-popover-card,
+[dir="rtl"] .tree-popover-card {
+  box-shadow: -20px 20px 45px -10px rgba(15, 82, 164, 0.28), -4px 4px 16px rgba(0, 0, 0, 0.08);
+  animation: techozeSlideInRTL 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tree-leaf-btn {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tree-node:hover .tree-branch-elbow .w-1\.5 {
+  background-color: #00a2e8;
 }

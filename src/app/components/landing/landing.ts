@@ -188,6 +188,14 @@ export class Landing {
     this.navService.closeAllPanels();
     this.isImageSearchOpen.set(false);
     this.stopVoiceSearch();
+    this.isHelpModalOpen.set(false);
+  }
+
+  // Help Modal State
+  isHelpModalOpen = signal<boolean>(false);
+
+  toggleHelpModal(): void {
+    this.isHelpModalOpen.update((v) => !v);
   }
 
   // Voice Search with Speech-to-Text
@@ -396,5 +404,163 @@ export class Landing {
         },
       ]);
     }, 600);
+  }
+
+  // Executive Overview Dashboard State & Metrics (Screenshot 1 Reference)
+  dashboardSearchQuery = signal<string>('');
+  dashboardPeriod = signal<string>('Last 30 days');
+  isDashboardDateOpen = signal<boolean>(false);
+  dateRanges = ['Today', 'Last 7 days', 'Last 30 days', 'This Quarter', 'This Year'];
+
+  toggleDashboardDateDropdown(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.isDashboardDateOpen.update((v) => !v);
+  }
+
+  setDashboardPeriod(period: string): void {
+    this.dashboardPeriod.set(period);
+    this.isDashboardDateOpen.set(false);
+  }
+
+  toastMessage = signal<string | null>(null);
+
+  showToast(msg: string): void {
+    this.toastMessage.set(msg);
+    setTimeout(() => {
+      this.toastMessage.set(null);
+    }, 3200);
+  }
+
+  exportReport(): void {
+    this.showToast('Executive Overview analytics report exported successfully.');
+  }
+
+  // 11 System Entity Breakdown KPI Items (Exact Match to Screenshot 1)
+  entityBreakdown = [
+    {
+      id: 'cat',
+      shortName: 'Cat...',
+      fullName: 'Categories',
+      count: 5,
+      trend: '↑ 12%',
+      trendColor: 'text-emerald-500',
+      icon: 'folder',
+      iconBg: 'bg-blue-50 dark:bg-blue-950/60',
+      iconColor: 'text-[#1863c0]',
+    },
+    {
+      id: 'post',
+      shortName: 'Po...',
+      fullName: 'Posts',
+      count: 3,
+      trend: '• Steady',
+      trendColor: 'text-slate-400',
+      icon: 'file-text',
+      iconBg: 'bg-indigo-50 dark:bg-indigo-950/60',
+      iconColor: 'text-indigo-600',
+    },
+    {
+      id: 'rev',
+      shortName: 'Rev...',
+      fullName: 'Reviews',
+      count: 4,
+      trend: '↑ 25%',
+      trendColor: 'text-emerald-500',
+      icon: 'chat',
+      iconBg: 'bg-amber-50 dark:bg-amber-950/60',
+      iconColor: 'text-amber-500',
+    },
+    {
+      id: 'srv',
+      shortName: 'Ser...',
+      fullName: 'Services',
+      count: 6,
+      trend: 'Active',
+      trendColor: 'text-[#00a2e8]',
+      icon: 'settings',
+      iconBg: 'bg-sky-50 dark:bg-sky-950/60',
+      iconColor: 'text-[#00a2e8]',
+    },
+    {
+      id: 'pro',
+      shortName: 'Pro...',
+      fullName: 'Products',
+      count: 6,
+      trend: '2 in review',
+      trendColor: 'text-blue-500',
+      icon: 'package-box',
+      iconBg: 'bg-emerald-50 dark:bg-emerald-950/60',
+      iconColor: 'text-emerald-600',
+    },
+    {
+      id: 'sli',
+      shortName: 'Sli...',
+      fullName: 'Sliders',
+      count: 4,
+      trend: 'Hero banner',
+      trendColor: 'text-purple-500',
+      icon: 'image',
+      iconBg: 'bg-purple-50 dark:bg-purple-950/60',
+      iconColor: 'text-purple-600',
+    },
+    {
+      id: 'faq',
+      shortName: 'FA...',
+      fullName: 'FAQs',
+      count: 5,
+      trend: 'Published',
+      trendColor: 'text-teal-500',
+      icon: 'help-circle',
+      iconBg: 'bg-teal-50 dark:bg-teal-950/60',
+      iconColor: 'text-teal-600',
+    },
+    {
+      id: 'sub',
+      shortName: 'Sub...',
+      fullName: 'Subscribers',
+      count: 3,
+      trend: '↑ New user',
+      trendColor: 'text-emerald-500',
+      icon: 'bell',
+      iconBg: 'bg-violet-50 dark:bg-violet-950/60',
+      iconColor: 'text-violet-600',
+    },
+    {
+      id: 'sol',
+      shortName: 'Sol...',
+      fullName: 'Solutions',
+      count: 8,
+      trend: '↑ 18%',
+      trendColor: 'text-emerald-500',
+      icon: 'sun',
+      iconBg: 'bg-amber-50 dark:bg-amber-950/60',
+      iconColor: 'text-amber-600',
+    },
+    {
+      id: 'ind',
+      shortName: 'Ind...',
+      fullName: 'Industries',
+      count: 7,
+      trend: 'Sectors',
+      trendColor: 'text-emerald-500',
+      icon: 'building',
+      iconBg: 'bg-emerald-50 dark:bg-emerald-950/60',
+      iconColor: 'text-emerald-600',
+    },
+    {
+      id: 'cli',
+      shortName: 'Cli...',
+      fullName: 'Clients',
+      count: 5,
+      trend: 'All active',
+      trendColor: 'text-emerald-500',
+      icon: 'user',
+      iconBg: 'bg-rose-50 dark:bg-rose-950/60',
+      iconColor: 'text-rose-600',
+    },
+  ];
+
+  selectEntityCard(item: any): void {
+    this.showToast(`Inspecting ${item.fullName}: ${item.count} active records (${item.trend})`);
   }
 }

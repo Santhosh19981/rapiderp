@@ -8,6 +8,7 @@ export interface SubMenuItem {
   id: string;
   label: string;
   icon: string;
+  children?: SubMenuItem[];
 }
 
 export interface MenuItem {
@@ -38,13 +39,16 @@ export class Sidebar {
   activeItemId = this.navService.currentModuleId;
   activeSubItemId = this.navService.currentSubModuleId;
   hoveredItemId = signal<string | null>(null);
+  hoveredSubItemId = signal<string | null>(null);
   flyoutTop = signal<number>(64);
+  treeFlyoutTop = signal<number>(0);
   showCompanyDropdown = signal<boolean>(false);
   selectedCompany = signal<string>('ABC Trading LLC');
 
   companies = ['ABC Trading LLC', 'Rapid Global Ltd', 'Indus Tech Pvt Ltd'];
 
   private closeTimer: any = null;
+  private subCloseTimer: any = null;
   private sidebarLeaveTimer: any = null;
 
   menuItems: MenuItem[] = [
@@ -58,13 +62,78 @@ export class Sidebar {
       label: 'Sales',
       icon: 'sales',
       subItems: [
-        { id: 'customers', label: 'Customers', icon: 'user-pin' },
-        { id: 'quotations', label: 'Quotations', icon: 'calculator' },
-        { id: 'invoices', label: 'Invoices', icon: 'file-invoice' },
-        { id: 'credit-notes', label: 'Credit Notes', icon: 'clipboard' },
-        { id: 'invoice-payments', label: 'Invoice Payments', icon: 'banknote' },
-        { id: 'customer-statement', label: 'Statement of Customer', icon: 'receipt' },
-        { id: 'manual-invoice', label: 'Manual Invoice', icon: 'file-invoice' },
+        {
+          id: 'customers',
+          label: 'Customers',
+          icon: 'user-pin',
+          children: [
+            { id: 'all-customers', label: 'All Customers Directory', icon: 'users-group' },
+            { id: 'add-customer', label: 'Add New Customer', icon: 'user-pin' },
+            { id: 'customer-groups', label: 'Customer Categories & Groups', icon: 'folder-tree' },
+            { id: 'customer-ledger', label: 'Customer Ledger & Aging', icon: 'book-ledger' },
+          ],
+        },
+        {
+          id: 'quotations',
+          label: 'Quotations',
+          icon: 'calculator',
+          children: [
+            { id: 'quotation-list', label: 'All Sales Quotations', icon: 'bullet-list' },
+            { id: 'create-quotation', label: 'Create New Quotation', icon: 'calculator' },
+            { id: 'quotation-approved', label: 'Approved & Sent Quotations', icon: 'check' },
+            { id: 'quotation-templates', label: 'Pricing Templates', icon: 'clipboard' },
+          ],
+        },
+        {
+          id: 'invoices',
+          label: 'Invoices',
+          icon: 'file-invoice',
+          children: [
+            { id: 'all-invoices', label: 'All Sales Invoices', icon: 'file-invoice' },
+            { id: 'create-invoice', label: 'Create Standard Invoice', icon: 'plus' },
+            { id: 'recurring-invoices', label: 'Recurring Invoices', icon: 'refresh' },
+            { id: 'proforma-invoices', label: 'Proforma Estimates', icon: 'receipt' },
+          ],
+        },
+        {
+          id: 'credit-notes',
+          label: 'Credit Notes',
+          icon: 'clipboard',
+          children: [
+            { id: 'credit-notes-list', label: 'All Credit Notes', icon: 'clipboard' },
+            { id: 'create-credit-note', label: 'Issue New Credit Note', icon: 'plus' },
+            { id: 'refund-vouchers', label: 'Refund Vouchers & Adjustments', icon: 'banknote' },
+          ],
+        },
+        {
+          id: 'invoice-payments',
+          label: 'Invoice Payments',
+          icon: 'banknote',
+          children: [
+            { id: 'payment-receipts', label: 'Payment Receipts', icon: 'receipt' },
+            { id: 'bulk-payments', label: 'Batch Customer Payments', icon: 'coins-stack' },
+            { id: 'unallocated-funds', label: 'Advance & Unallocated Funds', icon: 'banknote' },
+          ],
+        },
+        {
+          id: 'customer-statement',
+          label: 'Statement of Customer',
+          icon: 'receipt',
+          children: [
+            { id: 'account-statement', label: 'Account Statement', icon: 'book-ledger' },
+            { id: 'outstanding-balance', label: 'Outstanding Aging Summary', icon: 'bar-chart' },
+            { id: 'customer-reconciliation', label: 'Customer Reconciliation', icon: 'check' },
+          ],
+        },
+        {
+          id: 'manual-invoice',
+          label: 'Manual Invoice',
+          icon: 'file-invoice',
+          children: [
+            { id: 'manual-entry', label: 'Direct Manual Entry', icon: 'file-invoice' },
+            { id: 'draft-invoices', label: 'Draft & Pending Approval', icon: 'hourglass' },
+          ],
+        },
       ],
     },
     {
@@ -72,8 +141,56 @@ export class Sidebar {
       label: 'Services',
       icon: 'services',
       subItems: [
-        { id: 'srv-categories', label: 'Categories', icon: 'menu-bars' },
-        { id: 'srv-services', label: 'Services', icon: 'factory' },
+        {
+          id: 'srv-categories',
+          label: 'Categories',
+          icon: 'menu-bars',
+          children: [
+            { id: 'srv-cat-all', label: 'All Service Categories', icon: 'menu-bars' },
+            { id: 'srv-cat-new', label: 'Create Category', icon: 'plus' },
+            { id: 'srv-cat-sla', label: 'SLA & Tier Definitions', icon: 'shield-check' },
+          ],
+        },
+        {
+          id: 'srv-services',
+          label: 'Services',
+          icon: 'factory',
+          children: [
+            { id: 'srv-active', label: 'Active Services Catalog', icon: 'factory' },
+            { id: 'srv-rate-card', label: 'Rate Cards & Pricing', icon: 'price-tag' },
+            { id: 'srv-packages', label: 'Bundled Service Packages', icon: 'package-box' },
+          ],
+        },
+        {
+          id: 'srv-contracts',
+          label: 'Service Contracts',
+          icon: 'clipboard',
+          children: [
+            { id: 'srv-amc-all', label: 'Annual Maintenance (AMC)', icon: 'clipboard' },
+            { id: 'srv-amc-expiring', label: 'Expiring Contracts', icon: 'calendar' },
+            { id: 'srv-amc-renewals', label: 'Contract Renewals', icon: 'refresh' },
+          ],
+        },
+        {
+          id: 'srv-work-orders',
+          label: 'Work Orders',
+          icon: 'tool',
+          children: [
+            { id: 'srv-wo-all', label: 'All Field Work Orders', icon: 'tool' },
+            { id: 'srv-wo-pending', label: 'Pending Dispatch', icon: 'hourglass' },
+            { id: 'srv-wo-completed', label: 'Completed Jobs', icon: 'check' },
+          ],
+        },
+        {
+          id: 'srv-maintenance',
+          label: 'Maintenance Plans',
+          icon: 'headset',
+          children: [
+            { id: 'srv-maint-scheduled', label: 'Scheduled Maintenance', icon: 'calendar' },
+            { id: 'srv-maint-preventive', label: 'Preventive Care Plans', icon: 'shield-check' },
+            { id: 'srv-maint-tickets', label: 'Customer Support Tickets', icon: 'headset' },
+          ],
+        },
       ],
     },
     {
@@ -81,10 +198,57 @@ export class Sidebar {
       label: 'Purchase',
       icon: 'purchase',
       subItems: [
-        { id: 'pur-orders', label: 'Orders', icon: 'calculator' },
-        { id: 'pur-invoices', label: 'Invoices', icon: 'file-invoice' },
-        { id: 'pur-payments', label: 'Invoice Payments', icon: 'banknote' },
-        { id: 'pur-returns', label: 'Returns', icon: 'return-arrow' },
+        {
+          id: 'pur-orders',
+          label: 'Orders',
+          icon: 'calculator',
+          children: [
+            { id: 'pur-po-all', label: 'All Purchase Orders (PO)', icon: 'calculator' },
+            { id: 'pur-po-create', label: 'Create Purchase Order', icon: 'plus' },
+            { id: 'pur-po-approval', label: 'Pending Approvals', icon: 'hourglass' },
+            { id: 'pur-grn', label: 'Goods Received (GRN)', icon: 'package-box' },
+          ],
+        },
+        {
+          id: 'pur-invoices',
+          label: 'Invoices',
+          icon: 'file-invoice',
+          children: [
+            { id: 'pur-bills-all', label: 'Vendor Bills & Invoices', icon: 'file-invoice' },
+            { id: 'pur-bills-due', label: 'Overdue & Payable Bills', icon: 'calendar' },
+            { id: 'pur-recurring', label: 'Recurring Supplier Bills', icon: 'refresh' },
+          ],
+        },
+        {
+          id: 'pur-payments',
+          label: 'Invoice Payments',
+          icon: 'banknote',
+          children: [
+            { id: 'pur-pay-vouchers', label: 'Vendor Payment Vouchers', icon: 'banknote' },
+            { id: 'pur-pay-batch', label: 'Batch Disbursements', icon: 'coins-stack' },
+            { id: 'pur-advances', label: 'Supplier Advance Payments', icon: 'wallet' },
+          ],
+        },
+        {
+          id: 'pur-returns',
+          label: 'Returns',
+          icon: 'return-arrow',
+          children: [
+            { id: 'pur-debit-notes', label: 'Purchase Debit Notes', icon: 'return-arrow' },
+            { id: 'pur-vendor-refunds', label: 'Supplier Refund Tracking', icon: 'receipt' },
+            { id: 'pur-damaged-goods', label: 'Damaged Goods Claims', icon: 'clipboard' },
+          ],
+        },
+        {
+          id: 'pur-vendors',
+          label: 'Vendors & Suppliers',
+          icon: 'users-group',
+          children: [
+            { id: 'pur-vendor-dir', label: 'Supplier & Vendor Directory', icon: 'users-group' },
+            { id: 'pur-vendor-add', label: 'Register New Vendor', icon: 'user-pin' },
+            { id: 'pur-vendor-ledger', label: 'Vendor Ledger & Statements', icon: 'book-ledger' },
+          ],
+        },
       ],
     },
     {
@@ -430,6 +594,7 @@ export class Sidebar {
     }
     this.closeTimer = setTimeout(() => {
       this.hoveredItemId.set(null);
+      this.hoveredSubItemId.set(null);
     }, 150);
 
     if (this.sidebarLeaveTimer) {
@@ -443,6 +608,70 @@ export class Sidebar {
     }, 180);
   }
 
+  onSubItemMouseEnter(sub: SubMenuItem, event: MouseEvent): void {
+    if (this.subCloseTimer) {
+      clearTimeout(this.subCloseTimer);
+      this.subCloseTimer = null;
+    }
+    if (this.closeTimer) {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
+    }
+    if (sub.children && sub.children.length > 0) {
+      const target = event.currentTarget as HTMLElement;
+      if (target) {
+        const parentFlyout = target.closest('.flyout-card') as HTMLElement;
+        const parentRect = parentFlyout ? parentFlyout.getBoundingClientRect() : { top: 0 };
+        const targetRect = target.getBoundingClientRect();
+        const relativeTop = targetRect.top - parentRect.top;
+        this.treeFlyoutTop.set(Math.max(0, relativeTop - 6));
+      }
+      this.hoveredSubItemId.set(sub.id);
+    } else {
+      this.hoveredSubItemId.set(null);
+    }
+  }
+
+  onSubItemMouseLeave(): void {
+    if (this.subCloseTimer) {
+      clearTimeout(this.subCloseTimer);
+    }
+    this.subCloseTimer = setTimeout(() => {
+      this.hoveredSubItemId.set(null);
+    }, 200);
+  }
+
+  onTreeFlyoutMouseEnter(): void {
+    if (this.subCloseTimer) {
+      clearTimeout(this.subCloseTimer);
+      this.subCloseTimer = null;
+    }
+    if (this.closeTimer) {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
+    }
+    if (this.sidebarLeaveTimer) {
+      clearTimeout(this.sidebarLeaveTimer);
+      this.sidebarLeaveTimer = null;
+    }
+  }
+
+  onTreeFlyoutMouseLeave(): void {
+    if (this.subCloseTimer) {
+      clearTimeout(this.subCloseTimer);
+    }
+    this.subCloseTimer = setTimeout(() => {
+      this.hoveredSubItemId.set(null);
+    }, 160);
+  }
+
+  getHoveredSubItem(): SubMenuItem | undefined {
+    const subId = this.hoveredSubItemId();
+    if (!subId) return undefined;
+    const currentItem = this.getHoveredItem();
+    return currentItem?.subItems?.find((s) => s.id === subId);
+  }
+
   selectItem(item: MenuItem): void {
     if (item.subItems && item.subItems.length > 0) {
       // Navigate to first subitem or keep module active
@@ -452,6 +681,7 @@ export class Sidebar {
       this.navService.navigateTo(item.id, '', item.label, '');
     }
     this.hoveredItemId.set(null);
+    this.hoveredSubItemId.set(null);
     if (this.isCollapsed()) {
       this.isHoverExpanded.set(false);
     }
@@ -461,6 +691,17 @@ export class Sidebar {
     event.stopPropagation();
     this.navService.navigateTo(item.id, sub.id, item.label, sub.label);
     this.hoveredItemId.set(null);
+    this.hoveredSubItemId.set(null);
+    if (this.isCollapsed()) {
+      this.isHoverExpanded.set(false);
+    }
+  }
+
+  selectTreeItem(item: MenuItem, sub: SubMenuItem, child: SubMenuItem, event: MouseEvent): void {
+    event.stopPropagation();
+    this.navService.navigateTo(item.id, child.id, item.label, child.label);
+    this.hoveredItemId.set(null);
+    this.hoveredSubItemId.set(null);
     if (this.isCollapsed()) {
       this.isHoverExpanded.set(false);
     }
@@ -473,6 +714,7 @@ export class Sidebar {
     this.isCollapsed.update((v) => !v);
     this.isHoverExpanded.set(false);
     this.hoveredItemId.set(null);
+    this.hoveredSubItemId.set(null);
     if (this.isCollapsed()) {
       this.showCompanyDropdown.set(false);
     }
