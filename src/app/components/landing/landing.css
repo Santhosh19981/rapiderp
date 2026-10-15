@@ -150,3 +150,26 @@
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
 }
 
+/* 6. System Performance Metric Gauge Ring Animation */
+.gauge-ring-stroke {
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: stroke-dashoffset;
+}
+
+@keyframes gaugeFill {
+  from {
+    stroke-dashoffset: 251.2;
+  }
+}
+
+/* 7. Live Equalizer Audio Wave Animations */
+@keyframes equalizerBounce {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+

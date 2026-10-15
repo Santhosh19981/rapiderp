@@ -406,7 +406,7 @@ export class Landing {
     }, 600);
   }
 
-  // Executive Overview Dashboard State & Metrics (Screenshot 1 Reference)
+  // Executive Overview Dashboard State & Metrics (Latest UI Reference)
   dashboardSearchQuery = signal<string>('');
   dashboardPeriod = signal<string>('Last 30 days');
   isDashboardDateOpen = signal<boolean>(false);
@@ -435,132 +435,283 @@ export class Landing {
     this.showToast('Executive Overview analytics report exported successfully.');
   }
 
-  // 11 System Entity Breakdown KPI Items (Exact Match to Screenshot 1)
-  entityBreakdown = [
+  // Active Orders Highlight Card (Latest UI Reference)
+  activeOrders = {
+    title: 'ACTIVE ORDERS',
+    value: '$128.4k',
+    trend: '+18.4%',
+    transactions: '942 transactions today',
+    target: '$140k',
+    pace: '91.7% Pace'
+  };
+
+  // API & Cloud Gateway Card (Latest UI Reference)
+  apiGateway = {
+    title: 'API & Cloud Gateway',
+    latency: '24ms Latency',
+    uptime: '99.99%',
+    nodes: 'Edge CDN Nodes (42)',
+    sync: 'Encrypted Sync',
+    status: 'All green'
+  };
+
+  // Section A - Row 1 Entity Cards
+  entityRow1 = [
     {
       id: 'cat',
-      shortName: 'Cat...',
-      fullName: 'Categories',
-      count: 5,
-      trend: '↑ 12%',
-      trendColor: 'text-emerald-500',
+      shortName: 'Categories',
+      count: '5',
+      trend: '↑ 12% MoM',
+      sub: '16 sub',
+      progress: 65,
       icon: 'folder',
       iconBg: 'bg-blue-50 dark:bg-blue-950/60',
       iconColor: 'text-[#1863c0]',
     },
     {
       id: 'post',
-      shortName: 'Po...',
-      fullName: 'Posts',
-      count: 3,
-      trend: '• Steady',
-      trendColor: 'text-slate-400',
+      shortName: 'Total Posts',
+      count: '3,420',
+      trend: '• Steady volume',
+      hasSparkline: true,
       icon: 'file-text',
       iconBg: 'bg-indigo-50 dark:bg-indigo-950/60',
       iconColor: 'text-indigo-600',
     },
     {
       id: 'rev',
-      shortName: 'Rev...',
-      fullName: 'Reviews',
-      count: 4,
-      trend: '↑ 25%',
-      trendColor: 'text-emerald-500',
+      shortName: 'Client Re...',
+      fullName: 'Client Reviews',
+      count: '4.92 ★',
+      rating: '98%',
+      trend: '↑ 25% ratings',
       icon: 'chat',
       iconBg: 'bg-amber-50 dark:bg-amber-950/60',
       iconColor: 'text-amber-500',
     },
     {
       id: 'srv',
-      shortName: 'Ser...',
-      fullName: 'Services',
-      count: 6,
-      trend: 'Active',
-      trendColor: 'text-[#00a2e8]',
+      shortName: 'Services',
+      count: '6',
+      badge: 'ALL ACTIVE',
       icon: 'settings',
       iconBg: 'bg-sky-50 dark:bg-sky-950/60',
       iconColor: 'text-[#00a2e8]',
     },
     {
       id: 'pro',
-      shortName: 'Pro...',
-      fullName: 'Products',
-      count: 6,
-      trend: '2 in review',
-      trendColor: 'text-blue-500',
-      icon: 'package-box',
+      shortName: 'Projects',
+      count: '24',
+      trend: '• 2 in review',
+      icon: 'folder-open',
       iconBg: 'bg-emerald-50 dark:bg-emerald-950/60',
       iconColor: 'text-emerald-600',
     },
     {
       id: 'sli',
-      shortName: 'Sli...',
-      fullName: 'Sliders',
-      count: 4,
-      trend: 'Hero banner',
-      trendColor: 'text-purple-500',
+      shortName: 'Hero Slid...',
+      fullName: 'Hero Sliders',
+      count: '4',
+      trend: 'A/B Test active',
       icon: 'image',
       iconBg: 'bg-purple-50 dark:bg-purple-950/60',
       iconColor: 'text-purple-600',
     },
+  ];
+
+  // Section A - Row 2 Entity Cards
+  entityRow2 = [
     {
       id: 'faq',
-      shortName: 'FA...',
-      fullName: 'FAQs',
-      count: 5,
-      trend: 'Published',
-      trendColor: 'text-teal-500',
+      shortName: 'FAQ Data...',
+      fullName: 'FAQ Database',
+      count: '52',
+      trend: '98% answered',
       icon: 'help-circle',
       iconBg: 'bg-teal-50 dark:bg-teal-950/60',
       iconColor: 'text-teal-600',
     },
     {
       id: 'sub',
-      shortName: 'Sub...',
+      shortName: 'Subscrib...',
       fullName: 'Subscribers',
-      count: 3,
-      trend: '↑ New user',
-      trendColor: 'text-emerald-500',
+      count: '18.4k',
+      trend: '↑ 320 this week',
       icon: 'bell',
       iconBg: 'bg-violet-50 dark:bg-violet-950/60',
       iconColor: 'text-violet-600',
     },
     {
       id: 'sol',
-      shortName: 'Sol...',
-      fullName: 'Solutions',
-      count: 8,
-      trend: '↑ 18%',
-      trendColor: 'text-emerald-500',
+      shortName: 'Solutions',
+      count: '8',
+      trend: '↑ 18% deploy',
       icon: 'sun',
       iconBg: 'bg-amber-50 dark:bg-amber-950/60',
       iconColor: 'text-amber-600',
     },
     {
       id: 'ind',
-      shortName: 'Ind...',
-      fullName: 'Industries',
-      count: 7,
-      trend: 'Sectors',
-      trendColor: 'text-emerald-500',
+      shortName: 'Industries',
+      count: '7',
+      trend: 'Global matrix',
       icon: 'building',
       iconBg: 'bg-emerald-50 dark:bg-emerald-950/60',
       iconColor: 'text-emerald-600',
     },
     {
       id: 'cli',
-      shortName: 'Cli...',
-      fullName: 'Clients',
-      count: 5,
-      trend: 'All active',
-      trendColor: 'text-emerald-500',
+      shortName: 'Clients & ...',
+      fullName: 'Clients & Partners',
+      count: '5',
+      trend: '100% active SLA',
       icon: 'user',
       iconBg: 'bg-rose-50 dark:bg-rose-950/60',
       iconColor: 'text-rose-600',
     },
+    {
+      id: 'tickets',
+      shortName: 'Open Tic...',
+      fullName: 'Open Tickets',
+      count: '2',
+      trend: 'Avg reply 8m',
+      icon: 'clock',
+      iconBg: 'bg-slate-100 dark:bg-slate-700/60',
+      iconColor: 'text-slate-600 dark:text-slate-300',
+    },
   ];
 
+  // Section D - Recent Activity Log Table (Latest UI Reference)
+  recentActivities = [
+    {
+      id: 1,
+      user: 'John Doe',
+      initials: 'JD',
+      avatarBg: 'bg-blue-500 text-white',
+      action: 'Created new country',
+      module: 'COUNTRIES',
+      moduleBadge: 'bg-purple-50 text-purple-600 border border-purple-200/80 dark:bg-purple-950/40 dark:text-purple-300',
+      time: '2 minutes ago',
+    },
+    {
+      id: 2,
+      user: 'Sarah Wilson',
+      initials: 'SW',
+      avatarBg: 'bg-emerald-500 text-white',
+      action: 'Updated user profile',
+      module: 'USERS',
+      moduleBadge: 'bg-blue-50 text-blue-600 border border-blue-200/80 dark:bg-blue-950/40 dark:text-blue-300',
+      time: '5 minutes ago',
+    },
+    {
+      id: 3,
+      user: 'Mike Chen',
+      initials: 'MC',
+      avatarBg: 'bg-amber-500 text-white',
+      action: 'Added new city',
+      module: 'SERVICES',
+      moduleBadge: 'bg-purple-50 text-purple-600 border border-purple-200/80 dark:bg-purple-950/40 dark:text-purple-300',
+      time: '12 minutes ago',
+    },
+    {
+      id: 4,
+      user: 'Emma Davis',
+      initials: 'ED',
+      avatarBg: 'bg-rose-500 text-white',
+      action: 'Generated report',
+      module: 'REPORTS',
+      moduleBadge: 'bg-blue-50 text-blue-600 border border-blue-200/80 dark:bg-blue-950/40 dark:text-blue-300',
+      time: '18 minutes ago',
+    },
+    {
+      id: 5,
+      user: 'Alex Johnson',
+      initials: 'AJ',
+      avatarBg: 'bg-[#1863c0] text-white',
+      action: 'Modified permissions',
+      module: 'SECURITY',
+      moduleBadge: 'bg-emerald-50 text-emerald-600 border border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300',
+      time: '25 minutes ago',
+    },
+  ];
+
+  // Section D - System Alerts (Latest UI Reference)
+  systemAlerts = [
+    {
+      id: 1,
+      type: 'warning',
+      title: 'Database backup overdue',
+      time: '32 minutes ago',
+      bg: 'bg-amber-50/70 border-amber-200/80 text-amber-900 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200',
+      iconColor: 'text-amber-500',
+    },
+    {
+      id: 2,
+      type: 'info',
+      title: 'System maintenance scheduled for tonight',
+      time: '7 hours ago',
+      bg: 'bg-blue-50/70 border-blue-200/80 text-blue-900 dark:bg-blue-950/30 dark:border-blue-800 dark:text-blue-200',
+      iconColor: 'text-[#1863c0]',
+    },
+    {
+      id: 3,
+      type: 'success',
+      title: 'All services running normally',
+      time: '4 hours ago',
+      bg: 'bg-emerald-50/70 border-emerald-200/80 text-emerald-900 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-200',
+      iconColor: 'text-emerald-500',
+    },
+  ];
+
+  // Section D - Quick Stats 2x2 Grid (Latest UI Reference)
+  quickStats = [
+    { label: 'Database Size', value: '2.4 GB', dotColor: 'bg-blue-500' },
+    { label: 'Server Load', value: '38%', badge: 'Opt', badgeColor: 'bg-emerald-50 text-emerald-600 border border-emerald-200/80 dark:bg-emerald-950/50' },
+    { label: 'Uptime', value: '99.8%', dotColor: 'bg-emerald-500' },
+    { label: 'Online Users', value: '1,247', dotColor: 'bg-cyan-500' },
+  ];
+
+  // Section E - System Performance Metrics (Latest UI Reference)
+  performanceMetrics = [
+    {
+      title: 'CPU Usage',
+      percentage: 37,
+      subtitle: '8 Cores active • 2.8 GHz',
+      strokeColor: '#1863c0',
+      offset: 158, // 251.2 * (1 - 0.37)
+    },
+    {
+      title: 'Memory',
+      percentage: 62,
+      subtitle: '9.9 GB of 16 GB',
+      strokeColor: '#10b981',
+      offset: 95, // 251.2 * (1 - 0.62)
+    },
+    {
+      title: 'Storage',
+      percentage: 84,
+      subtitle: '420 GB of 500 GB NVMe',
+      strokeColor: '#f59e0b',
+      offset: 40, // 251.2 * (1 - 0.84)
+    },
+    {
+      title: 'Network',
+      percentage: 78,
+      subtitle: '780 Mbps Out / 410 Mbps In',
+      strokeColor: '#8b5cf6',
+      offset: 55, // 251.2 * (1 - 0.78)
+    },
+  ];
+
+  viewActivity(item: any): void {
+    this.showToast(`Viewing activity details for ${item.user}: ${item.action}`);
+  }
+
+  editActivity(item: any): void {
+    this.showToast(`Editing audit log entry for ${item.user}`);
+  }
+
   selectEntityCard(item: any): void {
-    this.showToast(`Inspecting ${item.fullName}: ${item.count} active records (${item.trend})`);
+    this.showToast(`Inspecting ${item.fullName || item.shortName}: ${item.count} records`);
   }
 }
