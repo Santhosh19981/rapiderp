@@ -37,15 +37,15 @@ export class Login {
     return this.passwordFocused() || this.password().length > 0;
   });
 
-  // Valid tick mark triggers
+  // Valid tick mark triggers (shows green tick mark as user types valid content)
   isUsernameValid = computed(() => {
-    const u = this.username().trim().toLowerCase();
-    return u === 'admin@gcc.com' || (u.length >= 5 && u.includes('@') && u.includes('.'));
+    const u = this.username().trim();
+    return u.length >= 2;
   });
 
   isPasswordValid = computed(() => {
     const p = this.password();
-    return p === '!VKaIPxQTFKM6ANB' || p.length >= 6;
+    return p.length >= 3;
   });
 
   onUsernameInput(val: string): void {
