@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,16 +20,68 @@ export class Login {
   rememberMe = signal<boolean>(false);
   showPassword = signal<boolean>(false);
   isLoading = signal<boolean>(false);
-  errorMsg = signal<string>('');
+
+  usernameFocused = signal<boolean>(false);
+  passwordFocused = signal<boolean>(false);
+
+  usernameError = signal<string>('');
+  passwordError = signal<string>('');
+  isListening = signal<boolean>(false);
+
+  // Floating label triggers (matches reference UI notch)
+  isUsernameFloating = computed(() => {
+    return this.usernameFocused() || this.username().trim().length > 0;
+  });
+
+  isPasswordFloating = computed(() => {
+    return this.passwordFocused() || this.password().length > 0;
+  });
+
+  // Valid tick mark triggers
+  isUsernameValid = computed(() => {
+    const u = this.username().trim().toLowerCase();
+    return u === 'admin@gcc.com' || (u.length >= 5 && u.includes('@') && u.includes('.'));
+  });
+
+  isPasswordValid = computed(() => {
+    const p = this.password();
+    return p === '!VKaIPxQTFKM6ANB' || p.length >= 6;
+  });
+
+  onUsernameInput(val: string): void {
+    this.username.set(val);
+    if (this.usernameError()) {
+      this.usernameError.set('');
+    }
+  }
+
+  onPasswordInput(val: string): void {
+    this.password.set(val);
+    if (this.passwordError()) {
+      this.passwordError.set('');
+    }
+  }
 
   onLogin(): void {
-    this.errorMsg.set('');
+    this.usernameError.set('');
+    this.passwordError.set('');
 
     const u = this.username().trim();
     const p = this.password();
 
-    if (!u || !p) {
-      this.errorMsg.set('Please enter both username and password.');
+    let hasError = false;
+
+    if (!u) {
+      this.usernameError.set('Please enter your username or email.');
+      hasError = true;
+    }
+
+    if (!p) {
+      this.passwordError.set('Please enter your password.');
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
     }
 
@@ -42,7 +94,12 @@ export class Login {
       if (isValid) {
         this.router.navigate(['/landing']);
       } else {
-        this.errorMsg.set('Invalid credentials. Access restricted to authorized accounts.');
+        if (u !== 'admin@gcc.com') {
+          this.usernameError.set('Invalid username. Access restricted to authorized accounts.');
+        }
+        if (p !== '!VKaIPxQTFKM6ANB') {
+          this.passwordError.set('Invalid password. Please check your credentials.');
+        }
       }
     }, 400);
   }
@@ -55,7 +112,47 @@ export class Login {
     this.showPassword.update((v) => !v);
   }
 
+  startSpeechRecognition(): void {
+    const win = window as any;
+    const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      // Demo helper fallback if browser doesn't have Web Speech API enabled
+      this.username.set('admin@gcc.com');
+      this.usernameError.set('');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      this.isListening.set(true);
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript || '';
+        const clean = transcript.replace(/\s+/g, '').toLowerCase();
+        this.username.set(clean.includes('admin') ? 'admin@gcc.com' : clean);
+        this.usernameError.set('');
+        this.isListening.set(false);
+      };
+
+      recognition.onerror = () => {
+        this.isListening.set(false);
+      };
+
+      recognition.onend = () => {
+        this.isListening.set(false);
+      };
+
+      recognition.start();
+    } catch {
+      this.isListening.set(false);
+    }
+  }
+
   forgotPassword(): void {
     alert('Please contact your administrator to reset credentials for admin@gcc.com.');
   }
 }
+
