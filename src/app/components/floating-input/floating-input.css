@@ -1,0 +1,60 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.floating-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.floating-label {
+  position: absolute;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Resting State: Inside the input */
+.floating-label.resting {
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 400;
+  background: transparent;
+  padding: 0;
+}
+
+.has-left-icon .floating-label.resting {
+  left: 44px;
+}
+
+.floating-input-wrapper:not(.has-left-icon) .floating-label.resting {
+  left: 22px;
+}
+
+/* Floating State: Jump onto the top border notch (as in Image 5) */
+.floating-label.floating-top {
+  top: 0;
+  transform: translateY(-50%);
+  left: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0 6px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  color: #64748b;
+}
+
+/* When active/focused, label takes active secondary/primary color */
+.floating-input-wrapper.focused .floating-label.floating-top {
+  color: #06a9ea;
+}
+
+.input-container input:autofill,
+.input-container input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #1e293b !important;
+}
