@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Country, CountryStats, CountryHistoryEntry } from './country.models';
+import { Country, CountryStats, CountryHistoryEntry, MinimizedCountryForm } from './country.models';
 
 const INITIAL_COUNTRIES: Country[] = [
   {
@@ -835,6 +835,18 @@ export class CountryService {
 
   // Audit history log
   history = signal<CountryHistoryEntry[]>(INITIAL_HISTORY);
+
+  // Add/Edit forms minimized to the tab bar; kept here so they survive leaving the module
+  minimizedForms = signal<MinimizedCountryForm[]>([]);
+
+  saveMinimizedForm(form: MinimizedCountryForm): void {
+    // One tab per form: re-minimizing the same Add/Edit replaces its previous snapshot
+    this.minimizedForms.update((list) => [...list.filter((f) => f.id !== form.id), form]);
+  }
+
+  removeMinimizedForm(id: string): void {
+    this.minimizedForms.update((list) => list.filter((f) => f.id !== id));
+  }
 
   // Computed statistics
   stats = computed<CountryStats>(() => {

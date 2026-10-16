@@ -23,6 +23,56 @@
 }
 
 /* ========================================================================= */
+/* Custom Scrollbars: Bright Cyan Pill Thumb (Image 1 replica)              */
+/* Applied globally across Grid, List/Table, Add, Edit, View, and Modals     */
+/* ========================================================================= */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #00a6f4 #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #00a6f4;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #008ece;
+}
+
+html.dark .custom-scrollbar,
+.dark .custom-scrollbar {
+  scrollbar-color: #38bdf8 #0f172a;
+}
+
+html.dark .custom-scrollbar::-webkit-scrollbar-track,
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+html.dark .custom-scrollbar::-webkit-scrollbar-thumb,
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #38bdf8;
+}
+
+html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover,
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #0ea5e9;
+}
+
+/* ========================================================================= */
 /* Shared dropdown list (app-select-dropdown + header/dashboard pickers)     */
 /* Rows: bold title, optional grey description, divider between rows.        */
 /* ========================================================================= */

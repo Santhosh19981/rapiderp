@@ -95,7 +95,7 @@ export class Login {
 
       if (isValid) {
         this.navService.closeAllPanels();
-        this.router.navigate(['/landing']);
+        this.router.navigate(['/landing/dashboard']);
       } else {
         if (u !== 'admin@gcc.com') {
           this.usernameError.set('Invalid username. Access restricted to authorized accounts.');

@@ -49,3 +49,26 @@ export interface CountryFilter {
   currency: string;
   isDefault: string;
 }
+
+// Snapshot of an Add/Edit/View form parked in the minimized tab bar
+export interface MinimizedCountryForm {
+  id: string; // 'add' or 'edit-<countryId>' or 'view-<countryId>'
+  mode: 'add' | 'edit' | 'view';
+  countryId: string | null;
+  title: string;
+  state: {
+    code: string;
+    isd: string;
+    name: string;
+    currency: string;
+    isDefault: 'Yes' | 'No';
+    status: 'Active' | 'Inactive' | 'Draft' | 'Delete';
+    flag: string | null;
+    continent: string;
+    translations: Record<string, string>;
+    flagTab: 'drop' | 'attachment' | 'gallery';
+    keepOnPage: boolean;
+    pdfOnSubmit: boolean;
+    printOnSubmit: boolean;
+  };
+}

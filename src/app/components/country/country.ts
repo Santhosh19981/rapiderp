@@ -3,6 +3,8 @@ import {
   inject,
   signal,
   computed,
+  effect,
+  untracked,
   HostListener,
   ViewChild,
   ElementRef,
@@ -10,14 +12,17 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CountryService } from './country.service';
-import { Country, CountryHistoryEntry } from './country.models';
+import { Country, CountryHistoryEntry, MinimizedCountryForm } from './country.models';
 import { NavigationService } from '../../services/navigation.service';
 import { DropdownOption, SelectDropdown } from '../select-dropdown/select-dropdown';
 
 export type CountryViewMode = 'grid' | 'list' | 'add' | 'edit' | 'view';
 
 export type FormStatus = 'Active' | 'Inactive' | 'Draft' | 'Delete';
+
+export type FilterFieldKey = 'name' | 'code' | 'isd' | 'currency' | 'status' | 'isDefault' | 'continent';
 
 export type ListSortKey = 'name' | 'code' | 'isd' | 'currency' | 'states' | 'cities' | 'createdAt' | 'updatedAt' | 'draftedAt' | 'status';
 
@@ -62,6 +67,8 @@ export interface GalleryFlag {
 export class CountryComponent implements OnInit {
   public countryService = inject(CountryService);
   public navService = inject(NavigationService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   @ViewChild('flagFileInput') flagFileInput?: ElementRef<HTMLInputElement>;
   @ViewChild('importFileInput') importFileInput?: ElementRef<HTMLInputElement>;
@@ -76,12 +83,26 @@ export class CountryComponent implements OnInit {
   searchQuery = signal<string>('');
   isSearchListening = signal<boolean>(false);
 
-  // Filter drawer state
-  isFilterDrawerOpen = signal<boolean>(false);
-  filterStatus = signal<string>('all');
-  filterContinent = signal<string>('all');
-  filterCurrency = signal<string>('all');
-  filterDefault = signal<string>('all');
+  // Filter side panel: checkbox values per field. Draft = what's ticked in the panel,
+  // applied = what filters the data (null = no field filter).
+  isFilterPanelOpen = signal<boolean>(false);
+  filterSearch = signal<string>('');
+  readonly filterFieldDefs: { key: FilterFieldKey; label: string }[] = [
+    { key: 'name', label: 'Name' },
+    { key: 'code', label: 'Code' },
+    { key: 'isd', label: 'ISD' },
+    { key: 'currency', label: 'Currency' },
+    { key: 'status', label: 'Status' },
+    { key: 'isDefault', label: 'Default' },
+    { key: 'continent', label: 'Continent' },
+  ];
+  filterDraft = signal<Record<FilterFieldKey, Set<string>> | null>(null);
+  appliedFilter = signal<Partial<Record<FilterFieldKey, Set<string>>> | null>(null);
+
+  // Grid lazy loading: 20 cards first, 20 more each time the bottom is reached
+  readonly gridPageSize = 20;
+  gridVisibleCount = signal<number>(20);
+  isLoadingMore = signal<boolean>(false);
 
   // Export & Import & History & Delete modals
   isExportPanelOpen = signal<boolean>(false);
@@ -146,6 +167,26 @@ export class CountryComponent implements OnInit {
     return this.countryService.getCountryById(id) || null;
   });
 
+  viewCountry = computed<Country>(() => {
+    const sc = this.selectedCountry();
+    if (sc) return sc;
+    return {
+      id: this.currentCountryId() || '0',
+      name: this.formName() || 'Country',
+      code: this.formCode() || 'US',
+      isd: this.formIsd() || '+1',
+      currency: this.formCurrency() || 'USD',
+      status: (this.formStatus() === 'Delete' ? 'Deleted' : this.formStatus()) as any,
+      isDefault: this.formDefault() === 'Yes',
+      flag: this.formFlag() || `https://flagcdn.com/${(this.formCode() || 'us').toLowerCase()}.svg`,
+      continent: this.formContinent() || '',
+      translations: this.formTranslations() || {},
+      actionMessage: 'Updated',
+      createdAt: '2023-01-01',
+      updatedAt: '2023-01-01',
+    };
+  });
+
   // Country Form State for Add / Edit
   formCode = signal<string>('US');
   formIsd = signal<string>('+1');
@@ -178,21 +219,6 @@ export class CountryComponent implements OnInit {
   readonly defaultOptions: DropdownOption[] = [
     { value: 'Yes', label: 'Yes', description: 'Set default country' },
     { value: 'No', label: 'No', description: 'Remove default country' },
-  ];
-
-  // Filter drawer choices
-  readonly filterStatusOptions: DropdownOption[] = [
-    { value: 'all', label: 'All Statuses', description: 'Show every country' },
-    { value: 'active', label: 'Active Only', description: 'Available across all modules' },
-    { value: 'inactive', label: 'Inactive Only', description: 'Disabled temporarily' },
-    { value: 'draft', label: 'Draft Only', description: 'Under review' },
-    { value: 'deleted', label: 'Deleted Only', description: 'Moved to Deleted' },
-  ];
-
-  readonly filterDefaultOptions: DropdownOption[] = [
-    { value: 'all', label: 'All', description: 'Default and non-default' },
-    { value: 'yes', label: 'Default Countries Only' },
-    { value: 'no', label: 'Non-Default Only' },
   ];
 
   // Import "Match Fields": not mapped + every CSV column
@@ -362,17 +388,57 @@ export class CountryComponent implements OnInit {
     this.isTranslationOpen.set(false);
     this.isActionListOpen.set(false);
     this.isVisibilityOpen.set(false);
+    this.isPageSizeMenuOpen.set(false);
+    this.isCustomPageSizeOpen.set(false);
+    this.activeColumnMenu.set(null);
+    this.columnMenuPos.set(null);
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    if (this.activeColumnMenu()) {
+      this.closeColumnMenu();
+    }
+  }
+
+  getPercentage(key: 'active' | 'inactive' | 'draft' | 'deleted'): number {
+    const stats = this.countryService.stats();
+    if (!stats.total) return 0;
+    return Math.round((stats[key] / stats.total) * 100);
   }
 
   ngOnInit(): void {
-    // Check URL parameters if running inside browser
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const view = urlParams.get('view') as CountryViewMode;
-      if (view && ['grid', 'list', 'add', 'edit', 'view'].includes(view)) {
-        this.viewMode.set(view);
+    this.route.queryParamMap.subscribe((qp) => {
+      const mode = (qp.get('mode') || qp.get('view')) as CountryViewMode | null;
+      const tab = qp.get('tab');
+      const id = qp.get('id');
+
+      if (id && id !== this.currentCountryId()) {
+        this.currentCountryId.set(id);
+        const c = this.countryService.countries().find((item) => item.id === id);
+        if (c) {
+          this.loadCountryIntoForm(c);
+        }
       }
-    }
+
+      if (mode && ['grid', 'list', 'add', 'edit', 'view'].includes(mode)) {
+        if (this.viewMode() !== mode) {
+          if (mode === 'add') {
+            this.clearForm();
+          } else if ((mode === 'edit' || mode === 'view') && !this.formCode()) {
+            const c = this.selectedCountry();
+            if (c) this.loadCountryIntoForm(c);
+          }
+          this.viewMode.set(mode);
+        }
+      }
+
+      if (tab && ['all', 'active', 'inactive', 'draft', 'deleted'].includes(tab)) {
+        if (this.activeFilterTab() !== tab) {
+          this.activeFilterTab.set(tab);
+        }
+      }
+    });
   }
 
   // Filtered Countries List computed dynamically
@@ -406,30 +472,164 @@ export class CountryComponent implements OnInit {
       );
     }
 
-    // 3. Side Drawer Filters
-    const status = this.filterStatus();
-    if (status !== 'all') {
-      list = list.filter((c) => c.status.toLowerCase() === status.toLowerCase());
+    // 3. Filter panel: a row must match every restricted field
+    const applied = this.appliedFilter();
+    if (applied) {
+      const entries = Object.entries(applied) as [FilterFieldKey, Set<string>][];
+      list = list.filter((c) => entries.every(([key, allowed]) => allowed.has(this.filterValue(c, key))));
     }
 
-    const continent = this.filterContinent();
-    if (continent !== 'all') {
-      list = list.filter((c) => (c.continent || '').toLowerCase() === continent.toLowerCase());
-    }
-
-    const currency = this.filterCurrency();
-    if (currency !== 'all') {
-      list = list.filter((c) => c.currency.toLowerCase() === currency.toLowerCase());
-    }
-
-    const isDef = this.filterDefault();
-    if (isDef !== 'all') {
-      const wantDefault = isDef === 'yes';
-      list = list.filter((c) => c.isDefault === wantDefault);
+    // 4. Column Header Filters (Image 4 replica)
+    const colFilters = this.appliedColumnFilters();
+    for (const [colKey, allowedSet] of Object.entries(colFilters)) {
+      if (allowedSet && allowedSet.size > 0) {
+        list = list.filter((c) => {
+          let val = (c as any)[colKey];
+          if (val === null || val === undefined || val === '') val = '—';
+          if (this.dateColumns.includes(colKey as any)) {
+            val = this.formatDate(val);
+          }
+          return allowedSet.has(String(val));
+        });
+      }
     }
 
     return list;
   });
+
+  // Grid shows only the loaded slice of the filtered list
+  gridCountries = computed(() => this.filteredCountries().slice(0, this.gridVisibleCount()));
+  hasMoreGrid = computed(() => this.gridVisibleCount() < this.filteredCountries().length);
+
+  // Any change to search / tabs / filters starts the grid again from the first 20
+  private resetGridPaging = effect(() => {
+    this.filteredCountries();
+    untracked(() => {
+      this.gridVisibleCount.set(this.gridPageSize);
+      this.isLoadingMore.set(false);
+    });
+  });
+
+  onGridScroll(event: Event): void {
+    if (this.viewMode() !== 'grid') return;
+    const el = event.target as HTMLElement;
+    if (el.scrollHeight - el.scrollTop - el.clientHeight > 120) return;
+    this.loadMoreGrid();
+  }
+
+  loadMoreGrid(): void {
+    if (this.isLoadingMore() || !this.hasMoreGrid()) return;
+    this.isLoadingMore.set(true);
+    // Short delay so the loader is visible, as with a paged API
+    setTimeout(() => {
+      this.gridVisibleCount.update((n) => n + this.gridPageSize);
+      this.isLoadingMore.set(false);
+    }, 600);
+  }
+
+  // ---- Filter panel ----
+  filterValue(c: Country, key: FilterFieldKey): string {
+    if (key === 'isDefault') return c.isDefault ? 'Yes' : 'No';
+    const v = c[key];
+    return v ? String(v) : '—';
+  }
+
+  // Every distinct value per field across all countries (independent of the current filter)
+  filterValueOptions = computed<Record<FilterFieldKey, string[]>>(() => {
+    const all = this.countryService.countries();
+    const result = {} as Record<FilterFieldKey, string[]>;
+    for (const f of this.filterFieldDefs) {
+      const values = [...new Set(all.map((c) => this.filterValue(c, f.key)))];
+      // Name keeps list order (as on the cards); the rest sort alphabetically
+      result[f.key] = f.key === 'name' ? values : values.sort((a, b) => a.localeCompare(b));
+    }
+    return result;
+  });
+
+  // Fields/values shown for the current panel search (field label or value match)
+  visibleFilterFields = computed(() => {
+    const q = this.filterSearch().trim().toLowerCase();
+    const options = this.filterValueOptions();
+    return this.filterFieldDefs
+      .map((f) => {
+        const labelMatch = !q || f.label.toLowerCase().includes(q);
+        const values = labelMatch ? options[f.key] : options[f.key].filter((v) => v.toLowerCase().includes(q));
+        return { ...f, values };
+      })
+      .filter((f) => f.values.length > 0);
+  });
+
+  isFilterActive = computed(() => !!this.appliedFilter());
+
+  private fullFilterSelection(): Record<FilterFieldKey, Set<string>> {
+    const options = this.filterValueOptions();
+    const draft = {} as Record<FilterFieldKey, Set<string>>;
+    for (const f of this.filterFieldDefs) draft[f.key] = new Set(options[f.key]);
+    return draft;
+  }
+
+  toggleFilterPanel(): void {
+    if (this.isFilterPanelOpen()) {
+      this.isFilterPanelOpen.set(false);
+      return;
+    }
+    // Start from what's applied; untouched fields are fully ticked
+    const draft = this.fullFilterSelection();
+    const applied = this.appliedFilter();
+    if (applied) {
+      for (const [key, set] of Object.entries(applied) as [FilterFieldKey, Set<string>][]) draft[key] = new Set(set);
+    }
+    this.filterDraft.set(draft);
+    this.filterSearch.set('');
+    this.isExportPanelOpen.set(false);
+    this.isFilterPanelOpen.set(true);
+  }
+
+  isFilterValueChecked(key: FilterFieldKey, value: string): boolean {
+    return !!this.filterDraft()?.[key].has(value);
+  }
+
+  filterFieldState(key: FilterFieldKey): 'all' | 'some' | 'none' {
+    const set = this.filterDraft()?.[key];
+    const total = this.filterValueOptions()[key].length;
+    if (!set || set.size === 0) return 'none';
+    return set.size >= total ? 'all' : 'some';
+  }
+
+  toggleFilterValue(key: FilterFieldKey, value: string): void {
+    this.filterDraft.update((d) => {
+      if (!d) return d;
+      const next = new Set(d[key]);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return { ...d, [key]: next };
+    });
+  }
+
+  toggleFilterField(key: FilterFieldKey): void {
+    const selectAll = this.filterFieldState(key) !== 'all';
+    this.filterDraft.update((d) => (d ? { ...d, [key]: selectAll ? new Set(this.filterValueOptions()[key]) : new Set() } : d));
+  }
+
+  applyFilterPanel(): void {
+    const draft = this.filterDraft();
+    if (!draft) return;
+    const options = this.filterValueOptions();
+    // Only fields with something unticked restrict the data
+    const applied: Partial<Record<FilterFieldKey, Set<string>>> = {};
+    for (const f of this.filterFieldDefs) {
+      if (draft[f.key].size < options[f.key].length) applied[f.key] = new Set(draft[f.key]);
+    }
+    this.appliedFilter.set(Object.keys(applied).length ? applied : null);
+    this.isFilterPanelOpen.set(false);
+    this.showToast(Object.keys(applied).length ? 'Filters applied successfully.' : 'Showing all countries.');
+  }
+
+  resetFilterPanel(): void {
+    this.filterDraft.set(this.fullFilterSelection());
+    this.filterSearch.set('');
+    this.appliedFilter.set(null);
+  }
 
   // ---- List (table) view ----
   readonly listColumns: ListColumn[] = [
@@ -474,6 +674,24 @@ export class CountryComponent implements OnInit {
   // Clamp so a shrinking result set (search/filter) never leaves us on an empty page
   currentPage = computed(() => Math.min(this.page(), this.totalPages()));
 
+  visiblePages = computed<number[]>(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + 4);
+    if (end - start < 4) {
+      start = Math.max(1, end - 4);
+    }
+    const pages: number[] = [];
+    for (let p = start; p <= end; p++) {
+      pages.push(p);
+    }
+    return pages;
+  });
+
   pagedCountries = computed<Country[]>(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
     return this.sortedCountries().slice(start, start + this.pageSize());
@@ -507,6 +725,177 @@ export class CountryComponent implements OnInit {
     } else {
       this.sortKey.set(null);
     }
+  }
+
+  // Extended page size options (Image 2 replica)
+  isPageSizeMenuOpen = signal<boolean>(false);
+  isCustomPageSizeOpen = signal<boolean>(false);
+  customPageSizeInput = signal<string>('');
+  readonly extendedPageSizes: (number | 'All')[] = ['All', 999, 750, 500, 300, 100];
+
+  togglePageSizeMenu(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.isPageSizeMenuOpen.update((v) => !v);
+  }
+
+  selectExtendedPageSize(opt: number | 'All'): void {
+    if (opt === 'All') {
+      this.setPageSize(this.sortedCountries().length || 10000);
+    } else {
+      this.setPageSize(opt);
+    }
+    this.isPageSizeMenuOpen.set(false);
+    this.isCustomPageSizeOpen.set(false);
+  }
+
+  applyCustomPageSize(): void {
+    const val = parseInt(this.customPageSizeInput().trim(), 10);
+    if (!isNaN(val) && val > 0) {
+      this.setPageSize(val);
+      this.isPageSizeMenuOpen.set(false);
+      this.isCustomPageSizeOpen.set(false);
+    }
+  }
+
+  // Column Header Filter Menu state (Image 4 replica)
+  activeColumnMenu = signal<string | null>(null);
+  columnMenuPos = signal<{ top: number; left: number } | null>(null);
+  columnMenuSearch = signal<string>('');
+  columnDraftSelections = signal<Record<string, Set<string>>>({});
+  appliedColumnFilters = signal<Record<string, Set<string>>>({});
+
+  openColumnMenu(key: string, event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.activeColumnMenu() === key) {
+      this.closeColumnMenu();
+      return;
+    }
+    this.closePopovers();
+    this.activeColumnMenu.set(key);
+    this.columnMenuSearch.set('');
+
+    const btn = event.currentTarget as HTMLElement;
+    const rect = btn.getBoundingClientRect();
+    const menuWidth = 240;
+    let left = rect.left;
+    if (left + menuWidth > window.innerWidth - 16) {
+      left = Math.max(16, window.innerWidth - menuWidth - 16);
+    }
+    let top = rect.bottom + 6;
+    const menuEstimatedHeight = 360;
+    if (top + menuEstimatedHeight > window.innerHeight - 16) {
+      if (rect.top - menuEstimatedHeight - 6 > 10) {
+        top = rect.top - menuEstimatedHeight - 6;
+      } else {
+        top = Math.max(10, window.innerHeight - menuEstimatedHeight - 16);
+      }
+    }
+    this.columnMenuPos.set({ top, left });
+
+    const distinct = this.getColumnDistinctValues(key);
+    const applied = this.appliedColumnFilters()[key];
+    const draft = applied ? new Set(applied) : new Set(distinct);
+    this.columnDraftSelections.update((prev) => ({ ...prev, [key]: draft }));
+  }
+
+  closeColumnMenu(): void {
+    this.activeColumnMenu.set(null);
+    this.columnMenuPos.set(null);
+    this.columnMenuSearch.set('');
+  }
+
+  getColumnDistinctValues(key: string): string[] {
+    const list = this.countryService.countries();
+    const set = new Set<string>();
+    list.forEach((c) => {
+      let val = (c as any)[key];
+      if (val === null || val === undefined || val === '') val = '—';
+      if (this.dateColumns.includes(key as any)) {
+        val = this.formatDate(val);
+      }
+      set.add(String(val));
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  }
+
+  getFilteredDistinctValues(key: string): string[] {
+    const all = this.getColumnDistinctValues(key);
+    const q = this.columnMenuSearch().trim().toLowerCase();
+    if (!q) return all;
+    return all.filter((v) => v.toLowerCase().includes(q));
+  }
+
+  isColumnValueSelected(key: string, value: string): boolean {
+    return !!this.columnDraftSelections()[key]?.has(value);
+  }
+
+  toggleColumnValue(key: string, value: string): void {
+    this.columnDraftSelections.update((prev) => {
+      const current = new Set(prev[key] || []);
+      if (current.has(value)) current.delete(value);
+      else current.add(value);
+      return { ...prev, [key]: current };
+    });
+  }
+
+  isColumnAllSelected(key: string): boolean {
+    const all = this.getFilteredDistinctValues(key);
+    const current = this.columnDraftSelections()[key];
+    return all.length > 0 && all.every((v) => current?.has(v));
+  }
+
+  toggleColumnSelectAll(key: string): void {
+    const all = this.getFilteredDistinctValues(key);
+    const selectAll = !this.isColumnAllSelected(key);
+    this.columnDraftSelections.update((prev) => {
+      const current = new Set(prev[key] || []);
+      all.forEach((v) => {
+        if (selectAll) current.add(v);
+        else current.delete(v);
+      });
+      return { ...prev, [key]: current };
+    });
+  }
+
+  applyColumnFilter(key: string): void {
+    const draft = this.columnDraftSelections()[key];
+    const total = this.getColumnDistinctValues(key);
+    this.appliedColumnFilters.update((prev) => {
+      const next = { ...prev };
+      if (!draft || draft.size >= total.length) {
+        delete next[key];
+      } else {
+        next[key] = new Set(draft);
+      }
+      return next;
+    });
+    this.closeColumnMenu();
+    this.page.set(1);
+  }
+
+  clearColumnFilter(key: string): void {
+    this.appliedColumnFilters.update((prev) => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+    this.columnDraftSelections.update((prev) => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+    this.closeColumnMenu();
+    this.page.set(1);
+  }
+
+  isColumnFilterActive(key: string): boolean {
+    return !!this.appliedColumnFilters()[key];
+  }
+
+  sortColumnDirect(key: ListSortKey, dir: 'asc' | 'desc'): void {
+    this.sortKey.set(key);
+    this.sortDir.set(dir);
+    this.closeColumnMenu();
   }
 
   setPageSize(size: number): void {
@@ -586,10 +975,26 @@ export class CountryComponent implements OnInit {
     this.isActionListOpen.set(false);
     this.isVisibilityOpen.set(false);
     this.viewMode.set(mode);
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        mode: mode === 'grid' ? null : mode,
+        id: (mode === 'edit' || mode === 'view') ? this.currentCountryId() : null,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   setFilterTab(tab: string): void {
     this.activeFilterTab.set(tab);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        tab: tab === 'all' ? null : tab,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   openCreate(): void {
@@ -600,12 +1005,22 @@ export class CountryComponent implements OnInit {
     this.currentCountryId.set(country.id);
     this.loadCountryIntoForm(country);
     this.viewMode.set('view');
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { mode: 'view', id: country.id },
+      queryParamsHandling: 'merge',
+    });
   }
 
   openEdit(country: Country): void {
     this.currentCountryId.set(country.id);
     this.loadCountryIntoForm(country);
     this.viewMode.set('edit');
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { mode: 'edit', id: country.id },
+      queryParamsHandling: 'merge',
+    });
   }
 
   loadCountryIntoForm(country: Country): void {
@@ -634,6 +1049,108 @@ export class CountryComponent implements OnInit {
     this.flagTab.set('drop');
     this.isTranslationOpen.set(false);
     this.isActionListOpen.set(false);
+  }
+
+  // ---- Minimize Add/Edit/View to the tab bar ----
+  minimizeForm(): void {
+    const mode = this.viewMode();
+    if (mode !== 'add' && mode !== 'edit' && mode !== 'view') return;
+    const countryId = mode === 'edit' || mode === 'view' ? this.currentCountryId() : null;
+    const name = this.formName().trim() || this.selectedCountry()?.name || '';
+    const title =
+      mode === 'add'
+        ? 'Adding Country'
+        : mode === 'edit'
+        ? `Edit Country${name ? ' · ' + name : ''}`
+        : `Viewing Country${name ? ' · ' + name : ''}`;
+    this.countryService.saveMinimizedForm({
+      id: mode === 'add' ? 'add' : `${mode}-${countryId}`,
+      mode,
+      countryId,
+      title,
+      state: {
+        code: this.formCode(),
+        isd: this.formIsd(),
+        name: this.formName(),
+        currency: this.formCurrency(),
+        isDefault: this.formDefault(),
+        status: this.formStatus(),
+        flag: this.formFlag(),
+        continent: this.formContinent(),
+        translations: { ...this.formTranslations() },
+        flagTab: this.flagTab(),
+        keepOnPage: this.keepOnPage(),
+        pdfOnSubmit: this.pdfOnSubmit(),
+        printOnSubmit: this.printOnSubmit(),
+      },
+    });
+    this.switchView('grid');
+    this.showToast(
+      mode === 'add'
+        ? 'Adding Country minimized'
+        : mode === 'edit'
+        ? 'Edit Country minimized'
+        : 'Viewing Country minimized'
+    );
+  }
+
+  // Reopen a minimized form exactly as it was left
+  restoreMinimized(form: MinimizedCountryForm): void {
+    if (
+      (form.mode === 'edit' || form.mode === 'view') &&
+      (!form.countryId || !this.countryService.getCountryById(form.countryId))
+    ) {
+      this.countryService.removeMinimizedForm(form.id);
+      this.showToast('This country no longer exists.');
+      return;
+    }
+    // Switching from another open form: park it first so its input isn't lost
+    const mode = this.viewMode();
+    if (mode === 'add' || mode === 'edit' || mode === 'view') {
+      const openId = mode === 'add' ? 'add' : `${mode}-${this.currentCountryId()}`;
+      if (openId !== form.id) this.minimizeForm();
+    }
+    const s = form.state;
+    this.closePopovers();
+    this.currentCountryId.set(form.countryId);
+    this.formCode.set(s.code);
+    this.formIsd.set(s.isd);
+    this.formName.set(s.name);
+    this.formCurrency.set(s.currency);
+    this.formDefault.set(s.isDefault);
+    this.formStatus.set(s.status);
+    this.formFlag.set(s.flag);
+    this.formContinent.set(s.continent);
+    this.formTranslations.set({ ...s.translations });
+    this.flagTab.set(s.flagTab);
+    this.keepOnPage.set(s.keepOnPage);
+    this.pdfOnSubmit.set(s.pdfOnSubmit);
+    this.printOnSubmit.set(s.printOnSubmit);
+    this.isExportPanelOpen.set(false);
+    this.isFilterPanelOpen.set(false);
+    // Set the mode directly: switchView would reload saved data over the snapshot
+    this.viewMode.set(form.mode);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { mode: form.mode, id: form.countryId || null },
+      queryParamsHandling: 'merge',
+    });
+    this.countryService.removeMinimizedForm(form.id);
+  }
+
+  exportPdfDirect(): void {
+    const c = this.selectedCountry();
+    if (c) this.downloadCountryPdf(c);
+  }
+
+  exportPrintDirect(): void {
+    const c = this.selectedCountry();
+    if (c) this.printCountry(c);
+  }
+
+  discardMinimized(form: MinimizedCountryForm, event: MouseEvent): void {
+    event.stopPropagation();
+    this.countryService.removeMinimizedForm(form.id);
   }
 
   // Code picked from the suggestion list: fill the remaining blanks from the preset
@@ -1009,28 +1526,19 @@ export class CountryComponent implements OnInit {
     this.showToast(`Country "${country.name}" restored to Active.`);
   }
 
-  // Filter Drawer controls
-  toggleFilterDrawer(): void {
-    this.isFilterDrawerOpen.update((v) => !v);
-  }
-
+  // Empty-state "Reset All Filters": clears search, counter tab and panel filters
   resetFilters(): void {
-    this.filterStatus.set('all');
-    this.filterContinent.set('all');
-    this.filterCurrency.set('all');
-    this.filterDefault.set('all');
+    this.appliedFilter.set(null);
+    this.filterDraft.set(null);
     this.searchQuery.set('');
     this.activeFilterTab.set('all');
     this.showToast('All filters have been reset.');
   }
 
-  applyFilters(): void {
-    this.isFilterDrawerOpen.set(false);
-    this.showToast('Filters applied successfully.');
-  }
-
   // ---- Export side panel ----
   toggleExportPanel(): void {
+    // Export and Filter share the right-hand slot
+    if (!this.isExportPanelOpen()) this.isFilterPanelOpen.set(false);
     this.isExportPanelOpen.update((v) => !v);
   }
 

@@ -1,4 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslationService } from './translation.service';
 
 export interface HistoryItem {
@@ -42,6 +43,7 @@ export interface SearchEntry {
   providedIn: 'root',
 })
 export class NavigationService {
+  private router = inject(Router);
   public translation = inject(TranslationService);
 
   currentModuleId = signal<string>('dashboard');
@@ -73,6 +75,16 @@ export class NavigationService {
   isProfileOpen = signal<boolean>(false);
   isLanguageOpen = signal<boolean>(false);
   isDateFilterOpen = signal<boolean>(false);
+  isHelpModalOpen = signal<boolean>(false);
+  helpActiveTab = signal<'list' | 'add' | 'edit' | 'view' | 'history'>('list');
+
+  toggleHelpModal(): void {
+    this.isHelpModalOpen.update((v) => !v);
+  }
+
+  setHelpTab(tab: 'list' | 'add' | 'edit' | 'view' | 'history'): void {
+    this.helpActiveTab.set(tab);
+  }
 
   constructor() {
     if (typeof document !== 'undefined') {
@@ -325,7 +337,13 @@ export class NavigationService {
     { id: 'crt', title: 'Digital Certificates', category: 'Certificates', moduleId: 'certificate', icon: 'certificate' },
   ];
 
-  navigateTo(moduleId: string, subModuleId: string = '', moduleLabel: string = '', subModuleLabel: string = ''): void {
+  navigateTo(
+    moduleId: string,
+    subModuleId: string = '',
+    moduleLabel: string = '',
+    subModuleLabel: string = '',
+    updateUrl: boolean = true
+  ): void {
     this.currentModuleId.set(moduleId);
     this.currentSubModuleId.set(subModuleId);
 
@@ -342,6 +360,14 @@ export class NavigationService {
     // Log to history
     const pageTitle = this.currentSubModuleLabel() || this.currentModuleLabel();
     this.addHistory(moduleId, subModuleId, pageTitle, this.currentModuleLabel());
+
+    if (updateUrl && this.router) {
+      const commands = subModuleId ? ['/landing', moduleId, subModuleId] : ['/landing', moduleId];
+      const targetPath = commands.join('/');
+      if (!this.router.url.startsWith(targetPath)) {
+        this.router.navigate(commands, { queryParamsHandling: 'preserve' });
+      }
+    }
   }
 
   addHistory(moduleId: string, subModuleId: string | undefined, title: string, moduleLabel: string): void {
@@ -444,6 +470,7 @@ export class NavigationService {
     this.isProfileOpen.set(false);
     this.isLanguageOpen.set(false);
     this.isDateFilterOpen.set(false);
+    this.isHelpModalOpen.set(false);
   }
 
   private formatTitle(str: string): string {

@@ -7,5 +7,12 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
   { path: 'landing', component: Landing, canActivate: [authGuard] },
+  { path: 'landing/:moduleId', component: Landing, canActivate: [authGuard] },
+  { path: 'landing/:moduleId/:subModuleId', component: Landing, canActivate: [authGuard] },
+  { path: 'dashboard', redirectTo: 'landing/dashboard', pathMatch: 'full' },
+  { path: 'countries', redirectTo: 'landing/countries', pathMatch: 'full' },
+  { path: 'country', redirectTo: 'landing/countries', pathMatch: 'full' },
+  { path: ':moduleId', redirectTo: 'landing/:moduleId', pathMatch: 'full' },
+  { path: ':moduleId/:subModuleId', redirectTo: 'landing/:moduleId/:subModuleId', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },
 ];

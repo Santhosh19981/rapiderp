@@ -11,23 +11,51 @@
   background-color: #ffffff;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbars: Bright Cyan Pill Thumb (Image 1 replica) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #00a6f4 #f1f5f9;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f1f5f9;
+  border-radius: 9999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
-  border-radius: 6px;
+  background: #00a6f4;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(24, 99, 192, 0.4);
+  background: #008ece;
+}
+
+:host-context(.dark) .custom-scrollbar,
+.dark .custom-scrollbar {
+  scrollbar-color: #38bdf8 #0f172a;
+}
+
+:host-context(.dark) .custom-scrollbar::-webkit-scrollbar-track,
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+:host-context(.dark) .custom-scrollbar::-webkit-scrollbar-thumb,
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #38bdf8;
+}
+
+:host-context(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover,
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #0ea5e9;
 }
 
 /* Top Action Bar Buttons */

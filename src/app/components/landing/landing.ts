@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, HostListener, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Sidebar } from '../sidebar/sidebar';
 import { CountryComponent } from '../country/country';
 import { NavigationService, SearchEntry } from '../../services/navigation.service';
@@ -16,6 +16,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class Landing implements OnInit {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   public navService = inject(NavigationService);
   private authService = inject(AuthService);
 
@@ -26,6 +27,19 @@ export class Landing implements OnInit {
   // Ensure all dropdowns & profile cards are closed by default on landing
   ngOnInit(): void {
     this.closeAll();
+
+    this.route.paramMap.subscribe((params) => {
+      const moduleId = params.get('moduleId');
+      const subModuleId = params.get('subModuleId') || '';
+      if (moduleId) {
+        if (this.navService.currentModuleId() !== moduleId || this.navService.currentSubModuleId() !== subModuleId) {
+          this.navService.navigateTo(moduleId, subModuleId, '', '', false);
+        }
+      } else {
+        const current = this.navService.currentModuleId() || 'dashboard';
+        this.router.navigate(['/landing', current], { replaceUrl: true, queryParamsHandling: 'preserve' });
+      }
+    });
   }
 
   // Search input state
@@ -214,14 +228,22 @@ export class Landing implements OnInit {
     this.navService.closeAllPanels();
     this.isImageSearchOpen.set(false);
     this.stopVoiceSearch();
-    this.isHelpModalOpen.set(false);
   }
 
   // Help Modal State
-  isHelpModalOpen = signal<boolean>(false);
+  isHelpModalOpen = this.navService.isHelpModalOpen;
+  helpActiveTab = signal<'list' | 'add' | 'edit' | 'view' | 'history'>('list');
 
   toggleHelpModal(): void {
-    this.isHelpModalOpen.update((v) => !v);
+    this.navService.toggleHelpModal();
+  }
+
+  closeHelpModal(): void {
+    this.navService.isHelpModalOpen.set(false);
+  }
+
+  setHelpTab(tab: 'list' | 'add' | 'edit' | 'view' | 'history'): void {
+    this.helpActiveTab.set(tab);
   }
 
   // Voice Search with Speech-to-Text
