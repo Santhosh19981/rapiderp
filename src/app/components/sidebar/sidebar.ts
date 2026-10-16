@@ -58,6 +58,11 @@ export class Sidebar {
       icon: 'dashboard',
     },
     {
+      id: 'countries',
+      label: 'Countries',
+      icon: 'countries',
+    },
+    {
       id: 'sales',
       label: 'Sales',
       icon: 'sales',
@@ -419,11 +424,6 @@ export class Sidebar {
       id: 'currencies',
       label: 'Currencies',
       icon: 'currencies',
-    },
-    {
-      id: 'countries',
-      label: 'Countries',
-      icon: 'countries',
     },
     {
       id: 'states',

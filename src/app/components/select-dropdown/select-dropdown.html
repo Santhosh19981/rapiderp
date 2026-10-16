@@ -1,0 +1,59 @@
+<div class="relative">
+  <button
+    type="button"
+    [id]="inputId()"
+    class="sd-trigger"
+    [class.sd-floating]="variant() === 'floating'"
+    [class.sd-plain]="variant() === 'plain'"
+    [class.sd-open]="isOpen()"
+    [class.sd-invalid]="invalid()"
+    (click)="toggleOpen()"
+    (keydown)="onKeydown($event)"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="isOpen()"
+  >
+    <span class="sd-value" [class.sd-placeholder]="!selected()">{{ selected()?.label ?? placeholder() }}</span>
+    <svg class="sd-chevron" [class.rotate-180]="isOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+    @if (variant() === 'floating' && label()) {
+      <span class="sd-label">
+        {{ label() }}
+        @if (required()) {
+          <span class="text-rose-500">*</span>
+        }
+      </span>
+    }
+  </button>
+
+  @if (isOpen()) {
+    <div class="rapid-dropdown-panel sd-panel" [ngStyle]="panelStyle()" role="listbox">
+      @for (opt of options(); track opt.value; let i = $index) {
+        <button
+          type="button"
+          role="option"
+          class="rapid-dropdown-option"
+          [class.is-selected]="opt.value === value()"
+          [class.is-active]="i === activeIndex()"
+          [attr.aria-selected]="opt.value === value()"
+          (click)="choose(opt)"
+          (mouseenter)="activeIndex.set(i)"
+        >
+          <span class="min-w-0">
+            <span class="rapid-dropdown-option-title">{{ opt.label }}</span>
+            @if (opt.description) {
+              <span class="rapid-dropdown-option-desc">{{ opt.description }}</span>
+            }
+          </span>
+          @if (showToggle()) {
+            <span class="sd-toggle" [class.is-on]="opt.value === value()" aria-hidden="true"><span class="sd-toggle-thumb"></span></span>
+          } @else if (opt.value === value()) {
+            <svg class="rapid-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+          }
+        </button>
+      } @empty {
+        <p class="rapid-dropdown-empty">No options</p>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,644 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ========================================================================= */
+/* 1. FLOATING NOTCH LABEL (Matches Login Page Username UI Specification)    */
+/* ========================================================================= */
+.floating-notch-label {
+  position: absolute;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Resting State: Inside the pill input */
+.floating-notch-label.resting {
+  top: 50%;
+  transform: translateY(-50%);
+  left: 20px;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 400;
+  background: transparent;
+  padding: 0;
+}
+
+/* Floating State: Jump onto top border notch with white background */
+.floating-notch-label.floating-top {
+  top: 0;
+  transform: translateY(-50%);
+  left: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0 8px;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  color: #00a6f4;
+}
+
+/* Dark mode floating label background */
+:host-context(.dark) .floating-notch-label.floating-top,
+.dark .floating-notch-label.floating-top {
+  background-color: #1e293b;
+  color: #38bdf8;
+}
+
+.floating-notch-label.is-error {
+  color: #ef4444 !important;
+}
+
+/* ========================================================================= */
+/* 2. STAT SUMMARY CAPSULE CARDS (Exact Replica of React VerticalSummaryCards)*/
+/* ========================================================================= */
+.capsule-card {
+  width: 100%;
+  height: 70px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.capsule-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.12);
+}
+
+.capsule-circle-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  filter: drop-shadow(4px 4px 10px rgba(255, 255, 255, 0.14));
+}
+
+/* 1. Blue / Total */
+.capsule-total {
+  background: linear-gradient(100deg, #70D3FC 24.22%, #D2F1FE 73.78%);
+}
+.circle-total {
+  background-color: #20B7FA;
+}
+
+/* 2. Green / Active */
+.capsule-active {
+  background: linear-gradient(98deg, #6BE4A0 25.78%, #C4FFDD 76.35%);
+}
+.circle-active {
+  background-color: #6BE4A0;
+}
+
+/* 3. Teal-Gray / Inactive */
+.capsule-inactive {
+  background: linear-gradient(276deg, #E2FBFF 15.76%, #82CAD2 82.53%);
+}
+.circle-inactive {
+  background-color: #82CAD2;
+}
+
+/* 4. Yellow / Draft */
+.capsule-draft {
+  background: linear-gradient(96deg, #F8D56B 28.65%, #FFF4D3 85.82%);
+}
+.circle-draft {
+  background-color: #FFCC2F;
+}
+
+/* 5. Purple / Updated */
+.capsule-updated {
+  background: linear-gradient(96deg, #9A78FF 18.47%, #D6C8FF 74.92%);
+}
+.circle-updated {
+  background-color: #9A78FF;
+}
+
+/* 6. Red-Coral / Deleted */
+.capsule-deleted {
+  background: linear-gradient(96deg, #FC9296 22.14%, #FFDFE0 76.81%);
+}
+.circle-deleted {
+  background-color: #FC9296;
+}
+
+/* Capsule Text */
+.capsule-title {
+  color: #4E516C;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 130%;
+  text-align: center;
+}
+
+.capsule-count {
+  color: #4E516C;
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 130%;
+}
+
+/* Tooltip on hover */
+.capsule-tooltip {
+  position: absolute;
+  /* Needs the top padding on .capsule-grid so the scroll container doesn't clip it */
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  color: #00a6f4;
+  border: 1.5px solid #00a6f4;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 6px 16px;
+  border-radius: 8px;
+  box-shadow: 0 6px 14px -2px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+  z-index: 50;
+}
+
+.capsule-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #00a6f4 transparent transparent transparent;
+}
+
+.capsule-card:hover {
+  z-index: 60;
+}
+
+.capsule-card:hover .capsule-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* Room above the capsules for the hover tooltip */
+.capsule-grid {
+  padding-top: 32px;
+}
+
+/* ========================================================================= */
+/* 3. COUNTRY GRID CARDS (Exact Match to Image 1 Specification)              */
+/* ========================================================================= */
+.country-card {
+  background: #ffffff;
+  border: 1px solid #E2E4EB;
+  border-radius: 12px;
+  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.08);
+  padding: 18px 26px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.country-card:hover {
+  border-color: #00a6f4;
+  box-shadow: 0 8px 24px -4px rgba(0, 166, 244, 0.2);
+  transform: translateY(-2px);
+}
+
+:host-context(.dark) .country-card,
+.dark .country-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+:host-context(.dark) .country-card:hover,
+.dark .country-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 8px 24px -4px rgba(56, 189, 248, 0.2);
+}
+
+/* ========================================================================= */
+/* 4. BUTTONS & UTILITIES                                                    */
+/* ========================================================================= */
+.btn-primary-pill {
+  background: linear-gradient(135deg, #00a6f4 0%, #0091ea 100%);
+  box-shadow: 0 6px 16px -2px rgba(0, 166, 244, 0.38);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-pill:hover {
+  background: linear-gradient(135deg, #02b1ff 0%, #0084d6 100%);
+  box-shadow: 0 8px 20px -2px rgba(0, 166, 244, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* ========================================================================= */
+/* IMPORT WIZARD MODAL                                                       */
+/* ========================================================================= */
+.import-step-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4E516C;
+  background: #E9EBF0;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.import-step-circle.is-active {
+  background: #ffffff;
+  border-color: #00a6f4;
+  color: #4E516C;
+}
+
+.import-step-circle.is-done {
+  background: #00a6f4;
+  border-color: #00a6f4;
+  color: #ffffff;
+}
+
+.import-step-line {
+  flex: 1;
+  height: 2px;
+  margin: 0 16px;
+  min-width: 24px;
+  border-radius: 9999px;
+  background: #E2E4EB;
+  transition: background 0.2s ease;
+}
+
+.import-step-line.is-done {
+  background: #00a6f4;
+}
+
+.import-dropzone {
+  min-height: 350px;
+  padding: 32px 24px;
+  border: 1.5px dashed #D5D9E2;
+  border-radius: 4px;
+  background: #F7F8FA;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.import-dropzone.cursor-pointer:hover,
+.import-dropzone.is-dragging {
+  border-color: #00a6f4;
+  background: #F0F9FF;
+}
+
+.import-btn-outline,
+.import-btn-primary {
+  height: 52px;
+  padding: 0 30px;
+  border-radius: 9999px;
+  font-size: 18px;
+  font-weight: 400;
+  border: 1.5px solid #00a6f4;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.import-btn-outline {
+  background: #ffffff;
+  color: #00a6f4;
+}
+
+.import-btn-outline:hover {
+  background: #F0F9FF;
+}
+
+.import-btn-primary {
+  background: #00a6f4;
+  color: #ffffff;
+}
+
+.import-btn-primary:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+/* Disabled state matches the faded "Import Now" in the client reference */
+.import-btn-primary:disabled {
+  background: #DCEFFA;
+  border-color: #9FD8F5;
+  color: #8A9AAE;
+  cursor: not-allowed;
+}
+
+:host-context(.dark) .import-step-circle,
+.dark .import-step-circle {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+:host-context(.dark) .import-step-circle.is-active,
+.dark .import-step-circle.is-active {
+  background: #1e293b;
+  border-color: #00a6f4;
+}
+
+:host-context(.dark) .import-step-circle.is-done,
+.dark .import-step-circle.is-done {
+  background: #00a6f4;
+  color: #ffffff;
+}
+
+:host-context(.dark) .import-step-line,
+.dark .import-step-line {
+  background: #475569;
+}
+
+:host-context(.dark) .import-step-line.is-done,
+.dark .import-step-line.is-done {
+  background: #00a6f4;
+}
+
+:host-context(.dark) .import-dropzone,
+.dark .import-dropzone {
+  background: #0f172a;
+  border-color: #475569;
+}
+
+:host-context(.dark) .import-dropzone.cursor-pointer:hover,
+:host-context(.dark) .import-dropzone.is-dragging,
+.dark .import-dropzone.cursor-pointer:hover,
+.dark .import-dropzone.is-dragging {
+  background: #0c2a3d;
+  border-color: #00a6f4;
+}
+
+
+:host-context(.dark) .import-btn-outline,
+.dark .import-btn-outline {
+  background: transparent;
+}
+
+:host-context(.dark) .import-btn-primary:disabled,
+.dark .import-btn-primary:disabled {
+  background: #1e3a4c;
+  border-color: #2b5670;
+  color: #7c8ea3;
+}
+
+/* ========================================================================= */
+/* FORM / VIEW PANEL FOOTER SWITCHES (Keep / PDF / Print)                    */
+/* ========================================================================= */
+.form-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-switch-track {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #cbd5e1;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.form-switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.form-switch input:checked + .form-switch-track {
+  background: #00a6f4;
+}
+
+.form-switch input:checked + .form-switch-track .form-switch-thumb {
+  transform: translateX(16px);
+}
+
+.form-switch input:focus-visible + .form-switch-track {
+  outline: 2px solid #00a6f4;
+  outline-offset: 2px;
+}
+
+.form-switch-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+:host-context(.dark) .form-switch-track,
+.dark .form-switch-track {
+  background: #475569;
+}
+
+:host-context(.dark) .form-switch-label,
+.dark .form-switch-label {
+  color: #e2e8f0;
+}
+
+/* ========================================================================= */
+/* LIST TABLE: sticky select / name / action columns + pagination buttons    */
+/* ========================================================================= */
+.country-table .sticky-col {
+  position: sticky;
+  z-index: 2;
+  background: #ffffff;
+}
+
+.country-table thead .sticky-col {
+  background: #f8fafc;
+  z-index: 3;
+}
+
+.country-table .sticky-left-0 {
+  left: 0;
+}
+
+.country-table .sticky-left-name {
+  left: 48px;
+  box-shadow: 4px 0 6px -4px rgba(15, 23, 42, 0.12);
+}
+
+.country-table .sticky-right-0 {
+  right: 0;
+  box-shadow: -4px 0 6px -4px rgba(15, 23, 42, 0.12);
+}
+
+.country-table tbody tr:hover .sticky-col {
+  background: #f8fafc;
+}
+
+:host-context(.dark) .country-table .sticky-col,
+.dark .country-table .sticky-col {
+  background: #1e293b;
+}
+
+:host-context(.dark) .country-table thead .sticky-col,
+.dark .country-table thead .sticky-col,
+:host-context(.dark) .country-table tbody tr:hover .sticky-col,
+.dark .country-table tbody tr:hover .sticky-col {
+  background: #0f172a;
+}
+
+.page-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #00a6f4;
+  color: #00a6f4;
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+:host-context(.dark) .page-btn,
+.dark .page-btn {
+  border-color: #475569;
+  color: #cbd5e1;
+}
+
+/* Table header row stays visible while rows scroll */
+.country-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #f8fafc;
+}
+
+.country-table thead th.sticky-col {
+  z-index: 4;
+}
+
+:host-context(.dark) .country-table thead th,
+.dark .country-table thead th {
+  background: #0f172a;
+}
+
+/* Room for card hover lift/shadow inside the scrolling grid area */
+.country-grid-scroll {
+  padding: 4px 6px 8px 2px;
+}
+
+/* ========================================================================= */
+/* EXPORT PANEL + SHARE DIALOG                                               */
+/* ========================================================================= */
+.export-format-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.export-format-btn:hover {
+  transform: scale(1.06);
+  border-color: currentColor;
+  box-shadow: 0 4px 10px -2px rgba(15, 23, 42, 0.15);
+}
+
+:host-context(.dark) .export-format-btn,
+.dark .export-format-btn {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.share-field {
+  position: relative;
+  border: 1px solid #00a6f4;
+  border-radius: 9999px;
+  padding: 12px 20px;
+  background: #ffffff;
+}
+
+.share-input {
+  width: 100%;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+  outline: none;
+}
+
+:host-context(.dark) .share-field,
+.dark .share-field {
+  background: #1e293b;
+}
+
+:host-context(.dark) .share-input,
+.dark .share-input {
+  color: #f1f5f9;
+}
+
+/* Export panel: one field per row */
+.export-panel .form-switch {
+  display: flex;
+  width: 100%;
+}

@@ -1,0 +1,144 @@
+:host {
+  display: block;
+}
+
+/* ---- Trigger ---- */
+.sd-trigger {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sd-trigger:focus-visible,
+.sd-trigger.sd-open {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 166, 244, 0.2);
+}
+
+/* Pill with notch label, matches the form inputs */
+.sd-floating {
+  border: 1px solid #00a6f4;
+  border-radius: 9999px;
+  padding: 14px 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Compact box for drawers and panels */
+.sd-plain {
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  color: #1e293b;
+}
+
+.sd-plain.sd-open,
+.sd-plain:focus-visible {
+  border-color: #00a6f4;
+}
+
+.sd-invalid {
+  border-color: #fb7185 !important;
+}
+
+.sd-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sd-placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.sd-chevron {
+  width: 16px;
+  height: 16px;
+  color: #64748b;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.sd-label {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  transform: translateY(-50%);
+  padding: 0 8px;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #00a6f4;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Viewport-pinned list (position set from the trigger rect) */
+.sd-panel {
+  position: fixed;
+  z-index: 1000;
+}
+
+/* ---- Toggle (Country module) ---- */
+.sd-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.sd-toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.sd-toggle.is-on {
+  background: #22c55e;
+}
+
+.sd-toggle.is-on .sd-toggle-thumb {
+  transform: translateX(20px);
+}
+
+/* ---- Dark mode ---- */
+:host-context(.dark) .sd-trigger {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .sd-plain {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+:host-context(.dark) .sd-label {
+  background: #1e293b;
+  color: #38bdf8;
+}
+
+:host-context(.dark) .sd-toggle {
+  background: #475569;
+}

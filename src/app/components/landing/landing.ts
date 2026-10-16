@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Sidebar } from '../sidebar/sidebar';
+import { CountryComponent } from '../country/country';
 import { NavigationService, SearchEntry } from '../../services/navigation.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, FormsModule, Sidebar],
+  imports: [CommonModule, FormsModule, Sidebar, CountryComponent],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
 })
@@ -106,6 +107,11 @@ export class Landing implements OnInit {
 
   currentPageModule = computed<string>(() => {
     return this.navService.currentModuleLabel() || 'Rapid ERP';
+  });
+
+  isCountryModule = computed<boolean>(() => {
+    const mod = (this.navService.currentModuleId() || '').toLowerCase();
+    return mod === 'countries' || mod === 'country';
   });
 
   // Hotkey listener for Ctrl+K (Search) and Escape (Close Overlays)

@@ -619,7 +619,13 @@
     <!-- (Exact Match to Customer Reference Screenshot 1 with Best Animations)    -->
     <!-- ========================================================================= -->
     <main
-      class="flex-1 overflow-y-auto bg-slate-50/70 dark:bg-slate-900 transition-colors duration-200 custom-scrollbar p-4 sm:p-6 lg:p-8 relative">
+      class="flex-1 overflow-y-auto bg-slate-50/70 dark:bg-slate-900 transition-colors duration-200 custom-scrollbar relative"
+      [class.p-4]="navService.currentModuleId() === 'dashboard'"
+      [class.sm:p-6]="navService.currentModuleId() === 'dashboard'"
+      [class.lg:p-8]="navService.currentModuleId() === 'dashboard'"
+      [class.p-0]="navService.currentModuleId() !== 'dashboard'"
+      [class.overflow-hidden]="isCountryModule()"
+    >
 
       @if (navService.currentModuleId() === 'dashboard') {
         <!-- EXECUTIVE OVERVIEW DASHBOARD (Screenshot 1 Reference) -->
@@ -676,17 +682,17 @@
                 </button>
 
                 @if (isDashboardDateOpen()) {
-                  <div class="absolute right-0 top-11 w-40 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-in fade-in zoom-in-95 duration-100">
+                  <div class="rapid-dropdown-panel absolute right-0 top-11 w-48 z-30 animate-in fade-in zoom-in-95 duration-100">
                     @for (d of dateRanges; track d) {
                       <button
                         type="button"
                         (click)="setDashboardPeriod(d)"
-                        class="w-full text-start px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700 hover:text-[#1863c0] transition flex items-center justify-between"
-                        [class.font-bold]="d === dashboardPeriod()"
+                        class="rapid-dropdown-option"
+                        [class.is-selected]="d === dashboardPeriod()"
                       >
-                        <span>{{ d }}</span>
+                        <span class="rapid-dropdown-option-title">{{ d }}</span>
                         @if (d === dashboardPeriod()) {
-                          <span class="w-1.5 h-1.5 rounded-full bg-[#00a2e8]"></span>
+                          <svg class="rapid-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7" /></svg>
                         }
                       </button>
                     }
@@ -1481,6 +1487,8 @@
           </div>
 
         </div>
+      } @else if (isCountryModule()) {
+        <app-country class="w-full h-full block overflow-hidden"></app-country>
       } @else {
         <!-- DEDICATED ACTIVE MODULE WORKSPACE VIEW -->
         <div class="module-workspace-container space-y-5 max-w-[1500px] mx-auto animate-in fade-in duration-200">
