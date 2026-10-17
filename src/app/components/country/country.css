@@ -583,29 +583,29 @@
   background: #0c4a6e;
 }
 
-/* Left frozen columns: Checkbox (48px), Name (180px), Code (110px) -> Total 338px */
+/* Left frozen columns: Checkbox (56px), Name (210px), Code (130px) -> Total 396px */
 .country-table .sticky-left-0 {
   left: 0;
-  width: 48px;
-  min-width: 48px;
-  max-width: 48px;
-  border-right: 1px solid #e2e8f0;
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  border-right: none !important;
 }
 
 .country-table .sticky-left-name {
-  left: 48px;
-  width: 180px;
-  min-width: 180px;
-  max-width: 180px;
+  left: 56px;
+  width: 210px !important;
+  min-width: 210px !important;
+  max-width: 210px !important;
   border-right: none !important;
   border-left: none !important;
 }
 
 .country-table .sticky-left-code {
-  left: 228px;
-  width: 110px;
-  min-width: 110px;
-  max-width: 110px;
+  left: 266px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
   border-right: none !important;
   border-left: none !important;
   box-shadow: none !important;
@@ -616,15 +616,15 @@
   left: 0;
 }
 .country-table.no-select-col .sticky-left-code {
-  left: 180px;
+  left: 210px;
 }
 
-/* Right frozen columns: Status (110px at right 130px) and Action (130px at right 0) -> Total 240px */
+/* Right frozen columns: Status (130px at right 130px) and Action (130px at right 0) -> Total 260px */
 .country-table .sticky-right-status {
   right: 130px;
-  width: 110px;
-  min-width: 110px;
-  max-width: 110px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
   border-right: none !important;
   border-left: none !important;
   box-shadow: none !important;
@@ -632,9 +632,9 @@
 
 .country-table .sticky-right-action {
   right: 0;
-  width: 130px;
-  min-width: 130px;
-  max-width: 130px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
   border-right: none !important;
   border-left: none !important;
 }
@@ -704,21 +704,25 @@
   background-color: #0c4a6e !important;
 }
 
-/* AG-Grid Header label: primary color, centered at rest, moves left on hover with filter icon */
+/* AG-Grid Header label: primary color, ALWAYS in the middle */
 .ag-header-col-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   width: 100%;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 28px;
 }
 
 .ag-header-label {
   color: #00a6f4;
   font-weight: 700;
-  transition: transform 0.2s ease, color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   user-select: none;
+  font-size: 12px;
+  text-align: center;
 }
 
 :host-context(.dark) .ag-header-label,
@@ -726,100 +730,145 @@
   color: #38bdf8;
 }
 
+/* Side-by-side header action icons (Filter + 3-Dots) right next to label on hover */
 .ag-header-icons {
-  position: absolute;
-  right: 0;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 2px;
   opacity: 0;
+  max-width: 0;
+  overflow: hidden;
   pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-.country-table thead th:hover .ag-header-col-wrap,
-.ag-header-col-wrap.has-filter-open {
-  justify-content: flex-start;
-  padding-left: 2px;
-  padding-right: 44px;
+  white-space: nowrap;
+  vertical-align: middle;
+  transition: opacity 0.18s ease, max-width 0.18s ease, margin-left 0.18s ease;
 }
 
 .country-table thead th:hover .ag-header-icons,
 .ag-header-col-wrap.has-filter-open .ag-header-icons {
   opacity: 1;
+  max-width: 52px;
+  margin-left: 6px;
   pointer-events: auto;
+  overflow: visible;
 }
 
-/* Ensure column widths are ample enough so text never collides with header icons */
+/* Ensure column widths are ample enough so text never collides with header icons and everything displays fully */
 .country-table th,
 .country-table td {
-  min-width: 100px;
+  box-sizing: border-box;
 }
+
 .country-table th.col-select,
 .country-table td.col-select {
-  min-width: 48px;
-  width: 48px;
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  text-align: center;
 }
+
 .country-table th.col-name,
 .country-table td.col-name {
-  min-width: 170px;
+  width: 210px !important;
+  min-width: 210px !important;
+  max-width: 210px !important;
 }
+
 .country-table th.col-code,
 .country-table td.col-code {
-  min-width: 90px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
 }
+
 .country-table th.col-isd,
 .country-table td.col-isd {
-  min-width: 95px;
+  width: 115px !important;
+  min-width: 115px !important;
+  max-width: 115px !important;
+  text-align: center;
 }
+
 .country-table th.col-currency,
 .country-table td.col-currency {
-  min-width: 130px;
+  width: 145px !important;
+  min-width: 145px !important;
+  max-width: 145px !important;
 }
+
 .country-table th.col-states,
 .country-table td.col-states {
-  min-width: 130px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
 }
+
 .country-table th.col-cities,
 .country-table td.col-cities {
-  min-width: 130px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
 }
+
 .country-table th.col-areas,
 .country-table td.col-areas {
-  min-width: 130px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
 }
+
 .country-table th.col-continent,
 .country-table td.col-continent {
-  min-width: 145px;
+  width: 175px !important;
+  min-width: 175px !important;
+  max-width: 175px !important;
 }
+
 .country-table th.col-population,
 .country-table td.col-population {
-  min-width: 130px;
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  text-align: center;
 }
+
 .country-table th.col-isDefault,
 .country-table td.col-isDefault {
-  min-width: 115px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
 }
+
 .country-table th.col-createdAt,
 .country-table td.col-createdAt,
 .country-table th.col-updatedAt,
 .country-table td.col-updatedAt,
 .country-table th.col-draftedAt,
 .country-table td.col-draftedAt {
-  min-width: 130px;
-}
-.country-table th.col-status,
-.country-table td.col-status {
-  min-width: 110px;
-}
-.country-table th.col-action,
-.country-table td.col-action {
-  min-width: 100px;
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  text-align: center;
 }
 
-.country-table thead th:hover .ag-header-label,
-.ag-header-col-wrap.has-filter-open .ag-header-label {
-  max-width: calc(100% - 44px);
+.country-table th.col-status,
+.country-table td.col-status {
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
+}
+
+.country-table th.col-action,
+.country-table td.col-action {
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
 }
 
 /* Screenshot 4 / Image 1: Page Dropdown custom cyan scrollbar & container */
@@ -881,13 +930,13 @@
   background: #ffffff;
   border-top: 1px solid #E2E4EB;
   border-bottom: 1px solid #E2E4EB;
-  margin-left: 338px;
-  margin-right: 240px;
+  margin-left: 396px;
+  margin-right: 260px;
   border-radius: 9999px;
 }
 
 .country-table-scroll.no-select-col::-webkit-scrollbar-track {
-  margin-left: 290px;
+  margin-left: 340px;
 }
 
 .country-table-scroll.no-status-col::-webkit-scrollbar-track {

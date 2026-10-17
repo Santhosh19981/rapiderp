@@ -168,70 +168,94 @@
           <!-- 4 CAPSULE STAT SUMMARY CARDS (Hidden when switched to table view) -->
           @if (viewMode() === 'grid') {
           <div
-            class="capsule-grid shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 w-full px-4 sm:px-6">
+            class="capsule-grid shrink-0 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3.5 w-full px-4 sm:px-6">
 
             <!-- 1. Total (42) - Blue Capsule -->
-            <div (click)="setFilterTab('all')" class="capsule-card capsule-total"
+            <div (click)="setFilterTab('all')" class="capsule-card capsule-total w-full h-[54px] rounded-full flex items-center cursor-pointer transition select-none"
               [class.ring-2]="activeFilterTab() === 'all'" [class.ring-[#00a6f4]]="activeFilterTab() === 'all'">
-              <!-- Icon Circle -->
-              <div class="capsule-circle-icon circle-total">
-                <img src="/counter-1.svg" alt="Total" class="w-6 h-6" (error)="onFlagError($event)" />
+              <div class="capsule-circle-icon circle-total w-[54px] h-[54px] rounded-full flex items-center justify-center shrink-0">
+                <span class="text-white font-black text-lg leading-none select-none">Σ</span>
               </div>
-              <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2 mr-5 min-w-0">
-                <div class="flex-1 flex items-center justify-center">
-                  <span class="capsule-title truncate">Total</span>
-                </div>
-                <span class="capsule-count flex-shrink-0 ml-2">{{ countryService.stats().total }}</span>
+              <div class="flex items-center justify-between flex-1 ml-2 mr-4 min-w-0">
+                <span class="capsule-title truncate">Total</span>
+                <span class="capsule-count shrink-0 ml-2">{{ countryService.stats().total }}</span>
               </div>
             </div>
 
-            <!-- 2. Active (33) - Mint Green Capsule -->
-            <div (click)="setFilterTab('active')" class="capsule-card capsule-active"
+            <!-- 2. Active (30) - Mint Green Capsule -->
+            <div (click)="setFilterTab('active')" class="capsule-card capsule-active w-full h-[54px] rounded-full flex items-center cursor-pointer transition select-none"
               [class.ring-2]="activeFilterTab() === 'active'" [class.ring-emerald-500]="activeFilterTab() === 'active'">
-              <!-- Icon Circle -->
-              <div class="capsule-circle-icon circle-active">
-                <img src="/counter-active.svg" alt="Active" class="w-6 h-6" (error)="onFlagError($event)" />
+              <div class="capsule-circle-icon circle-active w-[54px] h-[54px] rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  <path d="m9 14 2 2 4-4" />
+                </svg>
               </div>
-              <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2 mr-5 min-w-0">
-                <div class="flex-1 flex items-center justify-center">
-                  <span class="capsule-title truncate">Active</span>
-                </div>
-                <span class="capsule-count flex-shrink-0 ml-2">{{ countryService.stats().active }}</span>
-              </div>
-            </div>
-
-            <!-- 3. Inactive (7) - Teal / Gray Capsule -->
-            <div (click)="setFilterTab('inactive')" class="capsule-card capsule-inactive"
-              [class.ring-2]="activeFilterTab() === 'inactive'"
-              [class.ring-teal-500]="activeFilterTab() === 'inactive'">
-              <!-- Icon Circle -->
-              <div class="capsule-circle-icon circle-inactive">
-                <img src="/counter-inactive.svg" alt="Inactive" class="w-6 h-6" (error)="onFlagError($event)" />
-              </div>
-              <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2 mr-5 min-w-0">
-                <div class="flex-1 flex items-center justify-center">
-                  <span class="capsule-title truncate">Inactive</span>
-                </div>
-                <span class="capsule-count flex-shrink-0 ml-2">{{ countryService.stats().inactive }}</span>
+              <div class="flex items-center justify-between flex-1 ml-2 mr-4 min-w-0">
+                <span class="capsule-title truncate">Active</span>
+                <span class="capsule-count shrink-0 ml-2">{{ countryService.stats().active }}</span>
               </div>
             </div>
 
-            <!-- 4. Draft (1) - Yellow Capsule -->
-            <div (click)="setFilterTab('draft')" class="capsule-card capsule-draft"
+            <!-- 3. Inactive (20) - Teal / Gray Capsule -->
+            <div (click)="setFilterTab('inactive')" class="capsule-card capsule-inactive w-full h-[54px] rounded-full flex items-center cursor-pointer transition select-none"
+              [class.ring-2]="activeFilterTab() === 'inactive'" [class.ring-teal-500]="activeFilterTab() === 'inactive'">
+              <div class="capsule-circle-icon circle-inactive w-[54px] h-[54px] rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                </svg>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-2 mr-4 min-w-0">
+                <span class="capsule-title truncate">Inactive</span>
+                <span class="capsule-count shrink-0 ml-2">{{ countryService.stats().inactive }}</span>
+              </div>
+            </div>
+
+            <!-- 4. Draft (30) - Yellow Capsule -->
+            <div (click)="setFilterTab('draft')" class="capsule-card capsule-draft w-full h-[54px] rounded-full flex items-center cursor-pointer transition select-none"
               [class.ring-2]="activeFilterTab() === 'draft'" [class.ring-amber-500]="activeFilterTab() === 'draft'">
-              <!-- Icon Circle -->
-              <div class="capsule-circle-icon circle-draft">
-                <img src="/counter-draft.svg" alt="Draft" class="w-6 h-6" (error)="onFlagError($event)" />
+              <div class="capsule-circle-icon circle-draft w-[54px] h-[54px] rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="9" y1="13" x2="15" y2="13" />
+                  <line x1="9" y1="17" x2="13" y2="17" />
+                </svg>
               </div>
-              <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2 mr-5 min-w-0">
-                <div class="flex-1 flex items-center justify-center">
-                  <span class="capsule-title truncate">Draft</span>
-                </div>
-                <span class="capsule-count flex-shrink-0 ml-2">{{ countryService.stats().draft }}</span>
+              <div class="flex items-center justify-between flex-1 ml-2 mr-4 min-w-0">
+                <span class="capsule-title truncate">Draft</span>
+                <span class="capsule-count shrink-0 ml-2">{{ countryService.stats().draft }}</span>
+              </div>
+            </div>
+
+            <!-- 5. Updated (25) - Purple Capsule -->
+            <div (click)="setFilterTab('updated')" class="capsule-card capsule-updated w-full h-[54px] rounded-full flex items-center cursor-pointer transition select-none"
+              [class.ring-2]="activeFilterTab() === 'updated'" [class.ring-purple-500]="activeFilterTab() === 'updated'">
+              <div class="capsule-circle-icon circle-updated w-[54px] h-[54px] rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                </svg>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-2 mr-4 min-w-0">
+                <span class="capsule-title truncate">Updated</span>
+                <span class="capsule-count shrink-0 ml-2">{{ countryService.stats().updated }}</span>
+              </div>
+            </div>
+
+            <!-- 6. Deleted (30) - Red-Coral Capsule -->
+            <div (click)="setFilterTab('deleted')" class="capsule-card capsule-deleted w-full h-[54px] rounded-full flex items-center cursor-pointer transition select-none"
+              [class.ring-2]="activeFilterTab() === 'deleted'" [class.ring-rose-500]="activeFilterTab() === 'deleted'">
+              <div class="capsule-circle-icon circle-deleted w-[54px] h-[54px] rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-2 mr-4 min-w-0">
+                <span class="capsule-title truncate">Deleted</span>
+                <span class="capsule-count shrink-0 ml-2">{{ countryService.stats().deleted }}</span>
               </div>
             </div>
 
@@ -276,13 +300,7 @@
             <!-- Right: Share, Export & Filter buttons -->
             <div class="flex items-center gap-2">
               <button type="button" (click)="toggleSharePanel()"
-                class="h-[32px] px-3.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-                [class.bg-[#00a6f4]]="isSharePanelOpen()" [class.text-white]="isSharePanelOpen()"
-                [class.border-[#00a6f4]]="isSharePanelOpen()" [class.border-slate-300]="!isSharePanelOpen()"
-                [class.dark:border-slate-600]="!isSharePanelOpen()" [class.bg-white]="!isSharePanelOpen()"
-                [class.dark:bg-slate-800]="!isSharePanelOpen()" [class.text-slate-700]="!isSharePanelOpen()"
-                [class.dark:text-slate-200]="!isSharePanelOpen()" [class.hover:bg-slate-50]="!isSharePanelOpen()"
-                [class.dark:hover:bg-slate-700]="!isSharePanelOpen()"
+                class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs"
                 title="Share">
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="18" cy="5" r="3" />
@@ -502,7 +520,7 @@
                     class="country-table-scroll overflow-x-auto overflow-y-auto custom-scrollbar md:flex-1 md:min-h-0 outline-none focus:outline-none"
                     tabindex="0" (keydown)="onTableKeyDown($event)" [class.no-select-col]="!isSelectColumnVisible()"
                     [class.no-status-col]="hiddenColumns().has('status')" (scroll)="closeColumnMenu()">
-                    <table class="country-table w-full text-start text-xs min-w-[1520px]"
+                    <table class="country-table w-full text-start text-xs min-w-[1820px]"
                       [class.no-select-col]="!isSelectColumnVisible()">
                       <thead>
                         <tr
@@ -530,15 +548,15 @@
                           }
                           @for (col of visibleColumns(); track col.key) {
                           <th
-                            class="col-{{ col.key }} py-2 px-3 whitespace-nowrap group/th relative bg-[#f8fafc] dark:bg-slate-800"
+                            class="col-{{ col.key }} py-2 px-3 whitespace-nowrap group/th relative bg-[#f8fafc] dark:bg-slate-800 text-center"
                             [class.sticky-col]="col.key === 'name' || col.key === 'code' || col.key === 'status'"
                             [class.sticky-left-name]="col.key === 'name'" [class.sticky-left-code]="col.key === 'code'"
-                            [class.sticky-right-status]="col.key === 'status'" [class.text-start]="true">
-                            <div class="ag-header-col-wrap flex items-center justify-center group-hover/th:justify-start relative w-full transition-all duration-200"
+                            [class.sticky-right-status]="col.key === 'status'">
+                            <div class="ag-header-col-wrap flex items-center justify-center relative w-full"
                               [class.has-filter-open]="activeColumnMenu() === col.key || isColumnFilterActive(col.key)">
-                              <!-- Left: Column Title & Sort Button (Primary Color) -->
+                              <!-- Column Title & Sort Button (Primary Color) Centered in Middle -->
                               <button type="button" (click)="toggleSort(col.key)"
-                                class="ag-header-label inline-flex items-center gap-1.5 font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer transition select-none truncate">
+                                class="ag-header-label inline-flex items-center justify-center gap-1.5 font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer transition select-none truncate text-center">
                                 <span>{{ col.label }}</span>
                                 @if (sortKey() === col.key) {
                                 <svg class="w-3 h-3 text-[#00a6f4] dark:text-[#38bdf8]" viewBox="0 0 24 24" fill="none"
@@ -548,10 +566,13 @@
                                 }
                               </button>
 
-                              <!-- Right: AG Grid Header Icons (Filter Funnel + 3-Dots Menu) - Hidden by default, displayed on hover -->
-                              <div class="ag-header-icons absolute right-0 flex items-center gap-0.5 shrink-0 opacity-0 group-hover/th:opacity-100 pointer-events-none group-hover/th:pointer-events-auto transition-opacity duration-200"
+                              <!-- Header Icons (Filter Funnel + 3-Dots Menu) - Displayed side by side with label on hover -->
+                              <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[52px] group-hover/th:ml-1.5 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
                                 [class.!opacity-100]="activeColumnMenu() === col.key || isColumnFilterActive(col.key)"
-                                [class.!pointer-events-auto]="activeColumnMenu() === col.key || isColumnFilterActive(col.key)">
+                                [class.!max-w-[52px]]="activeColumnMenu() === col.key || isColumnFilterActive(col.key)"
+                                [class.!ml-1.5]="activeColumnMenu() === col.key || isColumnFilterActive(col.key)"
+                                [class.!pointer-events-auto]="activeColumnMenu() === col.key || isColumnFilterActive(col.key)"
+                                [class.!overflow-visible]="activeColumnMenu() === col.key || isColumnFilterActive(col.key)">
                                 <!-- 1. Filter Funnel Icon (Image 3: 3 narrowing bars) -->
                                 <button type="button" (click)="openColumnMenu(col.key, $event)"
                                   class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
@@ -1074,7 +1095,7 @@
                           @for (opt of extendedPageSizes; track opt) {
                           <button type="button" (click)="selectExtendedPageSize(opt)"
                             class="w-full py-1.5 px-3 rounded-full border border-sky-200 dark:border-slate-700 text-[#00a6f4] text-xs font-bold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer"
-                            [class.bg-[#e6f6fe]]="pageSize() === opt || (opt === 'All' && pageSize() >= 9999)">
+                            [class.bg-[#e6f6fe]]="pageSize() === opt">
                             {{ opt }}
                           </button>
                           }
@@ -1085,14 +1106,24 @@
                             Custom
                           </button>
                           } @else {
-                          <div class="flex flex-col gap-1 pt-1 border-t border-sky-100 dark:border-slate-700">
+                          <div class="flex flex-col gap-1.5 pt-1 border-t border-sky-100 dark:border-slate-700">
                             <div class="flex items-center gap-1.5">
-                              <input type="number" min="10" max="999" [ngModel]="customPageSizeInput()"
-                                (ngModelChange)="onCustomPageSizeChange($event)" (keydown.enter)="applyCustomPageSize()"
-                                placeholder="Size" autofocus
-                                class="w-20 px-2.5 py-1 text-center rounded-full border border-sky-300 text-xs font-semibold text-[#00a6f4] focus:outline-none focus:border-[#00a6f4] bg-white dark:bg-slate-750" />
+                              <input type="number" min="10" max="999" [value]="customPageSizeInput()"
+                                (input)="onCustomPageSizeChange($any($event.target).value)"
+                                (keydown.enter)="isCustomPageSizeValid() && applyCustomPageSize()"
+                                placeholder="10 - 999" autofocus
+                                class="w-20 px-2.5 py-1 text-center rounded-full border text-xs font-semibold focus:outline-none bg-white dark:bg-slate-750"
+                                [class.border-rose-400]="pageSizeErrorMessage() && customPageSizeInput()"
+                                [class.text-rose-600]="pageSizeErrorMessage() && customPageSizeInput()"
+                                [class.border-sky-300]="!pageSizeErrorMessage() || !customPageSizeInput()"
+                                [class.text-[#00a6f4]]="!pageSizeErrorMessage() || !customPageSizeInput()" />
                               <button type="button" (click)="applyCustomPageSize()"
-                                class="flex-1 py-1 px-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0091ea] text-white text-xs font-bold cursor-pointer transition shadow-2xs">
+                                [disabled]="!isCustomPageSizeValid()"
+                                [class.opacity-40]="!isCustomPageSizeValid()"
+                                [class.cursor-not-allowed]="!isCustomPageSizeValid()"
+                                [class.cursor-pointer]="isCustomPageSizeValid()"
+                                [class.hover:bg-[#0091ea]]="isCustomPageSizeValid()"
+                                class="flex-1 py-1 px-2.5 rounded-full bg-[#00a6f4] text-white text-xs font-bold transition shadow-2xs">
                                 Go
                               </button>
                             </div>
@@ -1370,11 +1401,11 @@
             </aside>
             }
 
-            <!-- EXPORT SIDE PANEL: pick fields, then a format (slides in from the right) -->
-            @if (isExportPanelOpen()) {
+            <!-- EXPORT / SHARE SIDE PANEL: pick fields, then a format or share (slides in from the right) -->
+            @if (isExportPanelOpen() || isSharePanelOpen()) {
             <aside
               class="export-panel side-panel-slide w-full md:w-80 shrink-0 md:h-full max-h-[520px] md:max-h-none flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 shadow-xs overflow-hidden relative">
-              <button type="button" (click)="isExportPanelOpen.set(false)"
+              <button type="button" (click)="isExportPanelOpen.set(false); isSharePanelOpen.set(false)"
                 class="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer"
                 title="Close">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -1482,108 +1513,6 @@
                       stroke-linecap="round" stroke-linejoin="round">
                       <rect width="20" height="16" x="2" y="4" rx="2" />
                       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                    }
-                    }
-                  </button>
-                  }
-                </div>
-              </div>
-            </aside>
-            }
-
-            <!-- SHARE SIDE PANEL: pick fields, then share (slides in from the right) -->
-            @if (isSharePanelOpen()) {
-            <aside
-              class="share-panel side-panel-slide w-full md:w-80 shrink-0 md:h-full max-h-[520px] md:max-h-none flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 shadow-xs overflow-hidden relative">
-              <button type="button" (click)="isSharePanelOpen.set(false)"
-                class="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer"
-                title="Close">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round">
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </button>
-
-              <div class="p-3 pt-8 border-b border-slate-100 dark:border-slate-700 shrink-0">
-                <div class="relative">
-                  <input type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
-                    placeholder="Search"
-                    class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                    class="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-              </div>
-
-              <label
-                class="form-switch justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 shrink-0">
-                <span class="form-switch-label">Select All</span>
-                <input type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
-                  (change)="setAllExportFields($any($event.target).checked)" />
-                <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-              </label>
-
-              <div class="flex flex-1 min-h-0">
-                <div class="flex-1 min-w-0 overflow-y-auto custom-scrollbar px-3 py-3 space-y-1">
-                  @for (f of visibleExportFields(); track f.key) {
-                  <label
-                    class="form-switch justify-between px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60">
-                    <span class="form-switch-label font-medium!">{{ f.label }}</span>
-                    <input type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
-                      (change)="toggleExportField(f.key)" />
-                    <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                  </label>
-                  } @empty {
-                  <p class="text-center text-xs text-slate-400 py-8">No matching fields found</p>
-                  }
-                </div>
-
-                <div
-                  class="w-16 shrink-0 border-l border-slate-100 dark:border-slate-700 overflow-y-auto custom-scrollbar flex flex-col items-center gap-3 py-3">
-                  @for (b of shareButtons; track b.id) {
-                  <button type="button" (click)="runShareAction(b.id)" class="export-format-btn" [style.color]="b.color"
-                    [title]="b.label" [attr.aria-label]="b.label">
-                    @switch (b.id) {
-                    @case ('whatsapp') {
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-                    </svg>
-                    }
-                    @case ('email') {
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <rect width="20" height="16" x="2" y="4" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                    }
-                    @case ('link') {
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                    </svg>
-                    }
-                    @case ('print') {
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                      <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" />
-                      <rect x="6" y="14" width="12" height="8" rx="1" />
-                    </svg>
-                    }
-                    @case ('pdf') {
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-                      <path d="M10 9H8" />
-                      <path d="M16 13H8" />
-                      <path d="M16 17H8" />
                     </svg>
                     }
                     }

@@ -840,7 +840,7 @@ export class CountryComponent implements OnInit {
   isCustomPageSizeOpen = signal<boolean>(false);
   customPageSizeInput = signal<string>('');
   pageSizeErrorMessage = signal<string | null>(null);
-  readonly extendedPageSizes: (number | 'All')[] = ['All', 999, 750, 500, 250, 100];
+  readonly extendedPageSizes: number[] = [999, 750, 500, 250, 100];
 
   togglePageSizeMenu(event?: MouseEvent): void {
     if (event) event.stopPropagation();
@@ -852,46 +852,47 @@ export class CountryComponent implements OnInit {
     }
   }
 
-  selectExtendedPageSize(opt: number | 'All'): void {
-    if (opt === 'All') {
-      this.setPageSize(this.sortedCountries().length || 10000);
-    } else {
-      this.setPageSize(opt);
-    }
+  selectExtendedPageSize(opt: number): void {
+    this.setPageSize(opt);
     this.isPageSizeMenuOpen.set(false);
     this.isCustomPageSizeOpen.set(false);
     this.pageSizeErrorMessage.set(null);
   }
 
-  onCustomPageSizeChange(val: string): void {
-    this.customPageSizeInput.set(val);
-    const n = parseInt(val.trim(), 10);
-    if (!val.trim()) {
+  isCustomPageSizeValid(): boolean {
+    const raw = String(this.customPageSizeInput() ?? '').trim();
+    if (!raw) return false;
+    const n = Number(raw);
+    return !isNaN(n) && Number.isInteger(n) && n >= 10 && n <= 999;
+  }
+
+  onCustomPageSizeChange(val: any): void {
+    const str = val === null || val === undefined ? '' : String(val);
+    this.customPageSizeInput.set(str);
+    const raw = str.trim();
+    if (!raw) {
       this.pageSizeErrorMessage.set(null);
-    } else if (isNaN(n) || n < 10) {
-      this.pageSizeErrorMessage.set('Minimum is 10');
+      return;
+    }
+    const n = Number(raw);
+    if (isNaN(n) || !Number.isInteger(n)) {
+      this.pageSizeErrorMessage.set('Please enter a valid whole number');
+    } else if (n < 10) {
+      this.pageSizeErrorMessage.set('Minimum page size is 10');
     } else if (n > 999) {
-      this.pageSizeErrorMessage.set('Maximum is 999');
+      this.pageSizeErrorMessage.set('Maximum page size is 999');
     } else {
       this.pageSizeErrorMessage.set(null);
     }
   }
 
   applyCustomPageSize(): void {
-    const raw = this.customPageSizeInput().trim();
-    const val = parseInt(raw, 10);
-    if (isNaN(val)) {
-      this.pageSizeErrorMessage.set('Please enter a number');
-      return;
-    }
-    if (val < 10) {
-      this.pageSizeErrorMessage.set('Minimum is 10');
-      this.showToast('Minimum page size is 10');
-      return;
-    }
-    if (val > 999) {
-      this.pageSizeErrorMessage.set('Maximum is 999');
-      this.showToast('Maximum page size is 999');
+    const raw = String(this.customPageSizeInput() ?? '').trim();
+    const val = Number(raw);
+    if (isNaN(val) || !Number.isInteger(val) || val < 10 || val > 999) {
+      if (isNaN(val)) this.pageSizeErrorMessage.set('Please enter a valid number');
+      else if (val < 10) this.pageSizeErrorMessage.set('Minimum page size is 10');
+      else if (val > 999) this.pageSizeErrorMessage.set('Maximum page size is 999');
       return;
     }
     this.pageSizeErrorMessage.set(null);
@@ -2034,21 +2035,26 @@ export class CountryComponent implements OnInit {
   isSharePanelOpen = signal<boolean>(false);
 
   toggleExportPanel(): void {
-    if (!this.isExportPanelOpen()) {
+    if (this.isExportPanelOpen()) {
+      this.isExportPanelOpen.set(false);
+    } else {
       this.isFilterPanelOpen.set(false);
       this.isSharePanelOpen.set(false);
       this.isVisibilityOpen.set(false);
+      this.isExportPanelOpen.set(true);
     }
-    this.isExportPanelOpen.update((v) => !v);
   }
 
   toggleSharePanel(): void {
-    if (!this.isSharePanelOpen()) {
+    // Both Export and Share display the exact same operation section (Screenshot 2)
+    if (this.isExportPanelOpen()) {
       this.isExportPanelOpen.set(false);
+    } else {
       this.isFilterPanelOpen.set(false);
+      this.isSharePanelOpen.set(false);
       this.isVisibilityOpen.set(false);
+      this.isExportPanelOpen.set(true);
     }
-    this.isSharePanelOpen.update((v) => !v);
   }
 
   copyShareLink(): void {
