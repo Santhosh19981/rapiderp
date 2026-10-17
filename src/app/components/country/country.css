@@ -685,6 +685,25 @@
   background-color: #1e293b !important;
 }
 
+/* Highlighted Row (e.g. returned from view or active row) */
+.country-table tbody tr.highlighted-row,
+.country-table tbody tr.highlighted-row td,
+.country-table tbody tr.highlighted-row td.sticky-col,
+.country-table tbody tr.highlighted-row .sticky-col {
+  background-color: #e0f2fe !important;
+}
+
+:host-context(.dark) .country-table tbody tr.highlighted-row,
+:host-context(.dark) .country-table tbody tr.highlighted-row td,
+:host-context(.dark) .country-table tbody tr.highlighted-row td.sticky-col,
+:host-context(.dark) .country-table tbody tr.highlighted-row .sticky-col,
+.dark .country-table tbody tr.highlighted-row,
+.dark .country-table tbody tr.highlighted-row td,
+.dark .country-table tbody tr.highlighted-row td.sticky-col,
+.dark .country-table tbody tr.highlighted-row .sticky-col {
+  background-color: #0c4a6e !important;
+}
+
 /* AG-Grid Header label: primary color, centered at rest, moves left on hover with filter icon */
 .ag-header-col-wrap {
   display: flex;
@@ -722,12 +741,85 @@
 .ag-header-col-wrap.has-filter-open {
   justify-content: flex-start;
   padding-left: 2px;
+  padding-right: 44px;
 }
 
 .country-table thead th:hover .ag-header-icons,
 .ag-header-col-wrap.has-filter-open .ag-header-icons {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* Ensure column widths are ample enough so text never collides with header icons */
+.country-table th,
+.country-table td {
+  min-width: 100px;
+}
+.country-table th.col-select,
+.country-table td.col-select {
+  min-width: 48px;
+  width: 48px;
+}
+.country-table th.col-name,
+.country-table td.col-name {
+  min-width: 170px;
+}
+.country-table th.col-code,
+.country-table td.col-code {
+  min-width: 90px;
+}
+.country-table th.col-isd,
+.country-table td.col-isd {
+  min-width: 95px;
+}
+.country-table th.col-currency,
+.country-table td.col-currency {
+  min-width: 130px;
+}
+.country-table th.col-states,
+.country-table td.col-states {
+  min-width: 130px;
+}
+.country-table th.col-cities,
+.country-table td.col-cities {
+  min-width: 130px;
+}
+.country-table th.col-areas,
+.country-table td.col-areas {
+  min-width: 130px;
+}
+.country-table th.col-continent,
+.country-table td.col-continent {
+  min-width: 145px;
+}
+.country-table th.col-population,
+.country-table td.col-population {
+  min-width: 130px;
+}
+.country-table th.col-isDefault,
+.country-table td.col-isDefault {
+  min-width: 115px;
+}
+.country-table th.col-createdAt,
+.country-table td.col-createdAt,
+.country-table th.col-updatedAt,
+.country-table td.col-updatedAt,
+.country-table th.col-draftedAt,
+.country-table td.col-draftedAt {
+  min-width: 130px;
+}
+.country-table th.col-status,
+.country-table td.col-status {
+  min-width: 110px;
+}
+.country-table th.col-action,
+.country-table td.col-action {
+  min-width: 100px;
+}
+
+.country-table thead th:hover .ag-header-label,
+.ag-header-col-wrap.has-filter-open .ag-header-label {
+  max-width: calc(100% - 44px);
 }
 
 /* Screenshot 4 / Image 1: Page Dropdown custom cyan scrollbar & container */
@@ -1052,8 +1144,9 @@
   color: #f1f5f9;
 }
 
-/* Export panel: one field per row */
-.export-panel .form-switch {
+/* Export & Share panels: one field per row */
+.export-panel .form-switch,
+.share-panel .form-switch {
   display: flex;
   width: 100%;
 }

@@ -146,6 +146,14 @@ export class CountryComponent implements OnInit {
     { id: 'email', label: 'Export to Email', color: '#3b82f6' },
   ];
 
+  readonly shareButtons: { id: 'whatsapp' | 'email' | 'link' | 'print' | 'pdf'; label: string; color: string }[] = [
+    { id: 'whatsapp', label: 'Share via WhatsApp', color: '#25D366' },
+    { id: 'email', label: 'Share via Email', color: '#8B5CF6' },
+    { id: 'link', label: 'Copy Link', color: '#00a6f4' },
+    { id: 'print', label: 'Print', color: '#F59E0B' },
+    { id: 'pdf', label: 'Download PDF', color: '#EF4444' },
+  ];
+
   // WhatsApp / Email share dialog
   shareChannel = signal<'whatsapp' | 'email' | null>(null);
   readonly shareFrom = signal<string>('+8801711111111');
@@ -404,6 +412,7 @@ export class CountryComponent implements OnInit {
     this.isPageSizeMenuOpen.set(false);
     this.isCustomPageSizeOpen.set(false);
     this.isPageDropdownOpen.set(false);
+    this.isSharePanelOpen.set(false);
     this.activeColumnMenu.set(null);
     this.columnMenuPos.set(null);
     if (this.editingCell()) {
@@ -415,6 +424,18 @@ export class CountryComponent implements OnInit {
   onWindowResize(): void {
     if (this.activeColumnMenu()) {
       this.closeColumnMenu();
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onWindowKeyDown(event: KeyboardEvent): void {
+    if (this.viewMode() !== 'list' || this.editingCell()) return;
+    const target = event.target as HTMLElement | null;
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+      return;
+    }
+    if (this.selectedCell() && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', ' '].includes(event.key)) {
+      this.onTableKeyDown(event);
     }
   }
 
@@ -601,6 +622,7 @@ export class CountryComponent implements OnInit {
     this.filterDraft.set(draft);
     this.filterSearch.set('');
     this.isExportPanelOpen.set(false);
+    this.isSharePanelOpen.set(false);
     this.isFilterPanelOpen.set(true);
   }
 
@@ -682,6 +704,7 @@ export class CountryComponent implements OnInit {
     if (next) {
       this.isFilterPanelOpen.set(false);
       this.isExportPanelOpen.set(false);
+      this.isSharePanelOpen.set(false);
     }
   }
 
@@ -816,11 +839,17 @@ export class CountryComponent implements OnInit {
   isPageSizeMenuOpen = signal<boolean>(false);
   isCustomPageSizeOpen = signal<boolean>(false);
   customPageSizeInput = signal<string>('');
+  pageSizeErrorMessage = signal<string | null>(null);
   readonly extendedPageSizes: (number | 'All')[] = ['All', 999, 750, 500, 250, 100];
 
   togglePageSizeMenu(event?: MouseEvent): void {
     if (event) event.stopPropagation();
-    this.isPageSizeMenuOpen.update((v) => !v);
+    const next = !this.isPageSizeMenuOpen();
+    this.isPageSizeMenuOpen.set(next);
+    if (next) {
+      this.isCustomPageSizeOpen.set(false);
+      this.pageSizeErrorMessage.set(null);
+    }
   }
 
   selectExtendedPageSize(opt: number | 'All'): void {
@@ -831,22 +860,44 @@ export class CountryComponent implements OnInit {
     }
     this.isPageSizeMenuOpen.set(false);
     this.isCustomPageSizeOpen.set(false);
+    this.pageSizeErrorMessage.set(null);
+  }
+
+  onCustomPageSizeChange(val: string): void {
+    this.customPageSizeInput.set(val);
+    const n = parseInt(val.trim(), 10);
+    if (!val.trim()) {
+      this.pageSizeErrorMessage.set(null);
+    } else if (isNaN(n) || n < 10) {
+      this.pageSizeErrorMessage.set('Minimum is 10');
+    } else if (n > 999) {
+      this.pageSizeErrorMessage.set('Maximum is 999');
+    } else {
+      this.pageSizeErrorMessage.set(null);
+    }
   }
 
   applyCustomPageSize(): void {
-    let val = parseInt(this.customPageSizeInput().trim(), 10);
-    if (isNaN(val)) return;
-    if (val < 10) {
-      val = 10;
-      this.customPageSizeInput.set('10');
-      this.showToast('Minimum page size is 10');
-    } else if (val > 999) {
-      val = 999;
-      this.customPageSizeInput.set('999');
-      this.showToast('Maximum page size is 999');
+    const raw = this.customPageSizeInput().trim();
+    const val = parseInt(raw, 10);
+    if (isNaN(val)) {
+      this.pageSizeErrorMessage.set('Please enter a number');
+      return;
     }
+    if (val < 10) {
+      this.pageSizeErrorMessage.set('Minimum is 10');
+      this.showToast('Minimum page size is 10');
+      return;
+    }
+    if (val > 999) {
+      this.pageSizeErrorMessage.set('Maximum is 999');
+      this.showToast('Maximum page size is 999');
+      return;
+    }
+    this.pageSizeErrorMessage.set(null);
     this.setPageSize(val);
     this.isPageSizeMenuOpen.set(false);
+    this.isCustomPageSizeOpen.set(false);
   }
 
   // Active page dropdown & direct numeric input (Screenshot 4 replica)
@@ -1198,6 +1249,14 @@ export class CountryComponent implements OnInit {
   selectCell(row: number, colKey: string, event?: Event): void {
     if (event) event.stopPropagation();
     this.selectedCell.set({ row, colKey });
+    const paged = this.pagedCountries();
+    if (paged[row]) {
+      this.highlightedCountryId.set(paged[row].id);
+    }
+    const tableContainer = document.querySelector('.country-table-scroll') as HTMLElement | null;
+    if (tableContainer && document.activeElement !== tableContainer) {
+      tableContainer.focus();
+    }
   }
 
   onCellClick(c: Country, row: number, colKey: string, event: Event): void {
@@ -1232,8 +1291,9 @@ export class CountryComponent implements OnInit {
   onTableKeyDown(event: KeyboardEvent): void {
     const paged = this.pagedCountries();
     if (paged.length === 0) return;
-    const cols = this.visibleColumns().map((c) => c.key);
-    if (cols.length === 0) return;
+    const visibleCols = this.visibleColumns().map((c) => c.key);
+    if (visibleCols.length === 0) return;
+    const cols = this.isSelectColumnVisible() ? ['select', ...visibleCols] : visibleCols;
 
     if (this.editingCell()) {
       if (event.key === 'Escape') {
@@ -1293,10 +1353,21 @@ export class CountryComponent implements OnInit {
         }
         handled = true;
         break;
+      case ' ': {
+        const country = paged[curRow];
+        if (country && cols[curColIdx] === 'select') {
+          this.toggleRowSelection(country.id);
+          handled = true;
+        }
+        break;
+      }
       case 'Enter': {
         const country = paged[curRow];
         const colKey = cols[curColIdx];
-        if (country && ['name', 'code', 'isd', 'currency', 'states', 'cities', 'areas'].includes(colKey)) {
+        if (colKey === 'select' && country) {
+          this.toggleRowSelection(country.id);
+          handled = true;
+        } else if (country && ['name', 'code', 'isd', 'currency', 'states', 'cities', 'areas'].includes(colKey)) {
           this.startCellEdit(country, colKey, event);
           handled = true;
         }
@@ -1312,6 +1383,10 @@ export class CountryComponent implements OnInit {
         const cellEl = document.getElementById(`cell-${curRow}-${newColKey}`);
         if (cellEl) {
           cellEl.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+        const rowEl = document.getElementById(`row-${paged[curRow]?.id}`);
+        if (rowEl) {
+          rowEl.scrollIntoView({ block: 'nearest' });
         }
       }, 0);
     }
@@ -1374,11 +1449,19 @@ export class CountryComponent implements OnInit {
     });
   }
 
+  previousListViewMode = signal<'grid' | 'list'>('list');
+  highlightedCountryId = signal<string | null>(null);
+
   openCreate(): void {
     this.switchView('add');
   }
 
   openView(country: Country): void {
+    const cur = this.viewMode();
+    if (cur === 'grid' || cur === 'list') {
+      this.previousListViewMode.set(cur);
+    }
+    this.highlightedCountryId.set(country.id);
     this.currentCountryId.set(country.id);
     this.loadCountryIntoForm(country);
     this.viewMode.set('view');
@@ -1394,6 +1477,11 @@ export class CountryComponent implements OnInit {
       event.stopPropagation();
       event.preventDefault();
     }
+    const cur = this.viewMode();
+    if (cur === 'grid' || cur === 'list') {
+      this.previousListViewMode.set(cur);
+    }
+    this.highlightedCountryId.set(country.id);
     this.currentCountryId.set(country.id);
     this.loadCountryIntoForm(country);
     this.viewMode.set('edit');
@@ -1402,6 +1490,19 @@ export class CountryComponent implements OnInit {
       queryParams: { mode: 'edit', id: country.id },
       queryParamsHandling: 'merge',
     });
+  }
+
+  returnFromFormView(): void {
+    const target = this.previousListViewMode() || 'list';
+    this.switchView(target);
+    if (this.highlightedCountryId()) {
+      setTimeout(() => {
+        const rowEl = document.getElementById(`row-${this.highlightedCountryId()}`);
+        if (rowEl) {
+          rowEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      }, 60);
+    }
   }
 
   toggleCountryStatus(country: Country, event?: Event): void {
@@ -1929,11 +2030,49 @@ export class CountryComponent implements OnInit {
     this.showToast('All filters have been reset.');
   }
 
-  // ---- Export side panel ----
+  // ---- Export & Share side panels ----
+  isSharePanelOpen = signal<boolean>(false);
+
   toggleExportPanel(): void {
-    // Export and Filter share the right-hand slot
-    if (!this.isExportPanelOpen()) this.isFilterPanelOpen.set(false);
+    if (!this.isExportPanelOpen()) {
+      this.isFilterPanelOpen.set(false);
+      this.isSharePanelOpen.set(false);
+      this.isVisibilityOpen.set(false);
+    }
     this.isExportPanelOpen.update((v) => !v);
+  }
+
+  toggleSharePanel(): void {
+    if (!this.isSharePanelOpen()) {
+      this.isExportPanelOpen.set(false);
+      this.isFilterPanelOpen.set(false);
+      this.isVisibilityOpen.set(false);
+    }
+    this.isSharePanelOpen.update((v) => !v);
+  }
+
+  copyShareLink(): void {
+    const url = window.location.href;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(
+        () => this.showToast('Share link copied to clipboard!'),
+        () => this.showToast('Failed to copy link')
+      );
+    } else {
+      this.showToast('Share link: ' + url);
+    }
+  }
+
+  runShareAction(id: 'whatsapp' | 'email' | 'link' | 'print' | 'pdf'): void {
+    if (id === 'whatsapp' || id === 'email') {
+      this.openShare(id);
+    } else if (id === 'link') {
+      this.copyShareLink();
+    } else if (id === 'print') {
+      this.runExport('print');
+    } else if (id === 'pdf') {
+      this.runExport('pdf');
+    }
   }
 
   // Search matches a field's label or any of its values in the current result set

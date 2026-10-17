@@ -57,7 +57,7 @@
           </button>
           <h1 class="text-[18px] sm:text-[20px] font-bold text-[#00a6f4] truncate">Country Master</h1>
           } @else {
-          <button type="button" (click)="switchView('grid')"
+          <button type="button" (click)="returnFromFormView()"
             class="w-[34px] h-[34px] rounded-full bg-[#e6f6fe] text-[#00a6f4] hover:bg-[#d4effd] flex items-center justify-center transition-colors cursor-pointer shrink-0"
             title="Back to Countries">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
@@ -136,7 +136,7 @@
           </button>
 
           <!-- Close button: always available in Add, Edit, and View! -->
-          <button type="button" (click)="switchView('grid')"
+          <button type="button" (click)="returnFromFormView()"
             class="self-center ml-1 w-9 h-9 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-white flex items-center justify-center cursor-pointer transition"
             title="Close" aria-label="Close">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -275,8 +275,14 @@
 
             <!-- Right: Share, Export & Filter buttons -->
             <div class="flex items-center gap-2">
-              <button type="button" (click)="openShare('whatsapp')"
-                class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs"
+              <button type="button" (click)="toggleSharePanel()"
+                class="h-[32px] px-3.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                [class.bg-[#00a6f4]]="isSharePanelOpen()" [class.text-white]="isSharePanelOpen()"
+                [class.border-[#00a6f4]]="isSharePanelOpen()" [class.border-slate-300]="!isSharePanelOpen()"
+                [class.dark:border-slate-600]="!isSharePanelOpen()" [class.bg-white]="!isSharePanelOpen()"
+                [class.dark:bg-slate-800]="!isSharePanelOpen()" [class.text-slate-700]="!isSharePanelOpen()"
+                [class.dark:text-slate-200]="!isSharePanelOpen()" [class.hover:bg-slate-50]="!isSharePanelOpen()"
+                [class.dark:hover:bg-slate-700]="!isSharePanelOpen()"
                 title="Share">
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="18" cy="5" r="3" />
@@ -503,7 +509,7 @@
                           class="ag-header-row border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[12px] font-semibold bg-[#f8fafc] dark:bg-slate-800/90 select-none">
                           @if (isSelectColumnVisible()) {
                           <th
-                            class="sticky-col sticky-left-0 w-12 py-2.5 px-3 text-center bg-[#f8fafc] dark:bg-slate-800">
+                            class="col-select sticky-col sticky-left-0 w-12 py-2.5 px-3 text-center bg-[#f8fafc] dark:bg-slate-800">
                             <label class="custom-checkbox-wrap">
                               <input type="checkbox" class="sr-only custom-checkbox-input"
                                 [checked]="isPageAllSelected()" [indeterminate]="isPagePartlySelected()"
@@ -524,7 +530,7 @@
                           }
                           @for (col of visibleColumns(); track col.key) {
                           <th
-                            class="py-2 px-3 whitespace-nowrap group/th relative bg-[#f8fafc] dark:bg-slate-800"
+                            class="col-{{ col.key }} py-2 px-3 whitespace-nowrap group/th relative bg-[#f8fafc] dark:bg-slate-800"
                             [class.sticky-col]="col.key === 'name' || col.key === 'code' || col.key === 'status'"
                             [class.sticky-left-name]="col.key === 'name'" [class.sticky-left-code]="col.key === 'code'"
                             [class.sticky-right-status]="col.key === 'status'" [class.text-start]="true">
@@ -680,34 +686,44 @@
                           </th>
                           }
                           <th
-                            class="sticky-col sticky-right-action py-2 px-3.5 text-center font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] bg-[#f8fafc] dark:bg-slate-800 border-none">
+                            class="col-action sticky-col sticky-right-action py-2 px-3.5 text-center font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] bg-[#f8fafc] dark:bg-slate-800 border-none">
                             Action</th>
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-slate-100 dark:divide-slate-700 font-medium">
                         @for (c of pagedCountries(); track c.id; let rIdx = $index) {
                         <tr
+                          [id]="'row-' + c.id"
                           class="group hover:bg-slate-50/60 dark:hover:bg-slate-700/40 transition-colors cursor-pointer"
-                          [class.bg-sky-50/60]="selectedIds().has(c.id)" (click)="openView(c)">
+                          [class.highlighted-row]="highlightedCountryId() === c.id"
+                          [class.bg-[#e0f2fe]!]="highlightedCountryId() === c.id"
+                          [class.dark:bg-[#0c4a6e]!]="highlightedCountryId() === c.id"
+                          [class.bg-sky-50/60]="selectedIds().has(c.id) && highlightedCountryId() !== c.id"
+                          (click)="openView(c)">
                           @if (isSelectColumnVisible()) {
-                          <td class="sticky-col sticky-left-0 py-3 px-4 text-center" (click)="$event.stopPropagation()">
-                            <label class="custom-checkbox-wrap">
-                              <input type="checkbox" class="sr-only custom-checkbox-input"
-                                [checked]="selectedIds().has(c.id)" (change)="toggleRowSelection(c.id)" />
-                              <span class="custom-checkbox-box">
-                                <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
-                                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                  stroke-linejoin="round">
-                                  <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
-                                </svg>
-                              </span>
-                            </label>
+                          <td class="col-select sticky-col sticky-left-0 py-3 px-4 text-center cursor-pointer"
+                            [id]="'cell-' + rIdx + '-select'"
+                            (click)="selectCell(rIdx, 'select', $event); $event.stopPropagation()">
+                            <div class="rounded-md p-0.5 inline-flex items-center justify-center transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'select')">
+                              <label class="custom-checkbox-wrap" (click)="$event.stopPropagation()">
+                                <input type="checkbox" class="sr-only custom-checkbox-input"
+                                  [checked]="selectedIds().has(c.id)" (change)="toggleRowSelection(c.id)" />
+                                <span class="custom-checkbox-box">
+                                  <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                                  </svg>
+                                </span>
+                              </label>
+                            </div>
                           </td>
                           }
                           @for (col of visibleColumns(); track col.key) {
                           @switch (col.key) {
                           @case ('name') {
-                          <td class="sticky-col sticky-left-name py-3 px-4 group/cell relative"
+                          <td class="col-name sticky-col sticky-left-name py-3 px-4 group/cell relative"
                             [id]="'cell-' + rIdx + '-name'" (click)="onCellClick(c, rIdx, 'name', $event)"
                             (dblclick)="onCellDblClick(c, rIdx, 'name', $event)">
                             @if (isCellEditing(c.id, 'name')) {
@@ -739,7 +755,7 @@
                           }
                           @case ('code') {
                           <td
-                            class="sticky-col sticky-left-code py-3 px-4 font-mono font-medium text-slate-700 dark:text-slate-300 group/cell relative"
+                            class="col-code sticky-col sticky-left-code py-3 px-4 font-mono font-medium text-slate-700 dark:text-slate-300 group/cell relative"
                             [id]="'cell-' + rIdx + '-code'" (click)="onCellClick(c, rIdx, 'code', $event)"
                             (dblclick)="onCellDblClick(c, rIdx, 'code', $event)">
                             @if (isCellEditing(c.id, 'code')) {
@@ -769,7 +785,7 @@
                           </td>
                           }
                           @case ('isd') {
-                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                          <td class="col-isd py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
                             [id]="'cell-' + rIdx + '-isd'" (click)="onCellClick(c, rIdx, 'isd', $event)"
                             (dblclick)="onCellDblClick(c, rIdx, 'isd', $event)">
                             @if (isCellEditing(c.id, 'isd')) {
@@ -799,7 +815,7 @@
                           </td>
                           }
                           @case ('currency') {
-                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                          <td class="col-currency py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
                             [id]="'cell-' + rIdx + '-currency'" (click)="onCellClick(c, rIdx, 'currency', $event)"
                             (dblclick)="onCellDblClick(c, rIdx, 'currency', $event)">
                             @if (isCellEditing(c.id, 'currency')) {
@@ -835,7 +851,7 @@
                           </td>
                           }
                           @case ('states') {
-                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                          <td class="col-states py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
                             [id]="'cell-' + rIdx + '-states'" (click)="onCellClick(c, rIdx, 'states', $event)"
                             (dblclick)="onCellDblClick(c, rIdx, 'states', $event)">
                             @if (isCellEditing(c.id, 'states')) {
@@ -865,7 +881,7 @@
                           </td>
                           }
                           @case ('cities') {
-                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                          <td class="col-cities py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
                             [id]="'cell-' + rIdx + '-cities'" (click)="onCellClick(c, rIdx, 'cities', $event)"
                             (dblclick)="onCellDblClick(c, rIdx, 'cities', $event)">
                             @if (isCellEditing(c.id, 'cities')) {
@@ -895,7 +911,7 @@
                           </td>
                           }
                           @case ('areas') {
-                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                          <td class="col-areas py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
                             [id]="'cell-' + rIdx + '-areas'" (click)="onCellClick(c, rIdx, 'areas', $event)"
                             (dblclick)="onCellDblClick(c, rIdx, 'areas', $event)">
                             @if (isCellEditing(c.id, 'areas')) {
@@ -925,7 +941,7 @@
                           </td>
                           }
                           @case ('continent') {
-                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap cursor-pointer"
+                          <td class="col-continent py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap cursor-pointer"
                             [id]="'cell-' + rIdx + '-continent'" (click)="selectCell(rIdx, 'continent', $event)">
                             <div class="rounded-md px-1.5 py-0.5 transition-all inline-block"
                               [class.cell-focus-box]="isCellFocused(rIdx, 'continent')">
@@ -937,7 +953,7 @@
                           </td>
                           }
                           @case ('population') {
-                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap cursor-pointer"
+                          <td class="col-population py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap cursor-pointer"
                             [id]="'cell-' + rIdx + '-population'" (click)="selectCell(rIdx, 'population', $event)">
                             <div class="rounded-md px-1.5 py-0.5 transition-all inline-block"
                               [class.cell-focus-box]="isCellFocused(rIdx, 'population')">
@@ -946,7 +962,7 @@
                           </td>
                           }
                           @case ('isDefault') {
-                          <td class="py-3 px-4 text-center cursor-pointer"
+                          <td class="col-isDefault py-3 px-4 text-center cursor-pointer"
                             [id]="'cell-' + rIdx + '-isDefault'" (click)="selectCell(rIdx, 'isDefault', $event)">
                             <div class="rounded-md px-1.5 py-0.5 transition-all inline-block"
                               [class.cell-focus-box]="isCellFocused(rIdx, 'isDefault')">
@@ -961,7 +977,7 @@
                           </td>
                           }
                           @case ('status') {
-                          <td class="sticky-col sticky-right-status py-3 px-4 text-center cursor-pointer"
+                          <td class="col-status sticky-col sticky-right-status py-3 px-4 text-center cursor-pointer"
                             [id]="'cell-' + rIdx + '-status'" (click)="selectCell(rIdx, 'status', $event)">
                             <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all"
                               [class.cell-focus-box]="isCellFocused(rIdx, 'status')"
@@ -976,7 +992,7 @@
                           </td>
                           }
                           @default {
-                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap cursor-pointer"
+                          <td class="col-{{ col.key }} py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap cursor-pointer"
                             [id]="'cell-' + rIdx + '-' + col.key" (click)="selectCell(rIdx, col.key, $event)">
                             <div class="rounded-md px-1.5 py-0.5 transition-all inline-block min-w-[60px]"
                               [class.cell-focus-box]="isCellFocused(rIdx, col.key)">
@@ -991,7 +1007,7 @@
                           }
                           }
                           <!-- Action Column (Exact Replica of Screenshot 1 with row-end hover button) -->
-                          <td class="sticky-col sticky-right-action py-3 px-4 text-end"
+                          <td class="col-action sticky-col sticky-right-action py-3 px-4 text-end"
                             (click)="$event.stopPropagation()">
                             <div class="flex items-center justify-end gap-2.5">
                               <span class="text-slate-500 dark:text-slate-400 whitespace-nowrap text-xs font-normal">
@@ -1062,17 +1078,31 @@
                             {{ opt }}
                           </button>
                           }
-                          <!-- Bottom Row: [ Size ⬍ ] [ Go ] -->
-                          <div class="flex items-center gap-1.5 pt-1 border-t border-sky-100 dark:border-slate-700">
-                            <input type="number" min="10" max="999" [ngModel]="customPageSizeInput()"
-                              (ngModelChange)="customPageSizeInput.set($event)" (keydown.enter)="applyCustomPageSize()"
-                              placeholder="Size"
-                              class="w-20 px-2.5 py-1 text-center rounded-full border border-sky-300 text-xs font-semibold text-[#00a6f4] focus:outline-none focus:border-[#00a6f4] bg-white dark:bg-slate-750" />
-                            <button type="button" (click)="applyCustomPageSize()"
-                              class="flex-1 py-1 px-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0091ea] text-white text-xs font-bold cursor-pointer transition shadow-2xs">
-                              Go
-                            </button>
+                          <!-- Custom Size option (default is Custom button, on click shows Size input) -->
+                          @if (!isCustomPageSizeOpen()) {
+                          <button type="button" (click)="isCustomPageSizeOpen.set(true)"
+                            class="w-full py-1.5 px-3 rounded-full border border-sky-200 dark:border-slate-700 text-[#00a6f4] text-xs font-bold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer">
+                            Custom
+                          </button>
+                          } @else {
+                          <div class="flex flex-col gap-1 pt-1 border-t border-sky-100 dark:border-slate-700">
+                            <div class="flex items-center gap-1.5">
+                              <input type="number" min="10" max="999" [ngModel]="customPageSizeInput()"
+                                (ngModelChange)="onCustomPageSizeChange($event)" (keydown.enter)="applyCustomPageSize()"
+                                placeholder="Size" autofocus
+                                class="w-20 px-2.5 py-1 text-center rounded-full border border-sky-300 text-xs font-semibold text-[#00a6f4] focus:outline-none focus:border-[#00a6f4] bg-white dark:bg-slate-750" />
+                              <button type="button" (click)="applyCustomPageSize()"
+                                class="flex-1 py-1 px-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0091ea] text-white text-xs font-bold cursor-pointer transition shadow-2xs">
+                                Go
+                              </button>
+                            </div>
+                            @if (pageSizeErrorMessage()) {
+                            <span class="text-[10px] text-rose-500 font-semibold px-1 text-center leading-tight">
+                              {{ pageSizeErrorMessage() }}
+                            </span>
+                            }
                           </div>
+                          }
                         </div>
                         }
                       </div>
@@ -1452,6 +1482,108 @@
                       stroke-linecap="round" stroke-linejoin="round">
                       <rect width="20" height="16" x="2" y="4" rx="2" />
                       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    }
+                    }
+                  </button>
+                  }
+                </div>
+              </div>
+            </aside>
+            }
+
+            <!-- SHARE SIDE PANEL: pick fields, then share (slides in from the right) -->
+            @if (isSharePanelOpen()) {
+            <aside
+              class="share-panel side-panel-slide w-full md:w-80 shrink-0 md:h-full max-h-[520px] md:max-h-none flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 shadow-xs overflow-hidden relative">
+              <button type="button" (click)="isSharePanelOpen.set(false)"
+                class="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                title="Close">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round">
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
+
+              <div class="p-3 pt-8 border-b border-slate-100 dark:border-slate-700 shrink-0">
+                <div class="relative">
+                  <input type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
+                    placeholder="Search"
+                    class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+
+              <label
+                class="form-switch justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 shrink-0">
+                <span class="form-switch-label">Select All</span>
+                <input type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
+                  (change)="setAllExportFields($any($event.target).checked)" />
+                <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+              </label>
+
+              <div class="flex flex-1 min-h-0">
+                <div class="flex-1 min-w-0 overflow-y-auto custom-scrollbar px-3 py-3 space-y-1">
+                  @for (f of visibleExportFields(); track f.key) {
+                  <label
+                    class="form-switch justify-between px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60">
+                    <span class="form-switch-label font-medium!">{{ f.label }}</span>
+                    <input type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
+                      (change)="toggleExportField(f.key)" />
+                    <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                  </label>
+                  } @empty {
+                  <p class="text-center text-xs text-slate-400 py-8">No matching fields found</p>
+                  }
+                </div>
+
+                <div
+                  class="w-16 shrink-0 border-l border-slate-100 dark:border-slate-700 overflow-y-auto custom-scrollbar flex flex-col items-center gap-3 py-3">
+                  @for (b of shareButtons; track b.id) {
+                  <button type="button" (click)="runShareAction(b.id)" class="export-format-btn" [style.color]="b.color"
+                    [title]="b.label" [attr.aria-label]="b.label">
+                    @switch (b.id) {
+                    @case ('whatsapp') {
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+                    </svg>
+                    }
+                    @case ('email') {
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    }
+                    @case ('link') {
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                    }
+                    @case ('print') {
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                      <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" />
+                      <rect x="6" y="14" width="12" height="8" rx="1" />
+                    </svg>
+                    }
+                    @case ('pdf') {
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                      <path d="M10 9H8" />
+                      <path d="M16 13H8" />
+                      <path d="M16 17H8" />
                     </svg>
                     }
                     }
