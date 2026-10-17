@@ -60,7 +60,7 @@
 /* ========================================================================= */
 .capsule-card {
   width: 100%;
-  height: 52px;
+  height: 58px;
   border-radius: 100px;
   display: flex;
   align-items: center;
@@ -76,8 +76,8 @@
 }
 
 .capsule-circle-icon {
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -182,7 +182,7 @@
 .country-card:hover {
   border-color: #20B7FA;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  transform: scale(1.05);
+  transform: scale(1.035) translateY(-2px);
   z-index: 20;
 }
 
@@ -197,7 +197,7 @@
 .dark .country-card:hover {
   border-color: #20B7FA;
   box-shadow: 0 10px 25px -5px rgba(32, 183, 250, 0.25);
-  transform: scale(1.05);
+  transform: scale(1.035) translateY(-2px);
   z-index: 20;
 }
 
@@ -597,7 +597,7 @@
   width: 180px;
   min-width: 180px;
   max-width: 180px;
-  border-right: 1px solid #e2e8f0;
+  border-right: none !important;
 }
 
 .country-table .sticky-left-code {
@@ -605,7 +605,7 @@
   width: 110px;
   min-width: 110px;
   max-width: 110px;
-  border-right: 1px solid #e2e8f0;
+  border-right: none !important;
   box-shadow: 4px 0 8px -2px rgba(15, 23, 42, 0.08);
 }
 
@@ -623,7 +623,7 @@
   width: 110px;
   min-width: 110px;
   max-width: 110px;
-  border-right: 1px solid #e2e8f0;
+  border-right: none !important;
   box-shadow: -4px 0 8px -2px rgba(15, 23, 42, 0.08);
 }
 
@@ -632,6 +632,18 @@
   width: 130px;
   min-width: 130px;
   max-width: 130px;
+  border-right: none !important;
+}
+
+.country-table th.sticky-left-name,
+.country-table td.sticky-left-name,
+.country-table th.sticky-left-code,
+.country-table td.sticky-left-code,
+.country-table th.sticky-right-status,
+.country-table td.sticky-right-status,
+.country-table th.sticky-right-action,
+.country-table td.sticky-right-action {
+  border-right: none !important;
 }
 
 :host-context(.dark) .country-table .sticky-left-0,
@@ -643,6 +655,83 @@
 .dark .country-table .sticky-left-code,
 .dark .country-table .sticky-right-status {
   border-color: #334155;
+}
+
+/* Table Row Hover: light blue color on row hover across all cells including sticky columns */
+.country-table tbody tr:hover,
+.country-table tbody tr:hover td,
+.country-table tbody tr:hover td.sticky-col {
+  background-color: #f0f9ff !important;
+}
+
+:host-context(.dark) .country-table tbody tr:hover,
+:host-context(.dark) .country-table tbody tr:hover td,
+:host-context(.dark) .country-table tbody tr:hover td.sticky-col,
+.dark .country-table tbody tr:hover,
+.dark .country-table tbody tr:hover td,
+.dark .country-table tbody tr:hover td.sticky-col {
+  background-color: #1e293b !important;
+}
+
+/* AG-Grid Header label: primary color, centered at rest, moves left on hover with filter icon */
+.ag-header-col-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ag-header-label {
+  color: #00a6f4;
+  font-weight: 700;
+  transition: transform 0.2s ease, color 0.2s ease;
+  user-select: none;
+}
+
+:host-context(.dark) .ag-header-label,
+.dark .ag-header-label {
+  color: #38bdf8;
+}
+
+.ag-header-icons {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.country-table thead th:hover .ag-header-col-wrap,
+.ag-header-col-wrap.has-filter-open {
+  justify-content: flex-start;
+  padding-left: 2px;
+}
+
+.country-table thead th:hover .ag-header-icons,
+.ag-header-col-wrap.has-filter-open .ag-header-icons {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Screenshot 4: Page Dropdown custom cyan scrollbar */
+.page-dropdown-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.page-dropdown-scroll::-webkit-scrollbar-track {
+  background: #f0f9ff;
+  border-radius: 9999px;
+}
+.page-dropdown-scroll::-webkit-scrollbar-thumb {
+  background: #70d3fc;
+  border-radius: 9999px;
+}
+.page-dropdown-scroll::-webkit-scrollbar-thumb:hover {
+  background: #00a6f4;
 }
 
 /* HORIZONTAL SCROLLBAR: display only across middle scrollable columns (between Code and Status) */

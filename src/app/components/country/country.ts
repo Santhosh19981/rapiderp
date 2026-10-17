@@ -24,7 +24,21 @@ export type FormStatus = 'Active' | 'Inactive' | 'Draft' | 'Delete';
 
 export type FilterFieldKey = 'name' | 'code' | 'isd' | 'currency' | 'status' | 'isDefault' | 'continent';
 
-export type ListSortKey = 'name' | 'code' | 'isd' | 'currency' | 'states' | 'cities' | 'createdAt' | 'updatedAt' | 'draftedAt' | 'status';
+export type ListSortKey =
+  | 'name'
+  | 'code'
+  | 'isd'
+  | 'currency'
+  | 'states'
+  | 'cities'
+  | 'areas'
+  | 'continent'
+  | 'population'
+  | 'isDefault'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'draftedAt'
+  | 'status';
 
 export type ExportFieldKey =
   | 'name' | 'code' | 'isd' | 'currency' | 'status' | 'isDefault'
@@ -389,6 +403,7 @@ export class CountryComponent implements OnInit {
     this.isActionListOpen.set(false);
     this.isPageSizeMenuOpen.set(false);
     this.isCustomPageSizeOpen.set(false);
+    this.isPageDropdownOpen.set(false);
     this.activeColumnMenu.set(null);
     this.columnMenuPos.set(null);
     if (this.editingCell()) {
@@ -643,6 +658,10 @@ export class CountryComponent implements OnInit {
     { key: 'currency', label: 'Currency' },
     { key: 'states', label: 'States' },
     { key: 'cities', label: 'Cities' },
+    { key: 'areas', label: 'Areas' },
+    { key: 'continent', label: 'Continent' },
+    { key: 'population', label: 'Population' },
+    { key: 'isDefault', label: 'Default' },
     { key: 'createdAt', label: 'Created' },
     { key: 'updatedAt', label: 'Updated' },
     { key: 'draftedAt', label: 'Drafted' },
@@ -673,8 +692,13 @@ export class CountryComponent implements OnInit {
     { key: 'currency', label: 'Currency' },
     { key: 'states', label: 'States' },
     { key: 'cities', label: 'Cities' },
+    { key: 'areas', label: 'Areas' },
+    { key: 'continent', label: 'Continent' },
+    { key: 'population', label: 'Population' },
+    { key: 'isDefault', label: 'Default' },
     { key: 'createdAt', label: 'Created' },
     { key: 'updatedAt', label: 'Updated' },
+    { key: 'draftedAt', label: 'Drafted' },
     { key: 'status', label: 'Status' },
   ];
 
@@ -792,7 +816,7 @@ export class CountryComponent implements OnInit {
   isPageSizeMenuOpen = signal<boolean>(false);
   isCustomPageSizeOpen = signal<boolean>(false);
   customPageSizeInput = signal<string>('');
-  readonly extendedPageSizes: (number | 'All')[] = ['All', 999, 750, 500, 300, 100];
+  readonly extendedPageSizes: (number | 'All')[] = ['All', 999, 750, 500, 250, 100];
 
   togglePageSizeMenu(event?: MouseEvent): void {
     if (event) event.stopPropagation();
@@ -810,12 +834,59 @@ export class CountryComponent implements OnInit {
   }
 
   applyCustomPageSize(): void {
-    const val = parseInt(this.customPageSizeInput().trim(), 10);
-    if (!isNaN(val) && val > 0) {
-      this.setPageSize(val);
-      this.isPageSizeMenuOpen.set(false);
-      this.isCustomPageSizeOpen.set(false);
+    let val = parseInt(this.customPageSizeInput().trim(), 10);
+    if (isNaN(val)) return;
+    if (val < 10) {
+      val = 10;
+      this.customPageSizeInput.set('10');
+      this.showToast('Minimum page size is 10');
+    } else if (val > 999) {
+      val = 999;
+      this.customPageSizeInput.set('999');
+      this.showToast('Maximum page size is 999');
     }
+    this.setPageSize(val);
+    this.isPageSizeMenuOpen.set(false);
+  }
+
+  // Active page dropdown & direct numeric input (Screenshot 4 replica)
+  isPageDropdownOpen = signal<boolean>(false);
+  pageInputValue = signal<string>('1');
+
+  pagesList = computed<number[]>(() => {
+    const total = this.totalPages();
+    const arr: number[] = [];
+    for (let i = total; i >= 1; i--) {
+      arr.push(i);
+    }
+    return arr;
+  });
+
+  togglePageDropdown(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isPageDropdownOpen.update((v) => !v);
+  }
+
+  selectPageFromDropdown(page: number): void {
+    this.goToPage(page);
+    this.pageInputValue.set(String(page));
+    this.isPageDropdownOpen.set(false);
+  }
+
+  onPageInputKey(val: any): void {
+    this.pageInputValue.set(String(val));
+  }
+
+  commitPageInput(): void {
+    const raw = parseInt(this.pageInputValue().trim(), 10);
+    if (!isNaN(raw)) {
+      const clamped = Math.max(1, Math.min(this.totalPages(), raw));
+      this.goToPage(clamped);
+      this.pageInputValue.set(String(clamped));
+    } else {
+      this.pageInputValue.set(String(this.currentPage()));
+    }
+    this.isPageDropdownOpen.set(false);
   }
 
   // Column Header Filter Menu state (Image 4 replica)
@@ -967,7 +1038,9 @@ export class CountryComponent implements OnInit {
   goToPage(target: number | string): void {
     const n = Math.floor(Number(target));
     if (!Number.isFinite(n)) return;
-    this.page.set(Math.min(Math.max(1, n), this.totalPages()));
+    const clamped = Math.min(Math.max(1, n), this.totalPages());
+    this.page.set(clamped);
+    this.pageInputValue.set(String(clamped));
   }
 
   toggleRowSelection(id: string): void {
@@ -1079,7 +1152,7 @@ export class CountryComponent implements OnInit {
 
     const rawVal = this.editingCellValue().trim();
     let parsedVal: any = rawVal;
-    if (field === 'states' || field === 'cities') {
+    if (field === 'states' || field === 'cities' || field === 'areas') {
       parsedVal = rawVal ? parseInt(rawVal, 10) || 0 : 0;
     } else if (field === 'code' || field === 'currency') {
       parsedVal = rawVal.toUpperCase();
@@ -1132,7 +1205,7 @@ export class CountryComponent implements OnInit {
   onCellDblClick(c: Country, row: number, colKey: string, event: Event): void {
     if (event) event.stopPropagation();
     this.selectCell(row, colKey);
-    if (['name', 'code', 'isd', 'currency', 'states', 'cities'].includes(colKey)) {
+    if (['name', 'code', 'isd', 'currency', 'states', 'cities', 'areas'].includes(colKey)) {
       this.startCellEdit(c, colKey, event);
     }
   }
@@ -1220,7 +1293,7 @@ export class CountryComponent implements OnInit {
       case 'Enter': {
         const country = paged[curRow];
         const colKey = cols[curColIdx];
-        if (country && ['name', 'code', 'isd', 'currency', 'states', 'cities'].includes(colKey)) {
+        if (country && ['name', 'code', 'isd', 'currency', 'states', 'cities', 'areas'].includes(colKey)) {
           this.startCellEdit(country, colKey, event);
           handled = true;
         }
