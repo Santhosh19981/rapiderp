@@ -503,7 +503,7 @@
                           class="ag-header-row border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[12px] font-semibold bg-[#f8fafc] dark:bg-slate-800/90 select-none">
                           @if (isSelectColumnVisible()) {
                           <th
-                            class="sticky-col sticky-left-0 w-12 py-2.5 px-3 text-center border-r border-slate-200/90 dark:border-slate-700/80 bg-[#f8fafc] dark:bg-slate-800">
+                            class="sticky-col sticky-left-0 w-12 py-2.5 px-3 text-center bg-[#f8fafc] dark:bg-slate-800">
                             <label class="custom-checkbox-wrap">
                               <input type="checkbox" class="sr-only custom-checkbox-input"
                                 [checked]="isPageAllSelected()" [indeterminate]="isPagePartlySelected()"
@@ -525,9 +525,6 @@
                           @for (col of visibleColumns(); track col.key) {
                           <th
                             class="py-2 px-3 whitespace-nowrap group/th relative bg-[#f8fafc] dark:bg-slate-800"
-                            [class.border-r]="col.key !== 'name' && col.key !== 'code' && col.key !== 'status'"
-                            [class.border-slate-200/90]="col.key !== 'name' && col.key !== 'code' && col.key !== 'status'"
-                            [class.dark:border-slate-700/80]="col.key !== 'name' && col.key !== 'code' && col.key !== 'status'"
                             [class.sticky-col]="col.key === 'name' || col.key === 'code' || col.key === 'status'"
                             [class.sticky-left-name]="col.key === 'name'" [class.sticky-left-code]="col.key === 'code'"
                             [class.sticky-right-status]="col.key === 'status'" [class.text-start]="true">
@@ -1026,7 +1023,7 @@
 
                   <!-- Pagination (Exact Replica of Screenshots 1 & 2) -->
                   <div
-                    class="shrink-0 flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs">
+                    class="relative z-30 shrink-0 flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs">
                     <!-- Left: Page Size Selectors (Screenshot 1 replica) -->
                     <div class="flex items-center gap-1.5 relative">
                       @for (size of pageSizeOptions; track size) {
@@ -1106,38 +1103,38 @@
                       </button>
 
                       <!-- Active Page Number Pill with input & dropdown (Screenshot 4 replica) -->
-                      <div class="relative" data-popover>
-                        <div class="pagination-page-pill is-active flex items-center justify-center cursor-pointer min-w-[58px] px-2 py-1"
+                      <div class="relative z-50" data-popover>
+                        <div
                           (click)="togglePageDropdown($event)"
+                          class="pagination-page-pill is-active flex items-center justify-center cursor-pointer min-w-[58px] px-2 py-1 select-none transition hover:shadow-xs"
                           title="Click to select page or type page number">
                           <input type="number"
                             min="1"
                             [max]="totalPages()"
                             [value]="pageInputValue()"
                             (input)="onPageInputKey($any($event.target).value)"
-                            (keydown.enter)="commitPageInput()"
+                            (keydown.enter)="commitPageInput(); isPageDropdownOpen.set(false)"
                             (blur)="commitPageInput()"
-                            (click)="$event.stopPropagation()"
-                            class="w-8 text-center text-sm font-bold text-[#00a6f4] bg-transparent outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-text" />
+                            (click)="togglePageDropdown($event)"
+                            class="w-7 text-center text-sm font-bold text-[#00a6f4] bg-transparent outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-pointer" />
                         </div>
 
                         <!-- Screenshot 4 Dropdown Popover -->
                         @if (isPageDropdownOpen()) {
                         <div
-                          class="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-32 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-sky-200 dark:border-slate-700 p-2.5 z-50 animate-in fade-in duration-150">
+                          class="page-dropdown-container absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-32 bg-[#f8fcff] dark:bg-slate-800 rounded-[28px] border-2 border-[#a5e3fd] dark:border-slate-600 p-2.5 z-50 animate-in fade-in duration-150"
+                          (click)="$event.stopPropagation()">
                           <!-- Notch arrow pointing down to active page pill -->
-                          <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-white dark:border-t-slate-800"></div>
+                          <div class="absolute -bottom-[9px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[9px] border-t-[#a5e3fd] dark:border-t-slate-600"></div>
+                          <div class="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[8px] border-t-[#f8fcff] dark:border-t-slate-800"></div>
 
                           <!-- Scrollable list of page numbers (descending like screenshot) with custom cyan scrollbar -->
-                          <div class="page-dropdown-scroll max-h-52 overflow-y-auto pr-1 flex flex-col gap-1">
+                          <div class="page-dropdown-scroll max-h-56 overflow-y-auto pr-1 flex flex-col gap-1.5">
                             @for (p of pagesList(); track p) {
                             <button type="button" (click)="selectPageFromDropdown(p)"
-                              class="w-full py-1.5 rounded-xl text-center text-base font-semibold transition cursor-pointer"
-                              [class.text-[#00a6f4]]="currentPage() !== p"
-                              [class.hover:bg-sky-50]="currentPage() !== p"
-                              [class.dark:hover:bg-slate-700]="currentPage() !== p"
-                              [class.bg-[#00a6f4]]="currentPage() === p"
-                              [class.text-white]="currentPage() === p">
+                              class="w-full py-1 rounded-xl text-center text-lg font-medium transition cursor-pointer text-[#00a6f4] hover:bg-[#e0f4fe] dark:hover:bg-slate-700/80"
+                              [class.font-bold]="currentPage() === p"
+                              [class.bg-[#dff3fd]]="currentPage() === p">
                               {{ p }}
                             </button>
                             }

@@ -598,6 +598,7 @@
   min-width: 180px;
   max-width: 180px;
   border-right: none !important;
+  border-left: none !important;
 }
 
 .country-table .sticky-left-code {
@@ -606,7 +607,8 @@
   min-width: 110px;
   max-width: 110px;
   border-right: none !important;
-  box-shadow: 4px 0 8px -2px rgba(15, 23, 42, 0.08);
+  border-left: none !important;
+  box-shadow: none !important;
 }
 
 /* Support when select checkbox column is hidden */
@@ -624,7 +626,8 @@
   min-width: 110px;
   max-width: 110px;
   border-right: none !important;
-  box-shadow: -4px 0 8px -2px rgba(15, 23, 42, 0.08);
+  border-left: none !important;
+  box-shadow: none !important;
 }
 
 .country-table .sticky-right-action {
@@ -633,6 +636,13 @@
   min-width: 130px;
   max-width: 130px;
   border-right: none !important;
+  border-left: none !important;
+}
+
+.country-table th,
+.country-table td {
+  border-right: none !important;
+  border-left: none !important;
 }
 
 .country-table th.sticky-left-name,
@@ -644,6 +654,8 @@
 .country-table th.sticky-right-action,
 .country-table td.sticky-right-action {
   border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
 }
 
 :host-context(.dark) .country-table .sticky-left-0,
@@ -718,20 +730,53 @@
   pointer-events: auto;
 }
 
-/* Screenshot 4: Page Dropdown custom cyan scrollbar */
+/* Screenshot 4 / Image 1: Page Dropdown custom cyan scrollbar & container */
+.page-dropdown-container {
+  background: #f8fcff;
+  border: 1.5px solid #a5e3fd;
+  border-radius: 28px;
+  box-shadow: 0 12px 32px -4px rgba(0, 166, 244, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+}
+
+:host-context(.dark) .page-dropdown-container,
+.dark .page-dropdown-container {
+  background: #1e293b;
+  border-color: #475569;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.5);
+}
+
+.page-dropdown-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #5ecafc #edf8fd;
+}
+
 .page-dropdown-scroll::-webkit-scrollbar {
-  width: 5px;
+  width: 9px;
 }
 .page-dropdown-scroll::-webkit-scrollbar-track {
-  background: #f0f9ff;
+  background: #edf8fd;
+  border: 1px solid #d4effd;
   border-radius: 9999px;
+  margin: 6px 0;
 }
 .page-dropdown-scroll::-webkit-scrollbar-thumb {
-  background: #70d3fc;
+  background: #5ecafc;
   border-radius: 9999px;
+  border: 1.5px solid #edf8fd;
 }
 .page-dropdown-scroll::-webkit-scrollbar-thumb:hover {
   background: #00a6f4;
+}
+
+:host-context(.dark) .page-dropdown-scroll::-webkit-scrollbar-track,
+.dark .page-dropdown-scroll::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-color: #334155;
+}
+:host-context(.dark) .page-dropdown-scroll::-webkit-scrollbar-thumb,
+.dark .page-dropdown-scroll::-webkit-scrollbar-thumb {
+  background: #38bdf8;
+  border-color: #0f172a;
 }
 
 /* HORIZONTAL SCROLLBAR: display only across middle scrollable columns (between Code and Status) */

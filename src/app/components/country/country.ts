@@ -854,7 +854,7 @@ export class CountryComponent implements OnInit {
   pageInputValue = signal<string>('1');
 
   pagesList = computed<number[]>(() => {
-    const total = this.totalPages();
+    const total = Math.max(8, this.totalPages());
     const arr: number[] = [];
     for (let i = total; i >= 1; i--) {
       arr.push(i);
@@ -863,13 +863,17 @@ export class CountryComponent implements OnInit {
   });
 
   togglePageDropdown(event?: Event): void {
-    if (event) event.stopPropagation();
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     this.isPageDropdownOpen.update((v) => !v);
   }
 
   selectPageFromDropdown(page: number): void {
-    this.goToPage(page);
-    this.pageInputValue.set(String(page));
+    const clamped = Math.max(1, Math.min(this.totalPages(), page));
+    this.goToPage(clamped);
+    this.pageInputValue.set(String(clamped));
     this.isPageDropdownOpen.set(false);
   }
 
@@ -886,7 +890,6 @@ export class CountryComponent implements OnInit {
     } else {
       this.pageInputValue.set(String(this.currentPage()));
     }
-    this.isPageDropdownOpen.set(false);
   }
 
   // Column Header Filter Menu state (Image 4 replica)
