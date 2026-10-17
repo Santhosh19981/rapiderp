@@ -5,7 +5,7 @@
   [dir]="navService.isRtl() ? 'rtl' : 'ltr'"
 >
   <aside
-    class="sidebar-wrapper flex flex-col h-full bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 select-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] z-30"
+    class="sidebar-wrapper flex flex-col h-full select-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] z-30"
     [class.border-r]="!navService.isRtl()"
     [class.border-l]="navService.isRtl()"
     [class.w-64]="effectiveExpanded()"
@@ -16,7 +16,7 @@
   >
     <!-- 1. Header (Logo & Collapse Toggle) -->
     <div
-      class="sidebar-header h-16 flex items-center border-b border-slate-100 dark:border-slate-800 px-3.5 transition-all duration-300 shrink-0"
+      class="sidebar-header h-16 flex items-center border-b border-white/10 px-3.5 transition-all duration-300 shrink-0"
       [class.justify-between]="effectiveExpanded()"
       [class.justify-center]="!effectiveExpanded()"
     >
@@ -25,12 +25,16 @@
          [class.max-w-0]="!effectiveExpanded()"
          [class.opacity-0]="!effectiveExpanded()"
          [class.px-0]="!effectiveExpanded()"
-         [class.max-w-[150px]]="effectiveExpanded()"
+         [class.max-w-[170px]]="effectiveExpanded()"
          [class.opacity-100]="effectiveExpanded()"
          [class.px-1.5]="effectiveExpanded()">
-        <span class="text-2xl font-black tracking-tight text-[#1863c0] group-hover:text-[#06a9ea] transition-colors whitespace-nowrap">
-          RAPID
-        </span>
+        <div class="flex flex-col">
+          <div class="flex items-center text-[22px] font-black tracking-tight whitespace-nowrap leading-none">
+            <span class="text-white">RAPID</span>
+            <span class="text-[#facc15] ml-0.5">ERP</span>
+          </div>
+          <div class="w-7 h-[2.5px] bg-[#facc15] rounded-full mt-1 shadow-xs"></div>
+        </div>
       </a>
 
       <!-- Header Toggle Button (Pins open if clicked while hover-expanded; collapses if pinned) -->
@@ -38,32 +42,32 @@
         type="button"
         (click)="toggleCollapse($event)"
         [title]="isCollapsed() ? 'Pin sidebar open' : 'Collapse sidebar'"
-        class="collapse-header-btn p-1.5 rounded-xl text-slate-400 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-800 transition-all cursor-pointer flex items-center justify-center shrink-0"
+        class="collapse-header-btn p-1.5 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer flex items-center justify-center shrink-0"
       >
         @if (effectiveExpanded()) {
           @if (!navService.isRtl()) {
             <!-- In LTR: points left << to collapse leftwards -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 hover:text-[#1863c0] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white/70 hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
             </svg>
           } @else {
             <!-- In RTL: points right >> to collapse rightwards towards edge -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 hover:text-[#1863c0] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white/70 hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
             </svg>
           }
         } @else {
           <!-- Collapsed Icon with hover expansion chevron -->
-          <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#1863c0] hover:bg-[#1863c0] hover:text-white flex items-center justify-center font-black text-lg transition-all duration-200 shadow-2xs group/r">
-            <span class="group-hover/r:hidden font-black">R</span>
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00a6f4] to-[#0052cc] text-white flex items-center justify-center font-black text-lg shadow-md group/r relative overflow-hidden border border-white/20">
+            <span class="group-hover/r:hidden font-black tracking-tight text-white">R<span class="text-[#facc15] text-xs">.</span></span>
             @if (!navService.isRtl()) {
               <!-- In LTR: points right >> into workspace -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden group-hover/r:block transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden group-hover/r:block transition-transform text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
               </svg>
             } @else {
               <!-- In RTL: points left << into workspace -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden group-hover/r:block transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden group-hover/r:block transition-transform text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
               </svg>
             }
@@ -75,9 +79,9 @@
 
 
     <!-- 3. Module List with Modern Icons & Reverse Sliding RTL Support -->
-    <nav class="sidebar-nav flex-1 space-y-1 overflow-y-auto custom-scrollbar py-1"
-         [class.px-2]="effectiveExpanded()"
-         [class.px-1.5]="!effectiveExpanded()">
+    <nav class="sidebar-nav flex-1 space-y-1 overflow-y-auto custom-scrollbar py-2"
+         [class.px-1.5]="effectiveExpanded()"
+         [class.px-1]="!effectiveExpanded()">
       @for (item of menuItems; track item.id) {
         <div
           class="module-item-container relative group"
@@ -88,8 +92,9 @@
             type="button"
             (click)="selectItem(item)"
             class="module-nav-btn w-full flex items-center rounded-xl text-xs font-medium cursor-pointer relative transition-all duration-180"
-            [class.px-2]="effectiveExpanded()"
-            [class.py-1.5]="effectiveExpanded()"
+            [class.pl-1.5]="effectiveExpanded()"
+            [class.pr-2]="effectiveExpanded()"
+            [class.py-1]="effectiveExpanded()"
             [class.px-0]="!effectiveExpanded()"
             [class.py-1.5]="!effectiveExpanded()"
             [class.justify-start]="effectiveExpanded()"
@@ -113,11 +118,12 @@
               class="sidebar-item-label-wrap flex-1 min-w-0 overflow-hidden transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]"
               [class.max-w-0]="!effectiveExpanded()"
               [class.opacity-0]="!effectiveExpanded()"
+              [class.px-0]="!effectiveExpanded()"
               [class.max-w-[170px]]="effectiveExpanded()"
               [class.opacity-100]="effectiveExpanded()"
               [class.mx-2.5]="effectiveExpanded()"
             >
-              <span class="truncate block text-xs font-medium whitespace-nowrap text-start">
+              <span class="truncate block text-xs font-semibold whitespace-nowrap text-start">
                 {{ navService.translation.translateModule(item.id, item.label) }}
               </span>
             </div>
@@ -134,27 +140,18 @@
                 [class.w-4]="effectiveExpanded()"
               >
                 @if (!navService.isRtl()) {
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1863c0] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 } @else {
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1863c0] group-hover:-translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-white/40 group-hover:text-white group-hover:-translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
                 }
               </span>
             }
 
-            <!-- Active Vertical Bar: Right edge for LTR, Left edge for RTL -->
-            @if (hoveredItemId() === item.id || activeItemId() === item.id) {
-              <span
-                class="active-right-bar absolute top-2 bottom-2 w-[3.5px] bg-[#1863c0] shadow-sm"
-                [class.right-0]="!navService.isRtl()"
-                [class.rounded-l-full]="!navService.isRtl()"
-                [class.left-0]="navService.isRtl()"
-                [class.rounded-r-full]="navService.isRtl()"
-              ></span>
-            }
+
           </button>
         </div>
       }
@@ -173,17 +170,17 @@
         <!-- Invisible Hitbox Bridge (Ensures 100% seamless cursor movement across to submenu) -->
         <div class="invisible-hitbox-bridge"></div>
 
-        <!-- Level 1 Popover Card (2nd Level Menu: Synchronized White Card Theme matching 3rd level) -->
-        <div class="flyout-card bg-white dark:bg-slate-800 border border-blue-200/90 dark:border-slate-700 rounded-2xl p-2.5 shadow-2xl shadow-blue-950/25 min-w-[245px] max-w-[320px] overflow-hidden shrink-0">
-          <!-- Header matching 3rd level header theme -->
-          <div class="px-2.5 py-1.5 border-b border-slate-100 dark:border-slate-700/80 mb-2 flex items-center justify-between">
+        <!-- Level 1 Popover Card (2nd Level Menu: Deep Royal Navy Glassmorphism) -->
+        <div class="flyout-card bg-[#052b6d]/95 dark:bg-[#031d4d]/95 border border-sky-400/30 rounded-2xl p-2.5 shadow-2xl shadow-blue-950/70 min-w-[245px] max-w-[320px] overflow-hidden shrink-0 backdrop-blur-xl">
+          <!-- Header -->
+          <div class="px-2.5 py-1.5 border-b border-white/10 mb-2 flex items-center justify-between">
             <div class="flex items-center gap-1.5 min-w-0">
-              <span class="w-2 h-2 rounded-full bg-[#00a2e8] animate-pulse"></span>
-              <span class="text-[11px] font-extrabold text-[#1863c0] dark:text-[#38bdf8] uppercase tracking-wider truncate">
+              <span class="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8] animate-pulse"></span>
+              <span class="text-[11px] font-extrabold text-white uppercase tracking-wider truncate">
                 {{ navService.translation.translateModule(getHoveredItem()!.id, getHoveredItem()!.label) }}
               </span>
             </div>
-            <span class="text-[9px] font-bold text-[#00a2e8] bg-sky-50 dark:bg-sky-950/60 px-1.5 py-0.5 rounded-full border border-sky-100 dark:border-sky-900 shrink-0">
+            <span class="text-[9px] font-bold text-sky-200 bg-sky-500/25 px-1.5 py-0.5 rounded-full border border-sky-400/30 shrink-0">
               {{ getHoveredItem()?.subItems?.length }} options
             </span>
           </div>
@@ -200,23 +197,18 @@
                   type="button"
                   (click)="selectSubItem(getHoveredItem()!, sub, $event)"
                   class="subpage-btn w-full text-start px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer flex items-center justify-between gap-2.5 group/sub"
-                  [class.bg-sky-100/70]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
-                  [class.text-[#1863c0]]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
-                  [class.shadow-2xs]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
-                  [class.dark:bg-slate-700]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
-                  [class.dark:text-[#38bdf8]]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
-                  [class.text-slate-700]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
-                  [class.dark:text-slate-200]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
-                  [class.hover:bg-sky-50/80]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
-                  [class.dark:hover:bg-slate-700/60]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
-                  [class.hover:text-[#1863c0]]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
-                  [class.dark:hover:text-[#38bdf8]]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
+                  [class.bg-[#0ea5e9]]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
+                  [class.text-white]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
+                  [class.shadow-md]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
+                  [class.text-slate-200]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
+                  [class.hover:bg-white/10]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
+                  [class.hover:text-white]="activeSubItemId() !== sub.id && hoveredSubItemId() !== sub.id"
                 >
                   <div class="flex items-center gap-2.5 min-w-0">
                     <!-- Modern Subpage Icon with mini-container -->
-                    <span class="subpage-icon w-6 h-6 rounded-lg bg-sky-100/70 dark:bg-slate-700/80 text-[#00a2e8] dark:text-[#38bdf8] flex items-center justify-center shrink-0 group-hover/sub:scale-110 transition-transform duration-150 p-1"
+                    <span class="subpage-icon w-6 h-6 rounded-lg bg-white/10 text-sky-300 flex items-center justify-center shrink-0 group-hover/sub:scale-110 transition-transform duration-150 p-1 border border-white/10"
                           [class.bg-white]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id"
-                          [class.dark:bg-slate-600]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id">
+                          [class.text-[#0284c7]]="activeSubItemId() === sub.id || hoveredSubItemId() === sub.id">
                       <ng-container *ngTemplateOutlet="iconTemplate; context: { icon: sub.icon }"></ng-container>
                     </span>
                     <span class="truncate text-start leading-snug">{{ navService.translation.translateSubModule(sub.id, sub.label) }}</span>
@@ -224,8 +216,8 @@
 
                   <!-- Tree Indicator Chevron -->
                   @if (sub.children && sub.children.length > 0) {
-                    <span class="shrink-0 text-slate-400 group-hover/sub:text-[#1863c0] dark:group-hover/sub:text-[#38bdf8] transition-all"
-                          [class.text-[#1863c0]]="hoveredSubItemId() === sub.id"
+                    <span class="shrink-0 text-white/50 group-hover/sub:text-white transition-all"
+                          [class.text-white]="hoveredSubItemId() === sub.id"
                           [class.translate-x-0.5]="hoveredSubItemId() === sub.id">
                       @if (!navService.isRtl()) {
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -244,7 +236,7 @@
           </div>
         </div>
 
-        <!-- Level 2 Tree Submenu Popover (3rd Level Menu: Exact Same Theme as 2nd Level, Clean List without Branch Lines) -->
+        <!-- Level 2 Tree Submenu Popover (3rd Level Menu: Deep Royal Navy Glassmorphism) -->
         @if (getHoveredSubItem()?.children && getHoveredSubItem()!.children!.length > 0) {
           <div
             class="tree-flyout-container relative ms-1.5 shrink-0"
@@ -255,30 +247,30 @@
             <!-- Invisible Hitbox Bridge between flyout 1 and tree 2 -->
             <div class="tree-hitbox-bridge"></div>
 
-            <div class="tree-popover-card bg-white dark:bg-slate-800 border border-blue-200/90 dark:border-slate-700 rounded-2xl p-2.5 shadow-2xl shadow-blue-950/25 min-w-[245px] max-w-[320px] animate-in fade-in zoom-in-95 duration-150">
+            <div class="tree-popover-card bg-[#052b6d]/95 dark:bg-[#031d4d]/95 border border-sky-400/30 rounded-2xl p-2.5 shadow-2xl shadow-blue-950/70 min-w-[245px] max-w-[320px] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
               <!-- Tree Header -->
-              <div class="px-2.5 py-1.5 border-b border-slate-100 dark:border-slate-700/80 mb-2 flex items-center justify-between">
+              <div class="px-2.5 py-1.5 border-b border-white/10 mb-2 flex items-center justify-between">
                 <div class="flex items-center gap-1.5 min-w-0">
-                  <span class="w-2 h-2 rounded-full bg-[#00a2e8] animate-pulse"></span>
-                  <span class="text-[11px] font-extrabold text-[#1863c0] dark:text-[#38bdf8] uppercase tracking-wider truncate">
+                  <span class="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8] animate-pulse"></span>
+                  <span class="text-[11px] font-extrabold text-white uppercase tracking-wider truncate">
                     {{ navService.translation.translateSubModule(getHoveredSubItem()!.id, getHoveredSubItem()!.label) }}
                   </span>
                 </div>
-                <span class="text-[9px] font-bold text-[#00a2e8] bg-sky-50 dark:bg-sky-950/60 px-1.5 py-0.5 rounded-full border border-sky-100 dark:border-sky-900 shrink-0">
+                <span class="text-[9px] font-bold text-sky-200 bg-sky-500/25 px-1.5 py-0.5 rounded-full border border-sky-400/30 shrink-0">
                   {{ getHoveredSubItem()!.children!.length }} options
                 </span>
               </div>
 
-              <!-- Clean List of 3rd Level Options (Tree connector lines removed as marked in user screenshot) -->
+              <!-- Clean List of 3rd Level Options -->
               <div class="tree-options-list space-y-1">
                 @for (child of getHoveredSubItem()!.children; track child.id) {
                   <div class="tree-option-row">
                     <button
                       type="button"
                       (click)="selectTreeItem(getHoveredItem()!, getHoveredSubItem()!, child, $event)"
-                      class="tree-leaf-btn w-full text-start px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-sky-50/80 dark:hover:bg-slate-700 hover:text-[#1863c0] dark:hover:text-[#38bdf8] transition-all duration-150 flex items-center gap-2.5 cursor-pointer group/leaf"
+                      class="tree-leaf-btn w-full text-start px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-white transition-all duration-150 flex items-center gap-2.5 cursor-pointer group/leaf"
                     >
-                      <span class="w-6 h-6 rounded-lg bg-sky-100/70 dark:bg-slate-700 text-[#00a2e8] dark:text-[#38bdf8] flex items-center justify-center shrink-0 p-1 group-hover/leaf:scale-110 transition-transform">
+                      <span class="w-6 h-6 rounded-lg bg-white/10 text-sky-300 flex items-center justify-center shrink-0 p-1 group-hover/leaf:scale-110 transition-transform border border-white/10">
                         <ng-container *ngTemplateOutlet="iconTemplate; context: { icon: child.icon }"></ng-container>
                       </span>
                       <span class="truncate leading-snug flex-1">{{ child.label }}</span>

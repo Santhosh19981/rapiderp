@@ -9,9 +9,14 @@
   transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ========================================================================= */
+/* VERY STRONG ROYAL/NAVY BLUE THEME (Matches RapidERP UI Specification)     */
+/* ========================================================================= */
 .sidebar-wrapper {
   height: 100%;
-  box-shadow: 2px 0 16px rgba(15, 82, 164, 0.05);
+  background: linear-gradient(180deg, #094eb8 0%, #063994 45%, #022263 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 4px 0 25px rgba(2, 34, 99, 0.35);
   transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: width, box-shadow;
 }
@@ -23,7 +28,8 @@
   right: auto;
   bottom: 0;
   z-index: 50;
-  box-shadow: 6px 0 28px -4px rgba(15, 82, 164, 0.16), 18px 0 48px -6px rgba(15, 23, 42, 0.12);
+  background: linear-gradient(180deg, #094eb8 0%, #063994 45%, #022263 100%);
+  box-shadow: 8px 0 36px rgba(2, 34, 99, 0.5), 20px 0 60px rgba(0, 0, 0, 0.35);
 }
 
 :host-context([dir="rtl"]) .sidebar-wrapper,
@@ -38,7 +44,7 @@
 .sidebar-outer-container[dir="rtl"] .sidebar-wrapper.hover-expanded-overlay {
   right: 0 !important;
   left: auto !important;
-  box-shadow: -6px 0 28px -4px rgba(15, 82, 164, 0.16), -18px 0 48px -6px rgba(15, 23, 42, 0.12) !important;
+  box-shadow: -8px 0 36px rgba(2, 34, 99, 0.5), -20px 0 60px rgba(0, 0, 0, 0.35) !important;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -48,32 +54,36 @@
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
+  background: rgba(255, 255, 255, 0.18);
   border-radius: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(24, 99, 192, 0.4);
+  background: rgba(56, 189, 248, 0.5);
 }
 
+/* Module item button states */
 .module-nav-btn {
-  color: #334155;
+  color: rgba(255, 255, 255, 0.85);
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .module-nav-btn.active-module {
-  background-color: #f0f7ff;
-  color: #1863c0;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(24, 99, 192, 0.08);
+  background: linear-gradient(90deg, rgba(0, 166, 244, 0.35) 0%, rgba(2, 132, 199, 0.5) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(0, 166, 244, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
 }
 .module-nav-btn.hovered-module {
-  background-color: #f1f7fe;
-  color: #1863c0;
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
 }
 .module-nav-btn.inactive-module:hover {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
 }
 
+/* Glassmorphic 3D Squircle Icon Badge */
 .module-icon-badge {
   width: 36px;
   height: 36px;
@@ -90,41 +100,34 @@
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .module-icon-badge.inactive-badge {
-  background-color: rgba(0, 162, 232, 0.08);
-  color: var(--secondary-color, #00a2e8);
-  border: 1px solid rgba(0, 162, 232, 0.22);
-}
-:host-context(.dark) .module-icon-badge.inactive-badge {
-  background-color: rgba(0, 162, 232, 0.14);
-  color: #38bdf8;
-  border-color: rgba(0, 162, 232, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: #bae6fd;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
 }
 .module-icon-badge.hover-badge {
-  background-color: #eff6ff;
-  color: #1863c0;
-  border: 1px solid #bfdbfe;
+  background: rgba(0, 166, 244, 0.3);
+  color: #ffffff;
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 12px rgba(0, 166, 244, 0.35);
   transform: scale(1.05);
-}
-:host-context(.dark) .module-icon-badge.hover-badge {
-  background-color: rgba(30, 58, 138, 0.3);
-  color: #38bdf8;
-  border-color: #1d4ed8;
 }
 .module-icon-badge.active-badge {
-  background: linear-gradient(135deg, #1863c0 0%, #06a9ea 100%);
+  background: linear-gradient(135deg, #00a6f4 0%, #0284c7 100%);
   color: #ffffff !important;
-  border: 1px solid transparent;
-  box-shadow: 0 4px 14px rgba(24, 99, 192, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 2px 12px rgba(0, 166, 244, 0.45);
   transform: scale(1.05);
+}
+.module-icon-badge.active-badge svg {
+  stroke: #ffffff !important;
+  color: #ffffff !important;
 }
 .module-nav-btn:hover .module-icon-badge svg {
   transform: scale(1.08);
 }
 
-.active-right-bar {
-  transition: all 0.16s ease-in-out;
-}
-
+/* Flyout Popover Animation & Submenus */
 .flyout-popover {
   position: absolute;
   animation: techozeSlideInLTR 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -165,14 +168,14 @@
 }
 
 .flyout-card {
-  box-shadow: 0 20px 45px -10px rgba(15, 82, 164, 0.24), 0 4px 16px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 45px -10px rgba(2, 23, 66, 0.7), 0 4px 16px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
   overflow-x: hidden !important;
 }
 :host-context([dir="rtl"]) .flyout-card,
 [dir="rtl"] .flyout-card,
 .sidebar-outer-container[dir="rtl"] .flyout-card {
-  box-shadow: -20px 20px 45px -10px rgba(15, 82, 164, 0.24), -4px 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: -20px 20px 45px -10px rgba(2, 23, 66, 0.7), -4px 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .flyout-card .custom-scrollbar::-webkit-scrollbar:horizontal,
@@ -186,9 +189,6 @@
 .subpage-btn {
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
-}
-.subpage-btn:hover {
-  background-color: #ffffff;
 }
 
 .tree-hitbox-bridge {
@@ -207,13 +207,13 @@
 }
 
 .tree-popover-card {
-  box-shadow: 0 20px 45px -10px rgba(15, 82, 164, 0.28), 0 4px 16px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 45px -10px rgba(2, 23, 66, 0.7), 0 4px 16px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
   animation: techozeSlideInLTR 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 :host-context([dir="rtl"]) .tree-popover-card,
 [dir="rtl"] .tree-popover-card {
-  box-shadow: -20px 20px 45px -10px rgba(15, 82, 164, 0.28), -4px 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: -20px 20px 45px -10px rgba(2, 23, 66, 0.7), -4px 4px 16px rgba(0, 0, 0, 0.2);
   animation: techozeSlideInRTL 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 

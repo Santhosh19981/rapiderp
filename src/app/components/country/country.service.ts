@@ -19,6 +19,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: '2 hours ago',
     createdAt: '2023-01-15',
     updatedAt: '2023-11-20',
+    draftedAt: '2023-01-10',
     isUpdated: true,
   },
   {
@@ -38,6 +39,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: '2 hours ago',
     createdAt: '2023-01-18',
     updatedAt: '2023-10-15',
+    draftedAt: '2023-01-12',
   },
   {
     id: '3',
@@ -56,6 +58,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: 'Yesterday',
     createdAt: '2023-03-01',
     updatedAt: '2023-11-15',
+    draftedAt: '2023-01-25',
   },
   {
     id: '4',
@@ -74,6 +77,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: '15 minutes ago',
     createdAt: '2023-02-10',
     updatedAt: '2023-11-05',
+    draftedAt: '2023-02-05',
     isUpdated: true,
   },
   {
@@ -112,6 +116,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: '3 hours ago',
     createdAt: '2023-05-20',
     updatedAt: '2023-11-02',
+    draftedAt: '2023-02-20',
   },
   {
     id: '7',
@@ -130,6 +135,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: 'Yesterday',
     createdAt: '2023-06-01',
     updatedAt: '2023-11-08',
+    draftedAt: '2023-03-05',
   },
   {
     id: '8',
@@ -148,6 +154,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: '3 days ago',
     createdAt: '2023-04-12',
     updatedAt: '2023-09-15',
+    draftedAt: '2023-03-10',
   },
   {
     id: '9',
@@ -166,6 +173,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: '5 hours ago',
     createdAt: '2023-06-15',
     updatedAt: '2023-11-01',
+    draftedAt: '2023-03-18',
     isUpdated: true,
   },
   {
@@ -185,6 +193,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: '1 day ago',
     createdAt: '2023-03-20',
     updatedAt: '2023-10-25',
+    draftedAt: '2023-03-25',
   },
   {
     id: '11',
@@ -203,6 +212,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: 'Just now',
     createdAt: '2023-04-05',
     updatedAt: '2023-11-12',
+    draftedAt: '2023-04-01',
   },
   {
     id: '12',
@@ -221,6 +231,7 @@ const INITIAL_COUNTRIES: Country[] = [
     actionMessage: 'Yesterday',
     createdAt: '2023-02-01',
     updatedAt: '2023-11-10',
+    draftedAt: '2023-01-15',
     isUpdated: true,
   },
   {

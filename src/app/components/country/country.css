@@ -60,8 +60,8 @@
 /* ========================================================================= */
 .capsule-card {
   width: 100%;
-  height: 50px;
-  border-radius: 9999px;
+  height: 52px;
+  border-radius: 100px;
   display: flex;
   align-items: center;
   position: relative;
@@ -76,8 +76,8 @@
 }
 
 .capsule-circle-icon {
-  width: 50px;
-  height: 50px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -148,97 +148,91 @@
 .capsule-count {
   color: #4E516C;
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   line-height: 120%;
 }
 
-/* Tooltip on hover */
-.capsule-tooltip {
-  position: absolute;
-  /* Needs the top padding on .capsule-grid so the scroll container doesn't clip it */
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: #ffffff;
-  color: #00a6f4;
-  border: 1.5px solid #00a6f4;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.2;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  box-shadow: 0 4px 14px rgba(0, 166, 244, 0.18);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  white-space: nowrap;
-  z-index: 50;
-}
-
-.capsule-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px;
-  border-style: solid;
-  border-color: #00a6f4 transparent transparent transparent;
-}
-
-.capsule-card:hover {
-  z-index: 60;
-}
-
-.capsule-card:hover .capsule-tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-2px);
-}
-
-/* Room above the capsules for the hover tooltip */
+/* Capsule grid spacing */
 .capsule-grid {
-  padding-top: 26px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 /* ========================================================================= */
-/* 3. COUNTRY GRID CARDS (Exact Match to Image 1 & Image 2 Specification)     */
+/* 3. COUNTRY GRID CARDS (Exact Match to React Project Specification)        */
 /* ========================================================================= */
 .country-card {
   background: #ffffff;
   border: 1px solid #E2E4EB;
   border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
-  padding: 16px 20px 18px 20px;
+  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.08);
+  padding: 12px 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 118px;
+  width: 100%;
   cursor: pointer;
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.18s ease, box-shadow 0.22s ease;
+  transition: all 0.2s ease-in-out;
   position: relative;
-  will-change: transform;
 }
 
 .country-card:hover {
-  border-color: #00a6f4;
-  box-shadow: 0 0 0 1px #00a6f4, 0 12px 28px -4px rgba(0, 166, 244, 0.22);
-  transform: scale(1.03) translateY(-2px);
-  z-index: 10;
+  border-color: #20B7FA;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+  z-index: 20;
 }
 
 :host-context(.dark) .country-card,
 .dark .country-card {
-  background: #1e293b;
-  border-color: #334155;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  background: #1f2937;
+  border-color: #374151;
+  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.25);
 }
 
 :host-context(.dark) .country-card:hover,
 .dark .country-card:hover {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 1px #38bdf8, 0 12px 28px -4px rgba(56, 189, 248, 0.25);
-  transform: scale(1.03) translateY(-2px);
-  z-index: 10;
+  border-color: #20B7FA;
+  box-shadow: 0 10px 25px -5px rgba(32, 183, 250, 0.25);
+  transform: scale(1.05);
+  z-index: 20;
+}
+
+/* Floating hover actions toolbar on country card (Edit, Delete, Status Toggle) */
+.country-card .card-hover-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(4px);
+  padding: 3px 8px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-3px);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 30;
+}
+
+.country-card:hover .card-hover-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+:host-context(.dark) .country-card .card-hover-actions,
+.dark .country-card .card-hover-actions {
+  background: rgba(30, 41, 59, 0.96);
+  border-color: rgba(51, 65, 85, 0.9);
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4);
 }
 
 /* ========================================================================= */
@@ -257,12 +251,12 @@
 }
 
 /* ========================================================================= */
-/* Custom Scrollbars: Bright Cyan Pill Thumb (Image 1 replica)              */
+/* Custom Scrollbars: Light Cyan/Sky Pill Thumb (Image 1 replica)            */
 /* Applied across Grid, Table, Add, Edit, View pages, and popups/modals      */
 /* ========================================================================= */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #00a6f4 #f1f5f9;
+  scrollbar-color: #80d6fb #f8fafc;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -271,19 +265,19 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f8fafc;
   border-radius: 9999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #00a6f4;
+  background: #80d6fb;
   border-radius: 9999px;
   border: 1px solid transparent;
   background-clip: padding-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #008ece;
+  background: #52c5f8;
 }
 
 :host-context(.dark) .custom-scrollbar,
@@ -527,58 +521,54 @@
 }
 
 /* ========================================================================= */
-/* LIST TABLE: sticky select / name / action columns + pagination buttons    */
+/* LIST TABLE: sticky left (Select, Name, Code) & sticky right (Status, Action) */
 /* ========================================================================= */
+.country-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.country-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
 .country-table .sticky-col {
   position: sticky;
-  z-index: 2;
   background: #ffffff;
 }
 
+.country-table thead th.sticky-col,
 .country-table thead .sticky-col {
-  background: #f8fafc;
-  z-index: 5;
+  background: #f8fafc !important;
+  z-index: 30;
 }
 
-.country-table .sticky-left-0 {
-  left: 0;
-  width: 48px;
-  min-width: 48px;
-  max-width: 48px;
+:host-context(.dark) .country-table thead th.sticky-col,
+:host-context(.dark) .country-table thead .sticky-col,
+.dark .country-table thead th.sticky-col,
+.dark .country-table thead .sticky-col {
+  background: #1e293b !important;
 }
 
-.country-table .sticky-left-name {
-  left: 48px;
-  width: 190px;
-  min-width: 190px;
-  max-width: 190px;
+.country-table tbody .sticky-col {
+  background: #ffffff;
+  z-index: 10;
 }
 
-.country-table .sticky-left-code {
-  left: 238px;
-  width: 90px;
-  min-width: 90px;
-  max-width: 90px;
-  box-shadow: 4px 0 6px -4px rgba(15, 23, 42, 0.14);
-}
-
-.country-table .sticky-right-status {
-  right: 140px;
-  width: 110px;
-  min-width: 110px;
-  max-width: 110px;
-  box-shadow: -4px 0 6px -4px rgba(15, 23, 42, 0.14);
-}
-
-.country-table .sticky-right-action {
-  right: 0;
-  width: 140px;
-  min-width: 140px;
-  max-width: 140px;
+:host-context(.dark) .country-table tbody .sticky-col,
+.dark .country-table tbody .sticky-col {
+  background: #1e293b;
 }
 
 .country-table tbody tr:hover .sticky-col {
   background: #f8fafc;
+}
+
+:host-context(.dark) .country-table tbody tr:hover .sticky-col,
+.dark .country-table tbody tr:hover .sticky-col {
+  background: #334155;
 }
 
 .country-table tbody tr.bg-sky-50\/60 .sticky-col,
@@ -586,16 +576,135 @@
   background: #f0f9ff;
 }
 
-:host-context(.dark) .country-table .sticky-col,
-.dark .country-table .sticky-col {
-  background: #1e293b;
+:host-context(.dark) .country-table tbody tr.bg-sky-50\/60 .sticky-col,
+:host-context(.dark) .country-table tbody tr[class*="bg-sky-50"] .sticky-col,
+.dark .country-table tbody tr.bg-sky-50\/60 .sticky-col,
+.dark .country-table tbody tr[class*="bg-sky-50"] .sticky-col {
+  background: #0c4a6e;
 }
 
-:host-context(.dark) .country-table thead .sticky-col,
-.dark .country-table thead .sticky-col,
-:host-context(.dark) .country-table tbody tr:hover .sticky-col,
-.dark .country-table tbody tr:hover .sticky-col {
-  background: #0f172a;
+/* Left frozen columns: Checkbox (48px), Name (180px), Code (110px) -> Total 338px */
+.country-table .sticky-left-0 {
+  left: 0;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.country-table .sticky-left-name {
+  left: 48px;
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.country-table .sticky-left-code {
+  left: 228px;
+  width: 110px;
+  min-width: 110px;
+  max-width: 110px;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 4px 0 8px -2px rgba(15, 23, 42, 0.08);
+}
+
+/* Support when select checkbox column is hidden */
+.country-table.no-select-col .sticky-left-name {
+  left: 0;
+}
+.country-table.no-select-col .sticky-left-code {
+  left: 180px;
+}
+
+/* Right frozen columns: Status (110px at right 130px) and Action (130px at right 0) -> Total 240px */
+.country-table .sticky-right-status {
+  right: 130px;
+  width: 110px;
+  min-width: 110px;
+  max-width: 110px;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: -4px 0 8px -2px rgba(15, 23, 42, 0.08);
+}
+
+.country-table .sticky-right-action {
+  right: 0;
+  width: 130px;
+  min-width: 130px;
+  max-width: 130px;
+}
+
+:host-context(.dark) .country-table .sticky-left-0,
+:host-context(.dark) .country-table .sticky-left-name,
+:host-context(.dark) .country-table .sticky-left-code,
+:host-context(.dark) .country-table .sticky-right-status,
+.dark .country-table .sticky-left-0,
+.dark .country-table .sticky-left-name,
+.dark .country-table .sticky-left-code,
+.dark .country-table .sticky-right-status {
+  border-color: #334155;
+}
+
+/* HORIZONTAL SCROLLBAR: display only across middle scrollable columns (between Code and Status) */
+.country-table-scroll::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.country-table-scroll::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-top: 1px solid #E2E4EB;
+  border-bottom: 1px solid #E2E4EB;
+  margin-left: 338px;
+  margin-right: 240px;
+  border-radius: 9999px;
+}
+
+.country-table-scroll.no-select-col::-webkit-scrollbar-track {
+  margin-left: 290px;
+}
+
+.country-table-scroll.no-status-col::-webkit-scrollbar-track {
+  margin-right: 130px;
+}
+
+/* Keyboard Grid Navigation Focus Box Outline */
+.cell-focus-box {
+  border: 2px solid #00a6f4 !important;
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.25) !important;
+  background-color: rgba(0, 166, 244, 0.07) !important;
+  border-radius: 6px !important;
+}
+
+:host-context(.dark) .country-table-scroll::-webkit-scrollbar-track,
+.dark .country-table-scroll::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-color: #374151;
+}
+
+.country-table-scroll::-webkit-scrollbar-thumb {
+  background: #20b7fa;
+  border-radius: 9999px;
+}
+
+.country-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #1a9ee6;
+}
+
+/* Visibility panel slide-in from right animation */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 :host-context(.dark) .country-table tbody tr[class*="bg-sky-50"] .sticky-col,
@@ -605,82 +714,115 @@
 /* ========================================================================= */
 /* PAGINATION NAVIGATION BUTTONS (Exact Match to Reference Screenshot)       */
 /* ========================================================================= */
+/* ========================================================================= */
+/* PAGINATION NAVIGATION BUTTONS (Exact Match to Reference Screenshot 2)     */
+/* ========================================================================= */
+.pagination-nav-circle,
 .pagination-nav-btn {
   width: 32px;
   height: 32px;
   border-radius: 9999px;
-  background: #e6f6fe;
-  color: #00a6f4;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   cursor: pointer;
-  transition: background 0.15s ease, opacity 0.15s ease, transform 0.1s ease;
+  background: #cbebfd;
+  color: #334155;
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
 }
 
+.pagination-nav-circle:hover:not(:disabled),
 .pagination-nav-btn:hover:not(:disabled) {
-  background: #d4effd;
+  background: #b5e4fc;
+  color: #0f172a;
 }
 
-.pagination-nav-btn:active:not(:disabled) {
-  transform: scale(0.95);
+.pagination-nav-first,
+.pagination-nav-prev,
+.pagination-nav-next,
+.pagination-nav-last {
+  background: #cbebfd;
+  color: #334155;
 }
 
+.pagination-nav-first:hover:not(:disabled),
+.pagination-nav-prev:hover:not(:disabled),
+.pagination-nav-next:hover:not(:disabled),
+.pagination-nav-last:hover:not(:disabled) {
+  background: #b5e4fc;
+  color: #0f172a;
+}
+
+.pagination-nav-circle:disabled,
 .pagination-nav-btn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
+  pointer-events: none;
 }
 
-:host-context(.dark) .pagination-nav-btn,
-.dark .pagination-nav-btn {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
+:host-context(.dark) .pagination-nav-first,
+:host-context(.dark) .pagination-nav-prev,
+:host-context(.dark) .pagination-nav-next,
+:host-context(.dark) .pagination-nav-last,
+.dark .pagination-nav-first,
+.dark .pagination-nav-prev,
+.dark .pagination-nav-next,
+.dark .pagination-nav-last {
+  background: rgba(56, 189, 248, 0.22);
+  color: #bae6fd;
 }
 
+:host-context(.dark) .pagination-nav-circle:hover:not(:disabled),
 :host-context(.dark) .pagination-nav-btn:hover:not(:disabled),
+.dark .pagination-nav-circle:hover:not(:disabled),
 .dark .pagination-nav-btn:hover:not(:disabled) {
-  background: rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.38);
+  color: #ffffff;
 }
 
+/* Page number pill: Wide rounded pill in Screenshot 2 */
+.pagination-page-pill,
 .pagination-page-btn {
-  width: 32px;
+  min-width: 58px;
   height: 32px;
+  padding: 0 18px;
   border-radius: 9999px;
-  background: #e6f6fe;
+  background: #ffffff;
+  border: 1px solid #7dd3fc;
   color: #00a6f4;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
 }
 
+.pagination-page-pill:hover,
 .pagination-page-btn:hover {
-  background: #d4effd;
+  background: #f0f9ff;
+  border-color: #38bdf8;
 }
 
+.pagination-page-pill.is-active,
 .pagination-page-btn.is-active {
-  border: 1px solid #00a6f4;
+  border: 1.5px solid #38bdf8;
   background: #ffffff;
   color: #00a6f4;
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 166, 244, 0.12);
+  box-shadow: 0 1px 3px rgba(56, 189, 248, 0.18);
 }
 
+:host-context(.dark) .pagination-page-pill,
 :host-context(.dark) .pagination-page-btn,
+.dark .pagination-page-pill,
 .dark .pagination-page-btn {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
-}
-
-:host-context(.dark) .pagination-page-btn.is-active,
-.dark .pagination-page-btn.is-active {
-  border-color: #38bdf8;
   background: #1e293b;
+  border-color: #38bdf8;
   color: #38bdf8;
 }
 
@@ -923,4 +1065,93 @@
   background-color: rgba(0, 166, 244, 0.18);
   border-color: #00a6f4;
   color: #38bdf8;
+}
+
+/* ========================================================================= */
+/* CUSTOM CHECKBOX (Exact Replica of Screenshot 3 Reference)                 */
+/* ========================================================================= */
+.custom-checkbox-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.custom-checkbox-box {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  background-color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease-in-out;
+  flex-shrink: 0;
+  color: #00a6f4;
+}
+
+:host-context(.dark) .custom-checkbox-box,
+.dark .custom-checkbox-box {
+  background-color: #1e293b;
+  border-color: #475569;
+}
+
+/* Hover effect */
+.custom-checkbox-wrap:hover .custom-checkbox-box {
+  border-color: #00a6f4;
+}
+
+/* Checked state: Cyan border, pure white background, cyan checkmark */
+.custom-checkbox-input:checked + .custom-checkbox-box,
+.custom-checkbox-box.is-checked {
+  border-color: #00a6f4 !important;
+  background-color: #ffffff !important;
+  color: #00a6f4 !important;
+}
+
+:host-context(.dark) .custom-checkbox-input:checked + .custom-checkbox-box,
+.dark .custom-checkbox-input:checked + .custom-checkbox-box {
+  background-color: #0f172a !important;
+  border-color: #00a6f4 !important;
+  color: #38bdf8 !important;
+}
+
+.custom-checkbox-input:focus-visible + .custom-checkbox-box {
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.35);
+}
+
+.custom-checkbox-input:checked + .custom-checkbox-box .check-icon {
+  display: block;
+}
+
+.custom-checkbox-icon {
+  width: 12px;
+  height: 12px;
+  display: none;
+}
+
+/* Indeterminate state */
+.custom-checkbox-input:indeterminate + .custom-checkbox-box {
+  border-color: #00a6f4 !important;
+  background-color: #ffffff !important;
+  color: #00a6f4 !important;
+}
+
+:host-context(.dark) .custom-checkbox-input:indeterminate + .custom-checkbox-box,
+.dark .custom-checkbox-input:indeterminate + .custom-checkbox-box {
+  background-color: #0f172a !important;
+  border-color: #00a6f4 !important;
+  color: #38bdf8 !important;
+}
+
+.custom-checkbox-input:indeterminate + .custom-checkbox-box .check-icon {
+  display: none !important;
+}
+
+.custom-checkbox-input:indeterminate + .custom-checkbox-box .dash-icon {
+  display: block !important;
 }

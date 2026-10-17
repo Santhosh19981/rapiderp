@@ -33,19 +33,29 @@
       <!-- 1. HEADER: ▶ title + Add (list)  |  ← title + List/Add/Edit/View tabs     -->
       <!-- ========================================================================= -->
       <div
-        class="country-header flex items-center justify-between gap-3 px-5 h-16 border-b border-slate-200/70 dark:border-slate-700 shrink-0">
+        class="country-header relative flex items-center justify-between gap-3 px-5 h-16 border-b border-slate-200/70 dark:border-slate-700 shrink-0">
         <div class="flex items-center gap-2.5 min-w-0">
           @if (viewMode() === 'grid' || viewMode() === 'list') {
-          <div
-            class="w-9 h-9 rounded-[11px] bg-gradient-to-br from-[#1863c0] to-[#06a9ea] text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/25">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round" class="w-[19px] h-[19px] text-white">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="2" y1="12" x2="22" y2="12" />
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          <!-- List toggle icon-only button beside Country Master -->
+          <button type="button" (click)="switchView(viewMode() === 'grid' ? 'list' : 'grid')"
+            class="w-9 h-9 rounded-full border border-[#00a6f4] text-[#00a6f4] bg-white dark:bg-slate-800 flex items-center justify-center hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs shrink-0"
+            [title]="viewMode() === 'grid' ? 'Switch to Table view' : 'Switch to Grid view'">
+            @if (viewMode() === 'grid') {
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-          </div>
-          <h1 class="text-[17px] font-bold text-[#00a6f4] truncate">Countries</h1>
+            } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            }
+          </button>
+          <h1 class="text-[18px] sm:text-[20px] font-bold text-[#00a6f4] truncate">Country Master</h1>
           } @else {
           <button type="button" (click)="switchView('grid')"
             class="w-[34px] h-[34px] rounded-full bg-[#e6f6fe] text-[#00a6f4] hover:bg-[#d4effd] flex items-center justify-center transition-colors cursor-pointer shrink-0"
@@ -63,10 +73,38 @@
           }
         </div>
 
-        <div class="flex items-center gap-2 self-stretch">
+        <!-- Centered Search Bar: Strictly in center as requested -->
+        @if (viewMode() === 'grid' || viewMode() === 'list') {
+        <div
+          class="absolute left-1/2 -translate-x-1/2 w-48 sm:w-64 md:w-80 lg:w-96 flex items-center z-10 pointer-events-auto">
+          <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search"
+            class="w-full h-10 pl-9 pr-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
+          <!-- Magnifying Glass Icon on Left -->
+          <svg xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <!-- Microphone Icon on Right -->
+          <button type="button" (click)="toggleSearchVoice()"
+            [title]="activeListeningField() === 'search' ? 'Listening...' : 'Voice Search'"
+            class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#00a6f4] p-1 rounded-full cursor-pointer focus:outline-none transition-colors"
+            [class.text-red-500]="activeListeningField() === 'search'"
+            [class.animate-pulse]="activeListeningField() === 'search'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+            </svg>
+          </button>
+        </div>
+        }
+
+        <!-- Right Side: Add Button or Form Tabs -->
+        <div class="flex items-center gap-3">
           @if (viewMode() === 'grid' || viewMode() === 'list') {
           <button type="button" (click)="openCreate()"
-            class="self-center h-11 px-10 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-[22px] font-bold transition-colors cursor-pointer"
+            class="h-10 px-8 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-[18px] sm:text-[20px] font-bold transition-colors cursor-pointer shrink-0 shadow-2xs"
             title="New Country">
             Add
           </button>
@@ -127,21 +165,20 @@
         <!-- Counters + toolbar stay put; the data area below scrolls (md and up) -->
         <div class="flex flex-col md:flex-1 md:min-h-0 w-full">
 
-          <!-- 5 CAPSULE STAT SUMMARY CARDS (Visible only in Grid view, hidden in Table view as requested) -->
-          @if (viewMode() === 'grid') {
+          <!-- 4 CAPSULE STAT SUMMARY CARDS (Exact match to React: Total, Active, Inactive, Draft) -->
+          @if (viewMode() === 'grid' || viewMode() === 'list') {
           <div
-            class="capsule-grid shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5 lg:gap-6 w-full px-4 sm:px-6">
+            class="capsule-grid shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 w-full px-4 sm:px-6">
 
             <!-- 1. Total (42) - Blue Capsule -->
             <div (click)="setFilterTab('all')" class="capsule-card capsule-total"
               [class.ring-2]="activeFilterTab() === 'all'" [class.ring-[#00a6f4]]="activeFilterTab() === 'all'">
-
               <!-- Icon Circle -->
               <div class="capsule-circle-icon circle-total">
                 <img src="/counter-1.svg" alt="Total" class="w-6 h-6" (error)="onFlagError($event)" />
               </div>
               <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2.5 mr-4 min-w-0">
+              <div class="flex items-center justify-between flex-1 ml-2 mr-5 min-w-0">
                 <div class="flex-1 flex items-center justify-center">
                   <span class="capsule-title truncate">Total</span>
                 </div>
@@ -152,13 +189,12 @@
             <!-- 2. Active (33) - Mint Green Capsule -->
             <div (click)="setFilterTab('active')" class="capsule-card capsule-active"
               [class.ring-2]="activeFilterTab() === 'active'" [class.ring-emerald-500]="activeFilterTab() === 'active'">
-
               <!-- Icon Circle -->
               <div class="capsule-circle-icon circle-active">
                 <img src="/counter-active.svg" alt="Active" class="w-6 h-6" (error)="onFlagError($event)" />
               </div>
               <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2.5 mr-4 min-w-0">
+              <div class="flex items-center justify-between flex-1 ml-2 mr-5 min-w-0">
                 <div class="flex-1 flex items-center justify-center">
                   <span class="capsule-title truncate">Active</span>
                 </div>
@@ -170,13 +206,12 @@
             <div (click)="setFilterTab('inactive')" class="capsule-card capsule-inactive"
               [class.ring-2]="activeFilterTab() === 'inactive'"
               [class.ring-teal-500]="activeFilterTab() === 'inactive'">
-
               <!-- Icon Circle -->
               <div class="capsule-circle-icon circle-inactive">
                 <img src="/counter-inactive.svg" alt="Inactive" class="w-6 h-6" (error)="onFlagError($event)" />
               </div>
               <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2.5 mr-4 min-w-0">
+              <div class="flex items-center justify-between flex-1 ml-2 mr-5 min-w-0">
                 <div class="flex-1 flex items-center justify-center">
                   <span class="capsule-title truncate">Inactive</span>
                 </div>
@@ -187,13 +222,12 @@
             <!-- 4. Draft (1) - Yellow Capsule -->
             <div (click)="setFilterTab('draft')" class="capsule-card capsule-draft"
               [class.ring-2]="activeFilterTab() === 'draft'" [class.ring-amber-500]="activeFilterTab() === 'draft'">
-
               <!-- Icon Circle -->
               <div class="capsule-circle-icon circle-draft">
                 <img src="/counter-draft.svg" alt="Draft" class="w-6 h-6" (error)="onFlagError($event)" />
               </div>
               <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2.5 mr-4 min-w-0">
+              <div class="flex items-center justify-between flex-1 ml-2 mr-5 min-w-0">
                 <div class="flex-1 flex items-center justify-center">
                   <span class="capsule-title truncate">Draft</span>
                 </div>
@@ -201,227 +235,197 @@
               </div>
             </div>
 
-            <!-- 5. Deleted (1) - Coral / Rose Capsule -->
-            <div (click)="setFilterTab('deleted')" class="capsule-card capsule-deleted"
-              [class.ring-2]="activeFilterTab() === 'deleted'" [class.ring-rose-500]="activeFilterTab() === 'deleted'">
-
-              <!-- Icon Circle -->
-              <div class="capsule-circle-icon circle-deleted">
-                <img src="/counter-deleted.svg" alt="Deleted" class="w-6 h-6" (error)="onFlagError($event)" />
-              </div>
-              <!-- Text Content -->
-              <div class="flex items-center justify-between flex-1 ml-2.5 mr-4 min-w-0">
-                <div class="flex-1 flex items-center justify-center">
-                  <span class="capsule-title truncate">Deleted</span>
-                </div>
-                <span class="capsule-count flex-shrink-0 ml-2">{{ countryService.stats().deleted }}</span>
-              </div>
-            </div>
-
           </div>
           }
 
-          <!-- ACTION TOOLBAR (Image 1: List, Import, Search with Mic, Export, Filter) -->
-          <div class="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-4">
-            <!-- Left Buttons: List & Import -->
-            <div class="flex items-center gap-2.5">
-              <!-- List / Grid Toggle Button -->
-              <button type="button" (click)="switchView(viewMode() === 'grid' ? 'list' : 'grid')"
-                class="h-[30px] px-3 rounded-full border border-[#00a6f4] text-[#00a6f4] bg-white dark:bg-slate-800 text-[13px] font-semibold flex items-center gap-1.5 hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
-                @if (viewMode() === 'grid') {
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <span>List</span>
-                } @else {
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="7" height="7" rx="1" />
+          <!-- LIST VIEW CONTROLS TOOLBAR (Exact Replica of Screenshots 1 & 2) -->
+          @if (viewMode() === 'list') {
+          <div
+            class="shrink-0 flex items-center justify-between gap-3 px-6 py-2.5 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
+            <!-- Left: Grid & Visibility buttons -->
+            <div class="flex items-center gap-2">
+              <button type="button" (click)="switchView('grid')"
+                class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                  <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                  <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                  <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 </svg>
                 <span>Grid</span>
-                }
               </button>
 
-              <!-- Import (grid) / Visibility (list) Pill Button -->
-              @if (viewMode() === 'grid') {
-              <button type="button" (click)="openImportModal()" hidden
-                class="h-[30px] px-3 rounded-full border border-[#00a6f4] text-[#00a6f4] bg-white dark:bg-slate-800 text-[13px] font-semibold flex items-center gap-1.5 hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
+              <button type="button" (click)="toggleVisibilityPanel($event)"
+                class="h-[32px] px-3.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                [class.bg-[#00a6f4]]="isVisibilityOpen()" [class.text-white]="isVisibilityOpen()"
+                [class.border-[#00a6f4]]="isVisibilityOpen()" [class.border-slate-300]="!isVisibilityOpen()"
+                [class.dark:border-slate-600]="!isVisibilityOpen()" [class.bg-white]="!isVisibilityOpen()"
+                [class.dark:bg-slate-800]="!isVisibilityOpen()" [class.text-slate-700]="!isVisibilityOpen()"
+                [class.dark:text-slate-200]="!isVisibilityOpen()" [class.hover:bg-slate-50]="!isVisibilityOpen()"
+                [class.dark:hover:bg-slate-700]="!isVisibilityOpen()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>Import</span>
-              </button>
-              } @else {
-              <div class="relative" data-popover>
-                <button type="button" (click)="isVisibilityOpen.set(!isVisibilityOpen())"
-                  class="h-[30px] px-3 rounded-full border border-[#00a6f4] text-[#00a6f4] bg-white dark:bg-slate-800 text-[13px] font-semibold flex items-center gap-1.5 hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs"
-                  [class.bg-[#e6f6fe]]="isVisibilityOpen()">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span>Visibility</span>
-                </button>
-                @if (isVisibilityOpen()) {
-                <div
-                  class="absolute z-40 left-0 mt-2 w-60 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl p-3 space-y-1">
-                  <label
-                    class="form-switch w-full justify-between px-2 py-1.5 border-b border-slate-100 dark:border-slate-700 mb-1">
-                    <span class="form-switch-label">Select All</span>
-                    <input type="checkbox" class="sr-only" [checked]="hiddenColumns().size === 0"
-                      (change)="setAllColumnsVisible($any($event.target).checked)" />
-                    <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                  </label>
-                  @for (col of listColumns; track col.key) {
-                  <label
-                    class="form-switch w-full justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60">
-                    <span class="form-switch-label font-medium!">{{ col.label }}</span>
-                    <input type="checkbox" class="sr-only" [checked]="!hiddenColumns().has(col.key)"
-                      (change)="toggleColumn(col.key)" />
-                    <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                  </label>
-                  }
-                </div>
-                }
-              </div>
-              }
-            </div>
-
-            <!-- Center Search Pill Input with Voice Mic -->
-            <div class="relative w-full sm:w-[282px]">
-              <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
-                placeholder="Search"
-                class="w-full h-[38px] pl-9 pr-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
-              <!-- Magnifying Glass Icon on Left -->
-              <svg xmlns="http://www.w3.org/2000/svg"
-                class="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <!-- Microphone Icon on Right -->
-              <button type="button" (click)="toggleSearchVoice()"
-                [title]="activeListeningField() === 'search' ? 'Listening...' : 'Voice Search'"
-                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#00a6f4] p-1 rounded-full cursor-pointer focus:outline-none transition-colors"
-                [class.text-red-500]="activeListeningField() === 'search'"
-                [class.animate-pulse]="activeListeningField() === 'search'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="1.8">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
+                <span>Visibility</span>
               </button>
             </div>
 
-            <!-- Right Buttons: Export & Filter -->
-            <div class="flex items-center gap-2.5" hidden>
-              <!-- Export Pill Button -->
+            <!-- Right: Export & Filter buttons -->
+            <div class="flex items-center gap-2">
               <button type="button" (click)="toggleExportPanel()"
-                class="h-[30px] px-3 rounded-full border border-[#00a6f4] text-[13px] font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-                [class.bg-[#00a6f4]]="isExportPanelOpen()" [class.text-white]="isExportPanelOpen()"
-                [class.text-[#00a6f4]]="!isExportPanelOpen()" [class.bg-white]="!isExportPanelOpen()"
-                [class.dark:bg-slate-800]="!isExportPanelOpen()" [class.hover:bg-sky-50]="!isExportPanelOpen()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <path d="m17 8-5-5-5 5" />
-                  <path d="M12 3v12" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" x2="12" y1="3" y2="15" />
                 </svg>
                 <span>Export</span>
               </button>
 
-              <!-- Filter Pill Button -->
               <button type="button" (click)="toggleFilterPanel()"
-                class="relative h-[30px] px-3 rounded-full border border-[#00a6f4] text-[13px] font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-                [class.bg-[#00a6f4]]="isFilterPanelOpen()" [class.text-white]="isFilterPanelOpen()"
-                [class.text-[#00a6f4]]="!isFilterPanelOpen()" [class.bg-white]="!isFilterPanelOpen()"
-                [class.dark:bg-slate-800]="!isFilterPanelOpen()" [class.hover:bg-sky-50]="!isFilterPanelOpen()">
-                @if (isFilterActive()) {
-                <span
-                  class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-800"
-                  title="Filters applied"></span>
-                }
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
                 </svg>
                 <span>Filter</span>
               </button>
             </div>
           </div>
 
+          <!-- Bulk actions sub-bar (Exact Replica of Screenshots 1 & 2) -->
+          @if (selectedIds().size > 0 || hasPendingChanges()) {
+          <div class="flex items-center gap-2.5 px-6 py-2 bg-transparent shrink-0">
+            @if (selectedIds().size > 0) {
+            <button type="button" (click)="bulkDelete()"
+              class="px-4 py-1.5 rounded-full bg-[#dff3fd] hover:bg-[#cbeafe] text-[#0284c7] dark:bg-sky-950/50 dark:text-sky-300 font-semibold text-xs transition cursor-pointer">
+              Bulk Delete
+            </button>
+            }
+            <button type="button" (click)="openBulkUpdateModal()"
+              class="px-4 py-1.5 rounded-full bg-[#dff3fd] hover:bg-[#cbeafe] text-[#0284c7] dark:bg-sky-950/50 dark:text-sky-300 font-semibold text-xs transition cursor-pointer">
+              Bulk Update
+            </button>
+            @if (selectedIds().size > 0) {
+            <span class="text-xs text-slate-400 dark:text-slate-500 font-normal ml-1">
+              Selected {{ selectedIds().size }} of total {{ sortedCountries().length }}
+            </span>
+            }
+          </div>
+          }
+          }
+
           <!-- ===================================================================== -->
-          <!-- 4-COLUMN CARDS GRID (Exact Replica of Reference Image 1)              -->
+          <!-- 4-COLUMN CARDS GRID (Exact Replica of React Country Cards)            -->
           <!-- ===================================================================== -->
           <!-- Data area (scrolls on its own) + optional Export side panel -->
           <div
-            class="flex flex-col md:flex-row gap-4 md:flex-1 md:min-h-0 px-4 py-4 bg-[#f8fafc] dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-700">
+            class="flex flex-col md:flex-row gap-2 md:flex-1 md:min-h-0 px-2.5 py-1.5 bg-[#f8fafc] dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-700">
             <div class="flex-1 min-w-0 md:min-h-0 custom-scrollbar" [class.md:overflow-y-auto]="viewMode() === 'grid'"
               [class.country-grid-scroll]="viewMode() === 'grid'" [class.md:flex]="viewMode() === 'list'"
               [class.md:flex-col]="viewMode() === 'list'" (scroll)="onGridScroll($event)">
               @if (viewMode() === 'grid') {
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-4.5 lg:gap-[18px]"
-                [class.lg:grid-cols-4]="!isExportPanelOpen() && !isFilterPanelOpen()"
-                [class.lg:grid-cols-3]="isExportPanelOpen() || isFilterPanelOpen()">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 p-1.5 pb-4">
                 @for (c of gridCountries(); track c.id) {
-                <div (click)="openView(c)" class="country-card select-none">
-                  <!-- Top Row - Country Name and Flag -->
-                  <div class="flex items-center justify-between gap-2 w-full">
-                    <h3 class="text-[15px] font-medium text-slate-800 dark:text-white truncate min-w-0"
-                      title="{{ c.name }}">
+                <div (click)="openView(c)" class="country-card select-none group/card">
+                  <!-- Floating Hover Actions: Edit, Delete, Status Toggle -->
+                  <div class="card-hover-actions" (click)="$event.stopPropagation()">
+                    <!-- Edit Icon -->
+                    <button type="button" (click)="openEdit(c, $event)"
+                      class="w-6 h-6 rounded-full flex items-center justify-center text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer"
+                      title="Edit Country">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                      </svg>
+                    </button>
+
+                    <!-- Delete Icon -->
+                    <button type="button" (click)="promptDelete(c, $event)"
+                      class="w-6 h-6 rounded-full flex items-center justify-center text-slate-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-700 transition cursor-pointer"
+                      title="Delete Country">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+
+                    <span class="w-px h-3.5 bg-slate-200 dark:bg-slate-700"></span>
+
+                    <!-- Status Toggle Switch -->
+                    <button type="button" (click)="toggleCountryStatus(c, $event)"
+                      class="w-7 h-4 rounded-full flex items-center p-0.5 cursor-pointer transition-colors"
+                      [class.bg-emerald-500]="c.status === 'Active'" [class.bg-slate-300]="c.status !== 'Active'"
+                      [class.dark:bg-slate-600]="c.status !== 'Active'" [class.justify-end]="c.status === 'Active'"
+                      [class.justify-start]="c.status !== 'Active'"
+                      [title]="'Status: ' + c.status + ' (Click to toggle)'">
+                      <span class="w-3 h-3 bg-white rounded-full shadow-xs"></span>
+                    </button>
+                  </div>
+
+                  <!-- Top Row - Flag on Left + Country Name -->
+                  <div class="flex items-center gap-2 w-full min-w-0 pr-1">
+                    <img [src]="c.flag || ('https://flagcdn.com/' + c.code.toLowerCase() + '.svg')"
+                      [alt]="c.name + ' flag'"
+                      class="h-3.5 w-5.5 object-cover border border-slate-200/90 dark:border-slate-700 rounded-xs shadow-2xs shrink-0"
+                      (error)="onFlagError($event, c)" />
+                    <h3
+                      class="text-[13.5px] font-semibold text-slate-800 dark:text-slate-100 transition-colors truncate max-w-full group-hover/card:max-w-[calc(100%-105px)]"
+                      [title]="c.name">
                       {{ c.name }}
                     </h3>
-
-                    <!-- Country Flag (Right-aligned, 48x32px, border, rounded-md) -->
-                    <div class="flex justify-end shrink-0">
-                      <img [src]="c.flag || ('https://flagcdn.com/' + c.code.toLowerCase() + '.svg')"
-                        [alt]="c.name + ' flag'"
-                        class="h-8 w-12 object-cover border border-slate-200 dark:border-slate-700 rounded-md shadow-2xs"
-                        (error)="onFlagError($event, c)" />
-                    </div>
                   </div>
 
                   <!-- Middle Row - Currency and Status -->
-                  <div class="flex items-center justify-between gap-2 w-full">
-                    <!-- Currency (Left) -->
+                  <div class="grid grid-cols-2 gap-2 w-full">
+                    <!-- Currency - Left -->
                     <div class="min-w-0">
-                      <div class="text-[11px] text-slate-400 dark:text-slate-400 font-normal">Currency</div>
-                      <div class="text-[13px] font-medium text-slate-700 dark:text-slate-100 truncate mt-0.5">
+                      <div class="text-[10px] text-slate-400 dark:text-slate-500 font-normal leading-tight mb-0.5">
+                        Currency
+                      </div>
+                      <div class="text-[12px] font-medium text-slate-800 dark:text-slate-100 truncate">
                         {{ c.currency || '—' }}
                       </div>
                     </div>
 
-                    <!-- Status (Right) -->
-                    <div class="text-right min-w-0">
-                      <div class="text-[11px] text-slate-400 dark:text-slate-400 font-normal">Status</div>
-                      <div class="text-[13px] font-medium text-slate-700 dark:text-slate-100 truncate mt-0.5">
-                        {{ c.status }}
+                    <!-- Status - Right -->
+                    <div class="text-right min-w-0 cursor-pointer" (click)="toggleCountryStatus(c, $event)"
+                      [title]="'Status: ' + c.status + ' (Click to toggle)'">
+                      <div class="text-[10px] text-slate-400 dark:text-slate-500 font-normal leading-tight mb-0.5">
+                        Status
+                      </div>
+                      <div class="text-[12px] font-medium truncate flex items-center justify-end gap-1.5"
+                        [class.text-emerald-600]="c.status === 'Active'"
+                        [class.dark:text-emerald-400]="c.status === 'Active'"
+                        [class.text-slate-800]="c.status !== 'Active'"
+                        [class.dark:text-slate-100]="c.status !== 'Active'">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full"
+                          [class.bg-emerald-500]="c.status === 'Active'"
+                          [class.bg-slate-400]="c.status !== 'Active'"></span>
+                        <span>{{ c.status }}</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- Bottom Row - Code and ISD -->
-                  <div class="flex items-center justify-between gap-2 w-full">
-                    <!-- Code (Left) -->
+                  <div class="grid grid-cols-2 items-center justify-between gap-2 w-full">
+                    <!-- Code - Left aligned -->
                     <div class="min-w-0">
-                      <div class="text-[11px] text-slate-400 dark:text-slate-400 font-normal">Code</div>
-                      <div class="text-[13px] font-medium text-slate-700 dark:text-slate-100 truncate mt-0.5">
+                      <div class="text-[10px] text-slate-400 dark:text-slate-500 font-normal leading-tight mb-0.5">
+                        Code
+                      </div>
+                      <div class="text-[12px] font-medium text-slate-800 dark:text-slate-100 truncate">
                         {{ c.code }}
                       </div>
                     </div>
 
-                    <!-- ISD (Right) -->
+                    <!-- ISD - Right aligned -->
                     <div class="text-right min-w-0">
-                      <div class="text-[11px] text-slate-400 dark:text-slate-400 font-normal">ISD</div>
-                      <div class="text-[13px] font-medium text-slate-700 dark:text-slate-100 truncate mt-0.5">
+                      <div class="text-[10px] text-slate-400 dark:text-slate-500 font-normal leading-tight mb-0.5">
+                        ISD
+                      </div>
+                      <div class="text-[12px] font-medium text-slate-800 dark:text-slate-100 truncate">
                         {{ c.isd }}
                       </div>
                     </div>
@@ -469,372 +473,672 @@
               }
               } @else {
               <!-- LIST TABLE VIEW: sticky Name / Action columns, sorting, selection, pagination -->
-              <div
-                class="md:flex-1 md:min-h-0 flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 overflow-hidden shadow-xs">
-
-                <!-- Bulk bar -->
-                @if (selectedIds().size > 0) {
+              <div class="md:flex-1 md:min-h-0 flex flex-row gap-3 overflow-hidden relative">
+                <!-- Main Table Container -->
                 <div
-                  class="flex items-center justify-between gap-3 px-4 py-2.5 bg-sky-50 dark:bg-sky-950/40 border-b border-sky-100 dark:border-slate-700">
-                  <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">
-                    Selected {{ selectedIds().size }} of total {{ sortedCountries().length }}
-                  </span>
-                  <div class="flex items-center gap-2">
-                    <button type="button" (click)="clearSelection()"
-                      class="px-4 py-1.5 rounded-full border border-slate-300 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 cursor-pointer">
-                      Clear
-                    </button>
-                    <button type="button" (click)="bulkDelete()"
-                      class="px-4 py-1.5 rounded-full bg-rose-500 text-white text-xs font-bold hover:bg-rose-600 cursor-pointer">
-                      Bulk Delete
-                    </button>
-                  </div>
-                </div>
-                }
+                  class="flex-1 min-w-0 md:min-h-0 flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 overflow-hidden shadow-xs">
 
-                <!-- Rows scroll here; header row and pagination stay in place -->
-                <div class="overflow-auto custom-scrollbar md:flex-1 md:min-h-0" (scroll)="closeColumnMenu()">
-                  <table class="country-table w-full text-start text-xs min-w-[1100px]">
-                    <thead>
-                      <tr
-                        class="border-b border-slate-200/80 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-[11px] font-bold tracking-wide bg-slate-50 dark:bg-slate-900">
-                        <th class="sticky-col sticky-left-0 w-12 py-3 px-4 text-start">
-                          <input type="checkbox" class="w-4 h-4 accent-[#00a6f4] cursor-pointer align-middle"
-                            [checked]="isPageAllSelected()" [indeterminate]="isPagePartlySelected()"
-                            (change)="togglePageSelection()" title="Select all on this page" />
-                        </th>
-                        @for (col of visibleColumns(); track col.key) {
-                        <th class="py-3 px-4 whitespace-nowrap group/th relative"
-                          [class.sticky-col]="col.key === 'name' || col.key === 'code' || col.key === 'status'"
-                          [class.sticky-left-name]="col.key === 'name'" [class.sticky-left-code]="col.key === 'code'"
-                          [class.sticky-right-status]="col.key === 'status'" [class.text-center]="col.key === 'status'"
-                          [class.text-start]="col.key !== 'status'">
-                          <div class="inline-flex items-center gap-1.5" [class.justify-center]="col.key === 'status'">
-                            <!-- Column Title & Sort Button -->
-                            <button type="button" (click)="toggleSort(col.key)"
-                              class="inline-flex items-center gap-1 hover:text-[#00a6f4] cursor-pointer"
-                              [class.text-[#00a6f4]]="sortKey() === col.key">
-                              <span>{{ col.label }}</span>
-                              @if (sortKey() === col.key) {
-                              <svg class="w-3 h-3 text-[#00a6f4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                                [class.rotate-180]="sortDir() === 'desc'">
-                                <path d="m18 15-6-6-6 6" />
-                              </svg>
-                              } @else {
-                              <svg class="w-3 h-3 opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <path d="m7 15 5 5 5-5M7 9l5-5 5 5" />
-                              </svg>
-                              }
-                            </button>
-
-                            <!-- Column Filter Icon Button (Image 4 exact replica: 3 horizontal bars) -->
-                            <!-- Appears on hover of column header, or stays visible if active -->
-                            <button type="button" (click)="openColumnMenu(col.key, $event)"
-                              class="w-5 h-5 rounded flex items-center justify-center transition-all cursor-pointer"
-                              [class.opacity-100]="isColumnFilterActive(col.key) || activeColumnMenu() === col.key"
-                              [class.opacity-0]="!isColumnFilterActive(col.key) && activeColumnMenu() !== col.key"
-                              [class.group-hover/th:opacity-100]="true"
-                              [class.bg-[#00a6f4]]="isColumnFilterActive(col.key)"
-                              [class.text-white]="isColumnFilterActive(col.key)"
-                              [class.bg-slate-200/80]="!isColumnFilterActive(col.key) && activeColumnMenu() === col.key"
-                              [class.bg-slate-100]="!isColumnFilterActive(col.key) && activeColumnMenu() !== col.key"
-                              [class.text-slate-600]="!isColumnFilterActive(col.key)"
-                              [class.dark:bg-slate-700]="!isColumnFilterActive(col.key)"
-                              [class.dark:text-slate-300]="!isColumnFilterActive(col.key)"
-                              title="Filter {{ col.label }}">
-                              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
-                              </svg>
-                            </button>
-                          </div>
-
-                          <!-- Column Filter Popover Menu (Image 4 exact replica) - Fixed & always on top -->
-                          @if (activeColumnMenu() === col.key && columnMenuPos(); as pos) {
-                          <div data-popover
-                            class="fixed z-[9999] w-60 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-2.5 text-start font-normal animate-in fade-in duration-150"
-                            [style.top.px]="pos.top"
-                            [style.left.px]="pos.left"
-                            (click)="$event.stopPropagation()">
-                            
-                            <!-- 1. Sort Ascending -->
-                            <button type="button" (click)="sortColumnDirect(col.key, 'asc')"
-                              class="w-full flex items-center gap-2.5 px-3.5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer transition">
-                              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                              </svg>
-                              <span>Sort Ascending</span>
-                              @if (sortKey() === col.key && sortDir() === 'asc') {
-                              <span class="ml-auto text-[#00a6f4] font-bold">✓</span>
-                              }
-                            </button>
-
-                            <!-- 2. Sort Descending -->
-                            <button type="button" (click)="sortColumnDirect(col.key, 'desc')"
-                              class="w-full flex items-center gap-2.5 px-3.5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer transition">
-                              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                              </svg>
-                              <span>Sort Descending</span>
-                              @if (sortKey() === col.key && sortDir() === 'desc') {
-                              <span class="ml-auto text-[#00a6f4] font-bold">✓</span>
-                              }
-                            </button>
-
-                            <div class="border-t border-slate-100 dark:border-slate-700 my-1.5"></div>
-
-                            <!-- 3. Search in Column Values -->
-                            <div class="px-3 py-1">
-                              <div class="relative">
-                                <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                  <circle cx="11" cy="11" r="8" />
-                                  <path d="m21 21-4.35-4.35" />
+                  <!-- Rows scroll here; horizontal scrollbar displays across scrollable columns only -->
+                  <div
+                    class="country-table-scroll overflow-x-auto overflow-y-auto custom-scrollbar md:flex-1 md:min-h-0 outline-none focus:outline-none"
+                    tabindex="0" (keydown)="onTableKeyDown($event)" [class.no-select-col]="!isSelectColumnVisible()"
+                    [class.no-status-col]="hiddenColumns().has('status')" (scroll)="closeColumnMenu()">
+                    <table class="country-table w-full text-start text-xs min-w-[1520px]"
+                      [class.no-select-col]="!isSelectColumnVisible()">
+                      <thead>
+                        <tr
+                          class="ag-header-row border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[12px] font-semibold bg-[#f8fafc] dark:bg-slate-800/90 select-none">
+                          @if (isSelectColumnVisible()) {
+                          <th
+                            class="sticky-col sticky-left-0 w-12 py-2.5 px-3 text-center border-r border-slate-200/90 dark:border-slate-700/80 bg-[#f8fafc] dark:bg-slate-800">
+                            <label class="custom-checkbox-wrap">
+                              <input type="checkbox" class="sr-only custom-checkbox-input"
+                                [checked]="isPageAllSelected()" [indeterminate]="isPagePartlySelected()"
+                                (change)="togglePageSelection()" title="Select all on this page" />
+                              <span class="custom-checkbox-box">
+                                <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                  stroke-linejoin="round">
+                                  <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
                                 </svg>
-                                <input type="text" [ngModel]="columnMenuSearch()" (ngModelChange)="columnMenuSearch.set($event)"
-                                  placeholder="Search..." (click)="$event.stopPropagation()"
-                                  class="w-full pl-8 pr-2.5 py-1.5 text-xs rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#00a6f4] focus:ring-1 focus:ring-[#00a6f4]/20" />
+                                <svg class="custom-checkbox-icon dash-icon" viewBox="0 0 16 16" fill="none"
+                                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                  <line x1="4" y1="8" x2="12" y2="8" />
+                                </svg>
+                              </span>
+                            </label>
+                          </th>
+                          }
+                          @for (col of visibleColumns(); track col.key) {
+                          <th
+                            class="py-2 px-3 whitespace-nowrap group/th relative border-r border-slate-200/90 dark:border-slate-700/80 bg-[#f8fafc] dark:bg-slate-800"
+                            [class.sticky-col]="col.key === 'name' || col.key === 'code' || col.key === 'status'"
+                            [class.sticky-left-name]="col.key === 'name'" [class.sticky-left-code]="col.key === 'code'"
+                            [class.sticky-right-status]="col.key === 'status'" [class.text-start]="true">
+                            <div class="flex items-center justify-between gap-2 w-full">
+                              <!-- Left: Column Title & Sort Button -->
+                              <button type="button" (click)="toggleSort(col.key)"
+                                class="inline-flex items-center gap-1.5 font-semibold text-[12px] text-slate-700 dark:text-slate-200 hover:text-[#00a6f4] dark:hover:text-[#38bdf8] cursor-pointer transition select-none truncate"
+                                [class.text-[#00a6f4]]="sortKey() === col.key"
+                                [class.dark:text-[#38bdf8]]="sortKey() === col.key">
+                                <span>{{ col.label }}</span>
+                                @if (sortKey() === col.key) {
+                                <svg class="w-3 h-3 text-[#00a6f4] dark:text-[#38bdf8]" viewBox="0 0 24 24" fill="none"
+                                  stroke="currentColor" stroke-width="2.5" [class.rotate-180]="sortDir() === 'desc'">
+                                  <path d="m18 15-6-6-6 6" />
+                                </svg>
+                                }
+                              </button>
+
+                              <!-- Right: AG Grid Header Icons (Filter Funnel + 3-Dots Menu) -->
+                              <div class="flex items-center gap-0.5 shrink-0">
+                                <!-- 1. Filter Funnel Icon (Image 3: 3 narrowing bars) -->
+                                <button type="button" (click)="openColumnMenu(col.key, $event)"
+                                  class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-700"
+                                  [class.text-[#00a6f4]]="isColumnFilterActive(col.key)"
+                                  [class.dark:text-[#38bdf8]]="isColumnFilterActive(col.key)"
+                                  title="Filter {{ col.label }}">
+                                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                  </svg>
+                                </button>
+
+                                <!-- 2. 3-Dots Column Menu (Image 3) -->
+                                <button type="button" (click)="openColumnMenu(col.key, $event)"
+                                  class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-700"
+                                  [class.text-[#00a6f4]]="activeColumnMenu() === col.key"
+                                  [class.dark:text-[#38bdf8]]="activeColumnMenu() === col.key" title="Column Options">
+                                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="5" r="1.5" />
+                                    <circle cx="12" cy="12" r="1.5" />
+                                    <circle cx="12" cy="19" r="1.5" />
+                                  </svg>
+                                </button>
                               </div>
                             </div>
 
-                            <!-- 4. Checkbox List of Column Values -->
-                            <div class="max-h-44 overflow-y-auto custom-scrollbar px-3 py-1 space-y-1 text-xs">
-                              <label class="flex items-center gap-2 py-1 cursor-pointer select-none font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700/60 pb-1.5 mb-1">
-                                <input type="checkbox" class="w-3.5 h-3.5 accent-[#00a6f4] rounded cursor-pointer"
-                                  [checked]="isColumnAllSelected(col.key)" (change)="toggleColumnSelectAll(col.key)" />
-                                <span>(Select All)</span>
-                              </label>
-                              @for (val of getFilteredDistinctValues(col.key); track val) {
-                              <label class="flex items-center gap-2 py-0.5 cursor-pointer select-none text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
-                                <input type="checkbox" class="w-3.5 h-3.5 accent-[#00a6f4] rounded cursor-pointer"
-                                  [checked]="isColumnValueSelected(col.key, val)" (change)="toggleColumnValue(col.key, val)" />
-                                <span class="truncate">{{ val }}</span>
-                              </label>
-                              } @empty {
-                              <p class="py-2 text-center text-slate-400 text-[11px]">No matches</p>
-                              }
-                            </div>
+                            <!-- Column Filter Popover Menu (Image 4 exact replica) - Fixed & always on top -->
+                            @if (activeColumnMenu() === col.key && columnMenuPos(); as pos) {
+                            <div data-popover
+                              class="fixed z-[9999] w-60 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-2.5 text-start font-normal animate-in fade-in duration-150"
+                              [style.top.px]="pos.top" [style.left.px]="pos.left" (click)="$event.stopPropagation()">
 
-                            <!-- 5. Clear & Apply Actions -->
-                            <div class="flex items-center justify-between px-3.5 pt-2 mt-1 border-t border-slate-100 dark:border-slate-700">
-                              <button type="button" (click)="clearColumnFilter(col.key)"
-                                class="text-xs text-slate-500 hover:text-rose-500 font-semibold cursor-pointer transition">
-                                Clear
+                              <!-- 1. Sort Ascending -->
+                              <button type="button" (click)="sortColumnDirect(col.key, 'asc')"
+                                class="w-full flex items-center gap-2.5 px-3.5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer transition">
+                                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24"
+                                  stroke="currentColor" stroke-width="2.5">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                </svg>
+                                <span>Sort Ascending</span>
+                                @if (sortKey() === col.key && sortDir() === 'asc') {
+                                <span class="ml-auto text-[#00a6f4] font-bold">✓</span>
+                                }
                               </button>
-                              <button type="button" (click)="applyColumnFilter(col.key)"
-                                class="px-4 py-1 rounded-full bg-[#00a6f4] text-white text-xs font-bold hover:bg-sky-500 cursor-pointer transition shadow-2xs">
-                                Apply
+
+                              <!-- 2. Sort Descending -->
+                              <button type="button" (click)="sortColumnDirect(col.key, 'desc')"
+                                class="w-full flex items-center gap-2.5 px-3.5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer transition">
+                                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24"
+                                  stroke="currentColor" stroke-width="2.5">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                </svg>
+                                <span>Sort Descending</span>
+                                @if (sortKey() === col.key && sortDir() === 'desc') {
+                                <span class="ml-auto text-[#00a6f4] font-bold">✓</span>
+                                }
+                              </button>
+
+                              <div class="border-t border-slate-100 dark:border-slate-700 my-1.5"></div>
+
+                              <!-- 3. Search in Column Values -->
+                              <div class="px-3 py-1">
+                                <div class="relative">
+                                  <svg
+                                    class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <path d="m21 21-4.35-4.35" />
+                                  </svg>
+                                  <input type="text" [ngModel]="columnMenuSearch()"
+                                    (ngModelChange)="columnMenuSearch.set($event)" placeholder="Search..."
+                                    (click)="$event.stopPropagation()"
+                                    class="w-full pl-8 pr-2.5 py-1.5 text-xs rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#00a6f4] focus:ring-1 focus:ring-[#00a6f4]/20" />
+                                </div>
+                              </div>
+
+                              <!-- 4. Checkbox List of Column Values -->
+                              <div class="max-h-44 overflow-y-auto custom-scrollbar px-3 py-1 space-y-1 text-xs">
+                                <label
+                                  class="flex items-center gap-2 py-1 cursor-pointer select-none font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700/60 pb-1.5 mb-1">
+                                  <span class="custom-checkbox-wrap">
+                                    <input type="checkbox" class="sr-only custom-checkbox-input"
+                                      [checked]="isColumnAllSelected(col.key)"
+                                      (change)="toggleColumnSelectAll(col.key)" />
+                                    <span class="custom-checkbox-box">
+                                      <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                                      </svg>
+                                    </span>
+                                  </span>
+                                  <span>(Select All)</span>
+                                </label>
+                                @for (val of getFilteredDistinctValues(col.key); track val) {
+                                <label
+                                  class="flex items-center gap-2 py-0.5 cursor-pointer select-none text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                                  <span class="custom-checkbox-wrap">
+                                    <input type="checkbox" class="sr-only custom-checkbox-input"
+                                      [checked]="isColumnValueSelected(col.key, val)"
+                                      (change)="toggleColumnValue(col.key, val)" />
+                                    <span class="custom-checkbox-box">
+                                      <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                                      </svg>
+                                    </span>
+                                  </span>
+                                  <span class="truncate">{{ val }}</span>
+                                  <span class="text-xs text-slate-400 font-normal shrink-0">({{
+                                    getColumnValueCount(col.key, val) }})</span>
+                                </label>
+                                } @empty {
+                                <p class="py-2 text-center text-slate-400 text-[11px]">No matches</p>
+                                }
+                              </div>
+
+                              <!-- 5. Clear & Apply Actions -->
+                              <div
+                                class="flex items-center justify-between px-3.5 pt-2 mt-1 border-t border-slate-100 dark:border-slate-700">
+                                <button type="button" (click)="clearColumnFilter(col.key)"
+                                  class="text-xs text-slate-500 hover:text-rose-500 font-semibold cursor-pointer transition">
+                                  Clear
+                                </button>
+                                <button type="button" (click)="applyColumnFilter(col.key)"
+                                  class="px-4 py-1 rounded-full bg-[#00a6f4] text-white text-xs font-bold hover:bg-sky-500 cursor-pointer transition shadow-2xs">
+                                  Apply
+                                </button>
+                              </div>
+                            </div>
+                            }
+                          </th>
+                          }
+                          <th
+                            class="sticky-col sticky-right-action py-2 px-3.5 text-end font-semibold text-[12px] text-slate-700 dark:text-slate-200 bg-[#f8fafc] dark:bg-slate-800">
+                            Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-100 dark:divide-slate-700 font-medium">
+                        @for (c of pagedCountries(); track c.id; let rIdx = $index) {
+                        <tr
+                          class="group hover:bg-slate-50/60 dark:hover:bg-slate-700/40 transition-colors cursor-pointer"
+                          [class.bg-sky-50/60]="selectedIds().has(c.id)" (click)="openView(c)">
+                          @if (isSelectColumnVisible()) {
+                          <td class="sticky-col sticky-left-0 py-3 px-4 text-center" (click)="$event.stopPropagation()">
+                            <label class="custom-checkbox-wrap">
+                              <input type="checkbox" class="sr-only custom-checkbox-input"
+                                [checked]="selectedIds().has(c.id)" (change)="toggleRowSelection(c.id)" />
+                              <span class="custom-checkbox-box">
+                                <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                  stroke-linejoin="round">
+                                  <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                                </svg>
+                              </span>
+                            </label>
+                          </td>
+                          }
+                          @for (col of visibleColumns(); track col.key) {
+                          @switch (col.key) {
+                          @case ('name') {
+                          <td class="sticky-col sticky-left-name py-3 px-4 group/cell relative"
+                            [id]="'cell-' + rIdx + '-name'" (click)="onCellClick(c, rIdx, 'name', $event)"
+                            (dblclick)="onCellDblClick(c, rIdx, 'name', $event)">
+                            @if (isCellEditing(c.id, 'name')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="text" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(c, 'name', $event)"
+                                (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'name', $event)"
+                                class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-36 shadow-xs"
+                                autofocus />
+                            </div>
+                            } @else {
+                            <div
+                              class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'name')" title="Double-click to edit">
+                              <span class="font-normal text-slate-700 dark:text-slate-200 whitespace-nowrap">{{ c.name
+                                }}</span>
+                              <button type="button" (click)="startCellEdit(c, 'name', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit Name">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
                               </button>
                             </div>
-                          </div>
+                            }
+                          </td>
                           }
-                        </th>
-                        }
-                        <th class="sticky-col sticky-right-action py-3 px-4 text-end">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700 font-medium">
-                      @for (c of pagedCountries(); track c.id) {
-                      <tr class="group hover:bg-slate-50/60 dark:hover:bg-slate-700/40 transition-colors cursor-pointer"
-                        [class.bg-sky-50/60]="selectedIds().has(c.id)" (click)="openView(c)">
-                        <td class="sticky-col sticky-left-0 py-3 px-4" (click)="$event.stopPropagation()">
-                          <input type="checkbox" class="w-4 h-4 accent-[#00a6f4] cursor-pointer align-middle"
-                            [checked]="selectedIds().has(c.id)" (change)="toggleRowSelection(c.id)" />
-                        </td>
-                        @for (col of visibleColumns(); track col.key) {
-                        @switch (col.key) {
-                        @case ('name') {
-                        <td class="sticky-col sticky-left-name py-3 px-4">
-                          <div class="flex items-center gap-2.5 min-w-40">
-                            <img [src]="c.flag || ('https://flagcdn.com/' + c.code.toLowerCase() + '.svg')"
-                              [alt]="c.name"
-                              class="h-5 w-8 object-cover rounded-sm shadow-2xs border border-slate-200 dark:border-slate-700 shrink-0"
-                              (error)="onFlagError($event, c)" />
-                            <span class="font-bold text-slate-900 dark:text-white whitespace-nowrap">{{ c.name }}</span>
-                          </div>
-                        </td>
-                        }
-                        @case ('code') {
-                        <td class="sticky-col sticky-left-code py-3 px-4 font-mono font-semibold text-[#00a6f4]">
-                          {{ c.code }}
-                        </td>
-                        }
-                        @case ('status') {
-                        <td class="sticky-col sticky-right-status py-3 px-4 text-center">
-                          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
-                            [class.bg-emerald-50]="c.status === 'Active'"
-                            [class.text-emerald-600]="c.status === 'Active'" [class.bg-red-50]="c.status === 'Inactive'"
-                            [class.text-red-500]="c.status === 'Inactive'" [class.bg-sky-50]="c.status === 'Draft'"
-                            [class.text-sky-600]="c.status === 'Draft'" [class.bg-slate-100]="c.status === 'Deleted'"
-                            [class.text-slate-500]="c.status === 'Deleted'">
-                            {{ c.status }}
-                          </span>
-                        </td>
-                        }
-                        @default {
-                        <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                          @if (dateColumns.includes(col.key)) {
-                          {{ formatDate($any(c)[col.key]) }}
-                          } @else {
-                          {{ $any(c)[col.key] ?? '—' }}
+                          @case ('code') {
+                          <td
+                            class="sticky-col sticky-left-code py-3 px-4 font-mono font-medium text-slate-700 dark:text-slate-300 group/cell relative"
+                            [id]="'cell-' + rIdx + '-code'" (click)="onCellClick(c, rIdx, 'code', $event)"
+                            (dblclick)="onCellDblClick(c, rIdx, 'code', $event)">
+                            @if (isCellEditing(c.id, 'code')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="text" maxlength="3" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event.toUpperCase())"
+                                (keydown.enter)="saveCellEdit(c, 'code', $event)"
+                                (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'code', $event)"
+                                class="px-2 py-1 text-xs uppercase font-mono border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-16 shadow-xs"
+                                autofocus />
+                            </div>
+                            } @else {
+                            <div
+                              class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'code')" title="Double-click to edit">
+                              <span>{{ c.code }}</span>
+                              <button type="button" (click)="startCellEdit(c, 'code', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit Code">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                            }
+                          </td>
                           }
-                        </td>
-                        }
-                        }
-                        }
-                        <td class="sticky-col sticky-right-action py-3 px-4 text-end"
-                          (click)="$event.stopPropagation()">
-                          <div class="flex items-center justify-end gap-2">
-                            <span class="text-slate-400 whitespace-nowrap group-hover:hidden">{{ c.actionMessage || '—'
-                              }}</span>
-                            <div class="hidden group-hover:flex items-center gap-2">
-                              <button type="button" (click)="openEdit(c)"
-                                class="text-xs font-semibold text-[#00a6f4] hover:underline cursor-pointer">Edit</button>
-                              @if (c.status !== 'Deleted') {
-                              <button type="button" (click)="promptDelete(c, $event)"
-                                class="text-xs font-semibold text-rose-500 hover:underline cursor-pointer">Delete</button>
+                          @case ('isd') {
+                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                            [id]="'cell-' + rIdx + '-isd'" (click)="onCellClick(c, rIdx, 'isd', $event)"
+                            (dblclick)="onCellDblClick(c, rIdx, 'isd', $event)">
+                            @if (isCellEditing(c.id, 'isd')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="text" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(c, 'isd', $event)"
+                                (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'isd', $event)"
+                                class="px-2 py-1 text-xs font-mono border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-20 shadow-xs"
+                                autofocus />
+                            </div>
+                            } @else {
+                            <div
+                              class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'isd')" title="Double-click to edit">
+                              <span>{{ c.isd ? (c.isd.startsWith('+') ? c.isd : '+' + c.isd) : '—' }}</span>
+                              <button type="button" (click)="startCellEdit(c, 'isd', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit ISD">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                            }
+                          </td>
+                          }
+                          @case ('currency') {
+                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                            [id]="'cell-' + rIdx + '-currency'" (click)="onCellClick(c, rIdx, 'currency', $event)"
+                            (dblclick)="onCellDblClick(c, rIdx, 'currency', $event)">
+                            @if (isCellEditing(c.id, 'currency')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="text" maxlength="5" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event.toUpperCase())"
+                                (keydown.enter)="saveCellEdit(c, 'currency', $event)"
+                                (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'currency', $event)"
+                                class="px-2 py-1 text-xs uppercase font-mono border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-20 shadow-xs"
+                                autofocus />
+                            </div>
+                            } @else {
+                            <div
+                              class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'currency')" title="Double-click to edit">
+                              <div class="flex items-center gap-1.5">
+                                <img [src]="c.flag || ('https://flagcdn.com/' + c.code.toLowerCase() + '.svg')"
+                                  [alt]="c.currency"
+                                  class="h-3.5 w-5 object-cover rounded-xs border border-slate-200 dark:border-slate-700 shrink-0"
+                                  (error)="onFlagError($event, c)" />
+                                <span>{{ c.currency || 'USD' }}</span>
+                              </div>
+                              <button type="button" (click)="startCellEdit(c, 'currency', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit Currency">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                            }
+                          </td>
+                          }
+                          @case ('states') {
+                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                            [id]="'cell-' + rIdx + '-states'" (click)="onCellClick(c, rIdx, 'states', $event)"
+                            (dblclick)="onCellDblClick(c, rIdx, 'states', $event)">
+                            @if (isCellEditing(c.id, 'states')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="number" min="0" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(c, 'states', $event)"
+                                (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'states', $event)"
+                                class="px-2 py-1 text-xs font-mono border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-16 shadow-xs"
+                                autofocus />
+                            </div>
+                            } @else {
+                            <div
+                              class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'states')" title="Double-click to edit">
+                              <span>{{ c.states ?? 10 }}</span>
+                              <button type="button" (click)="startCellEdit(c, 'states', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit States">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                            }
+                          </td>
+                          }
+                          @case ('cities') {
+                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap group/cell relative"
+                            [id]="'cell-' + rIdx + '-cities'" (click)="onCellClick(c, rIdx, 'cities', $event)"
+                            (dblclick)="onCellDblClick(c, rIdx, 'cities', $event)">
+                            @if (isCellEditing(c.id, 'cities')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="number" min="0" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(c, 'cities', $event)"
+                                (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'cities', $event)"
+                                class="px-2 py-1 text-xs font-mono border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-16 shadow-xs"
+                                autofocus />
+                            </div>
+                            } @else {
+                            <div
+                              class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'cities')" title="Double-click to edit">
+                              <span>{{ c.cities ?? 20 }}</span>
+                              <button type="button" (click)="startCellEdit(c, 'cities', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit Cities">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                            }
+                          </td>
+                          }
+                          @case ('status') {
+                          <td class="sticky-col sticky-right-status py-3 px-4 text-center cursor-pointer"
+                            [id]="'cell-' + rIdx + '-status'" (click)="selectCell(rIdx, 'status', $event)">
+                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'status')"
+                              [class.bg-emerald-50]="c.status === 'Active'"
+                              [class.text-emerald-600]="c.status === 'Active'"
+                              [class.bg-red-50]="c.status === 'Inactive'" [class.text-red-500]="c.status === 'Inactive'"
+                              [class.bg-sky-50]="c.status === 'Draft'" [class.text-sky-600]="c.status === 'Draft'"
+                              [class.bg-slate-100]="c.status === 'Deleted'"
+                              [class.text-slate-500]="c.status === 'Deleted'">
+                              {{ c.status }}
+                            </span>
+                          </td>
+                          }
+                          @default {
+                          <td class="py-3 px-4 text-slate-600 dark:text-slate-300 whitespace-nowrap cursor-pointer"
+                            [id]="'cell-' + rIdx + '-' + col.key" (click)="selectCell(rIdx, col.key, $event)">
+                            <div class="rounded-md px-1.5 py-0.5 transition-all inline-block min-w-[60px]"
+                              [class.cell-focus-box]="isCellFocused(rIdx, col.key)">
+                              @if (dateColumns.includes(col.key)) {
+                              {{ formatDate($any(c)[col.key]) }}
                               } @else {
-                              <button type="button" (click)="restoreCountry(c, $event)"
-                                class="text-xs font-semibold text-emerald-600 hover:underline cursor-pointer">Restore</button>
+                              {{ $any(c)[col.key] ?? '—' }}
                               }
+                            </div>
+                          </td>
+                          }
+                          }
+                          }
+                          <!-- Action Column (Exact Replica of Screenshot 1 with row-end hover button) -->
+                          <td class="sticky-col sticky-right-action py-3 px-4 text-end"
+                            (click)="$event.stopPropagation()">
+                            <div class="flex items-center justify-end gap-2.5">
+                              <span class="text-slate-500 dark:text-slate-400 whitespace-nowrap text-xs font-normal">
+                                {{ c.actionMessage || 'Yesterday' }}
+                              </span>
                               <button type="button" (click)="openView(c)"
-                                class="w-6 h-6 rounded-full bg-[#e6f6fe] text-[#00a6f4] flex items-center justify-center cursor-pointer"
-                                title="View details">
+                                class="w-7 h-7 rounded-full bg-[#00a6f4] hover:bg-sky-500 text-white flex items-center justify-center shadow-xs cursor-pointer transition-all duration-150 shrink-0 opacity-0 group-hover:opacity-100"
+                                [class.opacity-100]="selectedIds().has(c.id)" title="View Details">
                                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                  stroke-width="2.5">
+                                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                   <path d="m9 18 6-6-6-6" />
                                 </svg>
                               </button>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
-                      } @empty {
-                      <tr>
-                        <td [attr.colspan]="visibleColumns().length + 2" class="py-14 text-center">
-                          <p class="font-bold text-slate-700 dark:text-slate-200">No data available</p>
-                          <p class="text-xs text-slate-400 mt-1">There are no records to display at the moment.</p>
-                        </td>
-                      </tr>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-
-                <!-- Pagination -->
-                <div
-                  class="shrink-0 flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs">
-                  <div class="flex items-center gap-1.5 relative">
-                    @for (size of pageSizeOptions; track size) {
-                    <button type="button" (click)="setPageSize(size)"
-                      class="w-9 h-8 rounded-full border font-semibold cursor-pointer transition"
-                      [class.border-[#00a6f4]]="pageSize() === size" [class.bg-[#00a6f4]]="pageSize() === size"
-                      [class.text-white]="pageSize() === size" [class.border-slate-200]="pageSize() !== size"
-                      [class.text-slate-600]="pageSize() !== size">
-                      {{ size }}
-                    </button>
-                    }
-
-                    <!-- '...' more page sizes button (Image 1 & 2 replica) -->
-                    <div class="relative" data-popover>
-                      <button type="button" (click)="togglePageSizeMenu($event)"
-                        class="w-9 h-8 rounded-full border font-semibold cursor-pointer transition flex items-center justify-center text-xs"
-                        [class.border-[#00a6f4]]="isPageSizeMenuOpen() || pageSize() > 75"
-                        [class.bg-[#00a6f4]]="isPageSizeMenuOpen() || pageSize() > 75"
-                        [class.text-white]="isPageSizeMenuOpen() || pageSize() > 75"
-                        [class.border-slate-200]="!isPageSizeMenuOpen() && pageSize() <= 75"
-                        [class.text-slate-600]="!isPageSizeMenuOpen() && pageSize() <= 75"
-                        title="More page sizes">
-                        ...
-                      </button>
-
-                      <!-- Extended page size popup menu (Exact match to Image 2) -->
-                      @if (isPageSizeMenuOpen()) {
-                      <div
-                        class="absolute bottom-full mb-2 left-0 w-32 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-sky-200 dark:border-slate-700 p-2.5 flex flex-col gap-1.5 z-40 animate-in fade-in duration-150">
-                        @for (opt of extendedPageSizes; track opt) {
-                        <button type="button" (click)="selectExtendedPageSize(opt)"
-                          class="w-full py-1.5 px-3 rounded-full border border-sky-100 dark:border-slate-700 text-[#00a6f4] text-xs font-semibold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer"
-                          [class.bg-[#e6f6fe]]="pageSize() === opt || (opt === 'All' && pageSize() >= 9999)">
-                          {{ opt }}
-                        </button>
+                          </td>
+                        </tr>
+                        } @empty {
+                        <tr>
+                          <td [attr.colspan]="visibleColumns().length + (isSelectColumnVisible() ? 2 : 1)"
+                            class="py-14 text-center">
+                            <p class="font-bold text-slate-700 dark:text-slate-200">No data available</p>
+                            <p class="text-xs text-slate-400 mt-1">There are no records to display at the moment.</p>
+                          </td>
+                        </tr>
                         }
-                        @if (!isCustomPageSizeOpen()) {
-                        <button type="button" (click)="isCustomPageSizeOpen.set(true)"
-                          class="w-full py-1.5 px-3 rounded-full border border-sky-300 dark:border-slate-600 text-[#00a6f4] text-xs font-semibold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer">
-                          Custom
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Pagination (Exact Replica of Screenshots 1 & 2) -->
+                  <div
+                    class="shrink-0 flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs">
+                    <!-- Left: Page Size Selectors (Screenshot 1 replica) -->
+                    <div class="flex items-center gap-1.5 relative">
+                      @for (size of pageSizeOptions; track size) {
+                      <button type="button" (click)="setPageSize(size)"
+                        class="h-8 min-w-[36px] px-2 rounded-full border text-xs font-medium cursor-pointer transition flex items-center justify-center"
+                        [class.border-[#00a6f4]]="pageSize() === size" [class.bg-[#00a6f4]]="pageSize() === size"
+                        [class.text-white]="pageSize() === size" [class.border-[#38bdf8]]="pageSize() !== size"
+                        [class.bg-white]="pageSize() !== size" [class.text-[#0284c7]]="pageSize() !== size"
+                        [class.dark:bg-slate-800]="pageSize() !== size">
+                        {{ size }}
+                      </button>
+                      }
+
+                      <!-- '...' more page sizes button (Screenshot 1 replica) -->
+                      <div class="relative" data-popover>
+                        <button type="button" (click)="togglePageSizeMenu($event)"
+                          class="h-8 min-w-[36px] px-2 rounded-full border text-xs font-medium cursor-pointer transition flex items-center justify-center"
+                          [class.border-[#00a6f4]]="isPageSizeMenuOpen() || pageSize() > 75"
+                          [class.bg-[#00a6f4]]="isPageSizeMenuOpen() || pageSize() > 75"
+                          [class.text-white]="isPageSizeMenuOpen() || pageSize() > 75"
+                          [class.border-[#38bdf8]]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.bg-white]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.text-[#0284c7]]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.dark:bg-slate-800]="!isPageSizeMenuOpen() && pageSize() <= 75" title="More page sizes">
+                          ...
                         </button>
-                        } @else {
-                        <div class="flex items-center gap-1 pt-1">
-                          <input type="number" min="1" max="5000" [ngModel]="customPageSizeInput()"
-                            (ngModelChange)="customPageSizeInput.set($event)" (keydown.enter)="applyCustomPageSize()"
-                            placeholder="Size"
-                            class="w-full px-2 py-1 text-center rounded-full border border-sky-300 text-xs text-slate-700 focus:outline-none focus:border-[#00a6f4]" />
-                          <button type="button" (click)="applyCustomPageSize()"
-                            class="px-2 py-1 rounded-full bg-[#00a6f4] text-white text-xs font-bold cursor-pointer">
-                            Go
+
+                        <!-- Extended page size popup menu -->
+                        @if (isPageSizeMenuOpen()) {
+                        <div
+                          class="absolute bottom-full mb-2 left-0 w-32 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-sky-200 dark:border-slate-700 p-2.5 flex flex-col gap-1.5 z-40 animate-in fade-in duration-150">
+                          @for (opt of extendedPageSizes; track opt) {
+                          <button type="button" (click)="selectExtendedPageSize(opt)"
+                            class="w-full py-1.5 px-3 rounded-full border border-sky-100 dark:border-slate-700 text-[#00a6f4] text-xs font-semibold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer"
+                            [class.bg-[#e6f6fe]]="pageSize() === opt || (opt === 'All' && pageSize() >= 9999)">
+                            {{ opt }}
                           </button>
+                          }
+                          @if (!isCustomPageSizeOpen()) {
+                          <button type="button" (click)="isCustomPageSizeOpen.set(true)"
+                            class="w-full py-1.5 px-3 rounded-full border border-sky-300 dark:border-slate-600 text-[#00a6f4] text-xs font-semibold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer">
+                            Custom
+                          </button>
+                          } @else {
+                          <div class="flex items-center gap-1 pt-1">
+                            <input type="number" min="1" max="5000" [ngModel]="customPageSizeInput()"
+                              (ngModelChange)="customPageSizeInput.set($event)" (keydown.enter)="applyCustomPageSize()"
+                              placeholder="Size"
+                              class="w-full px-2 py-1 text-center rounded-full border border-sky-300 text-xs text-slate-700 focus:outline-none focus:border-[#00a6f4]" />
+                            <button type="button" (click)="applyCustomPageSize()"
+                              class="px-2 py-1 rounded-full bg-[#00a6f4] text-white text-xs font-bold cursor-pointer">
+                              Go
+                            </button>
+                          </div>
+                          }
                         </div>
                         }
                       </div>
-                      }
                     </div>
-                  </div>
-                  <!-- Center: Range Label -->
-                  <span class="text-slate-500 dark:text-slate-400 text-xs font-normal">{{ pageRangeLabel() }}</span>
 
-                  <!-- Right: Pagination Navigation Controls (Exact Match to Reference Screenshot) -->
-                  <div class="flex items-center gap-1.5">
-                    <!-- First Page («) -->
-                    <button type="button" (click)="goToPage(1)" [disabled]="currentPage() === 1"
-                      class="pagination-nav-btn" title="First page" aria-label="First page">
-                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m11 17-5-5 5-5M18 17l-5-5 5-5" />
-                      </svg>
-                    </button>
+                    <!-- Center: Range Label -->
+                    <span class="text-slate-500 dark:text-slate-400 text-xs font-normal">{{ pageRangeLabel() }}</span>
 
-                    <!-- Previous Page (‹) -->
-                    <button type="button" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
-                      class="pagination-nav-btn" title="Previous page" aria-label="Previous page">
-                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m15 18-6-6 6-6" />
-                      </svg>
-                    </button>
+                    <!-- Right: Pagination Navigation Controls (Exact Replica of Screenshot 1) -->
+                    <div class="flex items-center gap-2">
+                      <!-- First Page («) -->
+                      <button type="button" (click)="goToPage(1)" [disabled]="currentPage() === 1"
+                        class="pagination-nav-circle pagination-nav-first" title="First page" aria-label="First page">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m11 17-5-5 5-5M18 17l-5-5 5-5" />
+                        </svg>
+                      </button>
 
-                    <!-- Visible Page Number Buttons (e.g. 1) -->
-                    @for (p of visiblePages(); track p) {
-                    <button type="button" (click)="goToPage(p)"
-                      class="pagination-page-btn" [class.is-active]="currentPage() === p"
-                      [title]="'Page ' + p" [attr.aria-label]="'Page ' + p">
-                      {{ p }}
-                    </button>
-                    }
+                      <!-- Previous Page (‹) -->
+                      <button type="button" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
+                        class="pagination-nav-circle pagination-nav-prev" title="Previous page"
+                        aria-label="Previous page">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m15 18-6-6 6-6" />
+                        </svg>
+                      </button>
 
-                    <!-- Next Page (›) -->
-                    <button type="button" (click)="goToPage(currentPage() + 1)"
-                      [disabled]="currentPage() === totalPages()" class="pagination-nav-btn"
-                      title="Next page" aria-label="Next page">
-                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m9 18 6-6-6-6" />
-                      </svg>
-                    </button>
+                      <!-- Active Page Number Pill: Exact Single Wide Rounded Pill from Screenshot 1 -->
+                      <button type="button" class="pagination-page-pill is-active"
+                        [title]="'Current Page: ' + currentPage()" [attr.aria-label]="'Page ' + currentPage()">
+                        {{ currentPage() }}
+                      </button>
 
-                    <!-- Last Page (») -->
-                    <button type="button" (click)="goToPage(totalPages())"
-                      [disabled]="currentPage() === totalPages()" class="pagination-nav-btn"
-                      title="Last page" aria-label="Last page">
-                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m13 17 5-5-5-5M6 17l5-5-5-5" />
-                      </svg>
-                    </button>
+                      <!-- Next Page (›) -->
+                      <button type="button" (click)="goToPage(currentPage() + 1)"
+                        [disabled]="currentPage() === totalPages()" class="pagination-nav-circle pagination-nav-next"
+                        title="Next page" aria-label="Next page">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m9 18 6-6-6-6" />
+                        </svg>
+                      </button>
+
+                      <!-- Last Page (») -->
+                      <button type="button" (click)="goToPage(totalPages())" [disabled]="currentPage() === totalPages()"
+                        class="pagination-nav-circle pagination-nav-last" title="Last page" aria-label="Last page">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m13 17 5-5-5-5M6 17l5-5-5-5" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
               }
             </div>
+
+            <!-- VISIBILITY SIDE PANEL (Exact Replica of Screenshot 4, slides in from right to left) -->
+            @if (isVisibilityOpen()) {
+            <aside
+              class="visibility-panel side-panel-slide w-full md:w-80 shrink-0 md:h-full max-h-[600px] md:max-h-none flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 shadow-xl overflow-hidden relative"
+              (click)="$event.stopPropagation()">
+              <!-- Header with Search Input & Close 'X' Button (Screenshot 4 replica) -->
+              <div class="p-3 border-b border-slate-100 dark:border-slate-700 shrink-0 flex items-center gap-2">
+                <div class="relative flex-1">
+                  <svg class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3" />
+                  </svg>
+                  <input type="text" [ngModel]="visibilitySearch()" (ngModelChange)="visibilitySearch.set($event)"
+                    placeholder="Search"
+                    class="w-full pl-8 pr-8 py-1.5 rounded-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4]" />
+                  <svg class="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" x2="12" y1="19" y2="22" />
+                  </svg>
+                </div>
+                <button type="button" (click)="isVisibilityOpen.set(false)"
+                  class="w-6 h-6 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition shrink-0"
+                  title="Close">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Select All Row (Screenshot 4 replica) -->
+              <div
+                class="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50 shrink-0">
+                <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">Select All</span>
+                <button type="button" (click)="toggleAllColumnsVisible()"
+                  class="w-9 h-5 rounded-full flex items-center p-0.5 cursor-pointer transition-colors"
+                  [class.bg-[#00a6f4]]="isAllColumnsVisible()" [class.bg-slate-200]="!isAllColumnsVisible()"
+                  [class.dark:bg-slate-600]="!isAllColumnsVisible()" [class.justify-end]="isAllColumnsVisible()"
+                  [class.justify-start]="!isAllColumnsVisible()">
+                  <span class="w-4 h-4 bg-white rounded-full shadow-sm"></span>
+                </button>
+              </div>
+
+              <!-- Scrollable Column Items with Switches (Screenshot 4 replica) -->
+              <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 custom-scrollbar">
+                <!-- Select Column Toggle -->
+                <div
+                  class="flex items-center justify-between py-1 px-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
+                  <span class="text-xs text-slate-700 dark:text-slate-300 font-medium">Select</span>
+                  <button type="button" (click)="isSelectColumnVisible.set(!isSelectColumnVisible())"
+                    class="w-9 h-5 rounded-full flex items-center p-0.5 cursor-pointer transition-colors"
+                    [class.bg-[#00a6f4]]="isSelectColumnVisible()" [class.bg-slate-200]="!isSelectColumnVisible()"
+                    [class.dark:bg-slate-600]="!isSelectColumnVisible()" [class.justify-end]="isSelectColumnVisible()"
+                    [class.justify-start]="!isSelectColumnVisible()">
+                    <span class="w-4 h-4 bg-white rounded-full shadow-sm"></span>
+                  </button>
+                </div>
+
+                <!-- Individual Columns -->
+                @for (col of filteredVisibilityColumns(); track col.key) {
+                <div
+                  class="flex items-center justify-between py-1 px-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
+                  <span class="text-xs text-slate-700 dark:text-slate-300 font-medium capitalize">{{ col.label }}</span>
+                  <button type="button" (click)="toggleColumn(col.key)"
+                    class="w-9 h-5 rounded-full flex items-center p-0.5 cursor-pointer transition-colors"
+                    [class.bg-[#00a6f4]]="!hiddenColumns().has(col.key)"
+                    [class.bg-slate-200]="hiddenColumns().has(col.key)"
+                    [class.dark:bg-slate-600]="hiddenColumns().has(col.key)"
+                    [class.justify-end]="!hiddenColumns().has(col.key)"
+                    [class.justify-start]="hiddenColumns().has(col.key)">
+                    <span class="w-4 h-4 bg-white rounded-full shadow-sm"></span>
+                  </button>
+                </div>
+                }
+              </div>
+            </aside>
+            }
 
             <!-- FILTER SIDE PANEL: tick values per field, then Apply (slides in from the right) -->
             @if (isFilterPanelOpen() && filterDraft()) {
@@ -868,17 +1172,42 @@
                 <div class="py-1.5">
                   <label
                     class="flex items-center gap-2.5 px-1 py-1.5 border-b border-slate-100 dark:border-slate-700 cursor-pointer">
-                    <input type="checkbox" class="w-4 h-4 accent-[#00a6f4] cursor-pointer"
-                      [checked]="filterFieldState(f.key) === 'all'" [indeterminate]="filterFieldState(f.key) === 'some'"
-                      (change)="toggleFilterField(f.key)" />
+                    <span class="custom-checkbox-wrap">
+                      <input type="checkbox" class="sr-only custom-checkbox-input"
+                        [checked]="filterFieldState(f.key) === 'all'"
+                        [indeterminate]="filterFieldState(f.key) === 'some'" (change)="toggleFilterField(f.key)" />
+                      <span class="custom-checkbox-box">
+                        <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                        </svg>
+                        <svg class="custom-checkbox-icon dash-icon" viewBox="0 0 16 16" fill="none"
+                          stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                          <line x1="3.5" y1="8" x2="12.5" y2="8" />
+                        </svg>
+                      </span>
+                    </span>
                     <span class="text-[13px] font-bold text-slate-800 dark:text-white">{{ f.label }}</span>
                   </label>
                   <div class="pl-7 pt-1 space-y-0.5">
                     @for (v of f.values; track v) {
-                    <label class="flex items-center gap-2.5 py-1 cursor-pointer">
-                      <input type="checkbox" class="w-4 h-4 accent-[#00a6f4] cursor-pointer"
-                        [checked]="isFilterValueChecked(f.key, v)" (change)="toggleFilterValue(f.key, v)" />
-                      <span class="text-[13px] text-slate-700 dark:text-slate-200 truncate">{{ v }}</span>
+                    <label
+                      class="flex items-center justify-between gap-2.5 py-1 px-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-750 cursor-pointer transition-colors">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="custom-checkbox-wrap">
+                          <input type="checkbox" class="sr-only custom-checkbox-input"
+                            [checked]="isFilterValueChecked(f.key, v)" (change)="toggleFilterValue(f.key, v)" />
+                          <span class="custom-checkbox-box">
+                            <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                            </svg>
+                          </span>
+                        </span>
+                        <span class="text-[13px] text-slate-700 dark:text-slate-200 truncate">{{ v }}</span>
+                      </div>
+                      <span class="text-xs text-slate-400 font-normal shrink-0">({{ getFilterValueCount(f.key, v)
+                        }})</span>
                     </label>
                     }
                   </div>
@@ -1937,6 +2266,76 @@
         <button type="button" (click)="isExportPromptOpen.set(false)"
           class="px-6 py-2 rounded-full bg-[#00a6f4] text-white text-xs font-bold cursor-pointer">
           OK
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 7.5 BULK UPDATE MODAL                                                      -->
+  <!-- ========================================================================= -->
+  @if (isBulkUpdateModalOpen()) {
+  <div
+    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+    <div
+      class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl w-full max-w-md p-6 overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-700">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">Bulk Update</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Apply changes to {{ selectedIds().size }} selected {{
+            selectedIds().size === 1 ? 'country' : 'countries' }}</p>
+        </div>
+        <button type="button" (click)="closeBulkUpdateModal()"
+          class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 hover:text-slate-800 flex items-center justify-center cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="py-4 space-y-4">
+        <!-- Status -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Status</label>
+          <select [(ngModel)]="bulkUpdateStatusValue"
+            class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 text-xs text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-700 focus:outline-none focus:border-[#00a6f4]">
+            <option value="">(Keep unchanged)</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Draft">Draft</option>
+            <option value="Deleted">Deleted</option>
+          </select>
+        </div>
+
+        <!-- Currency -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Currency</label>
+          <select [(ngModel)]="bulkUpdateCurrencyValue"
+            class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 text-xs text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-700 focus:outline-none focus:border-[#00a6f4]">
+            <option value="">(Keep unchanged)</option>
+            <option value="USD">USD - US Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+            <option value="INR">INR - Indian Rupee</option>
+            <option value="AED">AED - UAE Dirham</option>
+            <option value="SAR">SAR - Saudi Riyal</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end gap-2.5 pt-3.5 border-t border-slate-100 dark:border-slate-700">
+        <button type="button" (click)="closeBulkUpdateModal()"
+          class="px-4 py-2 rounded-full border border-slate-300 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" (click)="applyBulkUpdate()"
+          class="px-5 py-2 rounded-full bg-[#00a6f4] hover:bg-sky-500 text-xs font-bold text-white shadow-md transition cursor-pointer">
+          Apply Changes
         </button>
       </div>
     </div>

@@ -73,7 +73,7 @@ export class CountryComponent implements OnInit {
   @ViewChild('flagFileInput') flagFileInput?: ElementRef<HTMLInputElement>;
   @ViewChild('importFileInput') importFileInput?: ElementRef<HTMLInputElement>;
 
-  // Current view mode
+  // Current view mode: 'grid' | 'list' | 'add' | 'edit' | 'view'
   viewMode = signal<CountryViewMode>('grid');
 
   // Active filter tab: 'all' | 'active' | 'inactive' | 'draft' | 'updated' | 'deleted'
@@ -387,11 +387,13 @@ export class CountryComponent implements OnInit {
   closePopovers(): void {
     this.isTranslationOpen.set(false);
     this.isActionListOpen.set(false);
-    this.isVisibilityOpen.set(false);
     this.isPageSizeMenuOpen.set(false);
     this.isCustomPageSizeOpen.set(false);
     this.activeColumnMenu.set(null);
     this.columnMenuPos.set(null);
+    if (this.editingCell()) {
+      this.cancelCellEdit();
+    }
   }
 
   @HostListener('window:resize')
@@ -423,6 +425,8 @@ export class CountryComponent implements OnInit {
 
       if (mode && ['grid', 'list', 'add', 'edit', 'view'].includes(mode)) {
         if (this.viewMode() !== mode) {
+          this.selectedCell.set(null);
+          this.editingCell.set(null);
           if (mode === 'add') {
             this.clearForm();
           } else if ((mode === 'edit' || mode === 'view') && !this.formCode()) {
@@ -649,6 +653,63 @@ export class CountryComponent implements OnInit {
 
   hiddenColumns = signal<Set<ListSortKey>>(new Set());
   isVisibilityOpen = signal<boolean>(false);
+  visibilitySearch = signal<string>('');
+  isSelectColumnVisible = signal<boolean>(true);
+
+  toggleVisibilityPanel(event?: Event): void {
+    if (event) event.stopPropagation();
+    const next = !this.isVisibilityOpen();
+    this.isVisibilityOpen.set(next);
+    if (next) {
+      this.isFilterPanelOpen.set(false);
+      this.isExportPanelOpen.set(false);
+    }
+  }
+
+  readonly visibilityColumnDefinitions: { key: ListSortKey; label: string }[] = [
+    { key: 'name', label: 'Title' },
+    { key: 'code', label: 'Code' },
+    { key: 'isd', label: 'CallingCode' },
+    { key: 'currency', label: 'Currency' },
+    { key: 'states', label: 'States' },
+    { key: 'cities', label: 'Cities' },
+    { key: 'createdAt', label: 'Created' },
+    { key: 'updatedAt', label: 'Updated' },
+    { key: 'status', label: 'Status' },
+  ];
+
+  filteredVisibilityColumns = computed(() => {
+    const q = this.visibilitySearch().toLowerCase().trim();
+    if (!q) return this.visibilityColumnDefinitions;
+    return this.visibilityColumnDefinitions.filter((c) =>
+      c.label.toLowerCase().includes(q) || c.key.toLowerCase().includes(q)
+    );
+  });
+
+  isAllColumnsVisible = computed(() => {
+    return this.hiddenColumns().size === 0 && this.isSelectColumnVisible();
+  });
+
+  toggleAllColumnsVisible(): void {
+    if (this.isAllColumnsVisible()) {
+      this.hiddenColumns.set(new Set(this.visibilityColumnDefinitions.map((c) => c.key)));
+      this.isSelectColumnVisible.set(false);
+    } else {
+      this.hiddenColumns.set(new Set());
+      this.isSelectColumnVisible.set(true);
+    }
+  }
+
+  // Bulk update and inline/cell editing
+  isBulkUpdateModalOpen = signal<boolean>(false);
+  bulkUpdateStatusValue = '';
+  bulkUpdateCurrencyValue = '';
+  editingCountryId = signal<string | null>(null);
+  editingCountryName = signal<string>('');
+  editingCell = signal<{ id: string; field: string } | null>(null);
+  editingCellValue = signal<string>('');
+  hasPendingChanges = signal<boolean>(false);
+
   sortKey = signal<ListSortKey | null>(null);
   sortDir = signal<'asc' | 'desc'>('asc');
   pageSize = signal<number>(10);
@@ -942,6 +1003,244 @@ export class CountryComponent implements OnInit {
     this.showToast(count ? `${count} ${count === 1 ? 'country' : 'countries'} moved to Deleted.` : 'Selected countries are already deleted.');
   }
 
+  openBulkUpdateModal(): void {
+    if (this.selectedIds().size === 0 && !this.hasPendingChanges()) {
+      this.showToast('Please select at least one country to update.');
+      return;
+    }
+    this.bulkUpdateStatusValue = '';
+    this.bulkUpdateCurrencyValue = '';
+    this.isBulkUpdateModalOpen.set(true);
+  }
+
+  closeBulkUpdateModal(): void {
+    this.isBulkUpdateModalOpen.set(false);
+  }
+
+  applyBulkUpdate(): void {
+    const ids = [...this.selectedIds()];
+    let updatedCount = 0;
+    for (const id of ids) {
+      const c = this.countryService.getCountryById(id);
+      if (c) {
+        const patch: Partial<Country> = {};
+        if (this.bulkUpdateStatusValue) {
+          patch.status = this.bulkUpdateStatusValue as any;
+        }
+        if (this.bulkUpdateCurrencyValue) {
+          patch.currency = this.bulkUpdateCurrencyValue;
+        }
+        if (Object.keys(patch).length > 0) {
+          this.countryService.updateCountry(id, patch);
+          updatedCount++;
+        }
+      }
+    }
+    const editId = this.editingCountryId();
+    if (editId) {
+      const newName = this.editingCountryName().trim();
+      if (newName) {
+        this.countryService.updateCountry(editId, { name: newName });
+        updatedCount++;
+      }
+      this.editingCountryId.set(null);
+    }
+    this.isBulkUpdateModalOpen.set(false);
+    this.clearSelection();
+    this.hasPendingChanges.set(false);
+    this.showToast(updatedCount ? `Updated ${updatedCount} ${updatedCount === 1 ? 'country' : 'countries'} successfully.` : 'No changes were applied.');
+  }
+
+  isCellEditing(id: string, field: string): boolean {
+    const cur = this.editingCell();
+    return cur !== null && cur.id === id && cur.field === field;
+  }
+
+  startCellEdit(c: Country, field: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.editingCell.set({ id: c.id, field });
+    const val = (c as any)[field];
+    this.editingCellValue.set(val !== undefined && val !== null ? String(val) : '');
+    this.hasPendingChanges.set(true);
+    setTimeout(() => {
+      const cellEl = document.getElementById(`cell-${this.selectedCell()?.row ?? 0}-${field}`);
+      const inputEl = cellEl?.querySelector<HTMLInputElement>('input');
+      if (inputEl) {
+        inputEl.focus();
+        inputEl.select();
+      }
+    }, 20);
+  }
+
+  saveCellEdit(c: Country, field: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    const cur = this.editingCell();
+    if (!cur || cur.id !== c.id || cur.field !== field) return;
+
+    const rawVal = this.editingCellValue().trim();
+    let parsedVal: any = rawVal;
+    if (field === 'states' || field === 'cities') {
+      parsedVal = rawVal ? parseInt(rawVal, 10) || 0 : 0;
+    } else if (field === 'code' || field === 'currency') {
+      parsedVal = rawVal.toUpperCase();
+    }
+
+    if ((c as any)[field] !== parsedVal) {
+      this.countryService.updateCountry(c.id, { [field]: parsedVal } as any);
+      this.showToast(`Updated ${field} to ${parsedVal}`);
+    }
+    this.editingCell.set(null);
+    this.hasPendingChanges.set(false);
+  }
+
+  cancelCellEdit(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.editingCell.set(null);
+    this.hasPendingChanges.set(false);
+  }
+
+  startInlineEdit(c: Country, event?: Event): void {
+    this.startCellEdit(c, 'name', event);
+  }
+
+  saveInlineEdit(c: Country, event?: Event): void {
+    this.saveCellEdit(c, 'name', event);
+  }
+
+  cancelInlineEdit(event?: Event): void {
+    this.cancelCellEdit(event);
+  }
+
+  // Keyboard arrow keys navigation (Up, Down, Left, Right)
+  selectedCell = signal<{ row: number; colKey: string } | null>(null);
+
+  isCellFocused(row: number, colKey: string): boolean {
+    const sc = this.selectedCell();
+    return sc !== null && sc.row === row && sc.colKey === colKey;
+  }
+
+  selectCell(row: number, colKey: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.selectedCell.set({ row, colKey });
+  }
+
+  onCellClick(c: Country, row: number, colKey: string, event: Event): void {
+    if (event) event.stopPropagation();
+    this.selectCell(row, colKey);
+  }
+
+  onCellDblClick(c: Country, row: number, colKey: string, event: Event): void {
+    if (event) event.stopPropagation();
+    this.selectCell(row, colKey);
+    if (['name', 'code', 'isd', 'currency', 'states', 'cities'].includes(colKey)) {
+      this.startCellEdit(c, colKey, event);
+    }
+  }
+
+  getColumnValueCount(key: string, value: string): number {
+    const list = this.countryService.countries();
+    return list.filter((c: Country) => {
+      const v = (c as any)[key];
+      return String(v !== undefined && v !== null ? v : '') === value;
+    }).length;
+  }
+
+  getFilterValueCount(key: FilterFieldKey, value: string): number {
+    const list = this.countryService.countries();
+    return list.filter((c: Country) => {
+      const v = (c as any)[key];
+      return String(v !== undefined && v !== null ? v : '') === value;
+    }).length;
+  }
+
+  onTableKeyDown(event: KeyboardEvent): void {
+    const paged = this.pagedCountries();
+    if (paged.length === 0) return;
+    const cols = this.visibleColumns().map((c) => c.key);
+    if (cols.length === 0) return;
+
+    if (this.editingCell()) {
+      if (event.key === 'Escape') {
+        this.cancelCellEdit(event);
+      }
+      return;
+    }
+
+    const current = this.selectedCell() ?? { row: 0, colKey: cols[0] };
+    let curRow = current.row;
+    let curColIdx = cols.indexOf(current.colKey as any);
+    if (curColIdx === -1) curColIdx = 0;
+
+    let handled = false;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        if (curRow < paged.length - 1) {
+          curRow++;
+          handled = true;
+        }
+        break;
+      case 'ArrowUp':
+        if (curRow > 0) {
+          curRow--;
+          handled = true;
+        }
+        break;
+      case 'ArrowRight':
+        if (curColIdx < cols.length - 1) {
+          curColIdx++;
+          handled = true;
+        }
+        break;
+      case 'ArrowLeft':
+        if (curColIdx > 0) {
+          curColIdx--;
+          handled = true;
+        }
+        break;
+      case 'Tab':
+        event.preventDefault();
+        if (event.shiftKey) {
+          if (curColIdx > 0) {
+            curColIdx--;
+          } else if (curRow > 0) {
+            curRow--;
+            curColIdx = cols.length - 1;
+          }
+        } else {
+          if (curColIdx < cols.length - 1) {
+            curColIdx++;
+          } else if (curRow < paged.length - 1) {
+            curRow++;
+            curColIdx = 0;
+          }
+        }
+        handled = true;
+        break;
+      case 'Enter': {
+        const country = paged[curRow];
+        const colKey = cols[curColIdx];
+        if (country && ['name', 'code', 'isd', 'currency', 'states', 'cities'].includes(colKey)) {
+          this.startCellEdit(country, colKey, event);
+          handled = true;
+        }
+        break;
+      }
+    }
+
+    if (handled) {
+      event.preventDefault();
+      const newColKey = cols[curColIdx];
+      this.selectedCell.set({ row: curRow, colKey: newColKey });
+      setTimeout(() => {
+        const cellEl = document.getElementById(`cell-${curRow}-${newColKey}`);
+        if (cellEl) {
+          cellEl.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+      }, 0);
+    }
+  }
+
   toggleColumn(key: ListSortKey): void {
     this.hiddenColumns.update((set) => {
       const next = new Set(set);
@@ -971,6 +1270,8 @@ export class CountryComponent implements OnInit {
       const c = this.selectedCountry();
       if (c) this.loadCountryIntoForm(c);
     }
+    this.selectedCell.set(null);
+    this.editingCell.set(null);
     this.isTranslationOpen.set(false);
     this.isActionListOpen.set(false);
     this.isVisibilityOpen.set(false);
@@ -1012,7 +1313,11 @@ export class CountryComponent implements OnInit {
     });
   }
 
-  openEdit(country: Country): void {
+  openEdit(country: Country, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
     this.currentCountryId.set(country.id);
     this.loadCountryIntoForm(country);
     this.viewMode.set('edit');
@@ -1021,6 +1326,16 @@ export class CountryComponent implements OnInit {
       queryParams: { mode: 'edit', id: country.id },
       queryParamsHandling: 'merge',
     });
+  }
+
+  toggleCountryStatus(country: Country, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    const newStatus: FormStatus = country.status === 'Active' ? 'Inactive' : 'Active';
+    this.countryService.updateCountry(country.id, { status: newStatus });
+    this.showToast(`Status changed to ${newStatus} for ${country.name}`);
   }
 
   loadCountryIntoForm(country: Country): void {
@@ -1500,8 +1815,11 @@ export class CountryComponent implements OnInit {
   }
 
   // Deletion flow with confirmation modal
-  promptDelete(country: Country, event?: MouseEvent): void {
-    if (event) event.stopPropagation();
+  promptDelete(country: Country, event?: MouseEvent | Event): void {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
     this.selectedCountryForDelete.set(country);
     this.isDeleteModalOpen.set(true);
   }

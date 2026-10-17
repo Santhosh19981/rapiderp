@@ -1677,50 +1677,42 @@
 
   <!-- Dedicated Full-Width Bottom Footer (Fixed at bottom spanning COMPLETE LEFT across under sidebar) -->
   <footer
-    class="h-11 w-full bg-white dark:bg-slate-800 border-t border-slate-200/90 dark:border-slate-700/80 px-4 sm:px-6 flex items-center justify-between shrink-0 text-xs text-slate-500 dark:text-slate-400 z-40 select-none shadow-xs">
-    <!-- Center: Powered By Rapid ERP -->
-    <div
-      class="flex items-center justify-center gap-1.5 font-medium tracking-wide text-xs text-slate-500 dark:text-slate-400">
+    class="justify-center h-10 w-full bg-white dark:bg-slate-800 border-t border-slate-200/90 dark:border-slate-700/80 px-4 sm:px-6 flex items-center justify-between shrink-0 text-xs text-slate-500 dark:text-slate-400 z-40 select-none shadow-xs relative">
+    <!-- Left: Powered By Rapid ERP (Matching Screenshot 2) -->
+    <div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
       <span>{{ navService.translateText('Powered By') }}</span>
-      <span
-        class="font-extrabold text-[#1863c0] dark:text-[#38bdf8] bg-gradient-to-r from-[#1863c0] to-[#06a9ea] bg-clip-text text-transparent">Rapid
-        ERP</span>
+      <span class="font-bold text-[#00a6f4] dark:text-[#38bdf8]">Rapid ERP</span>
     </div>
 
-    <!-- Option 1 (Left): Need help? (Matching Screenshot 1 & 2) -->
-    <div class="flex items-center gap-2">
+    <!-- Center: Need help? (Horizontally centered, exact replica of Screenshot 2) -->
+    <!-- <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
       <button type="button" (click)="toggleHelpModal()"
-        class="text-xs text-slate-500 hover:text-[#1863c0] dark:text-slate-400 dark:hover:text-[#38bdf8] font-medium transition-colors cursor-pointer flex items-center gap-1.5 group"
+        class="text-xs text-slate-600 hover:text-[#00a6f4] dark:text-slate-300 dark:hover:text-[#38bdf8] font-normal transition-colors cursor-pointer flex items-center gap-2 group"
         title="Rapid ERP Documentation & Support">
-        <div class="w-[34px] h-[34px] rounded-full bg-[#e6f6fe] flex items-center justify-center shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 fill-[#00a6f4]" viewBox="0 0 24 24">
-            <polygon points="8 5 19 12 8 19 8 5" />
+        <div class="w-6 h-6 rounded-full bg-[#e0f2fe] dark:bg-sky-950 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-2.5 h-2.5 fill-[#00a6f4] text-[#00a6f4]" viewBox="0 0 24 24">
+            <polygon points="7 5 19 12 7 19 7 5" />
           </svg>
         </div>
         <span>{{ navService.translateText('Need help?') }}</span>
       </button>
-    </div>
+    </div> -->
 
-
-
-    <!-- Option 2 (Right): Live Chat (Matching Screenshot 1 & 2) -->
-    <div class="flex items-center gap-2">
+    <!-- Right: Live Chat (Exact replica of Screenshot 2) -->
+    <!-- <div class="flex items-center gap-2">
       <button type="button" (click)="toggleLiveChat()"
-        class="text-xs text-slate-600 hover:text-[#1863c0] dark:text-slate-300 dark:hover:text-[#38bdf8] font-semibold transition-colors cursor-pointer flex items-center gap-2 group px-2 py-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60"
+        class="text-xs text-slate-600 hover:text-[#00a6f4] dark:text-slate-300 dark:hover:text-[#38bdf8] font-medium transition-colors cursor-pointer flex items-center gap-2 group"
         title="Open 24/7 Live Support Chat">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
+        <span class="w-2 h-2 rounded-full bg-[#10b981] inline-block shrink-0"></span>
         <span>{{ navService.translateText('Live Chat') }}</span>
         <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1863c0] dark:group-hover:text-[#38bdf8] transition-colors"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#00a6f4] dark:group-hover:text-[#38bdf8] transition-colors"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
           <path stroke-linecap="round" stroke-linejoin="round"
             d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
         </svg>
       </button>
-    </div>
+    </div> -->
   </footer>
 
   <!-- ========================================================================= -->
@@ -1733,15 +1725,13 @@
     <div
       class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col max-h-[88vh] animate-in zoom-in-95 duration-150"
       (click)="$event.stopPropagation()">
-      
+
       <!-- Modal Header (Title + Close Button) -->
       <div class="px-6 pt-5 pb-3.5 flex items-center justify-between border-b border-slate-100 shrink-0">
         <h2 class="text-lg font-bold text-slate-900 tracking-tight">
           Documentation & Help
         </h2>
-        <button
-          type="button"
-          (click)="navService.isHelpModalOpen.set(false)"
+        <button type="button" (click)="navService.isHelpModalOpen.set(false)"
           class="w-8 h-8 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition cursor-pointer text-base"
           title="Close">
           ✕
@@ -1749,430 +1739,447 @@
       </div>
 
       <!-- Tab Navigation Pills (Exact match to Reference Images 2-5) -->
-      <div class="px-6 py-2.5 bg-slate-50/70 border-b border-slate-100 flex items-center gap-2 overflow-x-auto custom-scrollbar shrink-0">
+      <div
+        class="px-6 py-2.5 bg-slate-50/70 border-b border-slate-100 flex items-center gap-2 overflow-x-auto custom-scrollbar shrink-0">
         @for (t of [
-          { id: 'list', label: 'List' },
-          { id: 'add', label: 'Add' },
-          { id: 'edit', label: 'Edit' },
-          { id: 'view', label: 'View' },
-          { id: 'history', label: 'History' }
+        { id: 'list', label: 'List' },
+        { id: 'add', label: 'Add' },
+        { id: 'edit', label: 'Edit' },
+        { id: 'view', label: 'View' },
+        { id: 'history', label: 'History' }
         ]; track t.id) {
-          <button
-            type="button"
-            (click)="setHelpTab($any(t.id))"
-            class="px-4 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer shrink-0"
-            [class.bg-[#e6f6fe]]="helpActiveTab() === t.id"
-            [class.border]="helpActiveTab() === t.id"
-            [class.border-[#00a6f4]]="helpActiveTab() === t.id"
-            [class.text-[#00a6f4]]="helpActiveTab() === t.id"
-            [class.shadow-2xs]="helpActiveTab() === t.id"
-            [class.text-slate-600]="helpActiveTab() !== t.id"
-            [class.hover:text-slate-900]="helpActiveTab() !== t.id"
-            [class.hover:bg-slate-100]="helpActiveTab() !== t.id"
-          >
-            {{ t.label }}
-          </button>
+        <button type="button" (click)="setHelpTab($any(t.id))"
+          class="px-4 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer shrink-0"
+          [class.bg-[#e6f6fe]]="helpActiveTab() === t.id" [class.border]="helpActiveTab() === t.id"
+          [class.border-[#00a6f4]]="helpActiveTab() === t.id" [class.text-[#00a6f4]]="helpActiveTab() === t.id"
+          [class.shadow-2xs]="helpActiveTab() === t.id" [class.text-slate-600]="helpActiveTab() !== t.id"
+          [class.hover:text-slate-900]="helpActiveTab() !== t.id" [class.hover:bg-slate-100]="helpActiveTab() !== t.id">
+          {{ t.label }}
+        </button>
         }
       </div>
 
       <!-- Modal Body (Pure LIGHT THEME with crystal clear contrast) -->
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-xs text-slate-700 bg-white">
-        
+
         <!-- 1. LIST TAB CONTENT (Reference Image 2) -->
         @if (helpActiveTab() === 'list') {
-          <div class="space-y-4 animate-in fade-in duration-150">
-            <div>
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Key Features:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Sortable columns</strong> - Click on any column header to sort data in ascending or descending order</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Search functionality</strong> - Use the search bar to find specific records quickly</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Filtering options</strong> - Apply multiple filters to narrow down your results</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Column visibility</strong> - Show or hide columns based on your preferences</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Pagination</strong> - Navigate through large datasets efficiently</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Bulk actions</strong> - Select multiple items for batch operations</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Navigation Tips:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Use keyboard shortcuts: <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700 font-mono text-[10px]">Ctrl+F</kbd> for quick search</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Right-click on column headers for additional options</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Drag column headers to reorder them</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Use the visibility toggle to customize your view</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Performance:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Optimized rendering for smooth scrolling with large datasets</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Background data synchronization keeps records up to date</span>
-                </li>
-              </ul>
-            </div>
+        <div class="space-y-4 animate-in fade-in duration-150">
+          <div>
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Key Features:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Sortable columns</strong> - Click on any column header to
+                  sort data in ascending or descending order</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Search functionality</strong> - Use the search bar to
+                  find specific records quickly</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Filtering options</strong> - Apply multiple filters to
+                  narrow down your results</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Column visibility</strong> - Show or hide columns based
+                  on your preferences</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Pagination</strong> - Navigate through large datasets
+                  efficiently</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Bulk actions</strong> - Select multiple items for batch
+                  operations</span>
+              </li>
+            </ul>
           </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Navigation Tips:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Use keyboard shortcuts: <kbd
+                    class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700 font-mono text-[10px]">Ctrl+F</kbd>
+                  for quick search</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Right-click on column headers for additional options</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Drag column headers to reorder them</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Use the visibility toggle to customize your view</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Performance:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Optimized rendering for smooth scrolling with large datasets</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Background data synchronization keeps records up to date</span>
+              </li>
+            </ul>
+          </div>
+        </div>
         }
 
         <!-- 2. ADD TAB CONTENT (Reference Image 3) -->
         @if (helpActiveTab() === 'add') {
-          <div class="space-y-4 animate-in fade-in duration-150">
-            <div>
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Getting Started:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Click the "Add" button to open the creation form</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>All required fields are marked with red asterisks (<span class="text-rose-500 font-bold">*</span>)</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Form validation occurs in real-time as you type</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Auto-save functionality prevents data loss</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Form Features:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Smart field suggestions based on previous entries</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>File upload support with drag-and-drop functionality</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Date picker with calendar integration</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Rich text editor for description fields</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Dynamic form fields that adjust based on selections</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Validation Rules:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Email fields must contain valid email format</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Phone numbers verified against international standards</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Unique fields validated against existing records</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Character limits enforced on text fields</span>
-                </li>
-              </ul>
-            </div>
+        <div class="space-y-4 animate-in fade-in duration-150">
+          <div>
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Getting Started:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Click the "Add" button to open the creation form</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>All required fields are marked with red asterisks (<span
+                    class="text-rose-500 font-bold">*</span>)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Form validation occurs in real-time as you type</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Auto-save functionality prevents data loss</span>
+              </li>
+            </ul>
           </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Form Features:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Smart field suggestions based on previous entries</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>File upload support with drag-and-drop functionality</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Date picker with calendar integration</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Rich text editor for description fields</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Dynamic form fields that adjust based on selections</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Validation Rules:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Email fields must contain valid email format</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Phone numbers verified against international standards</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Unique fields validated against existing records</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Character limits enforced on text fields</span>
+              </li>
+            </ul>
+          </div>
+        </div>
         }
 
         <!-- 3. EDIT TAB CONTENT (Reference Image 4) -->
         @if (helpActiveTab() === 'edit') {
-          <div class="space-y-4 animate-in fade-in duration-150">
-            <div>
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Accessing Edit Mode:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Click the edit icon (pencil) next to any record</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Double-click on editable fields for quick edit</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Use keyboard shortcut <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700 font-mono text-[10px]">'E'</kbd> when a record is selected</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Access edit from the record detail view</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Edit Features:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Track changes with visual indicators</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Undo/Redo functionality for all modifications</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Auto-save every 30 seconds to prevent data loss</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Field-level permissions control what can be modified</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Change history log maintains audit trail</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Advanced Options:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Bulk edit multiple records simultaneously</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Revert to previously saved versions</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Conflict resolution for concurrent edits</span>
-                </li>
-              </ul>
-            </div>
+        <div class="space-y-4 animate-in fade-in duration-150">
+          <div>
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Accessing Edit Mode:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Click the edit icon (pencil) next to any record</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Double-click on editable fields for quick edit</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Use keyboard shortcut <kbd
+                    class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700 font-mono text-[10px]">'E'</kbd>
+                  when a record is selected</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Access edit from the record detail view</span>
+              </li>
+            </ul>
           </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Edit Features:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Track changes with visual indicators</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Undo/Redo functionality for all modifications</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Auto-save every 30 seconds to prevent data loss</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Field-level permissions control what can be modified</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Change history log maintains audit trail</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Advanced Options:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Bulk edit multiple records simultaneously</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Revert to previously saved versions</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Conflict resolution for concurrent edits</span>
+              </li>
+            </ul>
+          </div>
+        </div>
         }
 
         <!-- 4. VIEW TAB CONTENT (Reference Image 5) -->
         @if (helpActiveTab() === 'view') {
-          <div class="space-y-4 animate-in fade-in duration-150">
-            <div>
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">View Components:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Header section with key identifying information</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Tabbed interface for organized data presentation</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Related records section showing connections</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Activity timeline displaying recent actions</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>File attachments and media gallery</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Navigation Features:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Previous/Next arrows to browse through records</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Breadcrumb navigation showing your path</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Quick action buttons for common tasks</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Print-friendly layout option</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Full-screen mode for detailed analysis</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Data Presentation:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Responsive tables with configurable views</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Expandable sections for deep-dive inspection</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span>Export individual record summaries in PDF or Excel</span>
-                </li>
-              </ul>
-            </div>
+        <div class="space-y-4 animate-in fade-in duration-150">
+          <div>
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">View Components:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Header section with key identifying information</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Tabbed interface for organized data presentation</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Related records section showing connections</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Activity timeline displaying recent actions</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>File attachments and media gallery</span>
+              </li>
+            </ul>
           </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Navigation Features:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Previous/Next arrows to browse through records</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Breadcrumb navigation showing your path</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Quick action buttons for common tasks</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Print-friendly layout option</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Full-screen mode for detailed analysis</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Data Presentation:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Responsive tables with configurable views</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Expandable sections for deep-dive inspection</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span>Export individual record summaries in PDF or Excel</span>
+              </li>
+            </ul>
+          </div>
+        </div>
         }
 
         <!-- 5. HISTORY TAB CONTENT (User's Exact Specification) -->
         @if (helpActiveTab() === 'history') {
-          <div class="space-y-4 animate-in fade-in duration-150">
-            <div>
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">History Types:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Create events</strong> - When records were first added</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Modification events</strong> - What changed and when</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Delete events</strong> - Removal and restoration activities</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Access events</strong> - Who viewed what and when</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">System events</strong> - Automated actions and updates</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">History Details:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">User information</strong> - Who performed the action</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Timestamp</strong> - Exact date and time of changes</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Change description</strong> - What specifically was modified</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Before/After values</strong> - See what changed</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">IP address and device information</strong> for security</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Filtering Options:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Filter by date range</strong> to find specific periods</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Filter by user</strong> to see individual activity</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Filter by action type</strong> (create, edit, delete, view)</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Search</strong> within history descriptions</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Export history reports</strong> for compliance</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100">
-              <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Security Features:</h4>
-              <ul class="space-y-2 text-slate-600 text-xs pl-1">
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Immutable history records</strong> cannot be altered</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Role-based access</strong> to history information</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Automatic archiving</strong> of old history data</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
-                  <span><strong class="font-bold text-slate-800">Compliance reporting</strong> for audit requirements</span>
-                </li>
-              </ul>
-            </div>
+        <div class="space-y-4 animate-in fade-in duration-150">
+          <div>
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">History Types:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Create events</strong> - When records were first
+                  added</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Modification events</strong> - What changed and
+                  when</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Delete events</strong> - Removal and restoration
+                  activities</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Access events</strong> - Who viewed what and when</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">System events</strong> - Automated actions and
+                  updates</span>
+              </li>
+            </ul>
           </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">History Details:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">User information</strong> - Who performed the
+                  action</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Timestamp</strong> - Exact date and time of
+                  changes</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Change description</strong> - What specifically was
+                  modified</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Before/After values</strong> - See what changed</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">IP address and device information</strong> for
+                  security</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Filtering Options:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Filter by date range</strong> to find specific
+                  periods</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Filter by user</strong> to see individual activity</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Filter by action type</strong> (create, edit, delete,
+                  view)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Search</strong> within history descriptions</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Export history reports</strong> for compliance</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100">
+            <h4 class="text-sm font-bold text-[#00a6f4] mb-2.5">Security Features:</h4>
+            <ul class="space-y-2 text-slate-600 text-xs pl-1">
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Immutable history records</strong> cannot be
+                  altered</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Role-based access</strong> to history information</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Automatic archiving</strong> of old history data</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#00a6f4] font-bold text-sm leading-none mt-0.5">•</span>
+                <span><strong class="font-bold text-slate-800">Compliance reporting</strong> for audit
+                  requirements</span>
+              </li>
+            </ul>
+          </div>
+        </div>
         }
 
       </div>

@@ -23,12 +23,12 @@
 }
 
 /* ========================================================================= */
-/* Custom Scrollbars: Bright Cyan Pill Thumb (Image 1 replica)              */
+/* Custom Scrollbars: Light Cyan/Sky Pill Thumb (Image 1 replica)            */
 /* Applied globally across Grid, List/Table, Add, Edit, View, and Modals     */
 /* ========================================================================= */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #00a6f4 #f1f5f9;
+  scrollbar-color: #80d6fb #f8fafc;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -37,19 +37,19 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f8fafc;
   border-radius: 9999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #00a6f4;
+  background: #80d6fb;
   border-radius: 9999px;
   border: 1px solid transparent;
   background-clip: padding-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #008ece;
+  background: #52c5f8;
 }
 
 html.dark .custom-scrollbar,
