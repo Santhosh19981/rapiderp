@@ -1437,3 +1437,97 @@
 .custom-checkbox-input:indeterminate + .custom-checkbox-box .dash-icon {
   display: block !important;
 }
+
+/* ========================================================================= */
+/* COUNTRY MASTER OVERVIEW DASHBOARD STYLES (MOD-8 / Enterprise Analytics)   */
+/* ========================================================================= */
+.overview-kpi-card {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
+}
+
+.overview-kpi-card:hover {
+  transform: translateY(-2px);
+}
+
+.country-overview-page {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Status Chart Graphical Presentation Animations --- */
+.pillar-column {
+  transform-origin: bottom;
+  animation: pillarRise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.pillar-column:hover {
+  transform: translateY(-4px) scaleY(1.02);
+  filter: brightness(1.08);
+}
+
+@keyframes pillarRise {
+  0% {
+    transform: scaleY(0.08);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.pillar-glow-halo {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.wave-spline-path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawWave 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawWave {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.wave-node-pulse {
+  animation: nodeRadar 2s infinite ease-out;
+}
+
+@keyframes nodeRadar {
+  0% {
+    r: 5;
+    opacity: 1;
+    stroke-width: 2;
+  }
+  100% {
+    r: 14;
+    opacity: 0;
+    stroke-width: 0.5;
+  }
+}
+

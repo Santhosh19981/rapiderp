@@ -863,17 +863,18 @@ export class CountryService {
     this.minimizedForms.update((list) => list.filter((f) => f.id !== id));
   }
 
-  // Computed statistics
+  // Computed statistics (Deleted records are excluded from total per requirements)
   stats = computed<CountryStats>(() => {
     const list = this.countries();
-    const active = list.filter((c) => c.status === 'Active').length;
-    const inactive = list.filter((c) => c.status === 'Inactive').length;
-    const draft = list.filter((c) => c.status === 'Draft').length;
+    const nonDeleted = list.filter((c) => c.status !== 'Deleted');
+    const active = nonDeleted.filter((c) => c.status === 'Active').length;
+    const inactive = nonDeleted.filter((c) => c.status === 'Inactive').length;
+    const draft = nonDeleted.filter((c) => c.status === 'Draft').length;
     const deleted = list.filter((c) => c.status === 'Deleted').length;
-    const updated = list.filter((c) => c.isUpdated).length;
+    const updated = nonDeleted.filter((c) => c.isUpdated).length;
 
     return {
-      total: list.length,
+      total: nonDeleted.length,
       active,
       inactive,
       draft,
