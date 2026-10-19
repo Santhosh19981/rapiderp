@@ -927,7 +927,7 @@ export class CountryService {
     const isoCode3 = (data.isoCode3 || `${isoCode2}A`).toUpperCase();
     const isoNumeric = data.isoNumeric || '840';
     const nationality = data.nationality || (data.name ? `${data.name} citizen` : 'Citizen');
-    const flag = data.flag || `https://flagcdn.com/${code.toLowerCase()}.svg`;
+    const flag = data.flag || '';
 
     const newCountry: Country = {
       id: newId,

@@ -28,6 +28,12 @@
   padding: 0;
 }
 
+@media (min-width: 640px) {
+  .floating-notch-label.resting {
+    font-size: 16px; /* Section 8.2 desktop standard 16px */
+  }
+}
+
 /* Floating State: Jump onto top border notch with white background */
 .floating-notch-label.floating-top {
   top: 0;
@@ -49,7 +55,7 @@
 }
 
 .floating-notch-label.is-error {
-  color: #ef4444 !important;
+  color: #DC2626 !important; /* Section 4.2 exact error color */
 }
 
 /* ========================================================================= */
@@ -524,6 +530,38 @@
 :host-context(.dark) .form-switch-label,
 .dark .form-switch-label {
   color: #e2e8f0;
+}
+
+/* Section 9: Keep Toggle specific styling */
+.keep-switch .form-switch-track {
+  background: #bae6fd; /* light secondary blue default (Section 9.1) */
+  border: 1px solid #7dd3fc;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+:host-context(.dark) .keep-switch .form-switch-track,
+.dark .keep-switch .form-switch-track {
+  background: #0369a1;
+  border: 1px solid #0284c7;
+}
+
+.keep-switch:hover .form-switch-track {
+  background: #7dd3fc;
+  border-color: #38bdf8;
+}
+
+.keep-switch input:checked + .form-switch-track {
+  background: #00a6f4; /* approved primary theme color (Section 9.2) */
+  border-color: #0284c7;
+}
+
+.keep-switch input:checked:hover + .form-switch-track {
+  background: #0284c7;
+}
+
+.keep-switch input:focus-visible + .form-switch-track {
+  outline: 2px solid #00a6f4;
+  outline-offset: 2px;
 }
 
 /* ========================================================================= */

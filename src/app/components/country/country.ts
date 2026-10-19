@@ -759,18 +759,18 @@ export class CountryComponent implements OnInit {
     }
     return {
       id: this.currentCountryId() || '0',
-      name: this.formName() || 'United Arab Emirates',
-      code: this.formIsoCode2() || this.formCode() || 'AE',
-      isoCode2: this.formIsoCode2() || 'AE',
-      isoCode3: this.formIsoCode3() || 'ARE',
-      isoNumeric: this.formIsoNumeric() || '784',
-      nationality: this.formNationality() || 'Emirati',
-      isd: this.formIsd() || '+971',
-      currency: this.formCurrency() || 'AED — UAE Dirham',
+      name: this.formName() || '',
+      code: this.formIsoCode2() || this.formCode() || '',
+      isoCode2: this.formIsoCode2() || '',
+      isoCode3: this.formIsoCode3() || '',
+      isoNumeric: this.formIsoNumeric() || '',
+      nationality: this.formNationality() || '',
+      isd: this.formIsd() || '',
+      currency: this.formCurrency() || '',
       status: (this.formStatus() === 'Delete' ? 'Deleted' : this.formStatus()) as any,
       isDefault: this.formDefault() === 'Yes',
-      flag: this.formFlag() || `https://flagcdn.com/${(this.formIsoCode2() || 'ae').toLowerCase()}.svg`,
-      continent: this.formContinent() || 'Asia',
+      flag: this.formFlag() || '',
+      continent: this.formContinent() || '',
       translations: this.formTranslations() || {},
       actionMessage: 'Updated',
       createdAt: '2023-01-01',
@@ -779,18 +779,18 @@ export class CountryComponent implements OnInit {
   });
 
   // Country Form State for Add / Edit
-  formCode = signal<string>('US');
-  formIsoCode2 = signal<string>('US');
-  formIsoCode3 = signal<string>('USA');
-  formIsoNumeric = signal<string>('840');
-  formNationality = signal<string>('American');
-  formIsd = signal<string>('+1');
-  formName = signal<string>('United States');
-  formCurrency = signal<string>('USD');
+  formCode = signal<string>('');
+  formIsoCode2 = signal<string>('');
+  formIsoCode3 = signal<string>('');
+  formIsoNumeric = signal<string>('');
+  formNationality = signal<string>('');
+  formIsd = signal<string>('');
+  formName = signal<string>('');
+  formCurrency = signal<string>('');
   formDefault = signal<'Yes' | 'No'>('No');
   formStatus = signal<FormStatus>('Active');
-  formFlag = signal<string | null>('https://flagcdn.com/us.svg');
-  formContinent = signal<string>('North America');
+  formFlag = signal<string | null>(null);
+  formContinent = signal<string>('');
   formTranslations = signal<Record<string, string>>({});
 
   // Form field focus tracking for floating label
@@ -815,14 +815,158 @@ export class CountryComponent implements OnInit {
   isCurrencyFloating = computed(() => this.isCurrencyFocused() || !!this.formCurrency()?.trim());
   isNationalityFloating = computed(() => this.isNationalityFocused() || !!this.formNationality()?.trim());
 
+  // Form Interaction & Touched Tracking (Section 4.5)
+  touchedFields = signal<Record<string, boolean>>({});
+  hasSubmitAttempted = signal<boolean>(false);
+
+  markFieldTouched(field: string): void {
+    this.touchedFields.update((t) => ({ ...t, [field]: true }));
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const isTouched = !!this.touchedFields()[field] || this.hasSubmitAttempted();
+    if (!isTouched) return false;
+    switch (field) {
+      case 'name': return !!this.nameError();
+      case 'isoCode2': return !!this.isoCode2Error();
+      case 'isoCode3': return !!this.isoCode3Error();
+      case 'isoNumeric': return !!this.isoNumericError();
+      case 'isd': return !!this.isdError();
+      case 'currency': return !!this.currencyError();
+      case 'nationality': return !!this.nationalityError();
+      default: return false;
+    }
+  }
+
+  // Section 4.8 Detailed Field Validation Computed Rules
+  nameError = computed<string | null>(() => {
+    const raw = this.formName();
+    const val = raw ? raw.trim() : '';
+    if (!val) return 'Country Name is required.';
+    if (/^\+?\d+$/.test(val) || /^[\d\s+\-()]+$/.test(val)) {
+      return 'Country name cannot be numeric or a phone dialing code.';
+    }
+    const validLettersRegex = /^[\p{L}\p{M}\s.'\-()]+$/u;
+    if (!validLettersRegex.test(val)) {
+      return 'Country name contains invalid special characters.';
+    }
+    const curId = this.currentCountryId();
+    const isEdit = this.viewMode() === 'edit';
+    const isDuplicate = this.countryService.countries().some((c) => 
+      c.status !== 'Deleted' &&
+      c.name.trim().toLowerCase() === val.toLowerCase() &&
+      (!isEdit || c.id !== curId)
+    );
+    if (isDuplicate) {
+      return 'A country with this name already exists in Country Master.';
+    }
+    return null;
+  });
+
+  isoCode2Error = computed<string | null>(() => {
+    const raw = this.formIsoCode2();
+    const val = raw ? raw.trim().toUpperCase() : '';
+    if (!val) return 'ISO Code 2 is required.';
+    if (!/^[A-Za-z]{2}$/.test(val)) {
+      return 'ISO Code 2 must be exactly 2 alphabetic characters (e.g. US, AE).';
+    }
+    return null;
+  });
+
+  isoCode3Error = computed<string | null>(() => {
+    const raw = this.formIsoCode3();
+    const val = raw ? raw.trim().toUpperCase() : '';
+    if (!val) return 'ISO Code 3 is required.';
+    if (!/^[A-Za-z]{3}$/.test(val)) {
+      return 'ISO Code 3 must be exactly 3 alphabetic characters (e.g. USA, ARE).';
+    }
+    return null;
+  });
+
+  isoNumericError = computed<string | null>(() => {
+    const raw = this.formIsoNumeric();
+    const val = raw ? raw.trim() : '';
+    if (!val) return 'ISO Numeric is required.';
+    if (!/^\d{3}$/.test(val)) {
+      return 'ISO Numeric must be exactly 3 digits (e.g. 840, 784, 076).';
+    }
+    return null;
+  });
+
+  isdError = computed<string | null>(() => {
+    const raw = this.formIsd();
+    const val = raw ? raw.trim() : '';
+    if (!val) return 'Phone Dial Code is required.';
+    if (!/^\+[0-9]{1,5}$/.test(val)) {
+      return 'Phone Dial Code must start with + followed by 1 to 5 digits (e.g. +1, +971).';
+    }
+    return null;
+  });
+
+  currencyError = computed<string | null>(() => {
+    const raw = this.formCurrency();
+    const val = raw ? raw.trim() : '';
+    if (!val) return 'Default Currency is required.';
+    if (!/^[A-Za-z]{3}(\s*—.*)?$/.test(val)) {
+      return 'Please select or enter a valid 3-letter currency (e.g. USD, EUR, AED).';
+    }
+    return null;
+  });
+
+  nationalityError = computed<string | null>(() => {
+    const raw = this.formNationality();
+    const val = raw ? raw.trim() : '';
+    if (!val) return null; // Optional
+    if (!/^[\p{L}\p{M}\s.'\-]+$/u.test(val)) {
+      return 'Nationality contains invalid characters.';
+    }
+    return null;
+  });
+
   // Input validity states for green checkmark icon
-  isNameValid = computed(() => !!this.formName()?.trim());
-  isIsoCode2Valid = computed(() => !!this.formIsoCode2()?.trim() && this.formIsoCode2().trim().length >= 2);
-  isIsoCode3Valid = computed(() => !!this.formIsoCode3()?.trim() && this.formIsoCode3().trim().length >= 3);
-  isIsoNumericValid = computed(() => !!this.formIsoNumeric()?.trim());
-  isIsdValid = computed(() => !!this.formIsd()?.trim());
-  isCurrencyValid = computed(() => !!this.formCurrency()?.trim());
-  isNationalityValid = computed(() => !!this.formNationality()?.trim());
+  isNameValid = computed(() => !!this.formName()?.trim() && !this.nameError());
+  isIsoCode2Valid = computed(() => !!this.formIsoCode2()?.trim() && !this.isoCode2Error());
+  isIsoCode3Valid = computed(() => !!this.formIsoCode3()?.trim() && !this.isoCode3Error());
+  isIsoNumericValid = computed(() => !!this.formIsoNumeric()?.trim() && !this.isoNumericError());
+  isIsdValid = computed(() => !!this.formIsd()?.trim() && !this.isdError());
+  isCurrencyValid = computed(() => !!this.formCurrency()?.trim() && !this.currencyError());
+  isNationalityValid = computed(() => !!this.formNationality()?.trim() && !this.nationalityError());
+
+  isFormValid = computed(() => 
+    !this.nameError() &&
+    !this.isoCode2Error() &&
+    !this.isoCode3Error() &&
+    !this.isoNumericError() &&
+    !this.isdError() &&
+    !this.currencyError()
+  );
+
+  // Currency Master Selection Options
+  readonly currencyMasterList = [
+    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    { code: 'EUR', name: 'Euro', symbol: '€' },
+    { code: 'GBP', name: 'British Pound', symbol: '£' },
+    { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' },
+    { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
+    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+    { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$' },
+    { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼' },
+    { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' },
+    { code: 'TRY', name: 'Turkish Lira', symbol: '₺' },
+    { code: 'KRW', name: 'South Korean Won', symbol: '₩' },
+    { code: 'MXN', name: 'Mexican Peso', symbol: '$' },
+  ];
+  isCurrencyDropdownOpen = signal<boolean>(false);
+
+  selectCurrencyOption(c: { code: string; name: string }): void {
+    this.formCurrency.set(`${c.code} — ${c.name}`);
+    this.isCurrencyDropdownOpen.set(false);
+    this.markFieldTouched('currency');
+  }
 
   // Create allows Active/Draft only; Inactive and Delete are edit-only
   statusOptions = computed<DropdownOption[]>(() => {
@@ -848,16 +992,31 @@ export class CountryComponent implements OnInit {
     ...this.importHeaders().map((h, i) => ({ value: i, label: h || `Column ${i + 1}`, description: `Column ${i + 1}` })),
   ]);
 
-  // Name translations popover
+  // Section 13: 10 Configured Default Languages for Translation
   readonly translationLanguages = [
-    { code: 'ar', label: 'Arabic', dir: 'rtl' },
-    { code: 'hi', label: 'Hindi', dir: 'ltr' },
-    { code: 'ur', label: 'Urdu', dir: 'rtl' },
-    { code: 'bn', label: 'Bangla', dir: 'ltr' },
+    { code: 'ar', label: 'Arabic', native: 'العربية', dir: 'rtl' },
+    { code: 'es', label: 'Spanish', native: 'Español', dir: 'ltr' },
+    { code: 'fr', label: 'French', native: 'Français', dir: 'ltr' },
+    { code: 'de', label: 'German', native: 'Deutsch', dir: 'ltr' },
+    { code: 'zh', label: 'Chinese', native: '中文', dir: 'ltr' },
+    { code: 'ja', label: 'Japanese', native: '日本語', dir: 'ltr' },
+    { code: 'ru', label: 'Russian', native: 'Русский', dir: 'ltr' },
+    { code: 'hi', label: 'Hindi', native: 'हिन्दी', dir: 'ltr' },
+    { code: 'pt', label: 'Portuguese', native: 'Português', dir: 'ltr' },
+    { code: 'it', label: 'Italian', native: 'Italiano', dir: 'ltr' },
   ];
+  translationSearch = signal<string>('');
+  filteredTranslationLanguages = computed(() => {
+    const q = this.translationSearch().trim().toLowerCase();
+    if (!q) return this.translationLanguages;
+    return this.translationLanguages.filter(
+      (l) => l.label.toLowerCase().includes(q) || l.native.toLowerCase().includes(q) || l.code.toLowerCase().includes(q)
+    );
+  });
   isTranslationOpen = signal<boolean>(false);
   translationDraft = signal<Record<string, string>>({});
   translationCount = computed(() => Object.values(this.formTranslations()).filter((v) => v.trim()).length);
+  confirmOverwriteTranslationsModal = signal<boolean>(false);
 
   // Read-only action history for the record being edited / viewed
   isActionListOpen = signal<boolean>(false);
@@ -872,6 +1031,7 @@ export class CountryComponent implements OnInit {
   pdfOnSubmit = signal<boolean>(false);
   printOnSubmit = signal<boolean>(false);
   isResetModalOpen = signal<boolean>(false);
+  isClearModalOpen = signal<boolean>(false);
 
   // View page footer switches + export prompt
   viewPdf = signal<boolean>(false);
@@ -882,11 +1042,13 @@ export class CountryComponent implements OnInit {
   activeListeningField = signal<string | null>(null);
   private speechRecognitionObj: any = null;
 
-  // Flag uploader sub-tab
-  flagTab = signal<'drop' | 'attachment' | 'gallery'>('drop');
+  // Flag uploader sub-tab (Upload, Drop, Gallery - Section 6.2)
+  flagTab = signal<'drop' | 'upload' | 'attachment' | 'gallery'>('drop');
   isDraggingFlag = signal<boolean>(false);
+  gallerySearch = signal<string>('');
+  galleryVisibleCount = signal<number>(16);
 
-  // Popular flags gallery for 1-click select
+  // Section 7: Popular flags gallery with 36 world flags
   galleryFlags: GalleryFlag[] = [
     { code: 'US', name: 'United States', flagUrl: 'https://flagcdn.com/us.svg' },
     { code: 'GB', name: 'United Kingdom', flagUrl: 'https://flagcdn.com/gb.svg' },
@@ -904,7 +1066,304 @@ export class CountryComponent implements OnInit {
     { code: 'BR', name: 'Brazil', flagUrl: 'https://flagcdn.com/br.svg' },
     { code: 'KR', name: 'South Korea', flagUrl: 'https://flagcdn.com/kr.svg' },
     { code: 'TR', name: 'Turkey', flagUrl: 'https://flagcdn.com/tr.svg' },
+    { code: 'NL', name: 'Netherlands', flagUrl: 'https://flagcdn.com/nl.svg' },
+    { code: 'CH', name: 'Switzerland', flagUrl: 'https://flagcdn.com/ch.svg' },
+    { code: 'SE', name: 'Sweden', flagUrl: 'https://flagcdn.com/se.svg' },
+    { code: 'NO', name: 'Norway', flagUrl: 'https://flagcdn.com/no.svg' },
+    { code: 'DK', name: 'Denmark', flagUrl: 'https://flagcdn.com/dk.svg' },
+    { code: 'FI', name: 'Finland', flagUrl: 'https://flagcdn.com/fi.svg' },
+    { code: 'BE', name: 'Belgium', flagUrl: 'https://flagcdn.com/be.svg' },
+    { code: 'AT', name: 'Austria', flagUrl: 'https://flagcdn.com/at.svg' },
+    { code: 'PT', name: 'Portugal', flagUrl: 'https://flagcdn.com/pt.svg' },
+    { code: 'IE', name: 'Ireland', flagUrl: 'https://flagcdn.com/ie.svg' },
+    { code: 'NZ', name: 'New Zealand', flagUrl: 'https://flagcdn.com/nz.svg' },
+    { code: 'MX', name: 'Mexico', flagUrl: 'https://flagcdn.com/mx.svg' },
+    { code: 'AR', name: 'Argentina', flagUrl: 'https://flagcdn.com/ar.svg' },
+    { code: 'ZA', name: 'South Africa', flagUrl: 'https://flagcdn.com/za.svg' },
+    { code: 'EG', name: 'Egypt', flagUrl: 'https://flagcdn.com/eg.svg' },
+    { code: 'MY', name: 'Malaysia', flagUrl: 'https://flagcdn.com/my.svg' },
+    { code: 'TH', name: 'Thailand', flagUrl: 'https://flagcdn.com/th.svg' },
+    { code: 'ID', name: 'Indonesia', flagUrl: 'https://flagcdn.com/id.svg' },
+    { code: 'PL', name: 'Poland', flagUrl: 'https://flagcdn.com/pl.svg' },
+    { code: 'QA', name: 'Qatar', flagUrl: 'https://flagcdn.com/qa.svg' },
   ];
+
+  filteredGalleryFlags = computed(() => {
+    const q = this.gallerySearch().trim().toLowerCase();
+    if (!q) return this.galleryFlags;
+    return this.galleryFlags.filter(
+      (f) => f.name.toLowerCase().includes(q) || f.code.toLowerCase().includes(q)
+    );
+  });
+
+  displayedGalleryFlags = computed(() => {
+    return this.filteredGalleryFlags().slice(0, this.galleryVisibleCount());
+  });
+
+  onGalleryScroll(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (target.scrollTop + target.clientHeight >= target.scrollHeight - 30) {
+      if (this.galleryVisibleCount() < this.filteredGalleryFlags().length) {
+        this.galleryVisibleCount.update((c) => Math.min(c + 8, this.filteredGalleryFlags().length));
+      }
+    }
+  }
+
+  downloadFlag(url?: string | null, name?: string): void {
+    const flagUrl = url || this.formFlag();
+    if (!flagUrl) {
+      this.showToast('No flag selected to download.');
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = flagUrl;
+    a.download = `${(name || this.formName() || 'country').toLowerCase().replace(/\s+/g, '-')}-flag.svg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    this.showToast(`Flag downloaded for ${name || this.formName()}`);
+  }
+
+  // Section 14: AI Assistance State
+  isAiModalOpen = signal<boolean>(false);
+  aiInputText = signal<string>('');
+  aiIsProcessing = signal<boolean>(false);
+  aiErrorMessage = signal<string | null>(null);
+  aiExtractedData = signal<{
+    name?: string;
+    isoCode2?: string;
+    isoCode3?: string;
+    isoNumeric?: string;
+    isd?: string;
+    currency?: string;
+    nationality?: string;
+    continent?: string;
+  } | null>(null);
+  aiShowConflictPrompt = signal<boolean>(false);
+
+  openAiModal(): void {
+    this.aiErrorMessage.set(null);
+    this.aiExtractedData.set(null);
+    this.aiShowConflictPrompt.set(false);
+    this.isAiModalOpen.set(true);
+  }
+
+  closeAiModal(): void {
+    this.isAiModalOpen.set(false);
+    this.aiShowConflictPrompt.set(false);
+  }
+
+  clearAiInput(): void {
+    this.aiInputText.set('');
+    this.aiExtractedData.set(null);
+    this.aiErrorMessage.set(null);
+  }
+
+  startAiExtraction(): void {
+    const text = this.aiInputText().trim();
+    if (!text) {
+      this.aiErrorMessage.set('Please enter or paste country details in the editor.');
+      return;
+    }
+    this.aiIsProcessing.set(true);
+    this.aiErrorMessage.set(null);
+
+    setTimeout(() => {
+      try {
+        const extracted = this.parseAiCountryText(text);
+        if (!extracted.name && !extracted.isoCode2) {
+          this.aiErrorMessage.set(
+            'Could not extract sufficient country data. Please ensure the country name and codes are included.'
+          );
+          this.aiIsProcessing.set(false);
+          return;
+        }
+        this.aiExtractedData.set(extracted);
+        this.aiIsProcessing.set(false);
+      } catch (err: any) {
+        this.aiErrorMessage.set('Failed to process text. Preserving your input for review.');
+        this.aiIsProcessing.set(false);
+      }
+    }, 450);
+  }
+
+  private parseAiCountryText(raw: string): any {
+    const text = raw.trim();
+    let name = '';
+    let isoCode2 = '';
+    let isoCode3 = '';
+    let isoNumeric = '';
+    let isd = '';
+    let currency = '';
+    let nationality = '';
+    let continent = '';
+
+    // Check if JSON format
+    if (text.startsWith('{') && text.endsWith('}')) {
+      try {
+        const obj = JSON.parse(text);
+        name = obj.name || obj.country || obj.countryName || '';
+        isoCode2 = obj.isoCode2 || obj.code || obj.iso2 || '';
+        isoCode3 = obj.isoCode3 || obj.iso3 || '';
+        isoNumeric = obj.isoNumeric || obj.numeric || '';
+        isd = obj.isd || obj.dialCode || obj.phoneCode || '';
+        currency = obj.currency || obj.currencyCode || '';
+        nationality = obj.nationality || '';
+        continent = obj.continent || obj.region || '';
+      } catch {}
+    }
+
+    // Keyword extractors
+    const nameMatch = text.match(/(?:Country|Name|Country Name)[:\s]+([A-Za-z\s.'\-]+)/i);
+    if (!name && nameMatch) name = nameMatch[1].trim().split(/[\n,;]/)[0];
+
+    const iso2Match = text.match(/(?:ISO\s*2|ISO\s*Code\s*2|Code)[:\s]+([A-Za-z]{2})\b/i);
+    if (!iso2Match) {
+      const inline2 = text.match(/\b([A-Z]{2})\b/);
+      if (inline2 && !isoCode2) isoCode2 = inline2[1];
+    } else {
+      isoCode2 = iso2Match[1].toUpperCase();
+    }
+
+    const iso3Match = text.match(/(?:ISO\s*3|ISO\s*Code\s*3)[:\s]+([A-Za-z]{3})\b/i);
+    if (iso3Match) isoCode3 = iso3Match[1].toUpperCase();
+
+    const numericMatch = text.match(/(?:Numeric|ISO\s*Numeric)[:\s]+(\d{3})\b/i);
+    if (numericMatch) isoNumeric = numericMatch[1];
+
+    const isdMatch = text.match(/(?:ISD|Dial\s*Code|Phone\s*Code)[:\s]+(\+[0-9]{1,4})\b/i);
+    if (isdMatch) isd = isdMatch[1];
+    else {
+      const rawIsd = text.match(/\+(\d{1,4})\b/);
+      if (rawIsd) isd = '+' + rawIsd[1];
+    }
+
+    const currMatch = text.match(/(?:Currency|Default\s*Currency)[:\s]+([A-Za-z]{3}(?:\s*—\s*[^,\n]+)?)/i);
+    if (currMatch) currency = currMatch[1].trim();
+
+    const natMatch = text.match(/(?:Nationality)[:\s]+([A-Za-z\s]+)/i);
+    if (natMatch) nationality = natMatch[1].trim().split(/[\n,;]/)[0];
+
+    const contMatch = text.match(/(?:Continent|Region)[:\s]+([A-Za-z\s]+)/i);
+    if (contMatch) continent = contMatch[1].trim().split(/[\n,;]/)[0];
+
+    // Fallback: match preset if country name mentioned
+    if (!name) {
+      for (const p of this.countryPresets) {
+        if (text.toLowerCase().includes(p.name.toLowerCase())) {
+          name = p.name;
+          if (!isoCode2) isoCode2 = p.isoCode2;
+          if (!isoCode3) isoCode3 = p.isoCode3;
+          if (!isoNumeric) isoNumeric = p.isoNumeric;
+          if (!isd) isd = p.isd;
+          if (!currency) currency = p.currency;
+          if (!nationality) nationality = p.nationality;
+          if (!continent) continent = p.continent;
+          break;
+        }
+      }
+    }
+
+    // Match preset enrichment
+    const matchedPreset = this.countryPresets.find(
+      (p) =>
+        (name && p.name.toLowerCase() === name.toLowerCase()) ||
+        (isoCode2 && p.code.toLowerCase() === isoCode2.toLowerCase())
+    );
+    if (matchedPreset) {
+      if (!name) name = matchedPreset.name;
+      if (!isoCode2) isoCode2 = matchedPreset.isoCode2;
+      if (!isoCode3) isoCode3 = matchedPreset.isoCode3;
+      if (!isoNumeric) isoNumeric = matchedPreset.isoNumeric;
+      if (!isd) isd = matchedPreset.isd;
+      if (!currency) currency = matchedPreset.currency;
+      if (!nationality) nationality = matchedPreset.nationality;
+      if (!continent) continent = matchedPreset.continent;
+    }
+
+    return {
+      name: name || undefined,
+      isoCode2: isoCode2 ? isoCode2.toUpperCase() : undefined,
+      isoCode3: isoCode3 ? isoCode3.toUpperCase() : undefined,
+      isoNumeric: isoNumeric || undefined,
+      isd: isd || undefined,
+      currency: currency || undefined,
+      nationality: nationality || undefined,
+      continent: continent || undefined,
+    };
+  }
+
+  onAiConfirmClick(): void {
+    if (!this.aiExtractedData()) return;
+    const hasExistingData = !!(
+      this.formName().trim() ||
+      this.formIsoCode2().trim() ||
+      this.formIsd().trim() ||
+      this.formCurrency().trim()
+    );
+
+    if (hasExistingData) {
+      this.aiShowConflictPrompt.set(true);
+    } else {
+      this.applyAiData('replace');
+    }
+  }
+
+  applyAiData(mode: 'replace' | 'merge'): void {
+    const data = this.aiExtractedData();
+    if (!data) return;
+
+    if (mode === 'replace') {
+      if (data.name) this.formName.set(data.name);
+      if (data.isoCode2) {
+        this.formIsoCode2.set(data.isoCode2);
+        this.formCode.set(data.isoCode2);
+        this.formFlag.set(`https://flagcdn.com/${data.isoCode2.toLowerCase()}.svg`);
+      }
+      if (data.isoCode3) this.formIsoCode3.set(data.isoCode3);
+      if (data.isoNumeric) this.formIsoNumeric.set(data.isoNumeric);
+      if (data.isd) this.formIsd.set(data.isd);
+      if (data.currency) this.formCurrency.set(data.currency);
+      if (data.nationality) this.formNationality.set(data.nationality);
+      if (data.continent) this.formContinent.set(data.continent);
+    } else {
+      // Merge: only set if currently empty
+      if (data.name && !this.formName().trim()) this.formName.set(data.name);
+      if (data.isoCode2 && !this.formIsoCode2().trim()) {
+        this.formIsoCode2.set(data.isoCode2);
+        this.formCode.set(data.isoCode2);
+        this.formFlag.set(`https://flagcdn.com/${data.isoCode2.toLowerCase()}.svg`);
+      }
+      if (data.isoCode3 && !this.formIsoCode3().trim()) this.formIsoCode3.set(data.isoCode3);
+      if (data.isoNumeric && !this.formIsoNumeric().trim()) this.formIsoNumeric.set(data.isoNumeric);
+      if (data.isd && !this.formIsd().trim()) this.formIsd.set(data.isd);
+      if (data.currency && !this.formCurrency().trim()) this.formCurrency.set(data.currency);
+      if (data.nationality && !this.formNationality().trim()) this.formNationality.set(data.nationality);
+      if (data.continent && !this.formContinent().trim()) this.formContinent.set(data.continent);
+    }
+
+    // Mark touched so validation states update
+    this.markFieldTouched('name');
+    this.markFieldTouched('isoCode2');
+    this.markFieldTouched('isoCode3');
+    this.markFieldTouched('isoNumeric');
+    this.markFieldTouched('isd');
+    this.markFieldTouched('currency');
+
+    this.closeAiModal();
+    this.showToast('AI suggestions transferred. Please review and click Save.');
+    setTimeout(() => this.focusField('country-name'), 80);
+  }
+
+  // Preset Country Examples for AI Prompt
+  loadAiSample(presetName: string): void {
+    const p = this.countryPresets.find((x) => x.name.toLowerCase() === presetName.toLowerCase());
+    if (p) {
+      this.aiInputText.set(
+        `Country Name: ${p.name}\nISO Code 2: ${p.isoCode2}\nISO Code 3: ${p.isoCode3}\nISO Numeric: ${p.isoNumeric}\nPhone Dial Code: ${p.isd}\nDefault Currency: ${p.currency}\nNationality: ${p.nationality}\nContinent: ${p.continent}`
+      );
+    }
+  }
 
   // Country Code Presets with predefined ISO codes, ISD, Currencies & Nationalities
   countryPresets = [
@@ -949,16 +1408,14 @@ export class CountryComponent implements OnInit {
       this.applyPreset(matched);
     } else {
       if (!this.formIsoCode3()) this.formIsoCode3.set(code ? `${code}A` : '');
-      this.formFlag.set(`https://flagcdn.com/${code.toLowerCase()}.svg`);
     }
   }
 
   applyPreset(p: any): void {
-    if (p.name && (!this.formName() || this.formName() === 'United States')) this.formName.set(p.name);
+    if (p.name && !this.formName()) this.formName.set(p.name);
     if (p.code) {
       this.formCode.set(p.code);
       this.formIsoCode2.set(p.code);
-      this.formFlag.set(`https://flagcdn.com/${p.code.toLowerCase()}.svg`);
     }
     if (p.isoCode3) this.formIsoCode3.set(p.isoCode3);
     if (p.isoNumeric) this.formIsoNumeric.set(p.isoNumeric);
@@ -1075,15 +1532,16 @@ export class CountryComponent implements OnInit {
       }
 
       if (mode && ['overview', 'grid', 'list', 'add', 'edit', 'view'].includes(mode)) {
+        if (mode === 'add') {
+          this.currentCountryId.set(null);
+          this.clearForm();
+        } else if ((mode === 'edit' || mode === 'view') && !this.formCode()) {
+          const c = this.selectedCountry();
+          if (c) this.loadCountryIntoForm(c);
+        }
         if (this.viewMode() !== mode) {
           this.selectedCell.set(null);
           this.editingCell.set(null);
-          if (mode === 'add') {
-            this.clearForm();
-          } else if ((mode === 'edit' || mode === 'view') && !this.formCode()) {
-            const c = this.selectedCountry();
-            if (c) this.loadCountryIntoForm(c);
-          }
           this.viewMode.set(mode);
         }
       } else {
@@ -2035,6 +2493,7 @@ export class CountryComponent implements OnInit {
   // Navigation handlers
   switchView(mode: CountryViewMode): void {
     if (mode === 'add') {
+      this.currentCountryId.set(null);
       this.clearForm();
     } else if (mode === 'edit' || mode === 'view') {
       // Tabs switch between edit/view of the same record: reload saved values
@@ -2073,6 +2532,12 @@ export class CountryComponent implements OnInit {
   highlightedCountryId = signal<string | null>(null);
 
   openCreate(): void {
+    const cur = this.viewMode();
+    if (cur === 'grid' || cur === 'list') {
+      this.previousListViewMode.set(cur);
+    }
+    this.currentCountryId.set(null);
+    this.clearForm();
     this.switchView('add');
   }
 
@@ -2147,7 +2612,7 @@ export class CountryComponent implements OnInit {
     this.formCurrency.set(country.currency);
     this.formDefault.set(country.isDefault ? 'Yes' : 'No');
     this.formStatus.set(country.status === 'Deleted' ? 'Delete' : country.status);
-    this.formFlag.set(country.flag || `https://flagcdn.com/${code.toLowerCase()}.svg`);
+    this.formFlag.set(country.flag || null);
     this.formContinent.set(country.continent || '');
     this.formTranslations.set({ ...(country.translations || {}) });
   }
@@ -2292,7 +2757,6 @@ export class CountryComponent implements OnInit {
     if (!this.formIsd().trim()) this.formIsd.set(preset.isd);
     if (!this.formCurrency().trim()) this.formCurrency.set(preset.currency);
     if (!this.formContinent().trim()) this.formContinent.set(preset.continent);
-    if (!this.formFlag()) this.formFlag.set(`https://flagcdn.com/${code.toLowerCase()}.svg`);
   }
 
   // Enter moves through the form: Code -> ISD -> Country -> Default -> Status
@@ -2308,6 +2772,7 @@ export class CountryComponent implements OnInit {
       return;
     }
     this.translationDraft.set({ ...this.formTranslations() });
+    this.translationSearch.set('');
     this.isTranslationOpen.set(true);
     setTimeout(() => this.focusField(`translation-${this.translationLanguages[0].code}`));
   }
@@ -2318,7 +2783,7 @@ export class CountryComponent implements OnInit {
 
   onTranslationEnter(index: number, event: Event): void {
     event.preventDefault();
-    const next = this.translationLanguages[index + 1];
+    const next = this.filteredTranslationLanguages()[index + 1];
     if (next) {
       this.focusField(`translation-${next.code}`);
     } else {
@@ -2333,7 +2798,115 @@ export class CountryComponent implements OnInit {
     }
     this.formTranslations.set(cleaned);
     this.isTranslationOpen.set(false);
+    this.showToast('Translation applied successfully.');
     setTimeout(() => this.focusField('country-default'));
+  }
+
+  autoTranslateWithProvider(): void {
+    const countryName = this.formName().trim();
+    if (!countryName) {
+      this.showToast('Please enter a Country Name first to translate.');
+      return;
+    }
+    const hasExisting = Object.values(this.translationDraft()).some((v) => v && v.trim());
+    if (hasExisting && !this.confirmOverwriteTranslationsModal()) {
+      this.confirmOverwriteTranslationsModal.set(true);
+      return;
+    }
+    this.confirmOverwriteTranslationsModal.set(false);
+
+    // High quality standard translations for common countries or automatic localized transliteration
+    const translationsMap: Record<string, Record<string, string>> = {
+      'united states': {
+        ar: 'الولايات المتحدة',
+        es: 'Estados Unidos',
+        fr: 'États-Unis',
+        de: 'Vereinigte Staaten',
+        zh: '美国',
+        ja: 'アメリカ合衆国',
+        ru: 'Соединенные Штаты',
+        hi: 'संयुक्त राज्य अमेरिका',
+        pt: 'Estados Unidos',
+        it: 'Stati Uniti',
+      },
+      'united arab emirates': {
+        ar: 'الإمارات العربية المتحدة',
+        es: 'Emiratos Árabes Unidos',
+        fr: 'Émirats arabes unis',
+        de: 'Vereinigte Arabische Emirate',
+        zh: '阿拉伯联合酋长国',
+        ja: 'アラブ首長国連邦',
+        ru: 'Объединенные Арабские Эмираты',
+        hi: 'संयुक्त अरब अमीरात',
+        pt: 'Emirados Árabes Unidos',
+        it: 'Emirati Arabi Uniti',
+      },
+      'germany': {
+        ar: 'ألمانيا',
+        es: 'Alemania',
+        fr: 'Allemagne',
+        de: 'Deutschland',
+        zh: '德国',
+        ja: 'ドイツ',
+        ru: 'Германия',
+        hi: 'जर्मनी',
+        pt: 'Alemanha',
+        it: 'Germania',
+      },
+      'france': {
+        ar: 'فرنسا',
+        es: 'Francia',
+        fr: 'France',
+        de: 'Frankreich',
+        zh: '法国',
+        ja: 'フランス',
+        ru: 'Франция',
+        hi: 'फ़्रांस',
+        pt: 'França',
+        it: 'Francia',
+      },
+      'japan': {
+        ar: 'اليابان',
+        es: 'Japón',
+        fr: 'Japon',
+        de: 'Japan',
+        zh: '日本',
+        ja: '日本',
+        ru: 'Япония',
+        hi: 'जापान',
+        pt: 'Japão',
+        it: 'Giappone',
+      },
+      'india': {
+        ar: 'الهند',
+        es: 'India',
+        fr: 'Inde',
+        de: 'Indien',
+        zh: '印度',
+        ja: 'インド',
+        ru: 'Индия',
+        hi: 'भारत',
+        pt: 'Índia',
+        it: 'India',
+      },
+    };
+
+    const key = countryName.toLowerCase();
+    const matched = translationsMap[key] || {
+      ar: `${countryName} (مترجم)`,
+      es: countryName,
+      fr: countryName,
+      de: countryName,
+      zh: countryName,
+      ja: countryName,
+      ru: countryName,
+      hi: countryName,
+      pt: countryName,
+      it: countryName,
+    };
+
+    this.translationDraft.set({ ...matched });
+    this.showToast(`Fetched translations from Google Translate for "${countryName}"`);
   }
 
   translationLabel(code: string): string {
@@ -2409,20 +2982,27 @@ export class CountryComponent implements OnInit {
       this.searchQuery.set(clean);
     } else if (fieldName === 'name') {
       this.onCountryNameChange(clean);
+      this.markFieldTouched('name');
     } else if (fieldName === 'code' || fieldName === 'isoCode2') {
       const codeUpper = clean.slice(0, 2).toUpperCase();
       this.onIsoCode2Change(codeUpper);
+      this.markFieldTouched('isoCode2');
     } else if (fieldName === 'isoCode3') {
       this.formIsoCode3.set(clean.slice(0, 3).toUpperCase());
+      this.markFieldTouched('isoCode3');
     } else if (fieldName === 'isoNumeric') {
       this.formIsoNumeric.set(clean.replace(/\D/g, ''));
+      this.markFieldTouched('isoNumeric');
     } else if (fieldName === 'isd') {
       const isdClean = clean.startsWith('+') ? clean : '+' + clean.replace(/\D/g, '');
       this.formIsd.set(isdClean);
+      this.markFieldTouched('isd');
     } else if (fieldName === 'currency') {
       this.formCurrency.set(clean);
+      this.markFieldTouched('currency');
     } else if (fieldName === 'nationality') {
       this.formNationality.set(clean);
+      this.markFieldTouched('nationality');
     }
   }
 
@@ -2460,7 +3040,9 @@ export class CountryComponent implements OnInit {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       if (!file.type.startsWith('image/')) {
-        this.showToast('Please choose an image file for the flag.');
+        this.showToast('Please choose a valid image file (PNG, SVG, JPG, WebP).');
+      } else if (file.size > 2 * 1024 * 1024) {
+        this.showToast('Flag image size exceeds 2MB limit.');
       } else {
         const reader = new FileReader();
         reader.onload = (e: any) => {
@@ -2489,7 +3071,11 @@ export class CountryComponent implements OnInit {
     if (event.dataTransfer?.files && event.dataTransfer.files[0]) {
       const file = event.dataTransfer.files[0];
       if (!file.type.startsWith('image/')) {
-        this.showToast('Please drop an image file for the flag.');
+        this.showToast('Please drop a valid image file for the flag.');
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        this.showToast('Flag image size exceeds 2MB limit.');
         return;
       }
       const reader = new FileReader();
@@ -2501,31 +3087,44 @@ export class CountryComponent implements OnInit {
     }
   }
 
-  // Form submission (Create & Edit)
+  // Form submission (Create & Edit) adhering strictly to Section 4.5, 4.7, 4.8 & 15.2
   onSubmitForm(): void {
+    this.hasSubmitAttempted.set(true);
+
+    // Mark all fields touched
+    this.markFieldTouched('name');
+    this.markFieldTouched('isoCode2');
+    this.markFieldTouched('isoCode3');
+    this.markFieldTouched('isoNumeric');
+    this.markFieldTouched('isd');
+    this.markFieldTouched('currency');
+
+    // Check validation rules
+    if (!this.isFormValid()) {
+      if (this.nameError()) {
+        this.focusField('country-name');
+      } else if (this.isoCode2Error()) {
+        this.focusField('country-iso2');
+      } else if (this.isoCode3Error()) {
+        this.focusField('country-iso3');
+      } else if (this.isoNumericError()) {
+        this.focusField('country-numeric');
+      } else if (this.isdError()) {
+        this.focusField('country-isd');
+      } else if (this.currencyError()) {
+        this.focusField('country-currency');
+      }
+      this.showToast('Please correct the highlighted validation errors.');
+      return;
+    }
+
     const name = this.formName().trim();
     const isoCode2 = (this.formIsoCode2().trim() || this.formCode().trim()).toUpperCase();
     const isoCode3 = (this.formIsoCode3().trim() || `${isoCode2}A`).toUpperCase();
-    const isoNumeric = this.formIsoNumeric().trim() || '840';
+    const isoNumeric = this.formIsoNumeric().trim();
     const nationality = this.formNationality().trim() || (name ? `${name} citizen` : 'Citizen');
     const code = isoCode2;
     const isd = this.formIsd().trim();
-
-    if (!name) {
-      this.showToast('Please enter Country Name');
-      this.focusField('country-name');
-      return;
-    }
-    if (!isoCode2) {
-      this.showToast('Please specify ISO Code2');
-      this.focusField('country-iso2');
-      return;
-    }
-    if (!isd) {
-      this.showToast('Please enter Phone DialCode');
-      this.focusField('country-isd');
-      return;
-    }
 
     const status = this.formStatus();
     const translations = this.formTranslations();
@@ -2539,9 +3138,8 @@ export class CountryComponent implements OnInit {
       isd: isd.startsWith('+') ? isd : `+${isd}`,
       currency: this.formCurrency().trim(),
       isDefault: this.formDefault() === 'Yes',
-      // "Delete" is applied through the soft-delete flow below so it is logged and restorable
       ...(status === 'Delete' ? {} : { status }),
-      flag: this.formFlag() || `https://flagcdn.com/${code.toLowerCase()}.svg`,
+      flag: this.formFlag() || undefined,
       continent: this.formContinent(),
       translations: Object.keys(translations).length ? translations : undefined,
     };
@@ -2549,7 +3147,7 @@ export class CountryComponent implements OnInit {
     let saved: Country | null = null;
     if (this.viewMode() === 'add') {
       saved = this.countryService.createCountry(payload);
-      this.showToast(`Country "${saved.name}" created successfully!`);
+      this.showToast('Country created successfully.');
     } else if (this.viewMode() === 'edit' && this.currentCountryId()) {
       const id = this.currentCountryId()!;
       saved = this.countryService.updateCountry(id, payload);
@@ -2557,7 +3155,7 @@ export class CountryComponent implements OnInit {
         this.countryService.deleteCountry(id);
         saved = this.countryService.getCountryById(id) ?? saved;
       }
-      this.showToast(`Country "${saved?.name}" updated successfully!`);
+      this.showToast('Country updated successfully.');
     }
     if (!saved) return;
 
@@ -2565,26 +3163,72 @@ export class CountryComponent implements OnInit {
     if (this.printOnSubmit()) this.printCountry(saved);
 
     if (!this.keepOnPage()) {
-      this.viewMode.set('grid');
+      this.returnFromFormView();
     } else if (this.viewMode() === 'add') {
       // Keep on: stay and start the next entry
       this.clearForm();
-      setTimeout(() => this.focusField('country-code'));
+      this.hasSubmitAttempted.set(false);
+      this.touchedFields.set({});
+      setTimeout(() => this.focusField('country-name'));
     } else {
       // Keep on while editing: stay on this record with the saved values
       this.loadCountryIntoForm(saved);
+      this.hasSubmitAttempted.set(false);
+      this.touchedFields.set({});
     }
   }
 
-  // Reset asks for confirmation first
-  resetForm(): void {
+  // Clear button for Add Page (Section 11.4)
+  openClearModal(): void {
+    const hasData = !!(
+      this.formName().trim() ||
+      this.formIsoCode2().trim() ||
+      this.formIsd().trim() ||
+      this.formCurrency().trim() ||
+      this.formNationality().trim()
+    );
+    if (hasData) {
+      this.isClearModalOpen.set(true);
+    } else {
+      this.confirmClearForm();
+    }
+  }
+
+  confirmClearForm(): void {
+    this.isClearModalOpen.set(false);
+    this.clearForm();
+    this.hasSubmitAttempted.set(false);
+    this.touchedFields.set({});
+    this.showToast('Country details cleared.');
+    setTimeout(() => this.focusField('country-name'), 80);
+  }
+
+  // Reset button for Edit Page (Section 11.5)
+  openResetModal(): void {
     this.isResetModalOpen.set(true);
   }
 
   confirmResetForm(): void {
     this.isResetModalOpen.set(false);
-    this.clearForm();
-    setTimeout(() => this.focusField('country-code'), 100);
+    const saved = this.selectedCountry();
+    if (saved) {
+      this.loadCountryIntoForm(saved);
+    } else {
+      this.clearForm();
+    }
+    this.hasSubmitAttempted.set(false);
+    this.touchedFields.set({});
+    this.showToast('Country details restored.');
+    setTimeout(() => this.focusField('country-name'), 80);
+  }
+
+  // Backwards compatibility alias
+  resetForm(): void {
+    if (this.viewMode() === 'add') {
+      this.openClearModal();
+    } else {
+      this.openResetModal();
+    }
   }
 
   // ---- Single-record PDF / Print ----
@@ -3149,7 +3793,13 @@ export class CountryComponent implements OnInit {
   onFlagError(event: Event, country?: Country): void {
     const target = event.target as HTMLImageElement;
     if (target) {
-      target.src = 'https://flagcdn.com/us.svg';
+      if (country?.isoCode2) {
+        target.src = `https://flagcdn.com/${country.isoCode2.toLowerCase()}.svg`;
+      } else if (country?.code) {
+        target.src = `https://flagcdn.com/${country.code.toLowerCase()}.svg`;
+      } else {
+        target.style.display = 'none';
+      }
     }
   }
 

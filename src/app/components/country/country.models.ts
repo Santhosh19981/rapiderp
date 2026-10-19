@@ -74,7 +74,7 @@ export interface MinimizedCountryForm {
     flag: string | null;
     continent: string;
     translations: Record<string, string>;
-    flagTab: 'drop' | 'attachment' | 'gallery';
+    flagTab: 'drop' | 'upload' | 'attachment' | 'gallery';
     keepOnPage: boolean;
     pdfOnSubmit: boolean;
     printOnSubmit: boolean;
