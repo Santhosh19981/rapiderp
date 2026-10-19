@@ -12,6 +12,8 @@ export const routes: Routes = [
   { path: 'dashboard', redirectTo: 'landing/dashboard', pathMatch: 'full' },
   { path: 'countries', redirectTo: 'landing/countries', pathMatch: 'full' },
   { path: 'country', redirectTo: 'landing/countries', pathMatch: 'full' },
+  { path: 'audit-history', redirectTo: 'landing/audit-history', pathMatch: 'full' },
+  { path: 'audit', redirectTo: 'landing/audit-history', pathMatch: 'full' },
   { path: ':moduleId', redirectTo: 'landing/:moduleId', pathMatch: 'full' },
   { path: ':moduleId/:subModuleId', redirectTo: 'landing/:moduleId/:subModuleId', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },

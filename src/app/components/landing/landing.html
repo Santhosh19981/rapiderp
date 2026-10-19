@@ -1559,6 +1559,8 @@
         </div>
         } @else if (isCountryModule()) {
         <app-country class="w-full h-full block overflow-hidden"></app-country>
+        } @else if (isAuditHistoryModule()) {
+        <app-audit-history class="w-full block"></app-audit-history>
         } @else {
         <!-- DEDICATED ACTIVE MODULE WORKSPACE VIEW -->
         <div class="module-workspace-container space-y-5 max-w-[1500px] mx-auto animate-in fade-in duration-200">

@@ -275,8 +275,12 @@ const INITIAL_COUNTRIES: Country[] = [
     id: '15',
     name: 'United Arab Emirates',
     code: 'AE',
+    isoCode2: 'AE',
+    isoCode3: 'ARE',
+    isoNumeric: '784',
+    nationality: 'Emirati',
     isd: '+971',
-    currency: 'AED',
+    currency: 'AED — UAE Dirham',
     status: 'Active',
     isDefault: false,
     continent: 'Asia',
@@ -883,7 +887,16 @@ export class CountryService {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
         try {
-          return JSON.parse(stored);
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length) {
+            return parsed.map((c: Country) => ({
+              ...c,
+              isoCode2: c.isoCode2 || c.code || 'US',
+              isoCode3: c.isoCode3 || (c.code === 'AE' ? 'ARE' : c.code === 'US' ? 'USA' : `${c.code || 'US'}A`),
+              isoNumeric: c.isoNumeric || (c.code === 'AE' ? '784' : c.code === 'US' ? '840' : '100'),
+              nationality: c.nationality || (c.code === 'AE' ? 'Emirati' : c.code === 'US' ? 'American' : `${c.name || ''} citizen`),
+            }));
+          }
         } catch {
           // fallback
         }
@@ -908,13 +921,21 @@ export class CountryService {
 
   createCountry(data: Partial<Country>): Country {
     const newId = String(Date.now());
-    const code = (data.code || 'US').toUpperCase();
+    const code = (data.code || data.isoCode2 || 'US').toUpperCase();
+    const isoCode2 = (data.isoCode2 || code).toUpperCase();
+    const isoCode3 = (data.isoCode3 || `${isoCode2}A`).toUpperCase();
+    const isoNumeric = data.isoNumeric || '840';
+    const nationality = data.nationality || (data.name ? `${data.name} citizen` : 'Citizen');
     const flag = data.flag || `https://flagcdn.com/${code.toLowerCase()}.svg`;
 
     const newCountry: Country = {
       id: newId,
       name: data.name || 'Untitled Country',
       code: code,
+      isoCode2: isoCode2,
+      isoCode3: isoCode3,
+      isoNumeric: isoNumeric,
+      nationality: nationality,
       isd: data.isd || '+1',
       currency: data.currency ?? 'USD',
       status: (data.status as any) || 'Active',
@@ -953,12 +974,20 @@ export class CountryService {
     this.countries.update((list) =>
       list.map((c) => {
         if (c.id === id) {
-          const code = (changes.code || c.code).toUpperCase();
+          const code = (changes.code || changes.isoCode2 || c.code).toUpperCase();
+          const isoCode2 = (changes.isoCode2 || code).toUpperCase();
+          const isoCode3 = (changes.isoCode3 || c.isoCode3 || `${isoCode2}A`).toUpperCase();
+          const isoNumeric = changes.isoNumeric || c.isoNumeric || '840';
+          const nationality = changes.nationality || c.nationality || (changes.name ? `${changes.name} citizen` : 'Citizen');
           const flag = changes.flag || c.flag || `https://flagcdn.com/${code.toLowerCase()}.svg`;
           updatedCountry = {
             ...c,
             ...changes,
             code,
+            isoCode2,
+            isoCode3,
+            isoNumeric,
+            nationality,
             flag,
             isUpdated: true,
             draftedAt: changes.status === 'Draft' && c.status !== 'Draft' ? new Date().toISOString().split('T')[0] : c.draftedAt,
@@ -1035,6 +1064,26 @@ export class CountryService {
   permanentlyRemoveCountry(id: string): void {
     this.countries.update((list) => list.filter((c) => c.id !== id));
     this.save();
+  }
+
+  restoreAllDeleted(): number {
+    const deletedCount = this.countries().filter((c) => c.status === 'Deleted').length;
+    if (deletedCount === 0) return 0;
+    this.countries.update((list) =>
+      list.map((c) => (c.status === 'Deleted' ? { ...c, status: 'Active', deletedAt: null, actionMessage: 'Restored to Active' } : c))
+    );
+    this.save();
+    this.addHistory('bulk', 'Recycle Bin', `Restored ${deletedCount} countries from Recycle Bin`, 'Active', 'None');
+    return deletedCount;
+  }
+
+  emptyRecycleBin(): number {
+    const deletedCount = this.countries().filter((c) => c.status === 'Deleted').length;
+    if (deletedCount === 0) return 0;
+    this.countries.update((list) => list.filter((c) => c.status !== 'Deleted'));
+    this.save();
+    this.addHistory('bulk', 'Recycle Bin', `Permanently emptied ${deletedCount} countries from Recycle Bin`, 'Deleted', 'None');
+    return deletedCount;
   }
 
   importCountries(newItems: Partial<Country>[]): number {

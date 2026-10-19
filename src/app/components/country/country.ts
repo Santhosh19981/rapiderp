@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CountryService } from './country.service';
 import { Country, CountryHistoryEntry, MinimizedCountryForm } from './country.models';
 import { NavigationService } from '../../services/navigation.service';
+import { AuditService } from '../../services/audit.service';
 import { DropdownOption, SelectDropdown } from '../select-dropdown/select-dropdown';
 
 export type CountryViewMode = 'grid' | 'list' | 'add' | 'edit' | 'view';
@@ -81,6 +82,7 @@ export interface GalleryFlag {
 export class CountryComponent implements OnInit {
   public countryService = inject(CountryService);
   public navService = inject(NavigationService);
+  public auditService = inject(AuditService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -92,6 +94,10 @@ export class CountryComponent implements OnInit {
 
   // Active filter tab: 'all' | 'active' | 'inactive' | 'draft' | 'updated' | 'deleted'
   activeFilterTab = signal<string>('all');
+
+  // Relative times for Updated and Deleted stat summary capsules (Image 3)
+  lastUpdatedTime = signal<string>('30 mins');
+  lastDeletedTime = signal<string>('40 mins');
 
   // Search query
   searchQuery = signal<string>('');
@@ -178,8 +184,44 @@ export class CountryComponent implements OnInit {
   shareBody = signal<string>('');
   isImportModalOpen = signal<boolean>(false);
   isHistoryModalOpen = signal<boolean>(false);
+  isRecycleBinModalOpen = signal<boolean>(false);
   isDeleteModalOpen = signal<boolean>(false);
   selectedCountryForDelete = signal<Country | null>(null);
+  recycleBinSearch = signal<string>('');
+  historySearch = signal<string>('');
+  historyScope = signal<'current' | 'all'>('all');
+
+  deletedCountries = computed(() => {
+    const q = this.recycleBinSearch().trim().toLowerCase();
+    const list = this.countryService.countries().filter((c) => c.status === 'Deleted');
+    if (!q) return list;
+    return list.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.code.toLowerCase().includes(q) ||
+        (c.continent && c.continent.toLowerCase().includes(q))
+    );
+  });
+
+  displayedHistory = computed(() => {
+    const q = this.historySearch().trim().toLowerCase();
+    const scope = this.historyScope();
+    const currentId = this.currentCountryId();
+    let list = this.countryService.history();
+    if (scope === 'current' && currentId) {
+      list = list.filter((h) => h.countryId === currentId);
+    }
+    if (q) {
+      list = list.filter(
+        (h) =>
+          h.countryName.toLowerCase().includes(q) ||
+          h.action.toLowerCase().includes(q) ||
+          h.user.toLowerCase().includes(q) ||
+          h.status.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  });
 
   // Currently viewed or edited country
   currentCountryId = signal<string | null>(null);
@@ -189,19 +231,300 @@ export class CountryComponent implements OnInit {
     return this.countryService.getCountryById(id) || null;
   });
 
+  currentCountryIndex = computed(() => {
+    const list = this.countryService.countries();
+    const id = this.currentCountryId();
+    if (!id) return 0;
+    const idx = list.findIndex((c) => c.id === id);
+    return idx >= 0 ? idx : 0;
+  });
+
+  totalCountriesCount = computed(() => this.countryService.countries().length);
+  hasPreviousCountry = computed(() => this.currentCountryIndex() > 0);
+  hasNextCountry = computed(() => this.currentCountryIndex() < this.totalCountriesCount() - 1);
+
+  navigateToPreviousCountry(): void {
+    const list = this.countryService.countries();
+    if (!list.length) return;
+    const idx = this.currentCountryIndex();
+    const prevIdx = idx > 0 ? idx - 1 : list.length - 1;
+    const prevCountry = list[prevIdx];
+    this.currentCountryId.set(prevCountry.id);
+    this.loadCountryIntoForm(prevCountry);
+  }
+
+  navigateToNextCountry(): void {
+    const list = this.countryService.countries();
+    if (!list.length) return;
+    const idx = this.currentCountryIndex();
+    const nextIdx = idx < list.length - 1 ? idx + 1 : 0;
+    const nextCountry = list[nextIdx];
+    this.currentCountryId.set(nextCountry.id);
+    this.loadCountryIntoForm(nextCountry);
+  }
+
+  openAdd(): void {
+    this.openCreate();
+  }
+
+  // MOD-7: Recycle Bin selection state
+  selectedBinIds = signal<Set<string>>(new Set());
+
+  openRecycleBinModal(): void {
+    this.recycleBinSearch.set('');
+    this.selectedBinIds.set(new Set());
+    this.isRecycleBinModalOpen.set(true);
+  }
+
+  closeRecycleBinModal(): void {
+    this.isRecycleBinModalOpen.set(false);
+  }
+
+  toggleBinSelection(id: string): void {
+    const next = new Set(this.selectedBinIds());
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    this.selectedBinIds.set(next);
+  }
+
+  clearBinSelection(): void {
+    this.selectedBinIds.set(new Set());
+  }
+
+  deleteSelectedFromBin(): void {
+    const ids = Array.from(this.selectedBinIds());
+    if (ids.length === 0) {
+      this.showToast('Please select at least one country to delete permanently');
+      return;
+    }
+    for (const id of ids) {
+      this.countryService.permanentlyRemoveCountry(id);
+    }
+    this.selectedBinIds.set(new Set());
+    this.showToast(`Permanently deleted ${ids.length} selected countries`);
+  }
+
+  restoreCountryFromBin(c: Country): void {
+    this.countryService.restoreCountry(c.id);
+    const next = new Set(this.selectedBinIds());
+    next.delete(c.id);
+    this.selectedBinIds.set(next);
+    this.showToast(`Restored "${c.name}" to Active status`);
+  }
+
+  permanentlyDeleteFromBin(c: Country): void {
+    this.countryService.permanentlyRemoveCountry(c.id);
+    const next = new Set(this.selectedBinIds());
+    next.delete(c.id);
+    this.selectedBinIds.set(next);
+    this.showToast(`Permanently deleted "${c.name}"`);
+  }
+
+  restoreAllDeletedFromBin(): void {
+    const count = this.countryService.restoreAllDeleted();
+    this.selectedBinIds.set(new Set());
+    if (count > 0) {
+      this.showToast(`Restored ${count} countries from Recycle Bin`);
+    }
+  }
+
+  emptyAllRecycleBin(): void {
+    const count = this.countryService.emptyRecycleBin();
+    this.selectedBinIds.set(new Set());
+    if (count > 0) {
+      this.showToast(`Permanently deleted ${count} countries from Recycle Bin`);
+    }
+  }
+
+  viewDeletedInList(): void {
+    this.isRecycleBinModalOpen.set(false);
+    this.setFilterTab('deleted');
+  }
+
+  // MOD-8: Country History popup state & expand/collapse
+  historyActivityFilter = signal<string>('All Activities');
+  historyStartDate = signal<string>('');
+  historyEndDate = signal<string>('');
+  isHistoryDateFilterOpen = signal<boolean>(false);
+  expandedHistoryIds = signal<Set<string>>(new Set(['H-003', 'A-10048']));
+
+  toggleHistoryDateFilter(): void {
+    this.isHistoryDateFilterOpen.update((v) => !v);
+  }
+
+  clearHistoryDateFilter(): void {
+    this.historyStartDate.set('');
+    this.historyEndDate.set('');
+  }
+
+  setHistoryDatePreset(preset: 'today' | '7days' | '30days' | 'thisMonth'): void {
+    const today = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const toStr = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+    this.historyEndDate.set(toStr(today));
+    if (preset === 'today') {
+      this.historyStartDate.set(toStr(today));
+    } else if (preset === '7days') {
+      const d = new Date(today);
+      d.setDate(d.getDate() - 7);
+      this.historyStartDate.set(toStr(d));
+    } else if (preset === '30days') {
+      const d = new Date(today);
+      d.setDate(d.getDate() - 30);
+      this.historyStartDate.set(toStr(d));
+    } else if (preset === 'thisMonth') {
+      const d = new Date(today.getFullYear(), today.getMonth(), 1);
+      this.historyStartDate.set(toStr(d));
+    }
+  }
+
+  toggleHistoryExpand(id: string): void {
+    const next = new Set(this.expandedHistoryIds());
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    this.expandedHistoryIds.set(next);
+  }
+
+  openHistoryModal(scope?: 'current' | 'all'): void {
+    this.historySearch.set('');
+    this.historyActivityFilter.set('All Activities');
+    this.historyStartDate.set('');
+    this.historyEndDate.set('');
+    this.isHistoryDateFilterOpen.set(false);
+    this.expandedHistoryIds.set(new Set(['H-003', 'A-10048']));
+    this.historyScope.set(scope || (this.viewMode() === 'view' || this.viewMode() === 'edit' ? 'current' : 'all'));
+    this.isHistoryModalOpen.set(true);
+  }
+
+  closeHistoryModal(): void {
+    this.isHistoryModalOpen.set(false);
+  }
+
+  viewFullAuditHistory(): void {
+    this.isHistoryModalOpen.set(false);
+    this.navService.navigateTo('audit-history');
+  }
+
+  countryAuditSummary = computed(() => {
+    const sc = this.selectedCountry();
+    const name = sc?.name || this.formName() || 'United Arab Emirates';
+    const code = sc?.isoCode2 || sc?.code || this.formIsoCode2() || 'AE';
+    const iso3 = sc?.isoCode3 || this.formIsoCode3() || (code === 'AE' ? 'ARE' : 'USA');
+    const refId = sc ? `CNT-00${sc.id}` : 'CNT-0001';
+    const status = sc?.status || 'Active';
+
+    const allActivities = [
+      {
+        id: 'H-003',
+        action: 'Updated',
+        actionType: 'updated',
+        dotColor: 'bg-blue-500',
+        description: 'Phone Dial Code changed',
+        user: 'Admin User',
+        date: '19 Oct 2026, 10:42 AM',
+        isoDate: '2026-10-19',
+        hasDetails: true,
+        previousValue: '+971',
+        newValue: '+971',
+        referenceId: 'H-003',
+      },
+      {
+        id: 'H-002',
+        action: 'Status Changed',
+        actionType: 'status',
+        dotColor: 'bg-emerald-500',
+        description: 'Status changed from Inactive to Active',
+        user: 'System Admin',
+        date: '18 Oct 2026, 03:15 PM',
+        isoDate: '2026-10-18',
+        hasDetails: false,
+        previousValue: 'Inactive',
+        newValue: 'Active',
+        referenceId: 'H-002',
+      },
+      {
+        id: 'H-001',
+        action: 'Created',
+        actionType: 'created',
+        dotColor: 'bg-slate-400',
+        description: 'Country record created',
+        user: 'Admin User',
+        date: '15 Oct 2026, 09:20 AM',
+        isoDate: '2026-10-15',
+        hasDetails: false,
+        previousValue: '—',
+        newValue: name,
+        referenceId: 'H-001',
+      },
+    ];
+
+    const filter = this.historyActivityFilter();
+    const startDate = this.historyStartDate();
+    const endDate = this.historyEndDate();
+
+    let filtered = filter === 'All Activities'
+      ? allActivities
+      : allActivities.filter((a) => a.action.toLowerCase().includes(filter.toLowerCase()));
+
+    if (startDate) {
+      filtered = filtered.filter((a) => a.isoDate >= startDate);
+    }
+    if (endDate) {
+      filtered = filtered.filter((a) => a.isoDate <= endDate);
+    }
+
+    const createdCount = filtered.filter((a) => a.action === 'Created').length;
+    const modifiedCount = filtered.filter((a) => a.action !== 'Created').length;
+
+    return {
+      country: { name, code, iso3, refId, status },
+      totalEvents: filtered.length,
+      created: createdCount,
+      modified: modifiedCount,
+      activities: filtered,
+    };
+  });
+
+  toggleStatusFilter(tab: 'active' | 'inactive' | 'draft'): void {
+    if (this.activeFilterTab() === tab) {
+      this.setFilterTab('all');
+    } else {
+      this.setFilterTab(tab);
+    }
+  }
+
   viewCountry = computed<Country>(() => {
     const sc = this.selectedCountry();
-    if (sc) return sc;
+    if (sc) {
+      return {
+        ...sc,
+        isoCode2: sc.isoCode2 || sc.code || 'US',
+        isoCode3: sc.isoCode3 || (sc.code === 'AE' ? 'ARE' : sc.code === 'US' ? 'USA' : `${sc.code}A`),
+        isoNumeric: sc.isoNumeric || (sc.code === 'AE' ? '784' : sc.code === 'US' ? '840' : '100'),
+        nationality: sc.nationality || (sc.code === 'AE' ? 'Emirati' : sc.code === 'US' ? 'American' : `${sc.name} citizen`),
+      };
+    }
     return {
       id: this.currentCountryId() || '0',
-      name: this.formName() || 'Country',
-      code: this.formCode() || 'US',
-      isd: this.formIsd() || '+1',
-      currency: this.formCurrency() || 'USD',
+      name: this.formName() || 'United Arab Emirates',
+      code: this.formIsoCode2() || this.formCode() || 'AE',
+      isoCode2: this.formIsoCode2() || 'AE',
+      isoCode3: this.formIsoCode3() || 'ARE',
+      isoNumeric: this.formIsoNumeric() || '784',
+      nationality: this.formNationality() || 'Emirati',
+      isd: this.formIsd() || '+971',
+      currency: this.formCurrency() || 'AED — UAE Dirham',
       status: (this.formStatus() === 'Delete' ? 'Deleted' : this.formStatus()) as any,
       isDefault: this.formDefault() === 'Yes',
-      flag: this.formFlag() || `https://flagcdn.com/${(this.formCode() || 'us').toLowerCase()}.svg`,
-      continent: this.formContinent() || '',
+      flag: this.formFlag() || `https://flagcdn.com/${(this.formIsoCode2() || 'ae').toLowerCase()}.svg`,
+      continent: this.formContinent() || 'Asia',
       translations: this.formTranslations() || {},
       actionMessage: 'Updated',
       createdAt: '2023-01-01',
@@ -211,6 +534,10 @@ export class CountryComponent implements OnInit {
 
   // Country Form State for Add / Edit
   formCode = signal<string>('US');
+  formIsoCode2 = signal<string>('US');
+  formIsoCode3 = signal<string>('USA');
+  formIsoNumeric = signal<string>('840');
+  formNationality = signal<string>('American');
   formIsd = signal<string>('+1');
   formName = signal<string>('United States');
   formCurrency = signal<string>('USD');
@@ -222,8 +549,34 @@ export class CountryComponent implements OnInit {
 
   // Form field focus tracking for floating label
   isCodeFocused = signal<boolean>(false);
+  isIsoCode2Focused = signal<boolean>(false);
+  isIsoCode3Focused = signal<boolean>(false);
+  isIsoNumericFocused = signal<boolean>(false);
+  isNationalityFocused = signal<boolean>(false);
+  isCurrencyFocused = signal<boolean>(false);
   isIsdFocused = signal<boolean>(false);
   isNameFocused = signal<boolean>(false);
+
+  // Right side section accordion state (closed by default)
+  isSideSectionOpen = signal<boolean>(false);
+
+  // Floating notch label computed states
+  isNameFloating = computed(() => this.isNameFocused() || !!this.formName()?.trim());
+  isIsoCode2Floating = computed(() => this.isIsoCode2Focused() || !!this.formIsoCode2()?.trim());
+  isIsoCode3Floating = computed(() => this.isIsoCode3Focused() || !!this.formIsoCode3()?.trim());
+  isIsoNumericFloating = computed(() => this.isIsoNumericFocused() || !!this.formIsoNumeric()?.trim());
+  isIsdFloating = computed(() => this.isIsdFocused() || !!this.formIsd()?.trim());
+  isCurrencyFloating = computed(() => this.isCurrencyFocused() || !!this.formCurrency()?.trim());
+  isNationalityFloating = computed(() => this.isNationalityFocused() || !!this.formNationality()?.trim());
+
+  // Input validity states for green checkmark icon
+  isNameValid = computed(() => !!this.formName()?.trim());
+  isIsoCode2Valid = computed(() => !!this.formIsoCode2()?.trim() && this.formIsoCode2().trim().length >= 2);
+  isIsoCode3Valid = computed(() => !!this.formIsoCode3()?.trim() && this.formIsoCode3().trim().length >= 3);
+  isIsoNumericValid = computed(() => !!this.formIsoNumeric()?.trim());
+  isIsdValid = computed(() => !!this.formIsd()?.trim());
+  isCurrencyValid = computed(() => !!this.formCurrency()?.trim());
+  isNationalityValid = computed(() => !!this.formNationality()?.trim());
 
   // Create allows Active/Draft only; Inactive and Delete are edit-only
   statusOptions = computed<DropdownOption[]>(() => {
@@ -307,51 +660,67 @@ export class CountryComponent implements OnInit {
     { code: 'TR', name: 'Turkey', flagUrl: 'https://flagcdn.com/tr.svg' },
   ];
 
-  // Country Code Presets with predefined ISD & Currencies
+  // Country Code Presets with predefined ISO codes, ISD, Currencies & Nationalities
   countryPresets = [
-    { code: 'US', name: 'United States', isd: '+1', currency: 'USD', continent: 'North America' },
-    { code: 'CA', name: 'Canada', isd: '+1', currency: 'CAD', continent: 'North America' },
-    { code: 'GB', name: 'United Kingdom', isd: '+44', currency: 'GBP', continent: 'Europe' },
-    { code: 'DE', name: 'Germany', isd: '+49', currency: 'EUR', continent: 'Europe' },
-    { code: 'FR', name: 'France', isd: '+33', currency: 'EUR', continent: 'Europe' },
-    { code: 'IT', name: 'Italy', isd: '+39', currency: 'EUR', continent: 'Europe' },
-    { code: 'ES', name: 'Spain', isd: '+34', currency: 'EUR', continent: 'Europe' },
-    { code: 'PT', name: 'Portugal', isd: '+351', currency: 'EUR', continent: 'Europe' },
-    { code: 'CH', name: 'Switzerland', isd: '+41', currency: 'CHF', continent: 'Europe' },
-    { code: 'NL', name: 'Netherlands', isd: '+31', currency: 'EUR', continent: 'Europe' },
-    { code: 'BE', name: 'Belgium', isd: '+32', currency: 'EUR', continent: 'Europe' },
-    { code: 'JP', name: 'Japan', isd: '+81', currency: 'JPY', continent: 'Asia' },
-    { code: 'IN', name: 'India', isd: '+91', currency: 'INR', continent: 'Asia' },
-    { code: 'AU', name: 'Australia', isd: '+61', currency: 'AUD', continent: 'Oceania' },
-    { code: 'AE', name: 'United Arab Emirates', isd: '+971', currency: 'AED', continent: 'Asia' },
-    { code: 'SA', name: 'Saudi Arabia', isd: '+966', currency: 'SAR', continent: 'Asia' },
-    { code: 'SG', name: 'Singapore', isd: '+65', currency: 'SGD', continent: 'Asia' },
-    { code: 'BR', name: 'Brazil', isd: '+55', currency: 'BRL', continent: 'South America' },
-    { code: 'MX', name: 'Mexico', isd: '+52', currency: 'MXN', continent: 'North America' },
-    { code: 'CN', name: 'China', isd: '+86', currency: 'CNY', continent: 'Asia' },
-    { code: 'KR', name: 'South Korea', isd: '+82', currency: 'KRW', continent: 'Asia' },
-    { code: 'NZ', name: 'New Zealand', isd: '+64', currency: 'NZD', continent: 'Oceania' },
-    { code: 'ZA', name: 'South Africa', isd: '+27', currency: 'ZAR', continent: 'Africa' },
-    { code: 'SE', name: 'Sweden', isd: '+46', currency: 'SEK', continent: 'Europe' },
-    { code: 'NO', name: 'Norway', isd: '+47', currency: 'NOK', continent: 'Europe' },
-    { code: 'DK', name: 'Denmark', isd: '+45', currency: 'DKK', continent: 'Europe' },
-    { code: 'FI', name: 'Finland', isd: '+358', currency: 'EUR', continent: 'Europe' },
-    { code: 'IE', name: 'Ireland', isd: '+353', currency: 'EUR', continent: 'Europe' },
-    { code: 'AT', name: 'Austria', isd: '+43', currency: 'EUR', continent: 'Europe' },
-    { code: 'QA', name: 'Qatar', isd: '+974', currency: 'QAR', continent: 'Asia' },
-    { code: 'KW', name: 'Kuwait', isd: '+965', currency: 'KWD', continent: 'Asia' },
-    { code: 'OM', name: 'Oman', isd: '+968', currency: 'OMR', continent: 'Asia' },
-    { code: 'BH', name: 'Bahrain', isd: '+973', currency: 'BHD', continent: 'Asia' },
-    { code: 'EG', name: 'Egypt', isd: '+20', currency: 'EGP', continent: 'Africa' },
-    { code: 'TR', name: 'Turkey', isd: '+90', currency: 'TRY', continent: 'Europe' },
-    { code: 'GR', name: 'Greece', isd: '+30', currency: 'EUR', continent: 'Europe' },
-    { code: 'PL', name: 'Poland', isd: '+48', currency: 'PLN', continent: 'Europe' },
-    { code: 'CZ', name: 'Czech Republic', isd: '+420', currency: 'CZK', continent: 'Europe' },
-    { code: 'HU', name: 'Hungary', isd: '+36', currency: 'HUF', continent: 'Europe' },
-    { code: 'MY', name: 'Malaysia', isd: '+60', currency: 'MYR', continent: 'Asia' },
-    { code: 'ID', name: 'Indonesia', isd: '+62', currency: 'IDR', continent: 'Asia' },
-    { code: 'TH', name: 'Thailand', isd: '+66', currency: 'THB', continent: 'Asia' },
+    { code: 'AE', name: 'United Arab Emirates', isoCode2: 'AE', isoCode3: 'ARE', isoNumeric: '784', nationality: 'Emirati', isd: '+971', currency: 'AED — UAE Dirham', continent: 'Asia' },
+    { code: 'US', name: 'United States', isoCode2: 'US', isoCode3: 'USA', isoNumeric: '840', nationality: 'American', isd: '+1', currency: 'USD', continent: 'North America' },
+    { code: 'CA', name: 'Canada', isoCode2: 'CA', isoCode3: 'CAN', isoNumeric: '124', nationality: 'Canadian', isd: '+1', currency: 'CAD', continent: 'North America' },
+    { code: 'GB', name: 'United Kingdom', isoCode2: 'GB', isoCode3: 'GBR', isoNumeric: '826', nationality: 'British', isd: '+44', currency: 'GBP', continent: 'Europe' },
+    { code: 'DE', name: 'Germany', isoCode2: 'DE', isoCode3: 'DEU', isoNumeric: '276', nationality: 'German', isd: '+49', currency: 'EUR', continent: 'Europe' },
+    { code: 'FR', name: 'France', isoCode2: 'FR', isoCode3: 'FRA', isoNumeric: '250', nationality: 'French', isd: '+33', currency: 'EUR', continent: 'Europe' },
+    { code: 'IT', name: 'Italy', isoCode2: 'IT', isoCode3: 'ITA', isoNumeric: '380', nationality: 'Italian', isd: '+39', currency: 'EUR', continent: 'Europe' },
+    { code: 'ES', name: 'Spain', isoCode2: 'ES', isoCode3: 'ESP', isoNumeric: '724', nationality: 'Spanish', isd: '+34', currency: 'EUR', continent: 'Europe' },
+    { code: 'PT', name: 'Portugal', isoCode2: 'PT', isoCode3: 'PRT', isoNumeric: '620', nationality: 'Portuguese', isd: '+351', currency: 'EUR', continent: 'Europe' },
+    { code: 'CH', name: 'Switzerland', isoCode2: 'CH', isoCode3: 'CHE', isoNumeric: '756', nationality: 'Swiss', isd: '+41', currency: 'CHF', continent: 'Europe' },
+    { code: 'NL', name: 'Netherlands', isoCode2: 'NL', isoCode3: 'NLD', isoNumeric: '528', nationality: 'Dutch', isd: '+31', currency: 'EUR', continent: 'Europe' },
+    { code: 'BE', name: 'Belgium', isoCode2: 'BE', isoCode3: 'BEL', isoNumeric: '056', nationality: 'Belgian', isd: '+32', currency: 'EUR', continent: 'Europe' },
+    { code: 'JP', name: 'Japan', isoCode2: 'JP', isoCode3: 'JPN', isoNumeric: '392', nationality: 'Japanese', isd: '+81', currency: 'JPY', continent: 'Asia' },
+    { code: 'IN', name: 'India', isoCode2: 'IN', isoCode3: 'IND', isoNumeric: '356', nationality: 'Indian', isd: '+91', currency: 'INR', continent: 'Asia' },
+    { code: 'AU', name: 'Australia', isoCode2: 'AU', isoCode3: 'AUS', isoNumeric: '036', nationality: 'Australian', isd: '+61', currency: 'AUD', continent: 'Oceania' },
+    { code: 'SA', name: 'Saudi Arabia', isoCode2: 'SA', isoCode3: 'SAU', isoNumeric: '682', nationality: 'Saudi', isd: '+966', currency: 'SAR', continent: 'Asia' },
+    { code: 'SG', name: 'Singapore', isoCode2: 'SG', isoCode3: 'SGP', isoNumeric: '702', nationality: 'Singaporean', isd: '+65', currency: 'SGD', continent: 'Asia' },
+    { code: 'BR', name: 'Brazil', isoCode2: 'BR', isoCode3: 'BRA', isoNumeric: '076', nationality: 'Brazilian', isd: '+55', currency: 'BRL', continent: 'South America' },
+    { code: 'MX', name: 'Mexico', isoCode2: 'MX', isoCode3: 'MEX', isoNumeric: '484', nationality: 'Mexican', isd: '+52', currency: 'MXN', continent: 'North America' },
+    { code: 'CN', name: 'China', isoCode2: 'CN', isoCode3: 'CHN', isoNumeric: '156', nationality: 'Chinese', isd: '+86', currency: 'CNY', continent: 'Asia' },
+    { code: 'KR', name: 'South Korea', isoCode2: 'KR', isoCode3: 'KOR', isoNumeric: '410', nationality: 'South Korean', isd: '+82', currency: 'KRW', continent: 'Asia' },
+    { code: 'TR', name: 'Turkey', isoCode2: 'TR', isoCode3: 'TUR', isoNumeric: '792', nationality: 'Turkish', isd: '+90', currency: 'TRY', continent: 'Europe' },
   ];
+
+  onCountryNameChange(val: string): void {
+    this.formName.set(val);
+    const matched = this.countryPresets.find((p) => p.name.toLowerCase() === val.trim().toLowerCase());
+    if (matched) {
+      this.applyPreset(matched);
+    }
+  }
+
+  onIsoCode2Change(val: string): void {
+    const code = val.toUpperCase();
+    this.formIsoCode2.set(code);
+    this.formCode.set(code);
+    const matched = this.countryPresets.find((p) => p.code.toLowerCase() === code.toLowerCase() || p.isoCode2.toLowerCase() === code.toLowerCase());
+    if (matched) {
+      this.applyPreset(matched);
+    } else {
+      if (!this.formIsoCode3()) this.formIsoCode3.set(code ? `${code}A` : '');
+      this.formFlag.set(`https://flagcdn.com/${code.toLowerCase()}.svg`);
+    }
+  }
+
+  applyPreset(p: any): void {
+    if (p.name && (!this.formName() || this.formName() === 'United States')) this.formName.set(p.name);
+    if (p.code) {
+      this.formCode.set(p.code);
+      this.formIsoCode2.set(p.code);
+      this.formFlag.set(`https://flagcdn.com/${p.code.toLowerCase()}.svg`);
+    }
+    if (p.isoCode3) this.formIsoCode3.set(p.isoCode3);
+    if (p.isoNumeric) this.formIsoNumeric.set(p.isoNumeric);
+    if (p.nationality) this.formNationality.set(p.nationality);
+    if (p.isd) this.formIsd.set(p.isd);
+    if (p.currency) this.formCurrency.set(p.currency);
+    if (p.continent) this.formContinent.set(p.continent);
+  }
 
   // Toast feedback message
   toastMessage = signal<string | null>(null);
@@ -470,6 +839,10 @@ export class CountryComponent implements OnInit {
             if (c) this.loadCountryIntoForm(c);
           }
           this.viewMode.set(mode);
+        }
+      } else {
+        if (this.viewMode() !== 'grid') {
+          this.viewMode.set('grid');
         }
       }
 
@@ -1450,7 +1823,7 @@ export class CountryComponent implements OnInit {
     });
   }
 
-  previousListViewMode = signal<'grid' | 'list'>('list');
+  previousListViewMode = signal<'grid' | 'list'>('grid');
   highlightedCountryId = signal<string | null>(null);
 
   openCreate(): void {
@@ -1494,7 +1867,7 @@ export class CountryComponent implements OnInit {
   }
 
   returnFromFormView(): void {
-    const target = this.previousListViewMode() || 'list';
+    const target = this.previousListViewMode() || 'grid';
     this.switchView(target);
     if (this.highlightedCountryId()) {
       setTimeout(() => {
@@ -1517,13 +1890,18 @@ export class CountryComponent implements OnInit {
   }
 
   loadCountryIntoForm(country: Country): void {
-    this.formCode.set(country.code);
+    const code = country.code || country.isoCode2 || 'US';
+    this.formCode.set(code);
+    this.formIsoCode2.set(country.isoCode2 || code);
+    this.formIsoCode3.set(country.isoCode3 || (code === 'AE' ? 'ARE' : code === 'US' ? 'USA' : `${code}A`));
+    this.formIsoNumeric.set(country.isoNumeric || (code === 'AE' ? '784' : code === 'US' ? '840' : '100'));
+    this.formNationality.set(country.nationality || (code === 'AE' ? 'Emirati' : code === 'US' ? 'American' : `${country.name} citizen`));
     this.formIsd.set(country.isd);
     this.formName.set(country.name);
     this.formCurrency.set(country.currency);
     this.formDefault.set(country.isDefault ? 'Yes' : 'No');
     this.formStatus.set(country.status === 'Deleted' ? 'Delete' : country.status);
-    this.formFlag.set(country.flag || `https://flagcdn.com/${country.code.toLowerCase()}.svg`);
+    this.formFlag.set(country.flag || `https://flagcdn.com/${code.toLowerCase()}.svg`);
     this.formContinent.set(country.continent || '');
     this.formTranslations.set({ ...(country.translations || {}) });
   }
@@ -1531,6 +1909,10 @@ export class CountryComponent implements OnInit {
   // Empty form for Create, and the target of the Reset confirmation
   clearForm(): void {
     this.formCode.set('');
+    this.formIsoCode2.set('');
+    this.formIsoCode3.set('');
+    this.formIsoNumeric.set('');
+    this.formNationality.set('');
     this.formIsd.set('');
     this.formName.set('');
     this.formCurrency.set('');
@@ -1563,6 +1945,10 @@ export class CountryComponent implements OnInit {
       title,
       state: {
         code: this.formCode(),
+        isoCode2: this.formIsoCode2(),
+        isoCode3: this.formIsoCode3(),
+        isoNumeric: this.formIsoNumeric(),
+        nationality: this.formNationality(),
         isd: this.formIsd(),
         name: this.formName(),
         currency: this.formCurrency(),
@@ -1607,6 +1993,10 @@ export class CountryComponent implements OnInit {
     this.closePopovers();
     this.currentCountryId.set(form.countryId);
     this.formCode.set(s.code);
+    this.formIsoCode2.set(s.isoCode2 || s.code);
+    this.formIsoCode3.set(s.isoCode3 || `${s.code}A`);
+    this.formIsoNumeric.set(s.isoNumeric || '840');
+    this.formNationality.set(s.nationality || 'Citizen');
     this.formIsd.set(s.isd);
     this.formName.set(s.name);
     this.formCurrency.set(s.currency);
@@ -1754,9 +2144,12 @@ export class CountryComponent implements OnInit {
     this.activeListeningField.set(fieldName);
     setTimeout(() => {
       let sample = 'United Arab Emirates';
-      if (fieldName === 'code') sample = 'AE';
+      if (fieldName === 'code' || fieldName === 'isoCode2') sample = 'AE';
+      if (fieldName === 'isoCode3') sample = 'ARE';
+      if (fieldName === 'isoNumeric') sample = '784';
       if (fieldName === 'isd') sample = '+971';
-      if (fieldName === 'currency') sample = 'AED';
+      if (fieldName === 'currency') sample = 'AED — UAE Dirham';
+      if (fieldName === 'nationality') sample = 'Emirati';
       if (fieldName === 'search') sample = 'Germany';
 
       this.applySpokenText(fieldName, sample);
@@ -1768,16 +2161,22 @@ export class CountryComponent implements OnInit {
     const clean = text.trim();
     if (fieldName === 'search') {
       this.searchQuery.set(clean);
-    } else if (fieldName === 'code') {
-      const codeUpper = clean.slice(0, 3).toUpperCase();
-      this.formCode.set(codeUpper);
+    } else if (fieldName === 'name') {
+      this.onCountryNameChange(clean);
+    } else if (fieldName === 'code' || fieldName === 'isoCode2') {
+      const codeUpper = clean.slice(0, 2).toUpperCase();
+      this.onIsoCode2Change(codeUpper);
+    } else if (fieldName === 'isoCode3') {
+      this.formIsoCode3.set(clean.slice(0, 3).toUpperCase());
+    } else if (fieldName === 'isoNumeric') {
+      this.formIsoNumeric.set(clean.replace(/\D/g, ''));
     } else if (fieldName === 'isd') {
       const isdClean = clean.startsWith('+') ? clean : '+' + clean.replace(/\D/g, '');
       this.formIsd.set(isdClean);
-    } else if (fieldName === 'name') {
-      this.formName.set(clean);
     } else if (fieldName === 'currency') {
-      this.formCurrency.set(clean.toUpperCase());
+      this.formCurrency.set(clean);
+    } else if (fieldName === 'nationality') {
+      this.formNationality.set(clean);
     }
   }
 
@@ -1859,22 +2258,26 @@ export class CountryComponent implements OnInit {
   // Form submission (Create & Edit)
   onSubmitForm(): void {
     const name = this.formName().trim();
-    const code = this.formCode().trim().toUpperCase();
+    const isoCode2 = (this.formIsoCode2().trim() || this.formCode().trim()).toUpperCase();
+    const isoCode3 = (this.formIsoCode3().trim() || `${isoCode2}A`).toUpperCase();
+    const isoNumeric = this.formIsoNumeric().trim() || '840';
+    const nationality = this.formNationality().trim() || (name ? `${name} citizen` : 'Citizen');
+    const code = isoCode2;
     const isd = this.formIsd().trim();
 
-    if (!code) {
-      this.showToast('Please specify a country code');
-      this.focusField('country-code');
+    if (!name) {
+      this.showToast('Please enter Country Name');
+      this.focusField('country-name');
+      return;
+    }
+    if (!isoCode2) {
+      this.showToast('Please specify ISO Code2');
+      this.focusField('country-iso2');
       return;
     }
     if (!isd) {
-      this.showToast('Please enter the ISD code');
+      this.showToast('Please enter Phone DialCode');
       this.focusField('country-isd');
-      return;
-    }
-    if (!name) {
-      this.showToast('Please enter a country name');
-      this.focusField('country-name');
       return;
     }
 
@@ -1883,8 +2286,12 @@ export class CountryComponent implements OnInit {
     const payload: Partial<Country> = {
       name,
       code,
+      isoCode2,
+      isoCode3,
+      isoNumeric,
+      nationality,
       isd: isd.startsWith('+') ? isd : `+${isd}`,
-      currency: this.formCurrency().trim().toUpperCase(),
+      currency: this.formCurrency().trim(),
       isDefault: this.formDefault() === 'Yes',
       // "Delete" is applied through the soft-delete flow below so it is logged and restorable
       ...(status === 'Delete' ? {} : { status }),
@@ -2491,10 +2898,6 @@ export class CountryComponent implements OnInit {
   openImportModal(): void {
     this.resetImportWizard();
     this.isImportModalOpen.set(true);
-  }
-
-  openHistoryModal(): void {
-    this.isHistoryModalOpen.set(true);
   }
 
   onFlagError(event: Event, country?: Country): void {

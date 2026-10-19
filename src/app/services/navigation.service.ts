@@ -330,6 +330,7 @@ export class NavigationService {
     { id: 'usr', title: 'Users & Permissions', category: 'Security', moduleId: 'users', icon: 'users' },
     { id: 'dtb', title: 'Database Backups', category: 'System', moduleId: 'database', icon: 'database' },
     { id: 'act', title: 'System Activity Logs', category: 'System', moduleId: 'activity-logs', icon: 'activity-logs' },
+    { id: 'aud', title: 'Audit History', category: 'System', moduleId: 'audit-history', icon: 'history' },
     { id: 'fny', title: 'Financial Year Settings', category: 'System', moduleId: 'financial-year', icon: 'financial-year' },
     { id: 'cly', title: 'Closing Fiscal Year', category: 'System', moduleId: 'closing-year', icon: 'closing-year' },
     { id: 'smp-c', title: 'Sample Categories', category: 'Sample', moduleId: 'sample', subModuleId: 'smp-categories', icon: 'menu-bars' },
@@ -365,7 +366,7 @@ export class NavigationService {
       const commands = subModuleId ? ['/landing', moduleId, subModuleId] : ['/landing', moduleId];
       const targetPath = commands.join('/');
       if (!this.router.url.startsWith(targetPath)) {
-        this.router.navigate(commands, { queryParamsHandling: 'preserve' });
+        this.router.navigate(commands);
       }
     }
   }

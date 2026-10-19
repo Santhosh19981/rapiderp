@@ -161,3 +161,116 @@ html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover,
 .dark .rapid-dropdown-option-desc {
   color: #94a3b8;
 }
+
+/* ========================================================================= */
+/* Global Secondary Color Button Hover Effect across the Whole Application   */
+/* Secondary Color: #00a2e8                                                 */
+/* ========================================================================= */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 1. Filled / Solid Buttons Hover (Primary, Action, or Buttons with filled hover state) */
+button[type="submit"]:not(:disabled):hover,
+button.bg-primary:not(:disabled):hover,
+button[class*="bg-slate-900"]:not(:disabled):hover,
+button[class*="bg-black"]:not(:disabled):hover,
+button[class*="bg-[#0b63be]"]:not(:disabled):hover,
+button[class*="bg-[#00a6f4]"]:not(:disabled):hover,
+button[class*="hover:bg-[#00a6f4]"]:not(:disabled):hover,
+button[class*="hover:bg-[#00a2e8]"]:not(:disabled):hover,
+button[class*="hover:bg-[#1863c0]"]:not(:disabled):hover,
+button[class*="hover:bg-primary"]:not(:disabled):hover,
+button[class*="hover:bg-sky"]:not(:disabled):hover,
+button[class*="hover:bg-blue"]:not(:disabled):hover,
+button[class*="hover:text-white"]:not(:disabled):hover {
+  background-color: var(--secondary-color, #00a2e8) !important;
+  border-color: var(--secondary-color, #00a2e8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px -2px rgba(0, 162, 232, 0.35) !important;
+}
+
+button[type="submit"]:not(:disabled):hover *,
+button.bg-primary:not(:disabled):hover *,
+button[class*="bg-slate-900"]:not(:disabled):hover *,
+button[class*="bg-black"]:not(:disabled):hover *,
+button[class*="bg-[#0b63be]"]:not(:disabled):hover *,
+button[class*="bg-[#00a6f4]"]:not(:disabled):hover *,
+button[class*="hover:bg-[#00a6f4]"]:not(:disabled):hover *,
+button[class*="hover:bg-[#00a2e8]"]:not(:disabled):hover *,
+button[class*="hover:bg-[#1863c0]"]:not(:disabled):hover *,
+button[class*="hover:bg-primary"]:not(:disabled):hover *,
+button[class*="hover:bg-sky"]:not(:disabled):hover *,
+button[class*="hover:bg-blue"]:not(:disabled):hover *,
+button[class*="hover:text-white"]:not(:disabled):hover * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* 2. Outlined / Bordered Buttons without filled hover background */
+button.border:not(.accordion-trigger-btn):not(:disabled):not([class*="bg-red"]):not([class*="bg-rose"]):not([class*="bg-emerald"]):not([class*="text-red"]):not([class*="text-rose"]):not([class*="border-red"]):not([class*="hover:bg-[#00a6f4]"]):not([class*="hover:bg-[#00a2e8]"]):not([class*="hover:bg-[#1863c0]"]):not([class*="hover:bg-primary"]):not([class*="hover:bg-sky"]):not([class*="hover:bg-blue"]):not([class*="hover:text-white"]):hover,
+button[class*="border-slate"]:not(.accordion-trigger-btn):not(:disabled):not([class*="text-red"]):not([class*="border-red"]):not([class*="hover:bg-[#00a6f4]"]):not([class*="hover:bg-[#00a2e8]"]):not([class*="hover:bg-[#1863c0]"]):not([class*="hover:bg-primary"]):not([class*="hover:bg-sky"]):not([class*="hover:bg-blue"]):not([class*="hover:text-white"]):hover,
+button[class*="border-gray"]:not(.accordion-trigger-btn):not(:disabled):not([class*="text-red"]):not([class*="border-red"]):not([class*="hover:bg-[#00a6f4]"]):not([class*="hover:bg-[#00a2e8]"]):not([class*="hover:bg-[#1863c0]"]):not([class*="hover:bg-primary"]):not([class*="hover:bg-sky"]):not([class*="hover:bg-blue"]):not([class*="hover:text-white"]):hover {
+  border-color: var(--secondary-color, #00a2e8) !important;
+  color: var(--secondary-color, #00a2e8) !important;
+  background-color: #f0f9ff !important;
+}
+
+button.border:not(.accordion-trigger-btn):not(:disabled):not([class*="bg-red"]):not([class*="bg-rose"]):not([class*="bg-emerald"]):not([class*="text-red"]):not([class*="text-rose"]):not([class*="border-red"]):not([class*="hover:bg-[#00a6f4]"]):not([class*="hover:bg-[#00a2e8]"]):not([class*="hover:bg-[#1863c0]"]):not([class*="hover:bg-primary"]):not([class*="hover:bg-sky"]):not([class*="hover:bg-blue"]):not([class*="hover:text-white"]):hover *:not(svg) {
+  color: var(--secondary-color, #00a2e8) !important;
+}
+
+button.border:not(.accordion-trigger-btn):not(:disabled):not([class*="bg-red"]):not([class*="bg-rose"]):not([class*="bg-emerald"]):not([class*="text-red"]):not([class*="text-rose"]):not([class*="border-red"]):not([class*="hover:bg-[#00a6f4]"]):not([class*="hover:bg-[#00a2e8]"]):not([class*="hover:bg-[#1863c0]"]):not([class*="hover:bg-primary"]):not([class*="hover:bg-sky"]):not([class*="hover:bg-blue"]):not([class*="hover:text-white"]):hover svg,
+button[class*="border-slate"]:not(.accordion-trigger-btn):not(:disabled):not([class*="text-red"]):not([class*="border-red"]):not([class*="hover:bg-[#00a6f4]"]):not([class*="hover:bg-[#00a2e8]"]):not([class*="hover:bg-[#1863c0]"]):not([class*="hover:bg-primary"]):not([class*="hover:bg-sky"]):not([class*="hover:bg-blue"]):not([class*="hover:text-white"]):hover svg,
+button[class*="border-gray"]:not(.accordion-trigger-btn):not(:disabled):not([class*="text-red"]):not([class*="border-red"]):not([class*="hover:bg-[#00a6f4]"]):not([class*="hover:bg-[#00a2e8]"]):not([class*="hover:bg-[#1863c0]"]):not([class*="hover:bg-primary"]):not([class*="hover:bg-sky"]):not([class*="hover:bg-blue"]):not([class*="hover:text-white"]):hover svg {
+  color: var(--secondary-color, #00a2e8) !important;
+  stroke: var(--secondary-color, #00a2e8) !important;
+}
+
+/* 3. Ghost / Subtle Hover Buttons */
+button.hover\:bg-slate-50:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover,
+button.hover\:bg-slate-100:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover,
+button[class*="hover:bg-slate-50"]:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover,
+button[class*="hover:bg-slate-100"]:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover {
+  background-color: #f0f9ff !important;
+  color: var(--secondary-color, #00a2e8) !important;
+}
+
+button.hover\:bg-slate-50:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover svg,
+button.hover\:bg-slate-100:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover svg,
+button[class*="hover:bg-slate-50"]:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover svg,
+button[class*="hover:bg-slate-100"]:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover svg {
+  color: var(--secondary-color, #00a2e8) !important;
+  stroke: var(--secondary-color, #00a2e8) !important;
+}
+
+.dark button.hover\:bg-slate-700:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover,
+.dark button[class*="hover:bg-slate-700"]:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover,
+.dark button[class*="hover:bg-slate-800"]:not(.accordion-trigger-btn):not(:disabled):not([class*="hover:text-white"]):not([class*="hover:bg-[#00a6f4]"]):hover {
+  background-color: #0c4a6e !important;
+  color: #38bdf8 !important;
+}
+
+/* 4. Right Sidebar Accordion Trigger Tab (Top-right pill with high-contrast white icon on hover) */
+button.accordion-trigger-btn:not(:disabled):hover,
+.accordion-trigger-btn:hover {
+  background-color: #00a6f4 !important;
+  border-color: #00a6f4 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 166, 244, 0.35) !important;
+}
+
+button.accordion-trigger-btn:not(:disabled):hover svg,
+.accordion-trigger-btn:hover svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  fill: none !important;
+}
+
+button.accordion-trigger-btn:not(:disabled):hover div,
+.accordion-trigger-btn:hover div {
+  background-color: #ffffff !important;
+}
+
+

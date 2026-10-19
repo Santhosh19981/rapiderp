@@ -6,6 +6,10 @@ export interface Country {
   currency: string;
   status: 'Active' | 'Inactive' | 'Draft' | 'Deleted';
   isDefault: boolean;
+  isoCode2?: string;
+  isoCode3?: string;
+  isoNumeric?: string;
+  nationality?: string;
   continent?: string;
   population?: string;
   states?: number;
@@ -58,6 +62,10 @@ export interface MinimizedCountryForm {
   title: string;
   state: {
     code: string;
+    isoCode2?: string;
+    isoCode3?: string;
+    isoNumeric?: string;
+    nationality?: string;
     isd: string;
     name: string;
     currency: string;

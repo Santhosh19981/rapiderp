@@ -486,6 +486,11 @@ export class Sidebar {
       icon: 'activity-logs',
     },
     {
+      id: 'audit-history',
+      label: 'Audit History',
+      icon: 'audit-history',
+    },
+    {
       id: 'financial-year',
       label: 'Financial Year',
       icon: 'financial-year',
@@ -673,7 +678,10 @@ export class Sidebar {
   }
 
   selectItem(item: MenuItem): void {
-    if (item.subItems && item.subItems.length > 0) {
+    if (item.id === 'countries') {
+      this.navService.navigateTo(item.id, '', item.label, '', false);
+      this.router.navigate(['/landing', 'countries'], { queryParams: {} });
+    } else if (item.subItems && item.subItems.length > 0) {
       // Navigate to first subitem or keep module active
       const firstSub = item.subItems[0];
       this.navService.navigateTo(item.id, firstSub.id, item.label, firstSub.label);

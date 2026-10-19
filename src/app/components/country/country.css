@@ -140,16 +140,17 @@
 .capsule-title {
   color: #4E516C;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   line-height: 120%;
-  text-align: center;
+  white-space: nowrap;
 }
 
 .capsule-count {
   color: #4E516C;
   font-weight: 800;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   line-height: 120%;
+  white-space: nowrap;
 }
 
 /* Capsule grid spacing */
@@ -164,19 +165,24 @@
 .country-card {
   background: #ffffff;
   border: 1px solid #E2E4EB;
-  border-radius: 12px;
+  border-radius: 14px;
   box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.08);
-  padding: 12px 18px;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
-  min-height: 118px;
+  gap: 12px;
+  min-height: 140px;
   width: 100%;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   position: relative;
+}
+
+.writing-vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
 }
 
 .country-card:hover {
@@ -208,17 +214,17 @@
   right: 8px;
   display: flex;
   align-items: center;
-  gap: 5px;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(4px);
-  padding: 3px 8px;
-  border-radius: 9999px;
-  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  gap: 6px;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-3px);
-  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(-2px);
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 30;
 }
 
@@ -230,9 +236,9 @@
 
 :host-context(.dark) .country-card .card-hover-actions,
 .dark .country-card .card-hover-actions {
-  background: rgba(30, 41, 59, 0.96);
-  border-color: rgba(51, 65, 85, 0.9);
-  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* ========================================================================= */
