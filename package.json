@@ -26,6 +26,7 @@
     "@angular/compiler-cli": "^22.2.0",
     "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.6.1",
+    "docx": "^9.13.0",
     "postcss": "^8.5.30",
     "prettier": "^3.8.1",
     "puppeteer-core": "^25.14.0",
