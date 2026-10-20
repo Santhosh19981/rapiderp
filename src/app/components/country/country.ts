@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CountryService } from './country.service';
-import { Country, CountryHistoryEntry, MinimizedCountryForm } from './country.models';
+import { Country, CountryHistoryEntry, MinimizedCountryForm, CountryLookupRecord } from './country.models';
 import { NavigationService } from '../../services/navigation.service';
 import { AuditService } from '../../services/audit.service';
 import { DropdownOption, SelectDropdown } from '../select-dropdown/select-dropdown';
@@ -1252,7 +1252,7 @@ export class CountryComponent implements OnInit {
       for (const p of this.countryPresets) {
         if (text.toLowerCase().includes(p.name.toLowerCase())) {
           name = p.name;
-          if (!isoCode2) isoCode2 = p.isoCode2;
+          if (!isoCode2) isoCode2 = p.isoCode2 || p.code;
           if (!isoCode3) isoCode3 = p.isoCode3;
           if (!isoNumeric) isoNumeric = p.isoNumeric;
           if (!isd) isd = p.isd;
@@ -1272,7 +1272,7 @@ export class CountryComponent implements OnInit {
     );
     if (matchedPreset) {
       if (!name) name = matchedPreset.name;
-      if (!isoCode2) isoCode2 = matchedPreset.isoCode2;
+      if (!isoCode2) isoCode2 = matchedPreset.isoCode2 || matchedPreset.code;
       if (!isoCode3) isoCode3 = matchedPreset.isoCode3;
       if (!isoNumeric) isoNumeric = matchedPreset.isoNumeric;
       if (!isd) isd = matchedPreset.isd;
@@ -1360,50 +1360,236 @@ export class CountryComponent implements OnInit {
     const p = this.countryPresets.find((x) => x.name.toLowerCase() === presetName.toLowerCase());
     if (p) {
       this.aiInputText.set(
-        `Country Name: ${p.name}\nISO Code 2: ${p.isoCode2}\nISO Code 3: ${p.isoCode3}\nISO Numeric: ${p.isoNumeric}\nPhone Dial Code: ${p.isd}\nDefault Currency: ${p.currency}\nNationality: ${p.nationality}\nContinent: ${p.continent}`
+        `Country Name: ${p.name}\nISO Code 2: ${p.isoCode2 || p.code}\nISO Code 3: ${p.isoCode3}\nISO Numeric: ${p.isoNumeric}\nPhone Dial Code: ${p.isd}\nDefault Currency: ${p.currency}\nNationality: ${p.nationality}\nContinent: ${p.continent}`
       );
     }
   }
 
-  // Country Code Presets with predefined ISO codes, ISD, Currencies & Nationalities
-  countryPresets = [
-    { code: 'AE', name: 'United Arab Emirates', isoCode2: 'AE', isoCode3: 'ARE', isoNumeric: '784', nationality: 'Emirati', isd: '+971', currency: 'AED — UAE Dirham', continent: 'Asia' },
-    { code: 'US', name: 'United States', isoCode2: 'US', isoCode3: 'USA', isoNumeric: '840', nationality: 'American', isd: '+1', currency: 'USD', continent: 'North America' },
-    { code: 'CA', name: 'Canada', isoCode2: 'CA', isoCode3: 'CAN', isoNumeric: '124', nationality: 'Canadian', isd: '+1', currency: 'CAD', continent: 'North America' },
-    { code: 'GB', name: 'United Kingdom', isoCode2: 'GB', isoCode3: 'GBR', isoNumeric: '826', nationality: 'British', isd: '+44', currency: 'GBP', continent: 'Europe' },
-    { code: 'DE', name: 'Germany', isoCode2: 'DE', isoCode3: 'DEU', isoNumeric: '276', nationality: 'German', isd: '+49', currency: 'EUR', continent: 'Europe' },
-    { code: 'FR', name: 'France', isoCode2: 'FR', isoCode3: 'FRA', isoNumeric: '250', nationality: 'French', isd: '+33', currency: 'EUR', continent: 'Europe' },
-    { code: 'IT', name: 'Italy', isoCode2: 'IT', isoCode3: 'ITA', isoNumeric: '380', nationality: 'Italian', isd: '+39', currency: 'EUR', continent: 'Europe' },
-    { code: 'ES', name: 'Spain', isoCode2: 'ES', isoCode3: 'ESP', isoNumeric: '724', nationality: 'Spanish', isd: '+34', currency: 'EUR', continent: 'Europe' },
-    { code: 'PT', name: 'Portugal', isoCode2: 'PT', isoCode3: 'PRT', isoNumeric: '620', nationality: 'Portuguese', isd: '+351', currency: 'EUR', continent: 'Europe' },
-    { code: 'CH', name: 'Switzerland', isoCode2: 'CH', isoCode3: 'CHE', isoNumeric: '756', nationality: 'Swiss', isd: '+41', currency: 'CHF', continent: 'Europe' },
-    { code: 'NL', name: 'Netherlands', isoCode2: 'NL', isoCode3: 'NLD', isoNumeric: '528', nationality: 'Dutch', isd: '+31', currency: 'EUR', continent: 'Europe' },
-    { code: 'BE', name: 'Belgium', isoCode2: 'BE', isoCode3: 'BEL', isoNumeric: '056', nationality: 'Belgian', isd: '+32', currency: 'EUR', continent: 'Europe' },
-    { code: 'JP', name: 'Japan', isoCode2: 'JP', isoCode3: 'JPN', isoNumeric: '392', nationality: 'Japanese', isd: '+81', currency: 'JPY', continent: 'Asia' },
-    { code: 'IN', name: 'India', isoCode2: 'IN', isoCode3: 'IND', isoNumeric: '356', nationality: 'Indian', isd: '+91', currency: 'INR', continent: 'Asia' },
-    { code: 'AU', name: 'Australia', isoCode2: 'AU', isoCode3: 'AUS', isoNumeric: '036', nationality: 'Australian', isd: '+61', currency: 'AUD', continent: 'Oceania' },
-    { code: 'SA', name: 'Saudi Arabia', isoCode2: 'SA', isoCode3: 'SAU', isoNumeric: '682', nationality: 'Saudi', isd: '+966', currency: 'SAR', continent: 'Asia' },
-    { code: 'SG', name: 'Singapore', isoCode2: 'SG', isoCode3: 'SGP', isoNumeric: '702', nationality: 'Singaporean', isd: '+65', currency: 'SGD', continent: 'Asia' },
-    { code: 'BR', name: 'Brazil', isoCode2: 'BR', isoCode3: 'BRA', isoNumeric: '076', nationality: 'Brazilian', isd: '+55', currency: 'BRL', continent: 'South America' },
-    { code: 'MX', name: 'Mexico', isoCode2: 'MX', isoCode3: 'MEX', isoNumeric: '484', nationality: 'Mexican', isd: '+52', currency: 'MXN', continent: 'North America' },
-    { code: 'CN', name: 'China', isoCode2: 'CN', isoCode3: 'CHN', isoNumeric: '156', nationality: 'Chinese', isd: '+86', currency: 'CNY', continent: 'Asia' },
-    { code: 'KR', name: 'South Korea', isoCode2: 'KR', isoCode3: 'KOR', isoNumeric: '410', nationality: 'South Korean', isd: '+82', currency: 'KRW', continent: 'Asia' },
-    { code: 'TR', name: 'Turkey', isoCode2: 'TR', isoCode3: 'TUR', isoNumeric: '792', nationality: 'Turkish', isd: '+90', currency: 'TRY', continent: 'Europe' },
+  // =========================================================================
+  // Section 1.A: Master World Country Lookup Table (Separate Lookup Table)
+  // =========================================================================
+  lookupTableData: CountryLookupRecord[] = [
+    { code: 'AE', name: 'United Arab Emirates', isoCode3: 'ARE', isoNumeric: '784', nationality: 'Emirati', isd: '+971', currency: 'AED — UAE Dirham', continent: 'Asia', capital: 'Abu Dhabi', flag: 'https://flagcdn.com/ae.svg' },
+    { code: 'US', name: 'United States', isoCode3: 'USA', isoNumeric: '840', nationality: 'American', isd: '+1', currency: 'USD', continent: 'North America', capital: 'Washington, D.C.', flag: 'https://flagcdn.com/us.svg' },
+    { code: 'GB', name: 'United Kingdom', isoCode3: 'GBR', isoNumeric: '826', nationality: 'British', isd: '+44', currency: 'GBP', continent: 'Europe', capital: 'London', flag: 'https://flagcdn.com/gb.svg' },
+    { code: 'CA', name: 'Canada', isoCode3: 'CAN', isoNumeric: '124', nationality: 'Canadian', isd: '+1', currency: 'CAD', continent: 'North America', capital: 'Ottawa', flag: 'https://flagcdn.com/ca.svg' },
+    { code: 'DE', name: 'Germany', isoCode3: 'DEU', isoNumeric: '276', nationality: 'German', isd: '+49', currency: 'EUR', continent: 'Europe', capital: 'Berlin', flag: 'https://flagcdn.com/de.svg' },
+    { code: 'FR', name: 'France', isoCode3: 'FRA', isoNumeric: '250', nationality: 'French', isd: '+33', currency: 'EUR', continent: 'Europe', capital: 'Paris', flag: 'https://flagcdn.com/fr.svg' },
+    { code: 'IT', name: 'Italy', isoCode3: 'ITA', isoNumeric: '380', nationality: 'Italian', isd: '+39', currency: 'EUR', continent: 'Europe', capital: 'Rome', flag: 'https://flagcdn.com/it.svg' },
+    { code: 'ES', name: 'Spain', isoCode3: 'ESP', isoNumeric: '724', nationality: 'Spanish', isd: '+34', currency: 'EUR', continent: 'Europe', capital: 'Madrid', flag: 'https://flagcdn.com/es.svg' },
+    { code: 'PT', name: 'Portugal', isoCode3: 'PRT', isoNumeric: '620', nationality: 'Portuguese', isd: '+351', currency: 'EUR', continent: 'Europe', capital: 'Lisbon', flag: 'https://flagcdn.com/pt.svg' },
+    { code: 'CH', name: 'Switzerland', isoCode3: 'CHE', isoNumeric: '756', nationality: 'Swiss', isd: '+41', currency: 'CHF', continent: 'Europe', capital: 'Bern', flag: 'https://flagcdn.com/ch.svg' },
+    { code: 'NL', name: 'Netherlands', isoCode3: 'NLD', isoNumeric: '528', nationality: 'Dutch', isd: '+31', currency: 'EUR', continent: 'Europe', capital: 'Amsterdam', flag: 'https://flagcdn.com/nl.svg' },
+    { code: 'BE', name: 'Belgium', isoCode3: 'BEL', isoNumeric: '056', nationality: 'Belgian', isd: '+32', currency: 'EUR', continent: 'Europe', capital: 'Brussels', flag: 'https://flagcdn.com/be.svg' },
+    { code: 'AT', name: 'Austria', isoCode3: 'AUT', isoNumeric: '040', nationality: 'Austrian', isd: '+43', currency: 'EUR', continent: 'Europe', capital: 'Vienna', flag: 'https://flagcdn.com/at.svg' },
+    { code: 'IE', name: 'Ireland', isoCode3: 'IRL', isoNumeric: '372', nationality: 'Irish', isd: '+353', currency: 'EUR', continent: 'Europe', capital: 'Dublin', flag: 'https://flagcdn.com/ie.svg' },
+    { code: 'SE', name: 'Sweden', isoCode3: 'SWE', isoNumeric: '752', nationality: 'Swedish', isd: '+46', currency: 'SEK', continent: 'Europe', capital: 'Stockholm', flag: 'https://flagcdn.com/se.svg' },
+    { code: 'NO', name: 'Norway', isoCode3: 'NOR', isoNumeric: '578', nationality: 'Norwegian', isd: '+47', currency: 'NOK', continent: 'Europe', capital: 'Oslo', flag: 'https://flagcdn.com/no.svg' },
+    { code: 'DK', name: 'Denmark', isoCode3: 'DNK', isoNumeric: '208', nationality: 'Danish', isd: '+45', currency: 'DKK', continent: 'Europe', capital: 'Copenhagen', flag: 'https://flagcdn.com/dk.svg' },
+    { code: 'FI', name: 'Finland', isoCode3: 'FIN', isoNumeric: '246', nationality: 'Finnish', isd: '+358', currency: 'EUR', continent: 'Europe', capital: 'Helsinki', flag: 'https://flagcdn.com/fi.svg' },
+    { code: 'PL', name: 'Poland', isoCode3: 'POL', isoNumeric: '616', nationality: 'Polish', isd: '+48', currency: 'PLN', continent: 'Europe', capital: 'Warsaw', flag: 'https://flagcdn.com/pl.svg' },
+    { code: 'GR', name: 'Greece', isoCode3: 'GRC', isoNumeric: '300', nationality: 'Greek', isd: '+30', currency: 'EUR', continent: 'Europe', capital: 'Athens', flag: 'https://flagcdn.com/gr.svg' },
+    { code: 'TR', name: 'Turkey', isoCode3: 'TUR', isoNumeric: '792', nationality: 'Turkish', isd: '+90', currency: 'TRY', continent: 'Europe', capital: 'Ankara', flag: 'https://flagcdn.com/tr.svg' },
+    { code: 'SA', name: 'Saudi Arabia', isoCode3: 'SAU', isoNumeric: '682', nationality: 'Saudi', isd: '+966', currency: 'SAR', continent: 'Asia', capital: 'Riyadh', flag: 'https://flagcdn.com/sa.svg' },
+    { code: 'QA', name: 'Qatar', isoCode3: 'QAT', isoNumeric: '634', nationality: 'Qatari', isd: '+974', currency: 'QAR', continent: 'Asia', capital: 'Doha', flag: 'https://flagcdn.com/qa.svg' },
+    { code: 'KW', name: 'Kuwait', isoCode3: 'KWT', isoNumeric: '414', nationality: 'Kuwaiti', isd: '+965', currency: 'KWD', continent: 'Asia', capital: 'Kuwait City', flag: 'https://flagcdn.com/kw.svg' },
+    { code: 'BH', name: 'Bahrain', isoCode3: 'BHR', isoNumeric: '048', nationality: 'Bahraini', isd: '+973', currency: 'BHD', continent: 'Asia', capital: 'Manama', flag: 'https://flagcdn.com/bh.svg' },
+    { code: 'OM', name: 'Oman', isoCode3: 'OMN', isoNumeric: '512', nationality: 'Omani', isd: '+968', currency: 'OMR', continent: 'Asia', capital: 'Muscat', flag: 'https://flagcdn.com/om.svg' },
+    { code: 'JO', name: 'Jordan', isoCode3: 'JOR', isoNumeric: '400', nationality: 'Jordanian', isd: '+962', currency: 'JOD', continent: 'Asia', capital: 'Amman', flag: 'https://flagcdn.com/jo.svg' },
+    { code: 'LB', name: 'Lebanon', isoCode3: 'LBN', isoNumeric: '422', nationality: 'Lebanese', isd: '+961', currency: 'LBP', continent: 'Asia', capital: 'Beirut', flag: 'https://flagcdn.com/lb.svg' },
+    { code: 'EG', name: 'Egypt', isoCode3: 'EGY', isoNumeric: '818', nationality: 'Egyptian', isd: '+20', currency: 'EGP', continent: 'Africa', capital: 'Cairo', flag: 'https://flagcdn.com/eg.svg' },
+    { code: 'UAR', name: 'United Arab Republic', isoCode3: 'SYR', isoNumeric: '760', nationality: 'Arab', isd: '+963', currency: 'SYP', continent: 'Asia', capital: 'Damascus', flag: 'https://flagcdn.com/sy.svg' },
+    { code: 'IN', name: 'India', isoCode3: 'IND', isoNumeric: '356', nationality: 'Indian', isd: '+91', currency: 'INR', continent: 'Asia', capital: 'New Delhi', flag: 'https://flagcdn.com/in.svg' },
+    { code: 'JP', name: 'Japan', isoCode3: 'JPN', isoNumeric: '392', nationality: 'Japanese', isd: '+81', currency: 'JPY', continent: 'Asia', capital: 'Tokyo', flag: 'https://flagcdn.com/jp.svg' },
+    { code: 'CN', name: 'China', isoCode3: 'CHN', isoNumeric: '156', nationality: 'Chinese', isd: '+86', currency: 'CNY', continent: 'Asia', capital: 'Beijing', flag: 'https://flagcdn.com/cn.svg' },
+    { code: 'KR', name: 'South Korea', isoCode3: 'KOR', isoNumeric: '410', nationality: 'South Korean', isd: '+82', currency: 'KRW', continent: 'Asia', capital: 'Seoul', flag: 'https://flagcdn.com/kr.svg' },
+    { code: 'SG', name: 'Singapore', isoCode3: 'SGP', isoNumeric: '702', nationality: 'Singaporean', isd: '+65', currency: 'SGD', continent: 'Asia', capital: 'Singapore', flag: 'https://flagcdn.com/sg.svg' },
+    { code: 'MY', name: 'Malaysia', isoCode3: 'MYS', isoNumeric: '458', nationality: 'Malaysian', isd: '+60', currency: 'MYR', continent: 'Asia', capital: 'Kuala Lumpur', flag: 'https://flagcdn.com/my.svg' },
+    { code: 'TH', name: 'Thailand', isoCode3: 'THA', isoNumeric: '764', nationality: 'Thai', isd: '+66', currency: 'THB', continent: 'Asia', capital: 'Bangkok', flag: 'https://flagcdn.com/th.svg' },
+    { code: 'ID', name: 'Indonesia', isoCode3: 'IDN', isoNumeric: '360', nationality: 'Indonesian', isd: '+62', currency: 'IDR', continent: 'Asia', capital: 'Jakarta', flag: 'https://flagcdn.com/id.svg' },
+    { code: 'PH', name: 'Philippines', isoCode3: 'PHL', isoNumeric: '608', nationality: 'Filipino', isd: '+63', currency: 'PHP', continent: 'Asia', capital: 'Manila', flag: 'https://flagcdn.com/ph.svg' },
+    { code: 'VN', name: 'Vietnam', isoCode3: 'VNM', isoNumeric: '704', nationality: 'Vietnamese', isd: '+84', currency: 'VND', continent: 'Asia', capital: 'Hanoi', flag: 'https://flagcdn.com/vn.svg' },
+    { code: 'PK', name: 'Pakistan', isoCode3: 'PAK', isoNumeric: '586', nationality: 'Pakistani', isd: '+92', currency: 'PKR', continent: 'Asia', capital: 'Islamabad', flag: 'https://flagcdn.com/pk.svg' },
+    { code: 'BD', name: 'Bangladesh', isoCode3: 'BGD', isoNumeric: '050', nationality: 'Bangladeshi', isd: '+880', currency: 'BDT', continent: 'Asia', capital: 'Dhaka', flag: 'https://flagcdn.com/bd.svg' },
+    { code: 'AU', name: 'Australia', isoCode3: 'AUS', isoNumeric: '036', nationality: 'Australian', isd: '+61', currency: 'AUD', continent: 'Oceania', capital: 'Canberra', flag: 'https://flagcdn.com/au.svg' },
+    { code: 'NZ', name: 'New Zealand', isoCode3: 'NZL', isoNumeric: '554', nationality: 'New Zealander', isd: '+64', currency: 'NZD', continent: 'Oceania', capital: 'Wellington', flag: 'https://flagcdn.com/nz.svg' },
+    { code: 'BR', name: 'Brazil', isoCode3: 'BRA', isoNumeric: '076', nationality: 'Brazilian', isd: '+55', currency: 'BRL', continent: 'South America', capital: 'Brasilia', flag: 'https://flagcdn.com/br.svg' },
+    { code: 'MX', name: 'Mexico', isoCode3: 'MEX', isoNumeric: '484', nationality: 'Mexican', isd: '+52', currency: 'MXN', continent: 'North America', capital: 'Mexico City', flag: 'https://flagcdn.com/mx.svg' },
+    { code: 'AR', name: 'Argentina', isoCode3: 'ARG', isoNumeric: '032', nationality: 'Argentine', isd: '+54', currency: 'ARS', continent: 'South America', capital: 'Buenos Aires', flag: 'https://flagcdn.com/ar.svg' },
+    { code: 'CL', name: 'Chile', isoCode3: 'CHL', isoNumeric: '152', nationality: 'Chilean', isd: '+56', currency: 'CLP', continent: 'South America', capital: 'Santiago', flag: 'https://flagcdn.com/cl.svg' },
+    { code: 'CO', name: 'Colombia', isoCode3: 'COL', isoNumeric: '170', nationality: 'Colombian', isd: '+57', currency: 'COP', continent: 'South America', capital: 'Bogota', flag: 'https://flagcdn.com/co.svg' },
+    { code: 'PE', name: 'Peru', isoCode3: 'PER', isoNumeric: '604', nationality: 'Peruvian', isd: '+51', currency: 'PEN', continent: 'South America', capital: 'Lima', flag: 'https://flagcdn.com/pe.svg' },
+    { code: 'ZA', name: 'South Africa', isoCode3: 'ZAF', isoNumeric: '710', nationality: 'South African', isd: '+27', currency: 'ZAR', continent: 'Africa', capital: 'Pretoria', flag: 'https://flagcdn.com/za.svg' },
+    { code: 'NG', name: 'Nigeria', isoCode3: 'NGA', isoNumeric: '566', nationality: 'Nigerian', isd: '+234', currency: 'NGN', continent: 'Africa', capital: 'Abuja', flag: 'https://flagcdn.com/ng.svg' },
+    { code: 'KE', name: 'Kenya', isoCode3: 'KEN', isoNumeric: '404', nationality: 'Kenyan', isd: '+254', currency: 'KES', continent: 'Africa', capital: 'Nairobi', flag: 'https://flagcdn.com/ke.svg' },
+    { code: 'MA', name: 'Morocco', isoCode3: 'MAR', isoNumeric: '504', nationality: 'Moroccan', isd: '+212', currency: 'MAD', continent: 'Africa', capital: 'Rabat', flag: 'https://flagcdn.com/ma.svg' },
+    { code: 'GH', name: 'Ghana', isoCode3: 'GHA', isoNumeric: '288', nationality: 'Ghanaian', isd: '+233', currency: 'GHS', continent: 'Africa', capital: 'Accra', flag: 'https://flagcdn.com/gh.svg' },
+    { code: 'CZ', name: 'Czech Republic', isoCode3: 'CZE', isoNumeric: '203', nationality: 'Czech', isd: '+420', currency: 'CZK', continent: 'Europe', capital: 'Prague', flag: 'https://flagcdn.com/cz.svg' },
+    { code: 'HU', name: 'Hungary', isoCode3: 'HUN', isoNumeric: '348', nationality: 'Hungarian', isd: '+36', currency: 'HUF', continent: 'Europe', capital: 'Budapest', flag: 'https://flagcdn.com/hu.svg' },
+    { code: 'RO', name: 'Romania', isoCode3: 'ROU', isoNumeric: '642', nationality: 'Romanian', isd: '+40', currency: 'RON', continent: 'Europe', capital: 'Bucharest', flag: 'https://flagcdn.com/ro.svg' },
   ];
 
-  onCountryNameChange(val: string): void {
-    this.formName.set(val);
-    const matched = this.countryPresets.find((p) => p.name.toLowerCase() === val.trim().toLowerCase());
-    if (matched) {
-      this.applyPreset(matched);
+  // Presets reference for compatibility
+  get countryPresets(): CountryLookupRecord[] {
+    return this.lookupTableData;
+  }
+
+  // Lookup Table modal state (Section 1.A & 7)
+  isLookupModalOpen = signal<boolean>(false);
+  lookupSearch = signal<string>('');
+  lookupContinentFilter = signal<string>('All');
+  lookupTargetMode = signal<'form' | 'view'>('form');
+  lookupSelectedIndex = signal<number>(0);
+
+  lookupContinents = ['All', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Oceania'];
+
+  filteredLookupRecords = computed<CountryLookupRecord[]>(() => {
+    const q = this.lookupSearch().trim().toLowerCase();
+    const cont = this.lookupContinentFilter();
+    return this.lookupTableData.filter((r) => {
+      if (cont !== 'All' && r.continent.toLowerCase() !== cont.toLowerCase()) {
+        return false;
+      }
+      if (!q) return true;
+      return (
+        r.name.toLowerCase().includes(q) ||
+        r.code.toLowerCase().includes(q) ||
+        r.isoCode3.toLowerCase().includes(q) ||
+        r.isoNumeric.includes(q) ||
+        r.isd.includes(q) ||
+        r.currency.toLowerCase().includes(q) ||
+        (r.capital && r.capital.toLowerCase().includes(q))
+      );
+    });
+  });
+
+  openLookupModal(target: 'form' | 'view' = 'form'): void {
+    this.lookupTargetMode.set(target);
+    this.lookupSearch.set('');
+    this.lookupContinentFilter.set('All');
+    this.lookupSelectedIndex.set(0);
+    this.isLookupModalOpen.set(true);
+    setTimeout(() => {
+      const input = document.getElementById('lookup-search-input') as HTMLInputElement;
+      if (input) input.focus();
+    }, 100);
+  }
+
+  closeLookupModal(): void {
+    this.isLookupModalOpen.set(false);
+  }
+
+  selectLookupRecord(r: CountryLookupRecord): void {
+    if (this.lookupTargetMode() === 'view') {
+      this.viewCountryName.set(r.name);
+      this.showToast(`Selected "${r.name}" from Lookup Table. Click "Save Changes" to save.`);
+    } else {
+      this.formName.set(r.name);
+      this.formCode.set(r.code);
+      this.formIsoCode2.set(r.code);
+      this.formIsoCode3.set(r.isoCode3);
+      this.formIsoNumeric.set(r.isoNumeric);
+      this.formNationality.set(r.nationality);
+      this.formIsd.set(r.isd);
+      this.formCurrency.set(r.currency);
+      this.formContinent.set(r.continent);
+      this.selectedMasterCountry.set(null); // Explicitly came from separate Lookup Table
+      this.markFieldTouched('name');
+      this.markFieldTouched('isoCode2');
+      this.markFieldTouched('isoCode3');
+      this.markFieldTouched('isoNumeric');
+      this.markFieldTouched('isd');
+      this.markFieldTouched('currency');
+      this.showToast(`Loaded details for "${r.name}" from Lookup Table. Review and save.`);
     }
+    this.closeLookupModal();
+  }
+
+  onLookupKeydown(event: KeyboardEvent): void {
+    const list = this.filteredLookupRecords();
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.lookupSelectedIndex.update((i) => (i < list.length - 1 ? i + 1 : 0));
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.lookupSelectedIndex.update((i) => (i > 0 ? i - 1 : list.length - 1));
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      const sel = list[this.lookupSelectedIndex()];
+      if (sel) this.selectLookupRecord(sel);
+    } else if (event.key === 'Escape') {
+      this.closeLookupModal();
+    }
+  }
+
+  // =========================================================================
+  // Section 1.B: Autocomplete against Permanent Country Master Table
+  // =========================================================================
+  nameAutocompleteQuery = signal<string>('');
+  isNameAutocompleteOpen = signal<boolean>(false);
+  selectedMasterCountry = signal<Country | null>(null);
+
+  countryMasterSuggestions = computed<Country[]>(() => {
+    const q = this.nameAutocompleteQuery().trim().toLowerCase();
+    if (!q) return [];
+    return this.countryService.countries().filter((c) =>
+      c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
+    ).slice(0, 8);
+  });
+
+  // Warning when manually edited name differs from the selected master record
+  isNameDifferingFromMaster = computed<boolean>(() => {
+    const master = this.selectedMasterCountry();
+    if (!master) return false;
+    const current = this.formName().trim();
+    return !!current && current.toLowerCase() !== master.name.toLowerCase();
+  });
+
+  // Warning when entered name matches an existing country in Country Master
+  duplicateNameWarning = computed<Country | null>(() => {
+    const current = this.formName().trim().toLowerCase();
+    if (!current) return null;
+    const currentId = this.currentCountryId();
+    return this.countryService.countries().find(
+      (c) => c.name.toLowerCase() === current && c.id !== currentId
+    ) || null;
+  });
+
+  private nameDebounceTimer: any = null;
+  onCountryNameInput(val: string): void {
+    this.formName.set(val);
+    this.markFieldTouched('name');
+    clearTimeout(this.nameDebounceTimer);
+    this.nameDebounceTimer = setTimeout(() => {
+      this.nameAutocompleteQuery.set(val.trim());
+      this.isNameAutocompleteOpen.set(!!val.trim());
+    }, 180);
+  }
+
+  selectMasterSuggestion(c: Country): void {
+    this.formName.set(c.name);
+    this.selectedMasterCountry.set(c);
+    this.isNameAutocompleteOpen.set(false);
+    this.markFieldTouched('name');
+    this.showToast(`Selected "${c.name}" from Country Master.`);
+  }
+
+  closeNameAutocomplete(): void {
+    setTimeout(() => {
+      this.isNameAutocompleteOpen.set(false);
+    }, 200);
+  }
+
+  // Legacy helper mapping
+  onCountryNameChange(val: string): void {
+    this.onCountryNameInput(val);
   }
 
   onIsoCode2Change(val: string): void {
     const code = val.toUpperCase();
     this.formIsoCode2.set(code);
     this.formCode.set(code);
-    const matched = this.countryPresets.find((p) => p.code.toLowerCase() === code.toLowerCase() || p.isoCode2.toLowerCase() === code.toLowerCase());
+    const matched = this.lookupTableData.find((p) => p.code.toLowerCase() === code.toLowerCase() || p.code.toLowerCase() === code.toLowerCase());
     if (matched) {
       this.applyPreset(matched);
     } else {
@@ -1423,6 +1609,116 @@ export class CountryComponent implements OnInit {
     if (p.isd) this.formIsd.set(p.isd);
     if (p.currency) this.formCurrency.set(p.currency);
     if (p.continent) this.formContinent.set(p.continent);
+  }
+
+  // =========================================================================
+  // Section 4 & 5: View Page Editable Country Name & Autocomplete
+  // =========================================================================
+  viewCountryName = signal<string>('');
+  originalViewCountryName = signal<string>('');
+  isViewNameAutocompleteOpen = signal<boolean>(false);
+  viewNameAutocompleteQuery = signal<string>('');
+
+  isViewNameEdited = computed<boolean>(() => {
+    return this.viewCountryName().trim() !== this.originalViewCountryName().trim();
+  });
+
+  viewNameSuggestions = computed<Country[]>(() => {
+    const q = this.viewNameAutocompleteQuery().trim().toLowerCase();
+    if (!q) return [];
+    return this.countryService.countries().filter((c) =>
+      c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
+    ).slice(0, 8);
+  });
+
+  private viewNameDebounceTimer: any = null;
+  onViewCountryNameInput(val: string): void {
+    this.viewCountryName.set(val);
+    clearTimeout(this.viewNameDebounceTimer);
+    this.viewNameDebounceTimer = setTimeout(() => {
+      this.viewNameAutocompleteQuery.set(val.trim());
+      this.isViewNameAutocompleteOpen.set(!!val.trim());
+    }, 180);
+  }
+
+  selectViewNameSuggestion(c: Country): void {
+    this.viewCountryName.set(c.name);
+    this.isViewNameAutocompleteOpen.set(false);
+    this.showToast(`Selected "${c.name}" from Country Master.`);
+  }
+
+  saveViewCountryName(): void {
+    const newName = this.viewCountryName().trim();
+    if (!newName) {
+      this.showToast('Country Name cannot be empty.');
+      return;
+    }
+    const id = this.currentCountryId();
+    if (!id) return;
+    const oldName = this.originalViewCountryName();
+    const updated = this.countryService.updateCountry(id, { name: newName });
+    if (updated) {
+      this.originalViewCountryName.set(newName);
+      this.isViewNameAutocompleteOpen.set(false);
+      this.auditService.addAuditRecord({
+        recordId: id,
+        recordName: newName,
+        action: 'Updated',
+        description: `Country Name changed from "${oldName}" to "${newName}" on View page by Admin User`,
+        changes: [{ field: 'Country Name', previousValue: oldName, newValue: newName }],
+      });
+      this.showToast(`Country Name updated to "${newName}".`);
+    }
+  }
+
+  cancelViewCountryName(): void {
+    this.viewCountryName.set(this.originalViewCountryName());
+    this.isViewNameAutocompleteOpen.set(false);
+    this.showToast('Country Name edit cancelled.');
+  }
+
+  // =========================================================================
+  // Section 6: Default country toggle across Add, Edit, View
+  // =========================================================================
+  toggleViewCountryDefault(checked: boolean): void {
+    const id = this.currentCountryId();
+    if (!id) return;
+    const updated = this.countryService.updateCountry(id, { isDefault: checked });
+    if (updated) {
+      this.auditService.addAuditRecord({
+        recordId: id,
+        recordName: updated.name,
+        action: 'Updated',
+        description: `Default setting set to ${checked ? 'True' : 'False'} on View page by Admin User`,
+        changes: [{ field: 'Default', previousValue: (!checked).toString(), newValue: checked.toString() }],
+      });
+      this.showToast(checked ? `"${updated.name}" set as default country.` : `Default selection unset for "${updated.name}".`);
+    }
+  }
+
+  // =========================================================================
+  // Section 3: Right-Side Action Panel Navigation Matrix
+  // =========================================================================
+  openEditForActiveCountry(): void {
+    const activeId = this.currentCountryId();
+    const active = activeId ? this.countryService.getCountryById(activeId) : null;
+    const target = active || this.selectedMasterCountry() || this.viewCountry() || this.countryService.countries()[0];
+    if (target) {
+      this.openEdit(target);
+    } else {
+      this.showToast('No country record available to edit.');
+    }
+  }
+
+  openViewForActiveCountry(): void {
+    const activeId = this.currentCountryId();
+    const active = activeId ? this.countryService.getCountryById(activeId) : null;
+    const target = active || this.selectedMasterCountry() || this.viewCountry() || this.countryService.countries()[0];
+    if (target) {
+      this.openView(target);
+    } else {
+      this.showToast('No country record available to view.');
+    }
   }
 
   // Toast feedback message
@@ -1528,16 +1824,25 @@ export class CountryComponent implements OnInit {
         const c = this.countryService.countries().find((item) => item.id === id);
         if (c) {
           this.loadCountryIntoForm(c);
+          this.viewCountryName.set(c.name);
+          this.originalViewCountryName.set(c.name);
+          this.selectedMasterCountry.set(c);
         }
       }
 
       if (mode && ['overview', 'grid', 'list', 'add', 'edit', 'view'].includes(mode)) {
         if (mode === 'add') {
           this.currentCountryId.set(null);
+          this.selectedMasterCountry.set(null);
           this.clearForm();
         } else if ((mode === 'edit' || mode === 'view') && !this.formCode()) {
           const c = this.selectedCountry();
-          if (c) this.loadCountryIntoForm(c);
+          if (c) {
+            this.loadCountryIntoForm(c);
+            this.viewCountryName.set(c.name);
+            this.originalViewCountryName.set(c.name);
+            this.selectedMasterCountry.set(c);
+          }
         }
         if (this.viewMode() !== mode) {
           this.selectedCell.set(null);
@@ -2537,7 +2842,9 @@ export class CountryComponent implements OnInit {
       this.previousListViewMode.set(cur);
     }
     this.currentCountryId.set(null);
+    this.selectedMasterCountry.set(null);
     this.clearForm();
+    this.isSideSectionOpen.set(true);
     this.switchView('add');
   }
 
@@ -2549,6 +2856,10 @@ export class CountryComponent implements OnInit {
     this.highlightedCountryId.set(country.id);
     this.currentCountryId.set(country.id);
     this.loadCountryIntoForm(country);
+    this.viewCountryName.set(country.name);
+    this.originalViewCountryName.set(country.name);
+    this.isViewNameAutocompleteOpen.set(false);
+    this.isSideSectionOpen.set(true);
     this.viewMode.set('view');
     this.router.navigate([], {
       relativeTo: this.route,
@@ -2569,6 +2880,8 @@ export class CountryComponent implements OnInit {
     this.highlightedCountryId.set(country.id);
     this.currentCountryId.set(country.id);
     this.loadCountryIntoForm(country);
+    this.selectedMasterCountry.set(country);
+    this.isSideSectionOpen.set(true);
     this.viewMode.set('edit');
     this.router.navigate([], {
       relativeTo: this.route,
@@ -2970,6 +3283,7 @@ export class CountryComponent implements OnInit {
       if (fieldName === 'currency') sample = 'AED — UAE Dirham';
       if (fieldName === 'nationality') sample = 'Emirati';
       if (fieldName === 'search') sample = 'Germany';
+      if (fieldName === 'viewName') sample = 'United Arab Emirates';
 
       this.applySpokenText(fieldName, sample);
       this.activeListeningField.set(null);
@@ -2983,6 +3297,8 @@ export class CountryComponent implements OnInit {
     } else if (fieldName === 'name') {
       this.onCountryNameChange(clean);
       this.markFieldTouched('name');
+    } else if (fieldName === 'viewName') {
+      this.onViewCountryNameInput(clean);
     } else if (fieldName === 'code' || fieldName === 'isoCode2') {
       const codeUpper = clean.slice(0, 2).toUpperCase();
       this.onIsoCode2Change(codeUpper);

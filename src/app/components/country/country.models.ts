@@ -26,6 +26,20 @@ export interface Country {
   translations?: Record<string, string>;
 }
 
+export interface CountryLookupRecord {
+  name: string;
+  code: string;
+  isoCode2?: string;
+  isoCode3: string;
+  isoNumeric: string;
+  nationality: string;
+  isd: string;
+  currency: string;
+  continent: string;
+  capital?: string;
+  flag?: string;
+}
+
 export interface CountryStats {
   total: number;
   active: number;

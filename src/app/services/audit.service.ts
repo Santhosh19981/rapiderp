@@ -609,4 +609,29 @@ export class AuditService {
   printReport(): void {
     window.print();
   }
+
+  addAuditRecord(entry: Partial<AuditRecord>): void {
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const timestamp = `${pad(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}, ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    const newRecord: AuditRecord = {
+      id: `A-${Math.floor(10000 + Math.random() * 90000)}`,
+      referenceId: entry.referenceId || 'CNT-' + Math.floor(100 + Math.random() * 900),
+      timestamp,
+      rawDate: d.toISOString(),
+      user: entry.user || 'Admin User',
+      module: entry.module || 'Country',
+      recordName: entry.recordName || 'Country Master',
+      recordId: entry.recordId,
+      action: entry.action || 'Updated',
+      description: entry.description || 'Country Master record modified',
+      source: entry.source || 'Web',
+      status: entry.status || 'Active',
+      ipAddress: '192.0.2.1',
+      companyBranch: entry.companyBranch || 'Authorized scope',
+      changes: entry.changes || [],
+    };
+    this.masterAuditLog.update((prev) => [newRecord, ...prev]);
+  }
 }

@@ -2618,15 +2618,27 @@
                       [class.border-slate-300]="!isFieldInvalid('name') && !isNameFocused() && !isNameFloating()"
                       [class.dark:border-slate-600]="!isFieldInvalid('name') && !isNameFocused() && !isNameFloating()">
                       <input id="country-name" type="text" [ngModel]="formName()"
-                        (ngModelChange)="onCountryNameChange($event); markFieldTouched('name')"
+                        (ngModelChange)="onCountryNameInput($event)"
                         (focus)="isNameFocused.set(true)"
-                        (blur)="isNameFocused.set(false); markFieldTouched('name')"
+                        (blur)="isNameFocused.set(false); markFieldTouched('name'); closeNameAutocomplete()"
                         (keydown.enter)="$event.preventDefault()"
-                        name="countryName" required
+                        name="countryName" required autocomplete="off"
                         class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4]" />
 
-                      <!-- Right Actions: Translation icon, Red Error / Green Checkmark, Voice Icon (Section 2.1, 4.4, 13.2) -->
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
+                      <!-- Right Actions: Lookup button, Translation icon, Red Error / Green Checkmark, Voice Icon (Requirement 1 & 2) -->
+                      <div class="flex items-center gap-1.5 ml-2 shrink-0">
+                        <!-- Requirement 1.A: Searchable Lookup from separate Lookup Table -->
+                        <button type="button" (click)="openLookupModal('form')"
+                          class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
+                          title="Lookup Country from World Lookup Table">
+                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            <line x1="11" y1="8" x2="11" y2="14" />
+                            <line x1="8" y1="11" x2="14" y2="11" />
+                          </svg>
+                        </button>
+
                         <!-- Translation Trigger Button (Section 13.2) -->
                         <button type="button" (click)="toggleTranslations()"
                           class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
@@ -2662,7 +2674,7 @@
                         </span>
                         }
 
-                        <!-- Voice Input: visible ONLY on hover or focus (Section 2.1 & 2.2) -->
+                        <!-- Voice Input: visible ONLY on hover or focus (Requirement 2) -->
                         <button type="button" (click)="toggleVoiceInput('name')"
                           [attr.aria-label]="activeListeningField() === 'name' ? 'Listening...' : 'Voice input for Country Name'"
                           [title]="activeListeningField() === 'name' ? 'Listening...' : 'Voice input'"
@@ -2690,6 +2702,62 @@
                         Country Name <span style="color: #DC2626;" class="font-bold">*</span>
                       </label>
                     </div>
+
+                    <!-- Requirement 1.B: Autocomplete Suggestions Dropdown from Permanent Country Master Table -->
+                    @if (isNameAutocompleteOpen() && countryMasterSuggestions().length > 0) {
+                    <div
+                      class="absolute left-0 right-0 top-full mt-1.5 z-50 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden py-1 animate-in fade-in slide-in-from-top-1">
+                      <div class="px-3.5 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
+                        <span>Country Master Suggestions ({{ countryMasterSuggestions().length }})</span>
+                        <span class="text-[9px] text-[#00a6f4] font-semibold">Existing Records</span>
+                      </div>
+                      <div class="max-h-56 overflow-y-auto custom-scrollbar">
+                        @for (sug of countryMasterSuggestions(); track sug.id) {
+                        <button type="button" (mousedown)="selectMasterSuggestion(sug); $event.preventDefault()"
+                          class="w-full px-3.5 py-2.5 flex items-center justify-between text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer group">
+                          <div class="flex items-center gap-2.5 min-w-0">
+                            @if (sug.flag) {
+                            <img [src]="sug.flag" [alt]="sug.name" class="w-5 h-3.5 object-cover rounded shadow-2xs shrink-0" (error)="onFlagError($event, sug)" />
+                            } @else {
+                            <span class="w-5 h-3.5 rounded bg-slate-100 dark:bg-slate-700 text-[8px] font-bold flex items-center justify-center shrink-0 uppercase text-slate-600 dark:text-slate-300">{{ sug.code }}</span>
+                            }
+                            <div class="truncate">
+                              <span class="text-xs font-semibold text-slate-800 dark:text-white group-hover:text-[#00a6f4] transition-colors block truncate">{{ sug.name }}</span>
+                              <span class="text-[10px] text-slate-400 block">Code: {{ sug.code }} · ISD: {{ sug.isd }}</span>
+                            </div>
+                          </div>
+                          <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium shrink-0 group-hover:bg-[#00a6f4] group-hover:text-white transition-colors">Select</span>
+                        </button>
+                        }
+                      </div>
+                    </div>
+                    }
+
+                    <!-- Requirement 1: Warning if entered name differs from a selected master record -->
+                    @if (isNameDifferingFromMaster()) {
+                    <div class="mt-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 text-[11px] text-amber-800 dark:text-amber-300 flex items-start gap-2 animate-in fade-in">
+                      <svg class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <span>
+                        <strong>Warning:</strong> The entered Country Name differs from the selected master record (<strong>{{ selectedMasterCountry()?.name }}</strong>). The record will not silently overwrite the master.
+                      </span>
+                    </div>
+                    }
+
+                    <!-- Requirement 1: Uniqueness duplicate name warning -->
+                    @if (duplicateNameWarning(); as dup) {
+                    <div class="mt-1.5 px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200/80 dark:border-sky-800/60 text-[11px] text-[#00a6f4] dark:text-sky-300 flex items-start gap-2 animate-in fade-in">
+                      <svg class="w-4 h-4 text-[#00a6f4] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                      </svg>
+                      <span>
+                        Notice: "<strong>{{ dup.name }}</strong>" is already registered in Country Master (Code: <strong>{{ dup.code }}</strong>).
+                      </span>
+                    </div>
+                    }
 
                     <!-- Validation Message directly below text box (Section 4.3 & 12.1) -->
                     @if (isFieldInvalid('name') && nameError()) {
@@ -3343,8 +3411,9 @@
                   </div>
                 </div>
 
-                <!-- Row 3: Status Control Container (Section 5) -->
-                <div class="pt-1">
+                <!-- Row 3: Status Control & Default Switch (Section 5 & 6) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-1">
+                  <!-- Status Control Container (Section 5) -->
                   <div
                     class="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 flex flex-wrap items-center justify-between gap-3">
                     <span class="text-xs font-bold text-slate-800 dark:text-white" id="status-group-label">
@@ -3404,6 +3473,32 @@
                       </label>
                       }
                     </div>
+                  </div>
+
+                  <!-- Requirement 6: Default Switch Card (Add & Edit) -->
+                  <div
+                    class="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-between gap-4">
+                    <div class="space-y-0.5 min-w-0">
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-800 dark:text-white">Default</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full font-bold transition-colors"
+                          [class.bg-sky-100]="formDefault() === 'Yes'"
+                          [class.text-[#00a6f4]]="formDefault() === 'Yes'"
+                          [class.dark:bg-sky-950/80]="formDefault() === 'Yes'"
+                          [class.bg-slate-200]="formDefault() !== 'Yes'"
+                          [class.text-slate-600]="formDefault() !== 'Yes'"
+                          [class.dark:bg-slate-700]="formDefault() !== 'Yes'"
+                          [class.dark:text-slate-300]="formDefault() !== 'Yes'">
+                          Preview: Default = {{ formDefault() === 'Yes' ? 'True' : 'False' }}
+                        </span>
+                      </div>
+                      <p class="text-[11px] text-slate-500 dark:text-slate-400">Set this country as the default selection.</p>
+                    </div>
+                    <label class="form-switch m-0 cursor-pointer shrink-0" title="Set this country as the default selection">
+                      <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
+                        (change)="formDefault.set($any($event.target).checked ? 'Yes' : 'No')" />
+                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                    </label>
                   </div>
                 </div>
 
@@ -3597,6 +3692,77 @@
                 </button>
               </div>
 
+              <!-- Requirement 3: Right-Side Action Panel Page Actions Matrix -->
+              <div class="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 shadow-2xs space-y-2">
+                <div class="flex items-center justify-between px-1 pb-1 border-b border-slate-100 dark:border-slate-700/60">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Page Actions</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200/80 dark:border-sky-800/80 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#00a6f4] animate-pulse"></span>
+                    @if (viewMode() === 'add') { Add Active }
+                    @else if (viewMode() === 'edit') { Edit Active }
+                    @else if (viewMode() === 'view') { View Active }
+                  </span>
+                </div>
+
+                <div class="space-y-1 pt-0.5">
+                  <!-- On Add: show Edit, View -->
+                  <!-- On Edit: show Add, View -->
+                  <!-- On View: show Add, Edit -->
+                  @if (viewMode() !== 'add') {
+                  <button type="button" (click)="openCreate()"
+                    class="w-full flex items-center justify-between p-2 rounded-xl border border-sky-200/60 dark:border-sky-800/60 bg-sky-50/40 dark:bg-sky-950/30 text-slate-700 dark:text-slate-200 hover:bg-[#00a6f4] hover:text-white hover:border-[#00a6f4] transition-all cursor-pointer group shadow-2xs">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-lg bg-[#00a6f4]/15 group-hover:bg-white/20 text-[#00a6f4] group-hover:text-white flex items-center justify-center transition-colors">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                      </div>
+                      <span class="text-xs font-bold block leading-tight">Add Country</span>
+                    </div>
+                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  }
+
+                  @if (viewMode() !== 'edit') {
+                  <button type="button" (click)="openEditForActiveCountry()"
+                    class="w-full flex items-center justify-between p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-[#00a6f4] hover:text-white hover:border-[#00a6f4] transition-all cursor-pointer group shadow-2xs">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-lg bg-amber-50 dark:bg-amber-950/60 group-hover:bg-white/20 text-amber-500 group-hover:text-white flex items-center justify-center transition-colors">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </div>
+                      <span class="text-xs font-bold block leading-tight">Edit Country</span>
+                    </div>
+                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  }
+
+                  @if (viewMode() !== 'view') {
+                  <button type="button" (click)="openViewForActiveCountry()"
+                    class="w-full flex items-center justify-between p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-[#00a6f4] hover:text-white hover:border-[#00a6f4] transition-all cursor-pointer group shadow-2xs">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-lg bg-sky-50 dark:bg-sky-950/60 group-hover:bg-white/20 text-[#00a6f4] group-hover:text-white flex items-center justify-center transition-colors">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </div>
+                      <span class="text-xs font-bold block leading-tight">View Country</span>
+                    </div>
+                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  }
+                </div>
+              </div>
+
               <!-- Single Card Container with 7 Ordered Actions (Section 10.2 & 10.3) -->
               <div class="p-2 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 shadow-2xs space-y-1">
                 <!-- 1. Overview -->
@@ -3720,7 +3886,7 @@
               @if (viewMode() === 'add') {
               <button type="button" (click)="openClearModal()"
                 class="px-7 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-sm font-semibold hover:border-[#00a6f4] hover:text-[#00a6f4] hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
-                Clear
+                Reset
               </button>
               <button type="submit"
                 class="px-9 py-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-sm font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
@@ -3751,63 +3917,144 @@
             <!-- Left Side: Clean data in 3 rows (Image 5) -->
             <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-6 sm:p-10 space-y-8">
 
-              <!-- Row 1: Country Name, ISO Code2, ISO Code3 (Image 5) -->
+              <!-- Row 1: Country Name (Visibly Editable per Requirement 1, 4, 5), ISO Code2, ISO Code3 -->
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div>
-                  <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">Country Name</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block">{{ sc.name }}</span>
+                <!-- Visibly Editable Country Name in View Mode -->
+                <div class="relative w-full group">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Country Name</span>
+                    <span class="text-[10px] font-bold text-[#00a6f4] bg-sky-50 dark:bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-200/60 dark:border-sky-800/60">
+                      Editable in View
+                    </span>
+                  </div>
+                  <div class="relative flex items-center w-full h-[46px] px-4 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-2xs">
+                    <input type="text" [ngModel]="viewCountryName()"
+                      (ngModelChange)="onViewCountryNameInput($event)"
+                      placeholder="Enter or edit country name..."
+                      class="w-full h-full bg-transparent text-slate-900 dark:text-white text-sm font-bold focus:outline-none select-text caret-[#00a6f4]" />
+
+                    <div class="flex items-center gap-1.5 ml-2 shrink-0">
+                      <!-- Lookup from Lookup Table in View Mode (Requirement 1.A) -->
+                      <button type="button" (click)="openLookupModal('view')"
+                        class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
+                        title="Lookup Country from World Lookup Table">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="11" cy="11" r="8" />
+                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                          <line x1="11" y1="8" x2="11" y2="14" />
+                          <line x1="8" y1="11" x2="14" y2="11" />
+                        </svg>
+                      </button>
+
+                      <!-- Voice Input for Country Name in View Mode (Requirement 2) -->
+                      <button type="button" (click)="toggleVoiceInput('viewName')"
+                        [attr.aria-label]="activeListeningField() === 'viewName' ? 'Listening...' : 'Voice input for Country Name'"
+                        [title]="activeListeningField() === 'viewName' ? 'Listening...' : 'Voice input'"
+                        class="p-1 rounded-full cursor-pointer focus:outline-none transition-colors"
+                        [class.text-[#00a6f4]]="activeListeningField() !== 'viewName'"
+                        [class.text-red-500]="activeListeningField() === 'viewName'"
+                        [class.animate-pulse]="activeListeningField() === 'viewName'">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Autocomplete suggestions dropdown against Country Master in View Mode (Requirement 1.B) -->
+                  @if (isViewNameAutocompleteOpen() && viewNameSuggestions().length > 0) {
+                  <div
+                    class="absolute left-0 right-0 top-full mt-1.5 z-40 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden py-1 animate-in fade-in slide-in-from-top-1">
+                    <div class="px-3.5 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
+                      <span>Country Master Suggestions</span>
+                      <span class="text-[9px] text-[#00a6f4] font-semibold">Existing Records</span>
+                    </div>
+                    <div class="max-h-52 overflow-y-auto custom-scrollbar">
+                      @for (sug of viewNameSuggestions(); track sug.id) {
+                      <button type="button" (mousedown)="selectViewNameSuggestion(sug); $event.preventDefault()"
+                        class="w-full px-3.5 py-2 flex items-center justify-between text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer group">
+                        <div class="truncate">
+                          <span class="text-xs font-semibold text-slate-800 dark:text-white group-hover:text-[#00a6f4] transition-colors block truncate">{{ sug.name }}</span>
+                          <span class="text-[10px] text-slate-400 block">Code: {{ sug.code }}</span>
+                        </div>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium shrink-0 group-hover:bg-[#00a6f4] group-hover:text-white transition-colors">Select</span>
+                      </button>
+                      }
+                    </div>
+                  </div>
+                  }
+
+                  <!-- Inline Save / Cancel actions when Country Name is modified (Client Requirement 5) -->
+                  @if (isViewNameEdited()) {
+                  <div class="mt-2 p-2.5 rounded-xl bg-sky-50 dark:bg-sky-950/50 border border-sky-200 dark:border-sky-800 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-top-1">
+                    <div class="text-[11px] text-slate-700 dark:text-slate-300 truncate">
+                      Unsaved: changed from <span class="font-bold text-slate-500 line-through">"{{ originalViewCountryName() }}"</span>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <button type="button" (click)="cancelViewCountryName()"
+                        class="px-3 py-1 rounded-full border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-xs font-semibold hover:bg-white dark:hover:bg-slate-800 cursor-pointer transition">
+                        Cancel
+                      </button>
+                      <button type="button" (click)="saveViewCountryName()"
+                        class="px-3.5 py-1 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold cursor-pointer shadow-xs transition">
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                  }
                 </div>
-                <div>
+
+                <!-- ISO Code 2 -->
+                <div class="p-3.5 rounded-2xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
                   <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">ISO Code2</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block uppercase">{{ sc.isoCode2 ||
-                    sc.code }}</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block uppercase">{{ sc.isoCode2 || sc.code }}</span>
                 </div>
-                <div>
+
+                <!-- ISO Code 3 -->
+                <div class="p-3.5 rounded-2xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
                   <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">ISO Code3</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block uppercase">{{ sc.isoCode3 ||
-                    'ARE' }}</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block uppercase">{{ sc.isoCode3 || 'ARE' }}</span>
                 </div>
               </div>
 
-              <!-- Row 2: ISO Numeric, Phone Dial Code, Default Currency (Image 5) -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div>
+              <!-- Row 2: 4 Columns (ISO Numeric, Phone Dial Code, Default Currency, Nationality) per Requirement 5 -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="p-3.5 rounded-2xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
                   <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">ISO Numeric</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block">{{ sc.isoNumeric || '784'
-                    }}</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block">{{ sc.isoNumeric || '784' }}</span>
                 </div>
-                <div>
+                <div class="p-3.5 rounded-2xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
                   <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">Phone Dial Code</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block">{{ sc.isd }}</span>
                 </div>
-                <div>
-                  <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">Default
-                    Currency</span>
+                <div class="p-3.5 rounded-2xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
+                  <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">Default Currency</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block">{{ sc.currency }}</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
+                  <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">Nationality</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block">{{ sc.nationality || 'Emirati' }}</span>
                 </div>
               </div>
 
-              <!-- Row 3: Nationality, Flag, Status (Image 5) -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
-                <div>
-                  <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">Nationality</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block">{{ sc.nationality || 'Emirati'
-                    }}</span>
-                </div>
-                <div>
+              <!-- Row 3: 4 Columns (Flag, Status, and Default Switch Card spanning 2 cols) per Requirement 5 & 6 -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-center">
+                <!-- Flag -->
+                <div class="p-3.5 rounded-2xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
                   <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">Flag</span>
                   <div class="flex items-center gap-2 mt-0.5">
-                    <span class="text-sm font-bold text-slate-900 dark:text-white uppercase">{{ sc.isoCode2 || sc.code
-                      }}</span>
+                    <span class="text-sm font-bold text-slate-900 dark:text-white uppercase">{{ sc.isoCode2 || sc.code }}</span>
                     <img [src]="sc.flag || ('https://flagcdn.com/' + (sc.isoCode2 || sc.code).toLowerCase() + '.svg')"
                       [alt]="sc.name"
-                      class="h-4 w-6 object-cover rounded shadow-2xs border border-slate-200 dark:border-slate-600 inline-block"
+                      class="h-5 w-7 object-cover rounded shadow-2xs border border-slate-200 dark:border-slate-600 inline-block"
                       (error)="onFlagError($event, sc)" />
-                    <span class="text-sm font-bold text-slate-900 dark:text-white uppercase">{{ sc.isoCode3 || sc.code
-                      }}</span>
+                    <span class="text-sm font-bold text-slate-900 dark:text-white uppercase">{{ sc.isoCode3 || sc.code }}</span>
                   </div>
                 </div>
-                <div>
+
+                <!-- Status -->
+                <div class="p-3.5 rounded-2xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
                   <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">Status</span>
                   <div class="mt-0.5">
                     <span class="px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5"
@@ -3823,6 +4070,31 @@
                       {{ sc.status }}
                     </span>
                   </div>
+                </div>
+
+                <!-- Requirement 6: Default Switch Card in View Mode (spanning 2 columns) -->
+                <div class="lg:col-span-2 p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-between gap-4">
+                  <div class="space-y-0.5 min-w-0">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold text-slate-800 dark:text-white">Default</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded-full font-bold transition-colors"
+                        [class.bg-sky-100]="sc.isDefault"
+                        [class.text-[#00a6f4]]="sc.isDefault"
+                        [class.dark:bg-sky-950/80]="sc.isDefault"
+                        [class.bg-slate-200]="!sc.isDefault"
+                        [class.text-slate-600]="!sc.isDefault"
+                        [class.dark:bg-slate-700]="!sc.isDefault"
+                        [class.dark:text-slate-300]="!sc.isDefault">
+                        Preview: Default = {{ sc.isDefault ? 'True' : 'False' }}
+                      </span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Set this country as the default selection.</p>
+                  </div>
+                  <label class="form-switch m-0 cursor-pointer shrink-0" title="Set this country as the default selection">
+                    <input type="checkbox" class="sr-only" [checked]="sc.isDefault"
+                      (change)="toggleViewCountryDefault($any($event.target).checked)" />
+                    <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                  </label>
                 </div>
               </div>
 
@@ -3870,6 +4142,51 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
+              </div>
+
+              <!-- Requirement 3: Right-Side Action Panel Page Actions Matrix -->
+              <div class="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 shadow-2xs space-y-2">
+                <div class="flex items-center justify-between px-1 pb-1 border-b border-slate-100 dark:border-slate-700/60">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Page Actions</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200/80 dark:border-sky-800/80 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#00a6f4] animate-pulse"></span>
+                    View Active
+                  </span>
+                </div>
+
+                <div class="space-y-1 pt-0.5">
+                  <!-- On View: show Add, Edit (Requirement 3: Never show current page) -->
+                  <button type="button" (click)="openCreate()"
+                    class="w-full flex items-center justify-between p-2 rounded-xl border border-sky-200/60 dark:border-sky-800/60 bg-sky-50/40 dark:bg-sky-950/30 text-slate-700 dark:text-slate-200 hover:bg-[#00a6f4] hover:text-white hover:border-[#00a6f4] transition-all cursor-pointer group shadow-2xs">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-lg bg-[#00a6f4]/15 group-hover:bg-white/20 text-[#00a6f4] group-hover:text-white flex items-center justify-center transition-colors">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                      </div>
+                      <span class="text-xs font-bold block leading-tight">Add Country</span>
+                    </div>
+                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+
+                  <button type="button" (click)="openEdit(sc)"
+                    class="w-full flex items-center justify-between p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-[#00a6f4] hover:text-white hover:border-[#00a6f4] transition-all cursor-pointer group shadow-2xs">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-lg bg-amber-50 dark:bg-amber-950/60 group-hover:bg-white/20 text-amber-500 group-hover:text-white flex items-center justify-center transition-colors">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </div>
+                      <span class="text-xs font-bold block leading-tight">Edit Country</span>
+                    </div>
+                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               <!-- Single Card Container with 7 Ordered Actions (Section 10.2 & 10.3) -->
@@ -3975,6 +4292,17 @@
                 <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                 <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Keep</span>
               </label>
+            </div>
+
+            <!-- Center: AI Assistance Button (Requirement 2: Available on Add, Edit, and View pages) -->
+            <div class="flex items-center justify-center">
+              <button type="button" (click)="openAiModal()"
+                class="px-5 py-2 rounded-full border border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-xs font-bold transition flex items-center gap-2 shadow-2xs cursor-pointer">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+                </svg>
+                <span>AI Assistance</span>
+              </button>
             </div>
 
             <!-- Right: Edit Country & Export Buttons (Section 11.3) -->
@@ -5115,6 +5443,155 @@
           Overwrite
         </button>
       </div>
+    </div>
+  </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 7.10 SECTION 1.A & 7: SEARCHABLE MASTER WORLD COUNTRY LOOKUP TABLE MODAL  -->
+  <!-- ========================================================================= -->
+  @if (isLookupModalOpen()) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-xs p-3 sm:p-5 animate-in fade-in duration-200"
+    (click)="closeLookupModal()" (keydown)="onLookupKeydown($event)">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-4xl w-full shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-slate-200 dark:border-slate-700 animate-in zoom-in-95"
+      (click)="$event.stopPropagation()">
+
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">World Country Lookup Table</h3>
+            <p class="text-xs text-slate-400">Search and select a country from the official Lookup Table (60+ standard records)</p>
+          </div>
+        </div>
+        <button type="button" (click)="closeLookupModal()" class="w-8 h-8 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center transition cursor-pointer" title="Close (Esc)">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Search & Continent Filter Bar -->
+      <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40 shrink-0 space-y-3">
+        <div class="relative w-full">
+          <input id="lookup-search-input" type="text" [ngModel]="lookupSearch()" (ngModelChange)="lookupSearch.set($event); lookupSelectedIndex.set(0)"
+            placeholder="Search by country name, ISO code, dial code, currency, or capital... (↑ / ↓ to navigate, Enter to select)"
+            class="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 transition" />
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          @if (lookupSearch()) {
+          <button type="button" (click)="lookupSearch.set(''); lookupSelectedIndex.set(0)" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+          }
+        </div>
+
+        <!-- Continent Filter Chips -->
+        <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 text-xs">
+          <span class="text-slate-400 font-semibold shrink-0 mr-1">Continent:</span>
+          @for (continent of lookupContinents; track continent) {
+          <button type="button" (click)="lookupContinentFilter.set(continent); lookupSelectedIndex.set(0)"
+            class="px-3 py-1 rounded-full font-semibold transition cursor-pointer shrink-0"
+            [class.bg-[#00a6f4]]="lookupContinentFilter() === continent"
+            [class.text-white]="lookupContinentFilter() === continent"
+            [class.bg-white]="lookupContinentFilter() !== continent"
+            [class.dark:bg-slate-800]="lookupContinentFilter() !== continent"
+            [class.border]="lookupContinentFilter() !== continent"
+            [class.border-slate-200]="lookupContinentFilter() !== continent"
+            [class.dark:border-slate-700]="lookupContinentFilter() !== continent"
+            [class.text-slate-600]="lookupContinentFilter() !== continent"
+            [class.dark:text-slate-300]="lookupContinentFilter() !== continent">
+            {{ continent }}
+          </button>
+          }
+        </div>
+      </div>
+
+      <!-- Informational banner -->
+      <div class="px-6 py-2 bg-sky-50/60 dark:bg-sky-950/30 border-b border-sky-100 dark:border-sky-900/40 text-[11px] text-slate-600 dark:text-slate-300 flex items-center justify-between shrink-0">
+        <span>Showing <strong>{{ filteredLookupRecords().length }}</strong> matching records in World Lookup Table</span>
+        <span class="text-slate-400 italic">Selecting a record fills the fields without saving. You can modify text before saving.</span>
+      </div>
+
+      <!-- Records Table -->
+      <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-4 sm:p-6">
+        @if (filteredLookupRecords().length === 0) {
+        <div class="py-12 text-center text-slate-400 space-y-2">
+          <svg class="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <p class="text-sm font-semibold">No countries found matching "{{ lookupSearch() }}"</p>
+          <p class="text-xs">Try searching by official country name, ISO 2 or 3 letter code, or calling code.</p>
+        </div>
+        } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          @for (rec of filteredLookupRecords(); track rec.code; let idx = $index) {
+          <div role="button" tabindex="0" (click)="selectLookupRecord(rec)" (keydown.enter)="selectLookupRecord(rec)"
+            class="p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 text-left group"
+            [class.border-[#00a6f4]]="lookupSelectedIndex() === idx"
+            [class.ring-2]="lookupSelectedIndex() === idx"
+            [class.ring-[#00a6f4]/30]="lookupSelectedIndex() === idx"
+            [class.bg-sky-50/60]="lookupSelectedIndex() === idx"
+            [class.dark:bg-slate-700/60]="lookupSelectedIndex() === idx"
+            [class.border-slate-200]="lookupSelectedIndex() !== idx"
+            [class.dark:border-slate-700]="lookupSelectedIndex() !== idx"
+            [class.bg-white]="lookupSelectedIndex() !== idx"
+            [class.dark:bg-slate-800]="lookupSelectedIndex() !== idx"
+            [class.hover:border-[#00a6f4]]="true">
+            <div class="flex items-center gap-3 min-w-0">
+              <img [src]="rec.flag" [alt]="rec.name" class="w-9 h-6 object-cover rounded shadow-2xs border border-slate-200 dark:border-slate-700 shrink-0" (error)="onFlagError($event)" />
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#00a6f4] transition-colors truncate">
+                    {{ rec.name }}
+                  </span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                    {{ rec.code }} / {{ rec.isoCode3 }}
+                  </span>
+                </div>
+                <div class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+                  <span>ISD: <strong class="text-slate-600 dark:text-slate-300 font-mono">{{ rec.isd }}</strong></span>
+                  <span>·</span>
+                  <span>Currency: <strong class="text-slate-600 dark:text-slate-300">{{ rec.currency }}</strong></span>
+                  <span>·</span>
+                  <span class="truncate">{{ rec.continent }}</span>
+                </div>
+              </div>
+            </div>
+            <button type="button" (click)="selectLookupRecord(rec); $event.stopPropagation()"
+              class="px-3.5 py-1.5 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] group-hover:bg-[#00a6f4] group-hover:text-white border border-sky-200/80 dark:border-sky-800 text-xs font-bold transition cursor-pointer shrink-0">
+              Select
+            </button>
+          </div>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-between text-xs text-slate-500 shrink-0">
+        <div class="flex items-center gap-3">
+          <span><kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[10px]">↑</kbd> <kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[10px]">↓</kbd> to navigate</span>
+          <span><kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[10px]">Enter</kbd> to select</span>
+          <span><kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[10px]">Esc</kbd> to close</span>
+        </div>
+        <button type="button" (click)="closeLookupModal()"
+          class="px-5 py-1.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer">
+          Close
+        </button>
+      </div>
+
     </div>
   </div>
   }

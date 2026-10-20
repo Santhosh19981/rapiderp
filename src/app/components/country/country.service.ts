@@ -929,6 +929,8 @@ export class CountryService {
     const nationality = data.nationality || (data.name ? `${data.name} citizen` : 'Citizen');
     const flag = data.flag || '';
 
+    const isDefault = !!data.isDefault;
+
     const newCountry: Country = {
       id: newId,
       name: data.name || 'Untitled Country',
@@ -940,7 +942,7 @@ export class CountryService {
       isd: data.isd || '+1',
       currency: data.currency ?? 'USD',
       status: (data.status as any) || 'Active',
-      isDefault: !!data.isDefault,
+      isDefault: isDefault,
       translations: data.translations,
       draftedAt: data.status === 'Draft' ? new Date().toISOString().split('T')[0] : null,
       continent: data.continent || 'Global',
@@ -955,13 +957,20 @@ export class CountryService {
       isUpdated: false,
     };
 
-    this.countries.update((prev) => [newCountry, ...prev]);
+    this.countries.update((prev) => {
+      let list = prev;
+      if (isDefault) {
+        // Enforce single default country rule: unset previous default
+        list = list.map((c) => (c.isDefault ? { ...c, isDefault: false } : c));
+      }
+      return [newCountry, ...list];
+    });
     this.save();
 
     this.addHistory(
       newCountry.id,
       newCountry.name,
-      `Created country "${newCountry.name}" (${newCountry.code})`,
+      `Created country "${newCountry.name}" (${newCountry.code})${isDefault ? ' · Set as Default' : ''} by Admin User`,
       newCountry.status,
       'None'
     );
@@ -970,7 +979,9 @@ export class CountryService {
   }
 
   updateCountry(id: string, changes: Partial<Country>): Country | null {
+    const prevCountry = this.getCountryById(id);
     let updatedCountry: Country | null = null;
+    const willBeDefault = changes.isDefault === true;
 
     this.countries.update((list) =>
       list.map((c) => {
@@ -980,7 +991,7 @@ export class CountryService {
           const isoCode3 = (changes.isoCode3 || c.isoCode3 || `${isoCode2}A`).toUpperCase();
           const isoNumeric = changes.isoNumeric || c.isoNumeric || '840';
           const nationality = changes.nationality || c.nationality || (changes.name ? `${changes.name} citizen` : 'Citizen');
-          const flag = changes.flag || c.flag || `https://flagcdn.com/${code.toLowerCase()}.svg`;
+          const flag = changes.flag !== undefined ? (changes.flag || '') : (c.flag || '');
           updatedCountry = {
             ...c,
             ...changes,
@@ -997,22 +1008,53 @@ export class CountryService {
           };
           return updatedCountry;
         }
+        // Enforce single default rule: if another country is set to default, unset this one
+        if (willBeDefault && c.isDefault) {
+          return { ...c, isDefault: false, updatedAt: new Date().toISOString().split('T')[0] };
+        }
         return c;
       })
     );
 
     if (updatedCountry) {
       this.save();
-      this.addHistory(
-        id,
-        (updatedCountry as Country).name,
-        `Updated country details for "${(updatedCountry as Country).name}"`,
-        (updatedCountry as Country).status,
-        'None'
-      );
+      const up = updatedCountry as Country;
+
+      // Audit requirement: Record who changed the country name or Default setting
+      if (changes.name && prevCountry && changes.name.trim() !== prevCountry.name.trim()) {
+        this.addHistory(
+          id,
+          up.name,
+          `Country Name changed from "${prevCountry.name}" to "${changes.name}" by Admin User`,
+          up.status,
+          'None'
+        );
+      }
+      if (changes.isDefault !== undefined && prevCountry && changes.isDefault !== prevCountry.isDefault) {
+        this.addHistory(
+          id,
+          up.name,
+          `Default setting changed to ${changes.isDefault ? 'True' : 'False'} by Admin User`,
+          up.status,
+          'None'
+        );
+      }
+      if (!changes.name && changes.isDefault === undefined) {
+        this.addHistory(
+          id,
+          up.name,
+          `Updated country details for "${up.name}" by Admin User`,
+          up.status,
+          'None'
+        );
+      }
     }
 
     return updatedCountry;
+  }
+
+  setDefaultCountry(id: string): Country | null {
+    return this.updateCountry(id, { isDefault: true });
   }
 
   deleteCountry(id: string): boolean {
