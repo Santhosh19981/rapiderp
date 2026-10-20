@@ -2733,14 +2733,14 @@
                     </div>
                     }
 
-                    <!-- Requirement 1: Warning if entered name differs from a selected master record -->
-                    @if (isNameDifferingFromMaster()) {
-                    <div class="mt-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 text-[11px] text-amber-800 dark:text-amber-300 flex items-start gap-2 animate-in fade-in">
+                    <!-- Requirement 1: Warning if entered name differs from a selected master or lookup record -->
+                    @if (isNameDifferingFromRecord()) {
+                    <div id="difference-warning-banner" class="mt-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 text-[11px] text-amber-800 dark:text-amber-300 flex items-start gap-2 animate-in fade-in">
                       <svg class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                       <span>
-                        <strong>Warning:</strong> The entered Country Name differs from the selected master record (<strong>{{ selectedMasterCountry()?.name }}</strong>). The record will not silently overwrite the master.
+                        <strong>Notice:</strong> Modified name differs from selected record: <strong>{{ selectedReferenceRecordName() }}</strong>. The record will not silently overwrite the original master record.
                       </span>
                     </div>
                     }
@@ -3494,8 +3494,8 @@
                       </div>
                       <p class="text-[11px] text-slate-500 dark:text-slate-400">Set this country as the default selection.</p>
                     </div>
-                    <label class="form-switch m-0 cursor-pointer shrink-0" title="Set this country as the default selection">
-                      <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
+                    <label class="form-switch m-0 cursor-pointer shrink-0" for="country-default-switch" title="Set this country as the default selection">
+                      <input type="checkbox" id="country-default-switch" class="sr-only" [checked]="formDefault() === 'Yes'"
                         (change)="formDefault.set($any($event.target).checked ? 'Yes' : 'No')" />
                       <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                     </label>

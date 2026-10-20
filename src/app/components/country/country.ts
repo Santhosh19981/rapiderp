@@ -803,8 +803,9 @@ export class CountryComponent implements OnInit {
   isIsdFocused = signal<boolean>(false);
   isNameFocused = signal<boolean>(false);
 
-  // Right side section accordion state (closed by default)
-  isSideSectionOpen = signal<boolean>(false);
+  // Right side section accordion state (open by default on desktop)
+  isSideSectionOpen = signal<boolean>(true);
+  selectedReferenceRecordName = signal<string | null>(null);
 
   // Floating notch label computed states
   isNameFloating = computed(() => this.isNameFocused() || !!this.formName()?.trim());
@@ -1494,6 +1495,7 @@ export class CountryComponent implements OnInit {
       this.formCurrency.set(r.currency);
       this.formContinent.set(r.continent);
       this.selectedMasterCountry.set(null); // Explicitly came from separate Lookup Table
+      this.selectedReferenceRecordName.set(r.name);
       this.markFieldTouched('name');
       this.markFieldTouched('isoCode2');
       this.markFieldTouched('isoCode3');
@@ -1537,6 +1539,14 @@ export class CountryComponent implements OnInit {
     ).slice(0, 8);
   });
 
+  // Warning when manually edited name differs from the selected reference record (Master or Lookup table)
+  isNameDifferingFromRecord = computed<boolean>(() => {
+    const ref = this.selectedReferenceRecordName();
+    if (!ref) return false;
+    const current = this.formName().trim();
+    return !!current && current.toLowerCase() !== ref.toLowerCase();
+  });
+
   // Warning when manually edited name differs from the selected master record
   isNameDifferingFromMaster = computed<boolean>(() => {
     const master = this.selectedMasterCountry();
@@ -1569,6 +1579,7 @@ export class CountryComponent implements OnInit {
   selectMasterSuggestion(c: Country): void {
     this.formName.set(c.name);
     this.selectedMasterCountry.set(c);
+    this.selectedReferenceRecordName.set(c.name);
     this.isNameAutocompleteOpen.set(false);
     this.markFieldTouched('name');
     this.showToast(`Selected "${c.name}" from Country Master.`);
@@ -2928,6 +2939,8 @@ export class CountryComponent implements OnInit {
     this.formFlag.set(country.flag || null);
     this.formContinent.set(country.continent || '');
     this.formTranslations.set({ ...(country.translations || {}) });
+    this.selectedReferenceRecordName.set(country.name);
+    this.selectedMasterCountry.set(country);
   }
 
   // Empty form for Create, and the target of the Reset confirmation
@@ -2945,6 +2958,8 @@ export class CountryComponent implements OnInit {
     this.formFlag.set(null);
     this.formContinent.set('');
     this.formTranslations.set({});
+    this.selectedReferenceRecordName.set(null);
+    this.selectedMasterCountry.set(null);
     this.flagTab.set('drop');
     this.isTranslationOpen.set(false);
     this.isActionListOpen.set(false);
