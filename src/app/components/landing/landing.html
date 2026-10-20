@@ -1680,22 +1680,17 @@
   <!-- Dedicated Full-Width Bottom Footer (Fixed at bottom spanning COMPLETE LEFT across under sidebar) -->
   <footer
     class="h-10 w-full bg-white dark:bg-slate-800 border-t border-slate-200/90 dark:border-slate-700/80 px-4 sm:px-6 flex items-center justify-between shrink-0 text-xs text-slate-500 dark:text-slate-400 z-40 select-none shadow-xs relative">
-    <!-- Left: Powered By Rapid ERP -->
+    <!-- Left: Powered By Rapid -->
     <div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
       <span>{{ navService.translateText('Powered By') }}</span>
-      <span class="font-bold text-[#00a6f4] dark:text-[#38bdf8]">Rapid ERP</span>
+      <span class="font-bold text-[#00a6f4] dark:text-[#38bdf8]">Rapid</span>
     </div>
 
     <!-- Center: Need help? (Horizontally centered) -->
     <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
       <button type="button" (click)="toggleHelpModal()"
         class="text-xs text-slate-600 hover:text-[#00a6f4] dark:text-slate-300 dark:hover:text-[#38bdf8] font-normal transition-colors cursor-pointer flex items-center gap-2 group"
-        title="Rapid ERP Documentation & Support">
-        <div class="w-5 h-5 rounded-full bg-[#e0f2fe] dark:bg-sky-950 flex items-center justify-center shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-2.5 h-2.5 fill-[#00a6f4] text-[#00a6f4]" viewBox="0 0 24 24">
-            <polygon points="7 5 19 12 7 19 7 5" />
-          </svg>
-        </div>
+        title="Rapid Documentation & Support">
         <span>{{ navService.translateText('Need help?') }}</span>
       </button>
     </div>
@@ -1707,12 +1702,6 @@
         title="Open 24/7 Live Support Chat">
         <span class="w-2 h-2 rounded-full bg-[#10b981] inline-block shrink-0"></span>
         <span>{{ navService.translateText('Live Chat') }}</span>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#00a6f4] dark:group-hover:text-[#38bdf8] transition-colors"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
       </button>
     </div>
   </footer>

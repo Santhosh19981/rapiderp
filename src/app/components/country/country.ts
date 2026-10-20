@@ -92,6 +92,25 @@ export class CountryComponent implements OnInit {
   // Current view mode: 'overview' | 'grid' | 'list' | 'add' | 'edit' | 'view'
   viewMode = signal<CountryViewMode>('overview');
 
+  pageHeaderTitle = computed<string>(() => {
+    switch (this.viewMode()) {
+      case 'grid':
+        return 'Country Grid View';
+      case 'list':
+        return 'Country List View';
+      case 'overview':
+        return 'Country Overview';
+      case 'add':
+        return 'Add Country';
+      case 'edit':
+        return 'Edit Country';
+      case 'view':
+        return 'Country Details';
+      default:
+        return 'Country Grid View';
+    }
+  });
+
   // Country Master Overview State & Metrics (Per Rapid ERP Master Specifications)
   overviewPeriod = signal<string>('Last 30 days');
   isOverviewPeriodDropdownOpen = signal<boolean>(false);
@@ -365,9 +384,9 @@ export class CountryComponent implements OnInit {
   filterDraft = signal<Record<FilterFieldKey, Set<string>> | null>(null);
   appliedFilter = signal<Partial<Record<FilterFieldKey, Set<string>>> | null>(null);
 
-  // Grid lazy loading: 20 cards first, 20 more each time the bottom is reached
-  readonly gridPageSize = 20;
-  gridVisibleCount = signal<number>(20);
+  // Grid lazy loading: 25 cards first, 25 more each time the bottom is reached
+  readonly gridPageSize = 25;
+  gridVisibleCount = signal<number>(25);
   isLoadingMore = signal<boolean>(false);
 
   // Export & Import & History & Delete modals
@@ -2152,7 +2171,7 @@ export class CountryComponent implements OnInit {
 
   sortKey = signal<ListSortKey | null>(null);
   sortDir = signal<'asc' | 'desc'>('asc');
-  pageSize = signal<number>(10);
+  pageSize = signal<number>(25);
   page = signal<number>(1);
   selectedIds = signal<Set<string>>(new Set());
 
