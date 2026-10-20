@@ -52,6 +52,82 @@
   background: #52c5f8;
 }
 
+/* Table vertical scrollbar is explicitly enabled; horizontal scrollbar is handled exclusively by middle-columns-scrollbar-track between fixed columns */
+.country-table-scroll {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #cbd5e1 #f8fafc !important;
+}
+
+html.dark .country-table-scroll,
+.dark .country-table-scroll {
+  scrollbar-color: #475569 #0f172a !important;
+}
+
+.country-table-scroll::-webkit-scrollbar {
+  width: 8px !important;
+  height: 0px !important;
+  display: block !important;
+}
+
+.country-table-scroll::-webkit-scrollbar:vertical {
+  width: 8px !important;
+  display: block !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-track:vertical {
+  background: #f8fafc !important;
+  border-left: 1px solid #e2e8f0 !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-thumb:vertical {
+  background: #cbd5e1 !important;
+  border-radius: 9999px !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
+  background: #00a6f4 !important;
+}
+
+html.dark .country-table-scroll::-webkit-scrollbar-track:vertical,
+.dark .country-table-scroll::-webkit-scrollbar-track:vertical {
+  background: #0f172a !important;
+  border-left: 1px solid #334155 !important;
+}
+
+html.dark .country-table-scroll::-webkit-scrollbar-thumb:vertical,
+.dark .country-table-scroll::-webkit-scrollbar-thumb:vertical {
+  background: #475569 !important;
+}
+
+html.dark .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover,
+.dark .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
+  background: #38bdf8 !important;
+}
+
+.country-table-scroll::-webkit-scrollbar:horizontal {
+  display: none !important;
+  height: 0px !important;
+  width: 0px !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-button,
+.country-table-scroll::-webkit-scrollbar-button:horizontal {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-track:horizontal,
+.country-table-scroll::-webkit-scrollbar-thumb:horizontal,
+.country-table-scroll::-webkit-scrollbar-corner {
+  display: none !important;
+  background: transparent !important;
+  height: 0px !important;
+  width: 0px !important;
+}
+
 html.dark .custom-scrollbar,
 .dark .custom-scrollbar {
   scrollbar-color: #38bdf8 #0f172a;
@@ -271,6 +347,73 @@ button.accordion-trigger-btn:not(:disabled):hover svg,
 button.accordion-trigger-btn:not(:disabled):hover div,
 .accordion-trigger-btn:hover div {
   background-color: #ffffff !important;
+}
+
+/* ========================================================================= */
+/* ========================================================================= */
+/* 5. GLOBAL FLOATING THEME BLUE POINTER TOOLTIP (Marked Type - Image 3)     */
+/* Rendered on document.body: Never clipped by overflow:hidden, precise caret */
+/* ========================================================================= */
+#rapiderp-global-tooltip {
+  position: fixed;
+  z-index: 9999999;
+  pointer-events: none;
+  background: #00a6f4;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  padding: 4.5px 9.5px;
+  border-radius: 7px;
+  white-space: nowrap;
+  box-shadow: 0 4px 18px -2px rgba(0, 166, 244, 0.45), 0 2px 6px -1px rgba(0, 0, 0, 0.15);
+  line-height: 1.25;
+  transition: opacity 0.14s cubic-bezier(0.16, 1, 0.3, 1), transform 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.94);
+}
+
+#rapiderp-global-tooltip.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+#rapiderp-tooltip-caret {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  pointer-events: none;
+}
+
+/* Caret pointing UP ▲ (Tooltip is below element - Exact match to user Reference Image 3) */
+#rapiderp-global-tooltip[data-pos="bottom"] #rapiderp-tooltip-caret {
+  top: -6px;
+  border-width: 0 5px 6px 5px;
+  border-color: transparent transparent #00a6f4 transparent;
+}
+
+/* Caret pointing DOWN ▼ (Tooltip is above element) */
+#rapiderp-global-tooltip[data-pos="top"] #rapiderp-tooltip-caret {
+  bottom: -6px;
+  border-width: 6px 5px 0 5px;
+  border-color: #00a6f4 transparent transparent transparent;
+}
+
+/* Caret pointing RIGHT ▶ (Tooltip is to the left of element) */
+#rapiderp-global-tooltip[data-pos="left"] #rapiderp-tooltip-caret {
+  right: -6px;
+  border-width: 5px 0 5px 6px;
+  border-color: transparent transparent transparent #00a6f4;
+}
+
+/* Caret pointing LEFT ◀ (Tooltip is to the right of element) */
+#rapiderp-global-tooltip[data-pos="right"] #rapiderp-tooltip-caret {
+  left: -6px;
+  border-width: 5px 6px 5px 0;
+  border-color: transparent #00a6f4 transparent transparent;
 }
 
 
