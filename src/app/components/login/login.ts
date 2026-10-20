@@ -100,7 +100,7 @@ export class Login {
         if (u !== 'admin@gcc.com') {
           this.usernameError.set('Invalid username. Access restricted to authorized accounts.');
         }
-        if (p !== '') {
+        if (p !== '!VKaIPxQTFKM6ANB') {
           this.passwordError.set('Invalid password. Please check your credentials.');
         }
       }
