@@ -441,9 +441,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
   ];
   readonly shareAttachmentOptions: { id: 'pdf' | 'excel' | 'csv' | 'docs'; label: string }[] = [
     { id: 'pdf', label: 'PDF' },
-    { id: 'excel', label: 'Excel' },
-    { id: 'csv', label: 'CSV' },
-    { id: 'docs', label: 'Doc' },
   ];
   shareContacts = signal<Set<string>>(new Set());
   shareAttachments = signal<Set<'pdf' | 'excel' | 'csv' | 'docs'>>(new Set(['pdf']));
@@ -543,11 +540,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
   openRecycleBinModal(): void {
     this.recycleBinSearch.set('');
     this.selectedBinIds.set(new Set());
+    this.activityModalTab.set('deleted');
     this.isRecycleBinModalOpen.set(true);
+    this.isActivityModalOpen.set(true);
   }
 
   closeRecycleBinModal(): void {
     this.isRecycleBinModalOpen.set(false);
+    this.isActivityModalOpen.set(false);
   }
 
   toggleBinSelection(id: string): void {
@@ -670,11 +670,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isHistoryDateFilterOpen.set(false);
     this.expandedHistoryIds.set(new Set(['H-003', 'A-10048']));
     this.historyScope.set(scope || (this.viewMode() === 'view' || this.viewMode() === 'edit' ? 'current' : 'all'));
+    this.activityModalTab.set('history');
     this.isHistoryModalOpen.set(true);
+    this.isActivityModalOpen.set(true);
   }
 
   closeHistoryModal(): void {
     this.isHistoryModalOpen.set(false);
+    this.isActivityModalOpen.set(false);
   }
 
   viewFullAuditHistory(): void {
@@ -820,6 +823,11 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isStatusDropdownOpen.update(v => !v);
   }
 
+  toggleDefault(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.formDefault.update(v => v === 'Yes' ? 'No' : 'Yes');
+  }
+
   setStatus(status: FormStatus, event?: Event): void {
     if (event) event.stopPropagation();
     this.formStatus.set(status);
@@ -841,10 +849,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const idx = curId ? list.findIndex(c => c.id === curId) : -1;
     const prevIdx = idx > 0 ? idx - 1 : list.length - 1;
     const target = list[prevIdx];
-    if (this.viewMode() === 'view') {
-      this.openView(target);
-    } else {
+    if (this.viewMode() === 'edit') {
       this.openEdit(target);
+    } else {
+      this.openView(target);
     }
   }
 
@@ -855,10 +863,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const idx = curId ? list.findIndex(c => c.id === curId) : -1;
     const nextIdx = idx >= 0 && idx < list.length - 1 ? idx + 1 : 0;
     const target = list[nextIdx];
-    if (this.viewMode() === 'view') {
-      this.openView(target);
-    } else {
+    if (this.viewMode() === 'edit') {
       this.openEdit(target);
+    } else {
+      this.openView(target);
     }
   }
   formFlag = signal<string | null>(null);
@@ -879,8 +887,104 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isSideSectionOpen = signal<boolean>(true);
   selectedReferenceRecordName = signal<string | null>(null);
 
+  // Unified Action Panel Modals (Points 36, 37, 38)
+  isActivityModalOpen = signal<boolean>(false);
+  activityModalTab = signal<'history' | 'deleted'>('history');
+  isExportModalOpen = signal<boolean>(false);
+
+  openActivityModal(tab: 'history' | 'deleted' = 'history'): void {
+    this.activityModalTab.set(tab);
+    if (tab === 'history') {
+      this.isRecycleBinModalOpen.set(false);
+      this.openHistoryModal(this.currentCountryId() ? 'current' : 'all');
+    } else {
+      this.isHistoryModalOpen.set(false);
+      this.openRecycleBinModal();
+    }
+    this.isActivityModalOpen.set(true);
+  }
+
+  setActivityTab(tab: 'history' | 'deleted'): void {
+    this.activityModalTab.set(tab);
+    if (tab === 'history') {
+      this.isRecycleBinModalOpen.set(false);
+      this.openHistoryModal(this.currentCountryId() ? 'current' : 'all');
+    } else {
+      this.isHistoryModalOpen.set(false);
+      this.openRecycleBinModal();
+    }
+  }
+
+  closeActivityModal(): void {
+    this.isActivityModalOpen.set(false);
+    this.isHistoryModalOpen.set(false);
+    this.isRecycleBinModalOpen.set(false);
+  }
+
+  openExportModal(): void {
+    if (this.exportFields().size === 0) {
+      this.exportFields.set(new Set(this.exportFieldDefs.map(f => f.key)));
+    }
+    this.exportSearch.set('');
+    this.isExportModalOpen.set(true);
+  }
+
+  closeExportModal(): void {
+    this.isExportModalOpen.set(false);
+  }
+
+  openShareModalUnified(channel: 'email' | 'whatsapp' = 'email'): void {
+    this.openShare(channel);
+  }
+
   toggleSideSection(): void {
     this.isSideSectionOpen.update(open => !open);
+  }
+
+  focusNextField(arg1: string, arg2?: string | Event, arg3?: Event): void {
+    let currentField = '';
+    let nextId = '';
+    let event: Event | undefined;
+
+    if (arg2 instanceof Event || (arg2 && typeof arg2 !== 'string')) {
+      // 2-arg call: focusNextField(nextId, event)
+      nextId = arg1;
+      event = arg2 as Event;
+    } else if (typeof arg2 === 'string') {
+      // 3-arg call: focusNextField(currentField, nextId, event)
+      currentField = arg1;
+      nextId = arg2;
+      event = arg3;
+    } else {
+      nextId = arg1;
+    }
+
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (currentField) {
+      let val = '';
+      switch (currentField) {
+        case 'name': val = this.formName()?.trim() || ''; break;
+        case 'isoCode2': val = this.formIsoCode2()?.trim() || ''; break;
+        case 'isoCode3': val = this.formIsoCode3()?.trim() || ''; break;
+        case 'isoNumeric': val = this.formIsoNumeric()?.trim() || ''; break;
+        case 'isd': val = this.formIsd()?.trim() || ''; break;
+        case 'currency': val = this.formCurrency()?.trim() || ''; break;
+        case 'nationality': val = this.formNationality()?.trim() || ''; break;
+        default: val = 'ok'; break;
+      }
+      if (!val) {
+        this.markFieldTouched(currentField);
+        return;
+      }
+    }
+
+    const el = document.getElementById(nextId);
+    if (el) {
+      el.focus();
+    }
   }
 
   // Floating notch label computed states: keep label on top notch so placeholder is clean & crisp
@@ -984,8 +1088,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const raw = this.formCurrency();
     const val = raw ? raw.trim() : '';
     if (!val) return 'Default Currency is required.';
-    if (!/^[A-Za-z]{3}(\s*—.*)?$/.test(val)) {
-      return 'Please select or enter a valid 3-letter currency (e.g. USD, EUR, AED).';
+    if (val.length < 2) {
+      return 'Please enter a valid currency (e.g. USD, EUR, AED).';
     }
     return null;
   });
@@ -1038,6 +1142,34 @@ export class CountryComponent implements OnInit, AfterViewInit {
     { code: 'MXN', name: 'Mexican Peso', symbol: '$' },
   ];
   isCurrencyDropdownOpen = signal<boolean>(false);
+
+  filteredCurrencyList = computed(() => {
+    const raw = this.formCurrency();
+    const query = raw ? raw.trim().toLowerCase() : '';
+    if (!query) {
+      return this.currencyMasterList;
+    }
+    const isExact = this.currencyMasterList.some(
+      (c) => `${c.code} — ${c.name}`.toLowerCase() === query || c.code.toLowerCase() === query
+    );
+    if (isExact) {
+      return this.currencyMasterList;
+    }
+    const filtered = this.currencyMasterList.filter(
+      (c) =>
+        c.code.toLowerCase().includes(query) ||
+        c.name.toLowerCase().includes(query) ||
+        c.symbol.toLowerCase().includes(query)
+    );
+    return filtered.length > 0 ? filtered : this.currencyMasterList;
+  });
+
+  toggleCurrencyDropdown(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.isCurrencyDropdownOpen.update((v) => !v);
+  }
 
   selectCurrencyOption(c: { code: string; name: string }): void {
     this.formCurrency.set(`${c.code} — ${c.name}`);
@@ -1223,6 +1355,12 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.aiExtractedData.set(null);
     this.aiShowConflictPrompt.set(false);
     this.isAiModalOpen.set(true);
+    setTimeout(() => {
+      const el = document.getElementById('ai-textarea');
+      if (el) {
+        el.focus();
+      }
+    }, 100);
   }
 
   closeAiModal(): void {
@@ -1257,6 +1395,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         }
         this.aiExtractedData.set(extracted);
         this.aiIsProcessing.set(false);
+        this.onAiConfirmClick();
       } catch (err: any) {
         this.aiErrorMessage.set('Failed to process text. Preserving your input for review.');
         this.aiIsProcessing.set(false);
@@ -1516,7 +1655,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   lookupSearch = signal<string>('');
   lookupContinentFilter = signal<string>('All');
   lookupTargetMode = signal<'form' | 'view'>('form');
-  lookupSelectedIndex = signal<number>(0);
+  lookupSelectedIndex = signal<number>(-1);
 
   lookupContinents = ['All', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Oceania'];
 
@@ -1544,7 +1683,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.lookupTargetMode.set(target);
     this.lookupSearch.set('');
     this.lookupContinentFilter.set('All');
-    this.lookupSelectedIndex.set(0);
+    this.lookupSelectedIndex.set(-1);
     this.isLookupModalOpen.set(true);
     setTimeout(() => {
       const input = document.getElementById('lookup-search-input') as HTMLInputElement;
@@ -3231,13 +3370,36 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   exportPdfDirect(): void {
-    const c = this.selectedCountry();
-    if (c) this.downloadCountryPdf(c);
+    if (this.exportFields().size === 0) {
+      this.showToast('Please select at least one column to export to PDF');
+      return;
+    }
+    this.runExport('pdf');
+    this.closeExportModal();
+  }
+
+  exportExcelDirect(): void {
+    this.runExport('excel');
+    this.closeExportModal();
+  }
+
+  exportCsvDirect(): void {
+    this.runExport('csv');
+    this.closeExportModal();
+  }
+
+  exportDocsDirect(): void {
+    this.runExport('docs');
+    this.closeExportModal();
   }
 
   exportPrintDirect(): void {
-    const c = this.selectedCountry();
-    if (c) this.printCountry(c);
+    if (this.exportFields().size === 0) {
+      this.showToast('Please select at least one column to print');
+      return;
+    }
+    this.runExport('print');
+    this.closeExportModal();
   }
 
   discardMinimized(form: MinimizedCountryForm, event: MouseEvent): void {
@@ -3467,7 +3629,11 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (fieldName === 'isd') sample = '+971';
       if (fieldName === 'currency') sample = 'AED — UAE Dirham';
       if (fieldName === 'nationality') sample = 'Emirati';
+      if (fieldName === 'flagSearch') sample = 'United';
       if (fieldName === 'search') sample = 'Germany';
+      if (fieldName === 'lookupSearch') sample = 'Germany';
+      if (fieldName === 'translationSearch') sample = 'Arabic';
+      if (fieldName.startsWith('translation-')) sample = 'Emirates';
       if (fieldName === 'viewName') sample = 'United Arab Emirates';
 
       this.applySpokenText(fieldName, sample);
@@ -3479,6 +3645,15 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const clean = text.trim();
     if (fieldName === 'search') {
       this.searchQuery.set(clean);
+    } else if (fieldName === 'flagSearch') {
+      this.gallerySearch.set(clean);
+    } else if (fieldName === 'lookupSearch') {
+      this.lookupSearch.set(clean);
+    } else if (fieldName === 'translationSearch') {
+      this.translationSearch.set(clean);
+    } else if (fieldName.startsWith('translation-')) {
+      const langCode = fieldName.replace('translation-', '');
+      this.setTranslationDraft(langCode, clean);
     } else if (fieldName === 'name') {
       this.onCountryNameChange(clean);
       this.markFieldTouched('name');
@@ -3914,16 +4089,18 @@ export class CountryComponent implements OnInit, AfterViewInit {
     return v === undefined || v === null || v === '' ? '—' : String(v);
   }
 
-  // Selected fields in panel order; Docs and share attachments fall back to every field
   private exportTable(useAllIfEmpty = false): { headers: string[]; rows: string[][] } | null {
     let fields = this.exportFieldDefs.filter((f) => this.exportFields().has(f.key));
     if (!fields.length) {
       if (!useAllIfEmpty) return null;
       fields = this.exportFieldDefs;
     }
+    const list = (this.viewMode() === 'view' && this.selectedCountry())
+      ? [this.selectedCountry()!]
+      : this.filteredCountries();
     return {
       headers: fields.map((f) => f.label),
-      rows: this.filteredCountries().map((c) => fields.map((f) => this.exportValue(c, f.key))),
+      rows: list.map((c) => fields.map((f) => this.exportValue(c, f.key))),
     };
   }
 

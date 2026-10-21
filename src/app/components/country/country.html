@@ -38,7 +38,9 @@
         <!-- Left: Dynamic Title on top, Breadcrumb below Title across all pages -->
         <div class="flex items-center gap-3 min-w-0">
           <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500/15 via-[#00a6f4]/20 to-blue-600/15 border border-sky-200/80 dark:border-sky-800 text-[#00a6f4] flex items-center justify-center shrink-0 shadow-xs">
+            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500/15 via-[#00a6f4]/20 to-blue-600/15 border border-sky-200/80 dark:border-sky-800 text-[#00a6f4] flex items-center justify-center shrink-0 shadow-xs cursor-pointer"
+            [attr.data-tooltip]="(viewMode() === 'add' || viewMode() === 'edit') ? ('Administrator > General > Country Master > ' + pageHeaderTitle()) : null"
+            data-tooltip-pos="bottom">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10" />
               <line x1="2" y1="12" x2="22" y2="12" />
@@ -47,9 +49,11 @@
           </div>
           <div class="min-w-0 flex flex-col justify-center">
             <!-- 1. First: Page Title (Dynamic across all pages) -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2"
+              [attr.data-tooltip]="(viewMode() === 'add' || viewMode() === 'edit') ? ('Administrator > General > Country Master > ' + pageHeaderTitle()) : null"
+              data-tooltip-pos="bottom">
               <h1
-                class="text-[17px] sm:text-[19px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
+                class="text-[17px] sm:text-[19px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate cursor-default">
                 {{ pageHeaderTitle() }}
               </h1>
               @if (viewMode() === 'overview') {
@@ -61,6 +65,7 @@
             </div>
 
             <!-- 2. Below: Dynamic Breadcrumb (Administrator > General > Country Master > [Current Action/View]) -->
+            @if (viewMode() !== 'add' && viewMode() !== 'edit') {
             <nav class="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium leading-none mt-1 select-none"
               aria-label="Breadcrumb">
               <button type="button" (click)="navService.navigateTo('dashboard')"
@@ -93,8 +98,43 @@
                 @else if (viewMode() === 'grid') { Country Grid View }
               </span>
             </nav>
+            }
           </div>
         </div>
+
+        <!-- Center: Record Navigator in Page Title Bar (Centered on page: absolute left-1/2 -translate-x-1/2) -->
+        @if (viewMode() === 'add' || viewMode() === 'edit' || viewMode() === 'view') {
+        <div
+          class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex items-center gap-2 select-none z-10">
+          <!-- Left arrow: Circular button per Screenshot 1 -->
+          <button type="button" (click)="goToPreviousCountry()"
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center transition cursor-pointer shadow-2xs"
+            title="Previous Country" data-tooltip="Previous Country" data-tooltip-pos="bottom">
+            <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
+          <!-- Center: Circular badge with current record number per Screenshot 1 -->
+          <div
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[#00a6f4] font-bold text-base sm:text-lg flex items-center justify-center cursor-default select-none shadow-2xs"
+            [title]="'Countries ' + currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 47)"
+            data-tooltip-pos="bottom">
+            <span class="text-[#00a6f4]">{{ currentCountryDisplayNumber() }}</span>
+          </div>
+
+          <!-- Right arrow: Circular button per Screenshot 1 -->
+          <button type="button" (click)="goToNextCountry()"
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center transition cursor-pointer shadow-2xs"
+            title="Next Country" data-tooltip="Next Country" data-tooltip-pos="bottom">
+            <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+        }
 
         <!-- Right Side: View Switchers and Action buttons -->
         <div class="flex items-center gap-2 sm:gap-2.5">
@@ -183,6 +223,7 @@
           </button>
           } @else {
           <!-- In Add/Edit/View mode -->
+          @if (viewMode() !== 'add' && viewMode() !== 'edit') {
           <button type="button" (click)="switchView('overview')"
             class="h-9 px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-[#00a6f4] hover:text-[#00a6f4] flex items-center gap-1.5 text-xs font-semibold transition cursor-pointer shadow-2xs"
             title="Overview Dashboard">
@@ -194,6 +235,7 @@
             </svg>
             <span>Overview</span>
           </button>
+          }
 
           @if (viewMode() === 'view') {
           <button type="button" (click)="openCreate()"
@@ -239,8 +281,7 @@
           }
 
           <button type="button" (click)="returnFromFormView()"
-            class="h-9 px-4 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200/80 dark:border-sky-800 hover:bg-[#1863c0] hover:text-white hover:border-[#1863c0] flex items-center gap-2 text-sm font-semibold transition-all duration-200 cursor-pointer shadow-2xs"
-            title="Back to Country List">
+            class="h-9 px-4 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200/80 dark:border-sky-800 hover:bg-[#1863c0] hover:text-white hover:border-[#1863c0] flex items-center gap-2 text-sm font-semibold transition-all duration-200 cursor-pointer shadow-2xs">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="8" y1="6" x2="21" y2="6" stroke-linecap="round" />
               <line x1="8" y1="12" x2="21" y2="12" stroke-linecap="round" />
@@ -2786,74 +2827,46 @@
         <!-- VIEW B: ADD / EDIT COUNTRY — Exact Replica of MOD-4, Image 2, 3, 4        -->
         <!-- ======================================================================= -->
         @if (viewMode() === 'add' || viewMode() === 'edit') {
-        <form (ngSubmit)="onSubmitForm()"
+        <form (ngSubmit)="onSubmitForm()" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
           class="country-panel w-full flex flex-col flex-1 min-h-0 bg-white dark:bg-slate-800 overflow-hidden">
+
+          <!-- Invisible dummy inputs to prevent Google Chrome aggressive autofill -->
+          <div style="position: absolute; top: -9999px; left: -9999px; opacity: 0; pointer-events: none;"
+            aria-hidden="true">
+            <input type="text" name="fake_user_prevent_autofill" tabindex="-1" autocomplete="off" />
+            <input type="password" name="fake_pass_prevent_autofill" tabindex="-1" autocomplete="off" />
+          </div>
 
           <!-- Body split into Form Info on Left & Sidebar on Right -->
           <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative">
-            <!-- Left Side: Add / Edit Country Info (Row 1 fixed, remaining rows scroll) -->
+            <!-- Left Side: Add / Edit Country Info (Full unified scroll & left alignment per Point 17) -->
             <div class="flex-1 flex flex-col min-h-0 overflow-hidden">
-
-              <!-- Pinned 1st Row: Country Name *, ISO Code2 *, ISO Code3 * (Section 4.8 & 8.2) -->
               <div
-                class="shrink-0 px-6 pt-6 pb-4 sm:px-8 sm:pt-7 sm:pb-5 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700/60 z-20">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                  <!-- Country Name * (Section 4.8 & 13) -->
-                  <div class="relative w-full group" data-popover>
-                    <!-- Contextual Tooltip on focus (Section 12.3) -->
-                    @if (isNameFocused() && !isFieldInvalid('name')) {
-                    <div
-                      class="absolute -top-7 left-4 z-30 px-2.5 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-medium shadow-md animate-in fade-in pointer-events-none select-none">
-                      Official country name in English or approved Unicode script
-                    </div>
-                    }
+                class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar px-6 py-6 sm:px-8 sm:py-7 space-y-6">
+
+                <!-- Row 1: Country Name *, ISO Code2 *, ISO Code3 * (Unified scroll & left alignment) -->
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-5">
+                  <!-- Country Name * (Column 6 per Point 5) -->
+                  <div class="relative w-full group sm:col-span-6" data-popover>
 
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#DC2626]]="isFieldInvalid('name')" [class.ring-2]="isNameFocused()"
-                      [class.ring-[#DC2626]/20]="isNameFocused() && isFieldInvalid('name')"
-                      [class.border-[#00a6f4]]="!isFieldInvalid('name') && isNameFocused()"
-                      [class.ring-[#00a6f4]/20]="!isFieldInvalid('name') && isNameFocused()"
-                      [class.border-slate-800]="!isFieldInvalid('name') && !isNameFocused()"
-                      [class.dark:border-slate-400]="!isFieldInvalid('name') && !isNameFocused()">
-                      <input id="country-name" type="text" [ngModel]="formName()" placeholder="Enter country name"
+                      [class.border-[#00a6f4]]="isNameFocused()" [class.ring-2]="isNameFocused()"
+                      [class.ring-[#00a6f4]/20]="isNameFocused()" [class.border-slate-300]="!isNameFocused()"
+                      [class.dark:border-slate-600]="!isNameFocused()">
+                      <input id="country-name" type="text" [ngModel]="formName()" placeholder=""
                         (ngModelChange)="onCountryNameInput($event)" (focus)="isNameFocused.set(true)"
                         (blur)="isNameFocused.set(false); markFieldTouched('name'); closeNameAutocomplete()"
-                        (keydown.enter)="$event.preventDefault()" name="countryName" required autocomplete="off"
+                        (keydown.enter)="focusNextField('name', 'country-iso2', $event)" name="app_country_name"
+                        required autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+                        data-form-type="other" data-lpignore="true" aria-autocomplete="none"
                         class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
 
-                      <!-- Right Actions: Lookup button, Translation icon, Red Error / Green Checkmark, Voice Icon (Requirement 1 & 2) -->
-                      <div class="flex items-center gap-1.5 ml-2 shrink-0">
-                        <!-- Requirement 1.A: Searchable Lookup from separate Lookup Table -->
-                        <button type="button" (click)="openLookupModal('form')"
-                          class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
-                          title="Lookup Country from World Lookup Table">
-                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            <line x1="11" y1="8" x2="11" y2="14" />
-                            <line x1="8" y1="11" x2="14" y2="11" />
-                          </svg>
-                        </button>
-
-                        <!-- Translation Trigger Button (Section 13.2) -->
-                        <button type="button" (click)="toggleTranslations()"
-                          class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
-                          [class.text-[#00a6f4]]="isTranslationOpen() || translationCount() > 0"
-                          title="Name Translations (10 languages)">
-                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="m5 8 6 6" />
-                            <path d="m4 14 6-6 2-3" />
-                            <path d="M2 5h12" />
-                            <path d="M7 2h1" />
-                            <path d="m22 22-5-10-5 10" />
-                            <path d="M14 18h6" />
-                          </svg>
-                        </button>
-
+                      <!-- Right Actions: Translation icon, Lookup button, Voice Icon on hover sliding in from right to left (Change 1) -->
+                      <div class="flex items-center gap-1.5 ml-auto shrink-0">
                         <!-- Red × error icon on invalid field ONLY when field has content -->
                         @if (isFieldInvalid('name') && formName().trim()) {
-                        <span class="text-[#DC2626] flex items-center justify-center animate-in zoom-in-75 shrink-0"
+                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
                           title="Invalid Country Name">
                           <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.5">
@@ -2872,32 +2885,75 @@
                         </span>
                         }
 
-                        <!-- Voice Input: visible ONLY on hover or focus (Requirement 2) -->
-                        <button type="button" (click)="toggleVoiceInput('name')"
-                          [attr.aria-label]="activeListeningField() === 'name' ? 'Listening...' : 'Voice input for Country Name'"
-                          [title]="activeListeningField() === 'name' ? 'Listening...' : 'Voice input'"
-                          class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150"
-                          [class.opacity-0]="activeListeningField() !== 'name'" [class.group-hover:opacity-100]="true"
-                          [class.group-focus-within:opacity-100]="true" [class.focus:opacity-100]="true"
-                          [class.text-[#00a6f4]]="activeListeningField() !== 'name'"
-                          [class.text-red-500]="activeListeningField() === 'name'"
-                          [class.animate-pulse]="activeListeningField() === 'name'">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                        <!-- 1. Translation Trigger Button (Change 1) -->
+                        <button type="button" (click)="toggleTranslations()"
+                          class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
+                          [class.text-[#00a6f4]]="isTranslationOpen() || translationCount() > 0" title="Translation">
+                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m5 8 6 6" />
+                            <path d="m4 14 6-6 2-3" />
+                            <path d="M2 5h12" />
+                            <path d="M7 2h1" />
+                            <path d="m22 22-5-10-5 10" />
+                            <path d="M14 18h6" />
                           </svg>
                         </button>
+
+                        <!-- 2. Searchable Lookup from separate Lookup Table (Change 1) -->
+                        <button type="button" (click)="openLookupModal('form')"
+                          class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
+                          title="Lookup Country from World Lookup Table">
+                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            <line x1="11" y1="8" x2="11" y2="14" />
+                            <line x1="8" y1="11" x2="14" y2="11" />
+                          </svg>
+                        </button>
+
+                        <!-- 3. Voice Input: 0-width by default so Translation & Lookup are at the far right; on hover joins sliding in from right to left (Change 1) -->
+                        <div class="overflow-hidden flex items-center transition-all duration-300 ease-out"
+                          [class.max-w-0]="activeListeningField() !== 'name'"
+                          [class.opacity-0]="activeListeningField() !== 'name'"
+                          [class.translate-x-4]="activeListeningField() !== 'name'"
+                          [class.pointer-events-none]="activeListeningField() !== 'name'"
+                          [class.group-hover:max-w-[32px]]="true" [class.group-hover:opacity-100]="true"
+                          [class.group-hover:translate-x-0]="true" [class.group-hover:pointer-events-auto]="true"
+                          [class.group-focus-within:max-w-[32px]]="true" [class.group-focus-within:opacity-100]="true"
+                          [class.group-focus-within:translate-x-0]="true"
+                          [class.group-focus-within:pointer-events-auto]="true">
+                          <button type="button" (click)="toggleVoiceInput('name')"
+                            [attr.aria-label]="activeListeningField() === 'name' ? 'Listening...' : 'Voice input for Country Name'"
+                            [title]="activeListeningField() === 'name' ? 'Listening...' : 'Voice input'"
+                            class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
+                            [class.text-[#00a6f4]]="activeListeningField() !== 'name'"
+                            [class.text-red-500]="activeListeningField() === 'name'"
+                            [class.animate-pulse]="activeListeningField() === 'name'">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor" stroke-width="1.8">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
 
-                      <!-- Floating Notch Label with #DC2626 Asterisk (Section 4.1 & 4.2) -->
+                      <!-- Floating Notch Label: * grey by default, red on focus (Point 1) -->
                       <label for="country-name"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isNameFloating()" [class.resting]="!isNameFloating()"
-                        [class.is-error]="isFieldInvalid('name')">
-                        Country Name <span style="color: #DC2626;" class="font-bold">*</span>
+                        [class.floating-top]="isNameFloating()" [class.resting]="!isNameFloating()">
+                        Country Name <span [class.text-[#DC2626]]="isNameFocused()"
+                          [class.text-slate-400]="!isNameFocused()" class="font-bold transition-colors">*</span>
                       </label>
                     </div>
+
+                    <!-- Helper text below text box (Point 2) -->
+                    @if (isNameFocused() && !isFieldInvalid('name')) {
+                    <p
+                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
+                      Official country name in English or approved Unicode script
+                    </p>
+                    }
 
                     <!-- Requirement 1.B: Autocomplete Suggestions Dropdown from Permanent Country Master Table -->
                     @if (isNameAutocompleteOpen() && countryMasterSuggestions().length > 0) {
@@ -2975,7 +3031,7 @@
                     <!-- Validation Message directly below text box (Section 4.3 & 12.1) -->
                     @if (isFieldInvalid('name') && nameError()) {
                     <p
-                      class="text-[11px] text-[#DC2626] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
                       <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="12" cy="12" r="10" />
@@ -2986,15 +3042,17 @@
                     </p>
                     }
 
-                    <!-- Section 13: Country Name Translation Popover Panel -->
+                    <!-- Section 13: Country Name Translation Popover Panel (Image 3 eye-catching design) -->
                     @if (isTranslationOpen()) {
+                    <div class="fixed inset-0 z-40 bg-black/20 backdrop-blur-[1px]"
+                      (click)="isTranslationOpen.set(false)"></div>
                     <div
-                      class="absolute z-40 left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl p-4 space-y-3"
-                      (keydown.escape)="isTranslationOpen.set(false)">
+                      class="absolute z-50 left-0 right-0 sm:left-0 sm:w-[500px] mt-2 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/90 dark:border-slate-700 shadow-2xl shadow-sky-950/20 p-4 sm:p-5 space-y-3 max-h-[380px] flex flex-col animate-in fade-in zoom-in-95 duration-150"
+                      (keydown.escape)="isTranslationOpen.set(false)" (click)="$event.stopPropagation()">
                       <div
-                        class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
+                        class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-700 shrink-0">
                         <div class="flex items-center gap-2">
-                          <svg class="w-4 h-4 text-[#00a6f4]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          <svg class="w-4.5 h-4.5 text-[#00a6f4]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <path d="m5 8 6 6" />
                             <path d="m4 14 6-6 2-3" />
@@ -3006,7 +3064,7 @@
                           <h4 class="text-sm font-bold text-slate-800 dark:text-white">Country Name — Translations</h4>
                         </div>
                         <button type="button" (click)="isTranslationOpen.set(false)"
-                          class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-1"
+                          class="w-7 h-7 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center transition cursor-pointer"
                           title="Close">
                           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round">
@@ -3016,19 +3074,31 @@
                       </div>
 
                       <!-- Language search field & Auto-Translate action (Section 13.3 & 13.6) -->
-                      <div class="flex items-center gap-2">
-                        <div class="relative flex-1">
+                      <div class="flex items-center gap-2 shrink-0">
+                        <div class="relative flex-1 group">
                           <input type="text" [(ngModel)]="translationSearch" [ngModelOptions]="{ standalone: true }"
                             placeholder="Search language..."
-                            class="w-full h-8 pl-8 pr-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
+                            class="w-full h-8 pl-8 pr-8 rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4]" />
                           <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8" />
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
                           </svg>
+                          <!-- Voice input inside translation search (on hover only per Point 34) -->
+                          <button type="button" (click)="toggleVoiceInput('translationSearch')"
+                            class="absolute right-2 top-1.5 p-0.5 text-[#00a6f4] hover:text-[#0092d6] cursor-pointer opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 transition-opacity"
+                            [class.opacity-100]="activeListeningField() === 'translationSearch'"
+                            [class.text-red-500]="activeListeningField() === 'translationSearch'"
+                            [class.animate-pulse]="activeListeningField() === 'translationSearch'"
+                            title="Voice input for Search">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                            </svg>
+                          </button>
                         </div>
                         <button type="button" (click)="autoTranslateWithProvider()"
-                          class="h-8 px-3 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] hover:bg-sky-100 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shrink-0"
+                          class="h-8 px-3 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200/80 dark:border-sky-800 hover:bg-sky-100 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shrink-0"
                           title="Translate automatically via Google Translate">
                           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
@@ -3039,35 +3109,62 @@
                         </button>
                       </div>
 
-                      <!-- 10 Configured Languages Scrollable Panel (Section 13.4, 13.5, 13.10) -->
-                      <div class="max-h-56 overflow-y-auto custom-scrollbar space-y-2 pr-1">
+                      <!-- Configured Languages Scrollable Panel: round shape inputs, voice input on hover only -->
+                      <div class="max-h-40 overflow-y-auto custom-scrollbar space-y-2 pr-1 flex-1">
                         @for (lang of filteredTranslationLanguages(); track lang.code; let i = $index) {
-                        <label class="flex items-center gap-3">
+                        <div class="flex items-center gap-2.5 group">
                           <span class="w-20 text-xs font-semibold text-slate-600 dark:text-slate-300 shrink-0">
                             {{ lang.label }}
-                            <span class="text-[10px] text-slate-400 block font-normal">{{ lang.native }}</span>
+                            <span class="text-[10px] text-slate-400 block font-normal leading-tight">{{ lang.native
+                              }}</span>
                           </span>
-                          <input [id]="'translation-' + lang.code" type="text" [attr.dir]="lang.dir"
-                            [ngModel]="translationDraft()[lang.code] || ''"
-                            (ngModelChange)="setTranslationDraft(lang.code, $event)"
-                            [ngModelOptions]="{ standalone: true }" (keydown.enter)="onTranslationEnter(i, $event)"
-                            placeholder="Enter translation"
-                            class="flex-1 h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
-                        </label>
+                          <div class="relative flex-1 flex items-center">
+                            <input [id]="'translation-' + lang.code" type="text" [attr.dir]="lang.dir"
+                              [ngModel]="translationDraft()[lang.code] || ''"
+                              (ngModelChange)="setTranslationDraft(lang.code, $event)"
+                              [ngModelOptions]="{ standalone: true }" (keydown.enter)="onTranslationEnter(i, $event)"
+                              placeholder="Enter translation"
+                              class="w-full h-8 pl-3.5 pr-8 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 transition" />
+                            <button type="button" (click)="toggleVoiceInput('translation-' + lang.code)"
+                              class="absolute right-2 top-1.5 p-0.5 text-[#00a6f4] hover:text-[#0092d6] cursor-pointer opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 transition-opacity"
+                              [class.opacity-100]="activeListeningField() === ('translation-' + lang.code)"
+                              [class.text-red-500]="activeListeningField() === ('translation-' + lang.code)"
+                              [class.animate-pulse]="activeListeningField() === ('translation-' + lang.code)"
+                              [title]="'Voice input for ' + lang.label">
+                              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
                         }
                       </div>
 
+                      <!-- Translation Footer: RTL note on left, Cancel & Save Translations on right (Image 3) -->
                       <div
-                        class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700">
-                        <span class="text-[11px] text-slate-400">RTL supported for Arabic</span>
-                        <div class="flex gap-2">
+                        class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700 shrink-0">
+                        <span class="text-[11px] text-slate-400 font-medium">RTL supported for Arabic</span>
+                        <div class="flex items-center gap-2">
                           <button type="button" (click)="isTranslationOpen.set(false)"
-                            class="px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-xs font-semibold cursor-pointer">
-                            Cancel
+                            class="px-4 py-1.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <line x1="18" y1="6" x2="6" y2="18" />
+                              <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            <span>Cancel</span>
                           </button>
                           <button type="button" (click)="saveTranslations()"
-                            class="px-5 py-1.5 rounded-full bg-[#00a6f4] text-white text-xs font-bold hover:opacity-95 cursor-pointer shadow-sm">
-                            Save Translations
+                            class="px-5 py-1.5 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                              <polyline points="17 21 17 13 7 13 7 21" />
+                              <polyline points="7 3 7 8 15 8" />
+                            </svg>
+                            <span>Save Translations</span>
                           </button>
                         </div>
                       </div>
@@ -3075,35 +3172,27 @@
                     }
                   </div>
 
-                  <!-- ISO Code2 * (Section 4.8) -->
-                  <div class="relative w-full group">
-                    <!-- Contextual Tooltip on focus (Section 12.3) -->
-                    @if (isIsoCode2Focused() && !isFieldInvalid('isoCode2')) {
-                    <div
-                      class="absolute -top-7 left-4 z-30 px-2.5 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-medium shadow-md animate-in fade-in pointer-events-none select-none">
-                      2-letter ISO country code (e.g. US, AE, DE)
-                    </div>
-                    }
+                  <!-- ISO Code2 * (Column 3 per Point 5) -->
+                  <div class="relative w-full group sm:col-span-3">
 
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#DC2626]]="isFieldInvalid('isoCode2')" [class.ring-2]="isIsoCode2Focused()"
-                      [class.ring-[#DC2626]/20]="isIsoCode2Focused() && isFieldInvalid('isoCode2')"
-                      [class.border-[#00a6f4]]="!isFieldInvalid('isoCode2') && isIsoCode2Focused()"
-                      [class.ring-[#00a6f4]/20]="!isFieldInvalid('isoCode2') && isIsoCode2Focused()"
-                      [class.border-slate-800]="!isFieldInvalid('isoCode2') && !isIsoCode2Focused()"
-                      [class.dark:border-slate-400]="!isFieldInvalid('isoCode2') && !isIsoCode2Focused()">
-                      <input id="country-iso2" type="text" [ngModel]="formIsoCode2()" placeholder="e.g. US"
+                      [class.border-[#00a6f4]]="isIsoCode2Focused()" [class.ring-2]="isIsoCode2Focused()"
+                      [class.ring-[#00a6f4]/20]="isIsoCode2Focused()" [class.border-slate-300]="!isIsoCode2Focused()"
+                      [class.dark:border-slate-600]="!isIsoCode2Focused()">
+                      <input id="country-iso2" type="text" [ngModel]="formIsoCode2()" placeholder=""
                         (ngModelChange)="onIsoCode2Change($event); markFieldTouched('isoCode2')"
                         (focus)="isIsoCode2Focused.set(true)"
                         (blur)="isIsoCode2Focused.set(false); markFieldTouched('isoCode2')"
-                        (keydown.enter)="$event.preventDefault()" name="isoCode2" maxlength="2" required
+                        (keydown.enter)="focusNextField('isoCode2', 'country-iso3', $event)" name="app_iso2"
+                        maxlength="2" required autocomplete="off" autocorrect="off" autocapitalize="none"
+                        spellcheck="false" data-form-type="other" data-lpignore="true" aria-autocomplete="none"
                         class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold uppercase focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal placeholder:normal-case" />
 
                       <!-- Right Actions: Red Error / Green Checkmark & Mic Icon -->
                       <div class="flex items-center gap-2 ml-2 shrink-0">
                         @if (isFieldInvalid('isoCode2') && formIsoCode2().trim()) {
-                        <span class="text-[#DC2626] flex items-center justify-center animate-in zoom-in-75 shrink-0"
+                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
                           title="Invalid ISO Code 2">
                           <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.5">
@@ -3141,15 +3230,23 @@
 
                       <label for="country-iso2"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isIsoCode2Floating()" [class.resting]="!isIsoCode2Floating()"
-                        [class.is-error]="isFieldInvalid('isoCode2')">
-                        ISO Code 2 <span style="color: #DC2626;" class="font-bold">*</span>
+                        [class.floating-top]="isIsoCode2Floating()" [class.resting]="!isIsoCode2Floating()">
+                        ISO Code 2 <span [class.text-[#DC2626]]="isIsoCode2Focused()"
+                          [class.text-slate-400]="!isIsoCode2Focused()" class="font-bold transition-colors">*</span>
                       </label>
                     </div>
 
+                    <!-- Helper text below text box (Point 2) -->
+                    @if (isIsoCode2Focused() && !isFieldInvalid('isoCode2')) {
+                    <p
+                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
+                      2-letter ISO country code (e.g. US, AE, DE)
+                    </p>
+                    }
+
                     @if (isFieldInvalid('isoCode2') && isoCode2Error()) {
                     <p
-                      class="text-[11px] text-[#DC2626] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
                       <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="12" cy="12" r="10" />
@@ -3161,35 +3258,27 @@
                     }
                   </div>
 
-                  <!-- ISO Code3 * (Section 4.8) -->
-                  <div class="relative w-full group">
-                    <!-- Contextual Tooltip on focus (Section 12.3) -->
-                    @if (isIsoCode3Focused() && !isFieldInvalid('isoCode3')) {
-                    <div
-                      class="absolute -top-7 left-4 z-30 px-2.5 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-medium shadow-md animate-in fade-in pointer-events-none select-none">
-                      3-letter ISO country code (e.g. USA, ARE, DEU)
-                    </div>
-                    }
+                  <!-- ISO Code3 * (Column 3 per Point 5) -->
+                  <div class="relative w-full group sm:col-span-3">
 
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#DC2626]]="isFieldInvalid('isoCode3')" [class.ring-2]="isIsoCode3Focused()"
-                      [class.ring-[#DC2626]/20]="isIsoCode3Focused() && isFieldInvalid('isoCode3')"
-                      [class.border-[#00a6f4]]="!isFieldInvalid('isoCode3') && isIsoCode3Focused()"
-                      [class.ring-[#00a6f4]/20]="!isFieldInvalid('isoCode3') && isIsoCode3Focused()"
-                      [class.border-slate-800]="!isFieldInvalid('isoCode3') && !isIsoCode3Focused()"
-                      [class.dark:border-slate-400]="!isFieldInvalid('isoCode3') && !isIsoCode3Focused()">
-                      <input id="country-iso3" type="text" [ngModel]="formIsoCode3()" placeholder="e.g. USA"
+                      [class.border-[#00a6f4]]="isIsoCode3Focused()" [class.ring-2]="isIsoCode3Focused()"
+                      [class.ring-[#00a6f4]/20]="isIsoCode3Focused()" [class.border-slate-300]="!isIsoCode3Focused()"
+                      [class.dark:border-slate-600]="!isIsoCode3Focused()">
+                      <input id="country-iso3" type="text" [ngModel]="formIsoCode3()" placeholder=""
                         (ngModelChange)="formIsoCode3.set($event.toUpperCase()); markFieldTouched('isoCode3')"
                         (focus)="isIsoCode3Focused.set(true)"
                         (blur)="isIsoCode3Focused.set(false); markFieldTouched('isoCode3')"
-                        (keydown.enter)="$event.preventDefault()" name="isoCode3" maxlength="3" required
+                        (keydown.enter)="focusNextField('isoCode3', 'country-numeric', $event)" name="app_iso3"
+                        maxlength="3" required autocomplete="off" autocorrect="off" autocapitalize="none"
+                        spellcheck="false" data-form-type="other" data-lpignore="true" aria-autocomplete="none"
                         class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold uppercase focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal placeholder:normal-case" />
 
                       <!-- Right Actions: Red Error / Green Checkmark & Mic Icon -->
                       <div class="flex items-center gap-2 ml-2 shrink-0">
                         @if (isFieldInvalid('isoCode3') && formIsoCode3().trim()) {
-                        <span class="text-[#DC2626] flex items-center justify-center animate-in zoom-in-75 shrink-0"
+                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
                           title="Invalid ISO Code 3">
                           <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.5">
@@ -3227,15 +3316,23 @@
 
                       <label for="country-iso3"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isIsoCode3Floating()" [class.resting]="!isIsoCode3Floating()"
-                        [class.is-error]="isFieldInvalid('isoCode3')">
-                        ISO Code 3 <span style="color: #DC2626;" class="font-bold">*</span>
+                        [class.floating-top]="isIsoCode3Floating()" [class.resting]="!isIsoCode3Floating()">
+                        ISO Code 3 <span [class.text-[#DC2626]]="isIsoCode3Focused()"
+                          [class.text-slate-400]="!isIsoCode3Focused()" class="font-bold transition-colors">*</span>
                       </label>
                     </div>
 
+                    <!-- Helper text below text box (Point 2) -->
+                    @if (isIsoCode3Focused() && !isFieldInvalid('isoCode3')) {
+                    <p
+                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
+                      3-letter ISO country code (e.g. USA, ARE, DEU)
+                    </p>
+                    }
+
                     @if (isFieldInvalid('isoCode3') && isoCode3Error()) {
                     <p
-                      class="text-[11px] text-[#DC2626] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
                       <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="12" cy="12" r="10" />
@@ -3247,40 +3344,29 @@
                     }
                   </div>
                 </div>
-              </div>
-
-              <!-- Scrollable Body: Remaining Rows (Row 2, Row 3 Status, Row 4 Flag) -->
-              <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-6 py-5 sm:px-8 sm:py-6 space-y-6">
 
                 <!-- Row 2: ISO Numeric *, Phone Dial Code *, Default Currency *, Nationality -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                   <!-- ISO Numeric * (Section 4.8) -->
                   <div class="relative w-full group">
-                    @if (isIsoNumericFocused() && !isFieldInvalid('isoNumeric')) {
-                    <div
-                      class="absolute -top-7 left-4 z-30 px-2.5 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-medium shadow-md animate-in fade-in pointer-events-none select-none">
-                      Exactly 3 digits (e.g. 840, 784, 076)
-                    </div>
-                    }
-
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#DC2626]]="isFieldInvalid('isoNumeric')" [class.ring-2]="isIsoNumericFocused()"
-                      [class.ring-[#DC2626]/20]="isIsoNumericFocused() && isFieldInvalid('isoNumeric')"
-                      [class.border-[#00a6f4]]="!isFieldInvalid('isoNumeric') && isIsoNumericFocused()"
-                      [class.ring-[#00a6f4]/20]="!isFieldInvalid('isoNumeric') && isIsoNumericFocused()"
-                      [class.border-slate-800]="!isFieldInvalid('isoNumeric') && !isIsoNumericFocused()"
-                      [class.dark:border-slate-400]="!isFieldInvalid('isoNumeric') && !isIsoNumericFocused()">
-                      <input id="country-numeric" type="text" [ngModel]="formIsoNumeric()" placeholder="e.g. 840"
+                      [class.border-[#00a6f4]]="isIsoNumericFocused()" [class.ring-2]="isIsoNumericFocused()"
+                      [class.ring-[#00a6f4]/20]="isIsoNumericFocused()"
+                      [class.border-slate-300]="!isIsoNumericFocused()"
+                      [class.dark:border-slate-600]="!isIsoNumericFocused()">
+                      <input id="country-numeric" type="text" [ngModel]="formIsoNumeric()" placeholder=""
                         (ngModelChange)="formIsoNumeric.set($event); markFieldTouched('isoNumeric')"
                         (focus)="isIsoNumericFocused.set(true)"
                         (blur)="isIsoNumericFocused.set(false); markFieldTouched('isoNumeric')"
-                        (keydown.enter)="$event.preventDefault()" name="isoNumeric" maxlength="3" required
+                        (keydown.enter)="focusNextField('isoNumeric', 'country-isd', $event)" name="app_numeric"
+                        maxlength="3" required autocomplete="off" autocorrect="off" autocapitalize="none"
+                        spellcheck="false" data-form-type="other" data-lpignore="true" aria-autocomplete="none"
                         class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
 
                       <div class="flex items-center gap-2 ml-2 shrink-0">
                         @if (isFieldInvalid('isoNumeric') && formIsoNumeric().trim()) {
-                        <span class="text-[#DC2626] flex items-center justify-center animate-in zoom-in-75 shrink-0"
+                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
                           title="Invalid ISO Numeric">
                           <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.5">
@@ -3318,15 +3404,23 @@
 
                       <label for="country-numeric"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isIsoNumericFloating()" [class.resting]="!isIsoNumericFloating()"
-                        [class.is-error]="isFieldInvalid('isoNumeric')">
-                        ISO Numeric <span style="color: #DC2626;" class="font-bold">*</span>
+                        [class.floating-top]="isIsoNumericFloating()" [class.resting]="!isIsoNumericFloating()">
+                        ISO Numeric <span [class.text-[#DC2626]]="isIsoNumericFocused()"
+                          [class.text-slate-400]="!isIsoNumericFocused()" class="font-bold transition-colors">*</span>
                       </label>
                     </div>
 
+                    <!-- Helper text below text box (Point 2) -->
+                    @if (isIsoNumericFocused() && !isFieldInvalid('isoNumeric')) {
+                    <p
+                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
+                      Exactly 3 digits (e.g. 840, 784, 076)
+                    </p>
+                    }
+
                     @if (isFieldInvalid('isoNumeric') && isoNumericError()) {
                     <p
-                      class="text-[11px] text-[#DC2626] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
                       <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="12" cy="12" r="10" />
@@ -3340,30 +3434,22 @@
 
                   <!-- Phone Dial Code * (Section 4.8) -->
                   <div class="relative w-full group">
-                    @if (isIsdFocused() && !isFieldInvalid('isd')) {
-                    <div
-                      class="absolute -top-7 left-4 z-30 px-2.5 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-medium shadow-md animate-in fade-in pointer-events-none select-none">
-                      International code with leading + (e.g. +1, +971, +44)
-                    </div>
-                    }
-
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#DC2626]]="isFieldInvalid('isd')" [class.ring-2]="isIsdFocused()"
-                      [class.ring-[#DC2626]/20]="isIsdFocused() && isFieldInvalid('isd')"
-                      [class.border-[#00a6f4]]="!isFieldInvalid('isd') && isIsdFocused()"
-                      [class.ring-[#00a6f4]/20]="!isFieldInvalid('isd') && isIsdFocused()"
-                      [class.border-slate-800]="!isFieldInvalid('isd') && !isIsdFocused()"
-                      [class.dark:border-slate-400]="!isFieldInvalid('isd') && !isIsdFocused()">
-                      <input id="country-isd" type="text" [ngModel]="formIsd()" placeholder="e.g. +1"
+                      [class.border-[#00a6f4]]="isIsdFocused()" [class.ring-2]="isIsdFocused()"
+                      [class.ring-[#00a6f4]/20]="isIsdFocused()" [class.border-slate-300]="!isIsdFocused()"
+                      [class.dark:border-slate-600]="!isIsdFocused()">
+                      <input id="country-isd" type="text" [ngModel]="formIsd()" placeholder=""
                         (ngModelChange)="formIsd.set($event); markFieldTouched('isd')" (focus)="isIsdFocused.set(true)"
                         (blur)="isIsdFocused.set(false); markFieldTouched('isd')"
-                        (keydown.enter)="$event.preventDefault()" name="isd" required
+                        (keydown.enter)="focusNextField('isd', 'country-currency', $event)" name="app_isd" required
+                        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+                        data-form-type="other" data-lpignore="true" aria-autocomplete="none"
                         class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
 
                       <div class="flex items-center gap-2 ml-2 shrink-0">
                         @if (isFieldInvalid('isd') && formIsd().trim()) {
-                        <span class="text-[#DC2626] flex items-center justify-center animate-in zoom-in-75 shrink-0"
+                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
                           title="Invalid Phone Dial Code">
                           <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.5">
@@ -3400,15 +3486,23 @@
 
                       <label for="country-isd"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isIsdFloating()" [class.resting]="!isIsdFloating()"
-                        [class.is-error]="isFieldInvalid('isd')">
-                        Phone Dial Code <span style="color: #DC2626;" class="font-bold">*</span>
+                        [class.floating-top]="isIsdFloating()" [class.resting]="!isIsdFloating()">
+                        Phone Dial Code <span [class.text-[#DC2626]]="isIsdFocused()"
+                          [class.text-slate-400]="!isIsdFocused()" class="font-bold transition-colors">*</span>
                       </label>
                     </div>
 
+                    <!-- Helper text below text box (Point 2) -->
+                    @if (isIsdFocused() && !isFieldInvalid('isd')) {
+                    <p
+                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
+                      International code with leading + (e.g. +1, +971, +44)
+                    </p>
+                    }
+
                     @if (isFieldInvalid('isd') && isdError()) {
                     <p
-                      class="text-[11px] text-[#DC2626] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
                       <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="12" cy="12" r="10" />
@@ -3420,53 +3514,36 @@
                     }
                   </div>
 
-                  <!-- Default Currency * (Section 4.8 — Select from Currency Master) -->
+                  <!-- Default Currency * (Section 4.8 — input text box like nationality with no placeholder) -->
                   <div class="relative w-full group">
-                    @if (isCurrencyFocused() && !isFieldInvalid('currency')) {
-                    <div
-                      class="absolute -top-7 left-4 z-30 px-2.5 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-medium shadow-md animate-in fade-in pointer-events-none select-none">
-                      Select currency from Currency Master
-                    </div>
-                    }
-
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#DC2626]]="isFieldInvalid('currency')" [class.ring-2]="isCurrencyFocused()"
-                      [class.ring-[#DC2626]/20]="isCurrencyFocused() && isFieldInvalid('currency')"
-                      [class.border-[#00a6f4]]="!isFieldInvalid('currency') && isCurrencyFocused()"
-                      [class.ring-[#00a6f4]/20]="!isFieldInvalid('currency') && isCurrencyFocused()"
-                      [class.border-slate-800]="!isFieldInvalid('currency') && !isCurrencyFocused()"
-                      [class.dark:border-slate-400]="!isFieldInvalid('currency') && !isCurrencyFocused()">
-                      <input id="country-currency" type="text" [ngModel]="formCurrency()"
-                        placeholder="Select or enter currency"
+                      [class.border-[#00a6f4]]="isCurrencyFocused()" [class.ring-2]="isCurrencyFocused()"
+                      [class.ring-[#00a6f4]/20]="isCurrencyFocused()"
+                      [class.border-slate-300]="!isCurrencyFocused()"
+                      [class.dark:border-slate-600]="!isCurrencyFocused()">
+                      <input id="country-currency" type="text" [ngModel]="formCurrency()" placeholder=""
                         (ngModelChange)="formCurrency.set($event); markFieldTouched('currency')"
                         (focus)="isCurrencyFocused.set(true)"
                         (blur)="isCurrencyFocused.set(false); markFieldTouched('currency')"
-                        (keydown.enter)="$event.preventDefault()" name="currency" required
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
+                        (keydown.enter)="focusNextField('currency', 'country-nationality', $event)" name="app_currency"
+                        required autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+                        data-form-type="other" data-lpignore="true" aria-autocomplete="none"
+                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4]" />
 
-                      <div class="flex items-center gap-1.5 ml-2 shrink-0">
-                        <!-- Currency Master Dropdown Selector Trigger -->
-                        <button type="button" (click)="isCurrencyDropdownOpen.update(v => !v)"
-                          class="p-1 text-slate-400 hover:text-[#00a6f4] transition cursor-pointer"
-                          title="Select from Currency Master">
-                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </button>
-
+                      <div class="flex items-center gap-2 ml-2 shrink-0">
                         @if (isFieldInvalid('currency') && formCurrency().trim()) {
-                        <span class="text-[#DC2626] flex items-center justify-center animate-in zoom-in-75 shrink-0"
-                          title="Invalid Default Currency">
+                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
+                          title="Invalid Currency">
                           <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </span>
-                        } @else if (isCurrencyValid() && touchedFields()['currency'] && formCurrency().trim()) {
+                        } @else if (isCurrencyValid() && formCurrency()?.trim()) {
                         <span
                           class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid Default Currency">
+                          title="Valid Currency">
                           <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -3475,7 +3552,7 @@
                         }
 
                         <button type="button" (click)="toggleVoiceInput('currency')"
-                          [attr.aria-label]="activeListeningField() === 'currency' ? 'Listening...' : 'Voice input for Default Currency'"
+                          [attr.aria-label]="activeListeningField() === 'currency' ? 'Listening...' : 'Voice input for Currency'"
                           [title]="activeListeningField() === 'currency' ? 'Listening...' : 'Voice input'"
                           class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150"
                           [class.opacity-0]="activeListeningField() !== 'currency'"
@@ -3494,35 +3571,15 @@
 
                       <label for="country-currency"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isCurrencyFloating()" [class.resting]="!isCurrencyFloating()"
-                        [class.is-error]="isFieldInvalid('currency')">
-                        Default Currency <span style="color: #DC2626;" class="font-bold">*</span>
+                        [class.floating-top]="isCurrencyFloating()" [class.resting]="!isCurrencyFloating()">
+                        Default Currency <span [class.text-[#DC2626]]="isCurrencyFocused()"
+                          [class.text-slate-400]="!isCurrencyFocused()" class="font-bold transition-colors">*</span>
                       </label>
                     </div>
 
-                    <!-- Currency Master Selector Popup -->
-                    @if (isCurrencyDropdownOpen()) {
-                    <div
-                      class="absolute z-40 left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl p-3 max-h-56 overflow-y-auto custom-scrollbar animate-in fade-in">
-                      <div
-                        class="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-2 py-1 uppercase tracking-wider">
-                        Select From Currency Master
-                      </div>
-                      <div class="space-y-1 mt-1">
-                        @for (cur of currencyMasterList; track cur.code) {
-                        <button type="button" (click)="selectCurrencyOption(cur)"
-                          class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-700 hover:text-[#00a6f4] transition text-left cursor-pointer">
-                          <span>{{ cur.code }} — {{ cur.name }}</span>
-                          <span class="text-slate-400 font-mono">{{ cur.symbol }}</span>
-                        </button>
-                        }
-                      </div>
-                    </div>
-                    }
-
                     @if (isFieldInvalid('currency') && currencyError()) {
                     <p
-                      class="text-[11px] text-[#DC2626] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
                       <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="12" cy="12" r="10" />
@@ -3536,32 +3593,24 @@
 
                   <!-- Nationality (Section 4.8 — Optional) -->
                   <div class="relative w-full group">
-                    @if (isNationalityFocused() && !isFieldInvalid('nationality')) {
-                    <div
-                      class="absolute -top-7 left-4 z-30 px-2.5 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-medium shadow-md animate-in fade-in pointer-events-none select-none">
-                      Demonym or nationality (e.g. American, Emirati, German)
-                    </div>
-                    }
-
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#DC2626]]="isFieldInvalid('nationality')" [class.ring-2]="isNationalityFocused()"
-                      [class.ring-[#DC2626]/20]="isNationalityFocused() && isFieldInvalid('nationality')"
-                      [class.border-[#00a6f4]]="!isFieldInvalid('nationality') && isNationalityFocused()"
-                      [class.ring-[#00a6f4]/20]="!isFieldInvalid('nationality') && isNationalityFocused()"
-                      [class.border-slate-800]="!isFieldInvalid('nationality') && !isNationalityFocused()"
-                      [class.dark:border-slate-400]="!isFieldInvalid('nationality') && !isNationalityFocused()">
-                      <input id="country-nationality" type="text" [ngModel]="formNationality()"
-                        placeholder="e.g. American"
+                      [class.border-[#00a6f4]]="isNationalityFocused()" [class.ring-2]="isNationalityFocused()"
+                      [class.ring-[#00a6f4]/20]="isNationalityFocused()"
+                      [class.border-slate-300]="!isNationalityFocused()"
+                      [class.dark:border-slate-600]="!isNationalityFocused()">
+                      <input id="country-nationality" type="text" [ngModel]="formNationality()" placeholder=""
                         (ngModelChange)="formNationality.set($event); markFieldTouched('nationality')"
                         (focus)="isNationalityFocused.set(true)"
                         (blur)="isNationalityFocused.set(false); markFieldTouched('nationality')"
-                        (keydown.enter)="$event.preventDefault()" name="nationality"
+                        (keydown.enter)="$event.preventDefault()" name="app_nationality" autocomplete="off"
+                        autocorrect="off" autocapitalize="none" spellcheck="false" data-form-type="other"
+                        data-lpignore="true" aria-autocomplete="none"
                         class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
 
                       <div class="flex items-center gap-2 ml-2 shrink-0">
                         @if (isFieldInvalid('nationality') && formNationality().trim()) {
-                        <span class="text-[#DC2626] flex items-center justify-center animate-in zoom-in-75 shrink-0"
+                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
                           title="Invalid Nationality">
                           <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.5">
@@ -3599,15 +3648,22 @@
 
                       <label for="country-nationality"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isNationalityFloating()" [class.resting]="!isNationalityFloating()"
-                        [class.is-error]="isFieldInvalid('nationality')">
+                        [class.floating-top]="isNationalityFloating()" [class.resting]="!isNationalityFloating()">
                         Nationality
                       </label>
                     </div>
 
+                    <!-- Helper text below text box (Point 2) -->
+                    @if (isNationalityFocused() && !isFieldInvalid('nationality')) {
+                    <p
+                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
+                      Demonym or nationality (e.g. American, Emirati, German)
+                    </p>
+                    }
+
                     @if (isFieldInvalid('nationality') && nationalityError()) {
                     <p
-                      class="text-[11px] text-[#DC2626] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
                       <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="12" cy="12" r="10" />
@@ -3618,10 +3674,7 @@
                     </p>
                     }
                   </div>
-                </div>
 
-                <!-- Row 3: Status Control & Default Switch (Section 5 & 6) -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-1">
                   <!-- Status Dropdown Selector (Section 5) — Screenshots 2 & 3 Exact Match -->
                   <div class="relative w-full group">
                     <div
@@ -3629,20 +3682,29 @@
                       [class.border-[#00a6f4]]="isStatusDropdownOpen()" [class.ring-2]="isStatusDropdownOpen()"
                       [class.ring-[#00a6f4]/20]="isStatusDropdownOpen()"
                       [class.border-slate-300]="!isStatusDropdownOpen()"
-                      [class.dark:border-slate-600]="!isStatusDropdownOpen()" (click)="toggleStatusDropdown($event)"
-                      title="Country Status">
+                      [class.dark:border-slate-600]="!isStatusDropdownOpen()" (click)="toggleStatusDropdown($event)">
                       <span class="text-slate-800 dark:text-white text-sm font-semibold">
                         {{ formStatus() }}
                       </span>
-                      <svg class="w-4 h-4 text-slate-400 transition-transform duration-200"
-                        [class.rotate-180]="isStatusDropdownOpen()" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
+                      <div class="flex items-center gap-2.5 pointer-events-none">
+                        <!-- Display-only toggle beside arrow (Point 7) -->
+                        <label class="form-switch m-0 pointer-events-none shrink-0 scale-75">
+                          <input type="checkbox" [checked]="formStatus() === 'Active'" class="sr-only" />
+                          <span class="form-switch-track" [class.!bg-[#22c55e]]="formStatus() === 'Active'">
+                            <span class="form-switch-thumb"></span>
+                          </span>
+                        </label>
+                        <svg class="w-4 h-4 text-slate-400 transition-transform duration-200"
+                          [class.rotate-180]="isStatusDropdownOpen()" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
 
                       <label
                         class="floating-notch-label floating-top absolute pointer-events-none select-none md:text-base text-sm">
-                        Status <span style="color: #DC2626;" class="font-bold">*</span>
+                        Status <span [class.text-[#DC2626]]="isStatusDropdownOpen()"
+                          [class.text-slate-400]="!isStatusDropdownOpen()" class="font-bold transition-colors">*</span>
                       </label>
                     </div>
 
@@ -3704,40 +3766,33 @@
                     }
                   </div>
 
-                  <!-- Requirement 6: Default Switch Card (Add & Edit) -->
-                  <div
-                    class="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-between gap-4">
-                    <div class="space-y-0.5 min-w-0">
-                      <div class="flex items-center gap-2">
-                        <span class="text-xs font-bold text-slate-800 dark:text-white">Default</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full font-bold transition-colors"
-                          [class.bg-sky-100]="formDefault() === 'Yes'" [class.text-[#00a6f4]]="formDefault() === 'Yes'"
-                          [class.dark:bg-sky-950/80]="formDefault() === 'Yes'"
-                          [class.bg-slate-200]="formDefault() !== 'Yes'"
-                          [class.text-slate-600]="formDefault() !== 'Yes'"
-                          [class.dark:bg-slate-700]="formDefault() !== 'Yes'"
-                          [class.dark:text-slate-300]="formDefault() !== 'Yes'">
-                          Preview: Default = {{ formDefault() === 'Yes' ? 'True' : 'False' }}
-                        </span>
+                  <!-- Default Field (Section 6) - Increased column width spanning 2 columns per Screenshot 4 -->
+                  <div class="relative w-full group ">
+                    <div (click)="toggleDefault($event)"
+                      class="relative flex items-center justify-between w-full h-[52px] px-5 sm:px-6 rounded-full border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-200 bg-white dark:bg-slate-800 cursor-pointer select-none">
+                      <div class="flex flex-col justify-center min-w-0 pr-2">
+                        <div class="flex items-center gap-2 leading-none">
+                          <span class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">Set as Default Country</span>
+                        </div>
                       </div>
-                      <p class="text-[11px] text-slate-500 dark:text-slate-400">Set this country as the default
-                        selection.</p>
+
+                      <label class="form-switch m-0 cursor-pointer shrink-0" for="country-default-switch"
+                        (click)="$event.stopPropagation()">
+                        <input type="checkbox" id="country-default-switch" class="sr-only"
+                          [checked]="formDefault() === 'Yes'" (change)="toggleDefault($event)" />
+                        <span class="form-switch-track" [class.!bg-[#00a6f4]]="formDefault() === 'Yes'">
+                          <span class="form-switch-thumb"></span>
+                        </span>
+                      </label>
                     </div>
-                    <label class="form-switch m-0 cursor-pointer shrink-0" for="country-default-switch"
-                      title="Set this country as the default selection">
-                      <input type="checkbox" id="country-default-switch" class="sr-only"
-                        [checked]="formDefault() === 'Yes'"
-                        (change)="formDefault.set($any($event.target).checked ? 'Yes' : 'No')" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
                   </div>
                 </div>
 
                 <!-- Row 4: Flag Field & Direct Flag Gallery (Tabs commented out per client request) -->
                 <div class="w-full space-y-2 pt-2">
                   <div class="flex items-center justify-between">
-                    <label class="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
-                      Flag <span style="color: #DC2626;" class="font-bold">*</span>
+                    <label class="text-xs font-bold text-slate-700 dark:text-slate-200 tracking-wider">
+                      Flag <span class="text-slate-400 font-bold">*</span>
                     </label>
                     <!-- Tabs Upload, Drop, Gallery commented out per client request -->
                     <!--
@@ -3756,46 +3811,63 @@
                     -->
                   </div>
 
-                  <!-- Direct Flag Gallery: Left = Search & Flags Grid; Right = Selected Flag Preview -->
+                  <!-- Direct Flag Gallery: Left = Search & Flags Grid; Right = Selected Flag Preview (Fixed to Right) -->
                   <div
-                    class="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 flex flex-col md:flex-row gap-4">
+                    class="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 flex flex-col md:flex-row gap-4 items-stretch overflow-hidden">
 
-                    <!-- Left Side: Filter & Flags Grid -->
-                    <div class="flex-1 flex flex-col min-h-0 space-y-2">
-                      <!-- Counter & Search -->
+                    <!-- Left Side: Filter & Flags Grid (min-w-0 prevents flex item from expanding beyond available space) -->
+                    <div class="flex-1 min-w-0 flex flex-col space-y-2">
+                      <!-- Counter & Search (Roundshape Filter flags input per Task 3) -->
                       <div class="flex items-center justify-between gap-3">
-                        <span class="text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <span class="text-xs font-medium text-slate-400 dark:text-slate-500 shrink-0">
                           Showing {{ displayedGalleryFlags().length }} of {{ filteredGalleryFlags().length }} Flags
                         </span>
-                        <div class="relative w-48">
+                        <div class="relative w-52 shrink-0">
                           <input type="text" [(ngModel)]="gallerySearch" [ngModelOptions]="{ standalone: true }"
-                            placeholder="Filter flags..."
-                            class="w-full h-7 pl-7 pr-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
-                          <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2 top-2" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" stroke-width="2">
+                            placeholder="Search" autocomplete="off" autocorrect="off" autocapitalize="none"
+                            spellcheck="false"
+                            class="w-full h-8 pl-8 pr-8 rounded-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] shadow-2xs transition" />
+                          <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8" />
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
                           </svg>
+                          <button type="button" (click)="toggleVoiceInput('flagSearch')"
+                            [attr.aria-label]="activeListeningField() === 'flagSearch' ? 'Listening...' : 'Voice input for Flag Search'"
+                            [title]="activeListeningField() === 'flagSearch' ? 'Listening...' : 'Voice input'"
+                            class="absolute right-2 top-1.5 p-0.5 rounded-full cursor-pointer focus:outline-none transition-colors"
+                            [class.text-[#00a6f4]]="activeListeningField() !== 'flagSearch'"
+                            [class.text-red-500]="activeListeningField() === 'flagSearch'"
+                            [class.animate-pulse]="activeListeningField() === 'flagSearch'">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                              <line x1="12" y1="19" x2="12" y2="22" />
+                            </svg>
+                          </button>
                         </div>
                       </div>
 
-                      <!-- Scrollable grid with bottom-detection loading -->
+                      <!-- Flag gallery: 1 single row with bigger size for more clear visible (Task 3) -->
+                      <!-- ONLY THIS CONTAINER SCROLLS HORIZONTALLY -->
                       <div (scroll)="onGalleryScroll($event)"
-                        class="max-h-48 overflow-y-auto custom-scrollbar p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80">
-                        <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2.5">
+                        class="w-full overflow-x-auto overflow-y-hidden custom-scrollbar p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80">
+                        <div class="flex items-center gap-3 min-w-max py-1">
                           @for (gf of displayedGalleryFlags(); track gf.code) {
                           <button type="button" (click)="selectGalleryFlag(gf)"
                             [attr.aria-label]="'Select flag for ' + gf.name"
-                            class="p-1.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-[#00a6f4] flex flex-col items-center gap-1 transition cursor-pointer shadow-2xs group relative"
-                            [class.border-[#00a6f4]]="formFlag() === gf.flagUrl"
+                            class="h-20 w-24 shrink-0 p-2 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 hover:border-[#00a6f4] hover:shadow-md hover:scale-105 active:scale-95 flex flex-col items-center justify-between transition-all duration-200 cursor-pointer shadow-2xs group relative"
+                            [class.!border-[#00a6f4]]="formFlag() === gf.flagUrl"
                             [class.ring-2]="formFlag() === gf.flagUrl"
-                            [class.ring-[#00a6f4]/40]="formFlag() === gf.flagUrl"
-                            [class.bg-sky-50/60]="formFlag() === gf.flagUrl" [title]="gf.name">
+                            [class.ring-[#00a6f4]/30]="formFlag() === gf.flagUrl"
+                            [class.!bg-sky-50/70]="formFlag() === gf.flagUrl"
+                            [class.dark:!bg-sky-950/40]="formFlag() === gf.flagUrl">
                             <img [src]="gf.flagUrl" [alt]="gf.name"
-                              class="h-4 w-7 object-cover rounded border border-slate-100 dark:border-slate-700" />
+                              class="w-16 h-10 object-cover rounded-md shadow-xs border border-slate-200/60 dark:border-slate-700 group-hover:scale-105 transition" />
                             <span
-                              class="text-[9px] font-bold text-slate-700 dark:text-slate-300 truncate w-full text-center">{{
-                              gf.code }}</span>
+                              class="text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-wide leading-none truncate w-full text-center">
+                              {{ gf.code }}
+                            </span>
                           </button>
                           }
                         </div>
@@ -3807,35 +3879,122 @@
                       </div>
                     </div>
 
-                    <!-- Right Side: Selected Flag Preview -->
-                    <div
-                      class="w-full md:w-56 shrink-0 p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center gap-3">
-                      <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Selected Flag</span>
+                    <!-- Right Side: Selected Flag Dropzone (FIXED TO RIGHT, NEVER SCROLLS) -->
+                    <input #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
+                      class="hidden" />
+                    <div (click)="triggerFlagUpload()" (dragover)="onFlagDragOver($event)"
+                      (dragleave)="onFlagDragLeave($event)" (drop)="onFlagDrop($event)"
+                      class="w-full md:w-64 lg:w-72 shrink-0 p-4 rounded-2xl bg-white dark:bg-slate-800 border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center text-center gap-2.5 cursor-pointer group hover:border-[#00a6f4] hover:bg-sky-50/30 dark:hover:bg-sky-950/20 select-none relative"
+                      [class.border-[#00a6f4]]="isDraggingFlag()" [class.bg-sky-50/70]="isDraggingFlag()"
+                      [class.dark:bg-sky-950/40]="isDraggingFlag()"
+                      [class.border-slate-300]="!isDraggingFlag() && !formFlag()"
+                      [class.dark:border-slate-600]="!isDraggingFlag() && !formFlag()"
+                      [class.border-[#00a6f4]/60]="!isDraggingFlag() && formFlag()">
+
+
                       @if (formFlag()) {
-                      <img [src]="formFlag()" alt="Selected Flag Preview"
-                        class="h-14 w-22 object-cover rounded-md border border-slate-200 dark:border-slate-600 shadow-sm"
-                        (error)="onFlagError($event)" />
+                      <div class="relative group/flag">
+                        <img [src]="formFlag()" alt="Selected Flag Preview"
+                          class="h-16 w-26 object-cover rounded-xl border border-slate-200 dark:border-slate-600 shadow-md transition group-hover/flag:scale-102"
+                          (error)="onFlagError($event)" />
+                        <!-- Remove flag button -->
+                        <button type="button" (click)="$event.stopPropagation(); removeFlag()"
+                          class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-md transition cursor-pointer"
+                          title="Remove flag">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M18 6 6 18M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+
                       <div class="text-xs font-bold text-slate-800 dark:text-white truncate max-w-full">
                         {{ formName() || 'Country Flag' }}
-                        <span class="text-[10px] text-slate-400 block font-normal uppercase">{{ formIsoCode2() || '—'
-                          }}</span>
+                        <span class="text-[10px] text-slate-400 block font-normal uppercase">{{ formIsoCode2() ||
+                          'Custom' }}</span>
                       </div>
-                      <!-- Download Action -->
-                      <button type="button" (click)="downloadFlag(formFlag(), formName() || 'Country')"
-                        class="px-4 py-1.5 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                          <polyline points="7 10 12 15 17 10" />
-                          <line x1="12" y1="15" x2="12" y2="3" />
-                        </svg>
-                        <span>Download Flag</span>
-                      </button>
+
+                      <!-- Action Buttons: Change & Download -->
+                      <div class="flex items-center gap-2 mt-0.5">
+                        <button type="button" (click)="$event.stopPropagation(); triggerFlagUpload()"
+                          class="px-3.5 py-1 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                          </svg>
+                          <span>Change</span>
+                        </button>
+                        <button type="button"
+                          (click)="$event.stopPropagation(); downloadFlag(formFlag(), formName() || 'Country')"
+                          class="p-1.5 rounded-full text-slate-400 hover:text-[#00a6f4] hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer"
+                          title="Download Flag">
+                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                          </svg>
+                        </button>
+                      </div>
                       } @else {
-                      <div
-                        class="w-16 h-10 rounded-md border border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-[10px]">
-                        No Flag
+                      <!-- Clickable / Drag-and-drop Upload Placeholder (Screenshot 2 exact replica) -->
+                      @if (isDraggingFlag()) {
+                      <div class="flex flex-col items-center justify-center text-center gap-2 py-2">
+                        <!-- Cloud with sparkles -->
+                        <svg class="w-12 h-12 text-[#00a6f4] animate-bounce" viewBox="0 0 64 64" fill="none">
+                          <path d="M12 16l1.2 3.2L16 20.4l-2.8 1.2L12 24.8l-1.2-3.2L8 20.4l2.8-1.2L12 16z"
+                            fill="currentColor" />
+                          <path d="M9 34l1 2.6L12.5 37.6l-2.5 1L9 41.2l-1-2.6L5.5 37.6l2.5-1L9 34z"
+                            fill="currentColor" />
+                          <path d="M52 16l1.2 3.2L56 20.4l-2.8 1.2L52 24.8l-1.2-3.2L48 20.4l2.8-1.2L52 16z"
+                            fill="currentColor" />
+                          <path d="M55 34l1 2.6L58.5 37.6l-2.5 1L55 41.2l-1-2.6L51.5 37.6l2.5-1L55 34z"
+                            fill="currentColor" />
+                          <path
+                            d="M47 42h3.5a8.5 8.5 0 0 0 0-17 8.3 8.3 0 0 0-2.4.35A13.5 13.5 0 0 0 22.5 18a13.3 13.3 0 0 0-4.8 9.5A8.5 8.5 0 0 0 13.5 42H17"
+                            stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M32 44V26m0 0l-5.5 5.5M32 26l5.5 5.5" stroke="currentColor" stroke-width="3.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <p class="text-xs font-bold text-[#00a6f4] tracking-wide uppercase">
+                          Drop file to upload
+                        </p>
                       </div>
-                      <p class="text-[11px] text-slate-400">Select any flag from the gallery on the left</p>
+                      } @else {
+                      <div class="flex flex-col items-center justify-center text-center gap-2.5 py-1">
+                        <!-- Cloud with sparkles (Screenshot 2 exact replica) -->
+                        <svg
+                          class="w-12 h-12 text-[#00a6f4] transition-colors"
+                          viewBox="0 0 64 64" fill="none">
+                          <path d="M12 16l1.2 3.2L16 20.4l-2.8 1.2L12 24.8l-1.2-3.2L8 20.4l2.8-1.2L12 16z"
+                            fill="currentColor" />
+                          <path d="M9 34l1 2.6L12.5 37.6l-2.5 1L9 41.2l-1-2.6L5.5 37.6l2.5-1L9 34z"
+                            fill="currentColor" />
+                          <path d="M52 16l1.2 3.2L56 20.4l-2.8 1.2L52 24.8l-1.2-3.2L48 20.4l2.8-1.2L52 16z"
+                            fill="currentColor" />
+                          <path d="M55 34l1 2.6L58.5 37.6l-2.5 1L55 41.2l-1-2.6L51.5 37.6l2.5-1L55 34z"
+                            fill="currentColor" />
+                          <path
+                            d="M47 42h3.5a8.5 8.5 0 0 0 0-17 8.3 8.3 0 0 0-2.4.35A13.5 13.5 0 0 0 22.5 18a13.3 13.3 0 0 0-4.8 9.5A8.5 8.5 0 0 0 13.5 42H17"
+                            stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M32 44V26m0 0l-5.5 5.5M32 26l5.5 5.5" stroke="currentColor" stroke-width="3.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+
+                        <!-- Text: DRAG AND DROP FILES TO UPLOAD (Screenshot 2) -->
+                        <p
+                          class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide px-2 leading-tight">
+                          DRAG AND DROP FILES TO UPLOAD
+                        </p>
+
+                        <!-- Button: CHOOSE FILES styled like label link -->
+                        <span (click)="$event.stopPropagation(); triggerFlagUpload()"
+                          class="text-xs font-bold text-[#00a6f4] hover:text-[#0092d6] hover:underline cursor-pointer uppercase tracking-wider transition py-1">
+                          CHOOSE FILES
+                        </span>
+                      </div>
+                      }
                       }
                     </div>
                   </div>
@@ -3845,233 +4004,164 @@
 
             </div>
 
-            <!-- Right-Side Action Panel with Circular Accordion Open/Close Toggle (Image 3 & Image 4 Replica) -->
+            <!-- Right-Side Action Panel with Fixed Vertical Icon Bar -->
             <aside
-              class="shrink-0 pt-6 sm:pt-7 pr-3.5 pb-3 flex flex-col items-center z-20 transition-all duration-300 select-none">
-              <!-- Circular Accordion Open/Close Button (Image 4 Replica) -->
-              <button type="button" (click)="toggleSideSection()"
-                class="side-accordion-toggle w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer group shrink-0 relative"
-                [attr.title]="isSideSectionOpen() ? 'Collapse Quick Actions Panel' : 'Expand Quick Actions Panel'"
-                [attr.data-tooltip]="isSideSectionOpen() ? 'Collapse Actions' : 'Expand Actions'"
-                data-tooltip-pos="left">
-                <svg class="w-4.5 h-4.5 transition-transform duration-300" [class.rotate-180]="isSideSectionOpen()"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
+              class="shrink-0 h-full py-4 px-3 sm:px-3.5 flex flex-col items-center z-20 select-none border-l border-slate-100 dark:border-slate-800/60 bg-slate-50/40 dark:bg-slate-900/20">
 
-              <!-- Collapsible Toolbar Container (Smooth Accordion Expand/Collapse) -->
-              <div class="transition-all duration-300 ease-in-out flex flex-col items-center origin-top overflow-hidden"
-                [class.max-h-[calc(100vh-180px)]]="isSideSectionOpen()" [class.opacity-100]="isSideSectionOpen()"
-                [class.mt-2.5]="isSideSectionOpen()" [class.scale-y-100]="isSideSectionOpen()"
-                [class.max-h-0]="!isSideSectionOpen()" [class.opacity-0]="!isSideSectionOpen()"
-                [class.mt-0]="!isSideSectionOpen()" [class.scale-y-0]="!isSideSectionOpen()"
-                [class.pointer-events-none]="!isSideSectionOpen()">
+              <!-- Slim Vertical Floating Toolbar: covers all bottom space, larger icon size, no focus ring -->
+              <div
+                class="w-12 sm:w-14 h-full flex-1 side-toolbar-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:w-[3px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-[#cbd5e1] [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-button]:w-0 [&::-webkit-scrollbar-button]:h-0 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xl py-4 sm:py-5 px-1.5 flex flex-col items-center gap-4 sm:gap-5 select-none animate-in fade-in duration-200">
 
-                <!-- Slim Vertical Floating Toolbar: Display only icons with theme-blue pointed tooltips (Scrollable to access all options) -->
-                <div
-                  class="w-12 sm:w-13 max-h-[calc(100vh-210px)] overflow-y-auto overflow-x-hidden custom-scrollbar rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xl py-2.5 px-1.5 flex flex-col items-center gap-1.5 select-none animate-in fade-in duration-200">
+                <!-- AI Assistance -->
+                <button type="button" (click)="openAiModal()"
+                  class="w-10 h-10 rounded-2xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="AI Assistance" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+                  </svg>
+                </button>
 
-                  <!-- Record Number / Total (Navigator) -->
-                  <div
-                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-slate-700/80 border border-sky-200 dark:border-sky-800/80 text-[#00a6f4] dark:text-[#38bdf8] font-black text-xs flex items-center justify-center cursor-default select-none shadow-2xs shrink-0"
-                    [attr.data-tooltip]="'Record #' + currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 42)"
-                    data-tooltip-pos="left">
-                    {{ currentCountryDisplayNumber() }}
-                  </div>
-                  <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 leading-none shrink-0"
-                    [attr.data-tooltip]="'Total: ' + (sortedCountries().length || 42) + ' countries'"
-                    data-tooltip-pos="left">
-                    {{ sortedCountries().length || 42 }}
-                  </span>
+                <!-- Add Country -->
+                @if (viewMode() !== 'add') {
+                <button type="button" (click)="openCreate()"
+                  class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Add Country" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+                }
 
-                  <!-- Previous Country Button (Up Arrow) -->
-                  <button type="button" (click)="goToPreviousCountry()"
-                    class="w-8 h-7 mt-0.5 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Previous Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="18 15 12 9 6 15" />
-                    </svg>
-                  </button>
+                <!-- Edit Country (shown when in view mode) -->
+                @if (viewMode() === 'view') {
+                <button type="button" (click)="openEditForActiveCountry()"
+                  class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Edit Country" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </button>
+                }
 
-                  <!-- Next Country Button (Down Arrow) -->
-                  <button type="button" (click)="goToNextCountry()"
-                    class="w-8 h-7 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Next Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </button>
+                <!-- View Country (shown only when in edit mode; hidden in add mode per Point 28) -->
+                @if (viewMode() !== 'view' && viewMode() !== 'add') {
+                <button type="button" (click)="openViewForActiveCountry()"
+                  class="w-10 h-10 rounded-2xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="View Country" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+                }
 
-                  <!-- Divider -->
-                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
+                <!-- Executive Overview -->
+                <button type="button" (click)="switchView('overview')"
+                  class="w-10 h-10 rounded-2xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Executive Overview" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                  </svg>
+                </button>
 
-                  <!-- AI Assistance -->
-                  <button type="button" (click)="openAiModal()"
-                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="AI Assistance" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path
-                        d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
-                    </svg>
-                  </button>
+                <!-- Divider -->
+                <div class="w-7 h-px bg-slate-200 dark:bg-slate-700 my-1 shrink-0"></div>
 
-                  <!-- Add Country -->
-                  @if (viewMode() !== 'add') {
-                  <button type="button" (click)="openCreate()"
-                    class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Add Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 4v16m8-8H4" />
-                    </svg>
-                  </button>
-                  }
+                <!-- Activity -->
+                <button type="button" (click)="openActivityModal('history')"
+                  class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Activity" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                </button>
 
-                  <!-- Edit Country (shown when in view mode) -->
-                  @if (viewMode() === 'view') {
-                  <button type="button" (click)="openEditForActiveCountry()"
-                    class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Edit Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                  </button>
-                  }
+                <!-- Export -->
+                <button type="button" (click)="openExportModal()"
+                  class="w-10 h-10 rounded-2xl bg-violet-50 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Export" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                </button>
 
-                  <!-- View Country (shown when in add or edit mode) -->
-                  @if (viewMode() !== 'view') {
-                  <button type="button" (click)="openViewForActiveCountry()"
-                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="View Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  </button>
-                  }
-
-                  <!-- Executive Overview -->
-                  <button type="button" (click)="switchView('overview')"
-                    class="w-8 h-8 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Executive Overview" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="3" width="7" height="7" />
-                      <rect x="14" y="3" width="7" height="7" />
-                      <rect x="14" y="14" width="7" height="7" />
-                      <rect x="3" y="14" width="7" height="7" />
-                    </svg>
-                  </button>
-
-                  <!-- Divider -->
-                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
-
-                  <!-- Activity History -->
-                  <button type="button" (click)="openHistoryModal(currentCountryId() ? 'current' : 'all')"
-                    class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Activity History" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10" />
-                      <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                  </button>
-
-                  <!-- Recycle Bin -->
-                  <button type="button" (click)="openRecycleBinModal()"
-                    class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Recycle Bin" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    </svg>
-                  </button>
-
-                  <!-- Divider -->
-                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
-
-                  <!-- Download PDF -->
-                  <button type="button" (click)="exportPdfDirect()"
-                    class="w-8 h-8 rounded-xl bg-violet-50 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Download PDF" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                      <polyline points="14 2 14 8 20 8" />
-                    </svg>
-                  </button>
-
-                  <!-- Print -->
-                  <button type="button" (click)="exportPrintDirect()"
-                    class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Print Record" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="6 9 6 2 18 2 18 9" />
-                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                      <rect x="6" y="14" width="12" height="8" />
-                    </svg>
-                  </button>
-
-                  <!-- Share Email -->
-                  <button type="button" (click)="openShare('email')"
-                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Share via Email" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                      <polyline points="22,6 12,13 2,6" />
-                    </svg>
-                  </button>
-
-                  <!-- Share WhatsApp -->
-                  <button type="button" (click)="openShare('whatsapp')"
-                    class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Share via WhatsApp" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path
-                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                    </svg>
-                  </button>
-                </div>
+                <!-- Share -->
+                <button type="button" (click)="openShareModalUnified('email')"
+                  class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Share" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                  </svg>
+                </button>
               </div>
             </aside>
           </div>
 
           <!-- Section 11 & 14: Fixed Footer Bar -->
-          <!-- Left: Keep toggle | Center: AI Assistance | Right: Clear/Reset & Save/Update -->
+          <!-- Left: Keep toggle | Center: Record navigation & previous/next icons (Points 26 & 27) | Right: Clear/Reset & Save/Update -->
           <div
             class="country-panel-footer shrink-0 flex items-center justify-between gap-3 px-6 sm:px-8 py-3.5 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
-            <!-- Left: Keep Toggle with Light Secondary Blue default (Section 9.1 & 9.4) -->
+            <!-- Left: Stay on Page Toggle with Light Secondary Blue default (Image 5 Replica) -->
             <div class="flex items-center gap-2">
-              <label class="form-switch keep-switch m-0 flex items-center gap-2 cursor-pointer"
-                title="When enabled, remain on this form after saving">
+              <label class="form-switch keep-switch m-0 flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" class="sr-only" [checked]="keepOnPage()"
                   (change)="keepOnPage.set($any($event.target).checked)" />
                 <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Keep</span>
+                <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Stay on Page</span>
               </label>
             </div>
 
-            <!-- Right: Clear/Reset and Save/Update Buttons (Exact match to requested specification) -->
+            <!-- Right: Clear/Reset and Save/Update Buttons with Master Icons (Image 4 & 5 Replica) -->
             <div class="flex items-center gap-3">
               @if (viewMode() === 'add') {
               <button type="button" (click)="openClearModal()"
-                class="px-7 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-sm font-semibold hover:border-[#00a6f4] hover:text-[#00a6f4] hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
-                Clear
+                class="w-28 sm:w-32 h-10 rounded-full border-2 border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-sky-950/40 text-sm font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                <span>Clear</span>
               </button>
               <button type="submit"
-                class="px-9 py-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-sm font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
-                Save
+                class="w-28 sm:w-32 h-10 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-sm font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                <span>Save</span>
               </button>
               } @else {
               <button type="button" (click)="openResetModal()"
-                class="px-7 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-sm font-semibold hover:border-[#00a6f4] hover:text-[#00a6f4] hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
-                Reset
+                class="w-28 sm:w-32 h-10 rounded-full border-2 border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-sky-950/40 text-sm font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="1 4 1 10 7 10" />
+                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                </svg>
+                <span>Reset</span>
               </button>
               <button type="submit"
-                class="px-9 py-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-sm font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
-                Update
+                class="w-28 sm:w-32 h-10 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-sm font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span>Update</span>
               </button>
               }
             </div>
@@ -4179,179 +4269,91 @@
               }
             </div>
 
-            <!-- Right-Side Action Panel with Circular Accordion Open/Close Toggle (Image 3 & Image 4 Replica) -->
+            <!-- Right-Side Action Panel with Fixed Vertical Icon Bar -->
             <aside
-              class="shrink-0 pt-6 sm:pt-7 pr-3.5 pb-3 flex flex-col items-center z-20 transition-all duration-300 select-none">
-              <!-- Circular Accordion Open/Close Button (Image 4 Replica) -->
-              <button type="button" (click)="toggleSideSection()"
-                class="side-accordion-toggle w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer group shrink-0 relative"
-                [attr.title]="isSideSectionOpen() ? 'Collapse Quick Actions Panel' : 'Expand Quick Actions Panel'"
-                [attr.data-tooltip]="isSideSectionOpen() ? 'Collapse Actions' : 'Expand Actions'"
-                data-tooltip-pos="left">
-                <svg class="w-4.5 h-4.5 transition-transform duration-300" [class.rotate-180]="!isSideSectionOpen()"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
+              class="shrink-0 h-full py-4 px-3 sm:px-3.5 flex flex-col items-center z-20 select-none border-l border-slate-100 dark:border-slate-800/60 bg-slate-50/40 dark:bg-slate-900/20">
 
-              <!-- Collapsible Toolbar Container (Smooth Accordion Expand/Collapse) -->
-              <div class="transition-all duration-300 ease-in-out flex flex-col items-center origin-top overflow-hidden"
-                [class.max-h-[calc(100vh-180px)]]="isSideSectionOpen()" [class.opacity-100]="isSideSectionOpen()"
-                [class.mt-2.5]="isSideSectionOpen()" [class.scale-y-100]="isSideSectionOpen()"
-                [class.max-h-0]="!isSideSectionOpen()" [class.opacity-0]="!isSideSectionOpen()"
-                [class.mt-0]="!isSideSectionOpen()" [class.scale-y-0]="!isSideSectionOpen()"
-                [class.pointer-events-none]="!isSideSectionOpen()">
+              <!-- Slim Vertical Floating Toolbar: covers all bottom space, larger icon size, no focus ring -->
+              <div
+                class="w-12 sm:w-14 h-full flex-1 side-toolbar-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:w-[3px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-[#cbd5e1] [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-button]:w-0 [&::-webkit-scrollbar-button]:h-0 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xl py-4 sm:py-5 px-1.5 flex flex-col items-center gap-4 sm:gap-5 select-none animate-in fade-in duration-200">
 
-                <!-- Slim Vertical Floating Toolbar: Display only icons with theme-blue pointed tooltips (Scrollable to access all options) -->
-                <div
-                  class="w-12 sm:w-13 max-h-[calc(100vh-210px)] overflow-y-auto overflow-x-hidden custom-scrollbar rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xl py-2.5 px-1.5 flex flex-col items-center gap-1.5 select-none animate-in fade-in duration-200">
+                <!-- AI Assistance -->
+                <button type="button" (click)="openAiModal()"
+                  class="w-10 h-10 rounded-2xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="AI Assistance" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+                  </svg>
+                </button>
 
-                  <!-- Record Number / Total (Navigator) -->
-                  <div
-                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-slate-700/80 border border-sky-200 dark:border-sky-800/80 text-[#00a6f4] dark:text-[#38bdf8] font-black text-xs flex items-center justify-center cursor-default select-none shadow-2xs shrink-0"
-                    [attr.data-tooltip]="'Record #' + currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 42)"
-                    data-tooltip-pos="left">
-                    {{ currentCountryDisplayNumber() }}
-                  </div>
-                  <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 leading-none shrink-0"
-                    [attr.data-tooltip]="'Total: ' + (sortedCountries().length || 42) + ' countries'"
-                    data-tooltip-pos="left">
-                    {{ sortedCountries().length || 42 }}
-                  </span>
+                <!-- Add Country -->
+                <button type="button" (click)="openCreate()"
+                  class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Add Country" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
 
-                  <!-- Previous Country Button (Up Arrow) -->
-                  <button type="button" (click)="goToPreviousCountry()"
-                    class="w-8 h-7 mt-0.5 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Previous Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="18 15 12 9 6 15" />
-                    </svg>
-                  </button>
+                <!-- Edit Country -->
+                <button type="button" (click)="openEdit(sc)"
+                  class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Edit Country" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </button>
 
-                  <!-- Next Country Button (Down Arrow) -->
-                  <button type="button" (click)="goToNextCountry()"
-                    class="w-8 h-7 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Next Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </button>
+                <!-- Executive Overview -->
+                <button type="button" (click)="switchView('overview')"
+                  class="w-10 h-10 rounded-2xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Executive Overview" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                  </svg>
+                </button>
 
-                  <!-- Divider -->
-                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
+                <!-- Divider -->
+                <div class="w-7 h-px bg-slate-200 dark:bg-slate-700 my-1 shrink-0"></div>
 
-                  <!-- AI Assistance -->
-                  <button type="button" (click)="openAiModal()"
-                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="AI Assistance" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path
-                        d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
-                    </svg>
-                  </button>
+                <!-- Activity -->
+                <button type="button" (click)="openActivityModal('history')"
+                  class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Activity" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                </button>
 
-                  <!-- Add Country -->
-                  <button type="button" (click)="openCreate()"
-                    class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Add Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 4v16m8-8H4" />
-                    </svg>
-                  </button>
+                <!-- Export -->
+                <button type="button" (click)="openExportModal()"
+                  class="w-10 h-10 rounded-2xl bg-violet-50 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Export" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                </button>
 
-                  <!-- Edit Country -->
-                  <button type="button" (click)="openEdit(sc)"
-                    class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Edit Country" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                  </button>
-
-                  <!-- Executive Overview -->
-                  <button type="button" (click)="switchView('overview')"
-                    class="w-8 h-8 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Executive Overview" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="3" width="7" height="7" />
-                      <rect x="14" y="3" width="7" height="7" />
-                      <rect x="14" y="14" width="7" height="7" />
-                      <rect x="3" y="14" width="7" height="7" />
-                    </svg>
-                  </button>
-
-                  <!-- Divider -->
-                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
-
-                  <!-- Activity History -->
-                  <button type="button" (click)="openHistoryModal('current')"
-                    class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Activity History" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10" />
-                      <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                  </button>
-
-                  <!-- Recycle Bin -->
-                  <button type="button" (click)="openRecycleBinModal()"
-                    class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Recycle Bin" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    </svg>
-                  </button>
-
-                  <!-- Divider -->
-                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
-
-                  <!-- Download PDF -->
-                  <button type="button" (click)="downloadCountryPdf(sc)"
-                    class="w-8 h-8 rounded-xl bg-violet-50 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Download PDF" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                      <polyline points="14 2 14 8 20 8" />
-                    </svg>
-                  </button>
-
-                  <!-- Print -->
-                  <button type="button" (click)="printCountry(sc)"
-                    class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Print Record" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="6 9 6 2 18 2 18 9" />
-                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                      <rect x="6" y="14" width="12" height="8" />
-                    </svg>
-                  </button>
-
-                  <!-- Share Email -->
-                  <button type="button" (click)="openShare('email')"
-                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Share via Email" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                      <polyline points="22,6 12,13 2,6" />
-                    </svg>
-                  </button>
-
-                  <!-- Share WhatsApp -->
-                  <button type="button" (click)="openShare('whatsapp')"
-                    class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
-                    data-tooltip="Share via WhatsApp" data-tooltip-pos="left">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path
-                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                    </svg>
-                  </button>
-                </div>
+                <!-- Share -->
+                <button type="button" (click)="openShareModalUnified('email')"
+                  class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none focus:ring-0 outline-none"
+                  data-tooltip="Share" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                  </svg>
+                </button>
               </div>
             </aside>
           </div>
@@ -4396,8 +4398,12 @@
 
             <div class="flex items-center gap-3">
               <button type="button" (click)="openEdit(sc, $event)"
-                class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:border-[#00a6f4] hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs">
-                Edit Country
+                class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:border-[#00a6f4] hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center gap-2 transition cursor-pointer shadow-2xs">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                </svg>
+                <span>Edit Country</span>
               </button>
               <button type="button" (click)="exportViewedCountry()"
                 class="px-8 py-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0091ea] text-white text-sm font-bold shadow-md shadow-sky-500/25 transition cursor-pointer">
@@ -4426,12 +4432,41 @@
     <div
       class="bg-white dark:bg-slate-800 rounded-3xl max-w-lg w-full shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
       (click)="$event.stopPropagation()">
-      <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-700">
-        <h3 class="font-bold text-lg text-slate-900 dark:text-white">
-          {{ channel === 'whatsapp' ? 'Send WhatsApp Message' : 'Send Email' }}
-        </h3>
-        <button type="button" (click)="closeShare()" class="text-slate-400 hover:text-slate-600 cursor-pointer"
-          title="Close">
+      <div
+        class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40">
+        <!-- 2 Tabs: Share via Email and Share via WhatsApp (Point 38) -->
+        <div
+          class="inline-flex items-center p-1 rounded-2xl bg-slate-200/70 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <button type="button" (click)="shareChannel.set('email')"
+            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer"
+            [class.bg-white]="channel === 'email'" [class.text-[#00a6f4]]="channel === 'email'"
+            [class.shadow-xs]="channel === 'email'" [class.dark:bg-slate-700]="channel === 'email'"
+            [class.dark:text-white]="channel === 'email'" [class.text-slate-500]="channel !== 'email'"
+            [class.hover:text-slate-800]="channel !== 'email'">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            <span>Share Email</span>
+          </button>
+
+          <button type="button" (click)="shareChannel.set('whatsapp')"
+            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer"
+            [class.bg-white]="channel === 'whatsapp'" [class.text-emerald-600]="channel === 'whatsapp'"
+            [class.shadow-xs]="channel === 'whatsapp'" [class.dark:bg-slate-700]="channel === 'whatsapp'"
+            [class.dark:text-white]="channel === 'whatsapp'" [class.text-slate-500]="channel !== 'whatsapp'"
+            [class.hover:text-slate-800]="channel !== 'whatsapp'">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.11 6.84C8.94 6.84 8.66 6.9 8.42 7.16C8.18 7.42 7.5 8.05 7.5 9.35C7.5 10.65 8.45 11.9 8.58 12.07C8.72 12.25 10.45 14.91 13.1 16.05C15.3 17 15.75 16.82 16.23 16.78C16.7 16.73 17.76 16.15 17.98 15.53C18.2 14.91 18.2 14.38 18.13 14.26C18.07 14.15 17.9 14.08 17.65 13.96C17.39 13.83 16.14 13.22 15.91 13.13C15.68 13.05 15.51 13 15.34 13.26C15.17 13.51 14.69 14.08 14.54 14.26C14.39 14.43 14.25 14.45 13.99 14.33C13.74 14.2 12.92 13.93 11.95 13.07C11.19 12.39 10.68 11.56 10.53 11.31C10.39 11.05 10.52 10.92 10.64 10.79C10.76 10.68 10.9 10.5 11.03 10.35C11.16 10.2 11.2 10.09 11.28 9.92C11.37 9.75 11.33 9.61 11.26 9.48C11.2 9.35 10.68 8.08 10.47 7.56C10.26 7.05 10.05 7.12 9.9 7.11L9.41 7.1C9.24 7.1 8.97 7.04 8.73 7.3C8.49 7.56 9.11 6.84 9.11 6.84Z" />
+            </svg>
+            <span>Share WhatsApp</span>
+          </button>
+        </div>
+
+        <button type="button" (click)="closeShare()"
+          class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-black dark:text-white bg-transparent hover:text-[#f87171] hover:border-[#f87171] hover:bg-transparent flex items-center justify-center transition cursor-pointer"
+          data-tooltip="Close" data-tooltip-pos="bottom" data-tooltip-theme="light-red-nobg">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round">
             <path d="M18 6 6 18M6 6l12 12" />
@@ -4440,6 +4475,11 @@
       </div>
 
       <div class="px-6 py-6 space-y-6 overflow-y-auto custom-scrollbar">
+        <!-- Common subtitle for both tabs above From or To -->
+        <p class="text-xs text-slate-500 dark:text-slate-400 -mt-2">
+          Share country records via Email or WhatsApp with PDF attachment.
+        </p>
+
         @if (channel === 'whatsapp') {
         <div class="share-field">
           <span class="floating-notch-label floating-top select-none">From</span>
@@ -4501,21 +4541,18 @@
             </label>
             }
           </div>
-          <p class="text-[11px] text-slate-400">
-            Selected files are downloaded so you can attach them in {{ channel === 'whatsapp' ? 'WhatsApp' : 'your email
-            app' }}.
-          </p>
+
         </div>
       </div>
 
       <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 dark:border-slate-700">
         <button type="button" (click)="resetShareForm()"
           class="px-5 py-2 rounded-full border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer">
-          Reset
+          Clear
         </button>
         <button type="button" (click)="sendShare()"
           class="px-6 py-2 rounded-full bg-[#00a6f4] text-white text-xs font-bold hover:opacity-95 cursor-pointer">
-          Send
+          Save
         </button>
       </div>
     </div>
@@ -4793,37 +4830,42 @@
       class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
       (click)="$event.stopPropagation()">
 
-      <!-- Top header (Image 1: Country List, [Recycle Bin], [+ Add Country]) -->
-      <div class="flex items-center justify-between px-7 py-5 border-b border-slate-100 dark:border-slate-700">
-        <h3 class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2 cursor-pointer"
-          (click)="closeRecycleBinModal()">
-          <span>Country List</span>
-        </h3>
+      <!-- Top header with 2 Tabs: Activity History and Deleted (Point 36) -->
+      <div
+        class="flex items-center justify-between px-6 sm:px-7 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40">
+        <!-- 2 Tabs Switcher -->
+        <div
+          class="inline-flex items-center p-1 rounded-2xl bg-slate-200/70 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <button type="button" (click)="setActivityTab('history')"
+            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition cursor-pointer">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+            <span>Activity History</span>
+          </button>
 
-        <div class="flex items-center gap-2.5">
-          <div
-            class="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 shadow-2xs">
+          <button type="button" (click)="setActivityTab('deleted')"
+            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-slate-700 text-rose-600 dark:text-white shadow-xs transition cursor-pointer">
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>
-            <span>Recycle Bin</span>
-          </div>
-
-          <button type="button" (click)="closeRecycleBinModal(); openAdd()"
-            class="px-4 py-1.5 rounded-full bg-slate-900 hover:bg-black text-white text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-sm">
-            <span>+ Add Country</span>
-          </button>
-
-          <button type="button" (click)="closeRecycleBinModal()"
-            class="w-7 h-7 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer ml-1"
-            title="Close">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <span>Deleted</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700">
+              {{ deletedCountries().length }}
+            </span>
           </button>
         </div>
+
+        <!-- Round Close Button with light red hover (Matching Lookup popup per Point 42) -->
+        <button type="button" (click)="closeActivityModal()"
+          class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-black dark:text-white bg-transparent hover:text-[#f87171] hover:border-[#f87171] hover:bg-transparent flex items-center justify-center transition cursor-pointer"
+          data-tooltip="Close" data-tooltip-pos="bottom" data-tooltip-theme="light-red-nobg">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <!-- Popup Subheading (Image 1: Recycle Bin — Deleted Countries) -->
@@ -4934,19 +4976,40 @@
       class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
       (click)="$event.stopPropagation()">
 
-      <!-- Modal Header (Image 2) -->
-      <div class="flex items-center justify-between px-7 py-5 border-b border-slate-100 dark:border-slate-700">
-        <div>
-          <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">Country History</h3>
-          <p class="text-xs text-slate-400 mt-0.5">Audit trail for this record</p>
+      <!-- Top header with 2 Tabs: Activity History and Deleted (Point 36) -->
+      <div
+        class="flex items-center justify-between px-6 sm:px-7 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40">
+        <!-- 2 Tabs Switcher -->
+        <div
+          class="inline-flex items-center p-1 rounded-2xl bg-slate-200/70 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <button type="button" (click)="setActivityTab('history')"
+            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-slate-700 text-[#00a6f4] dark:text-white shadow-xs transition cursor-pointer">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+            <span>Activity History</span>
+          </button>
+
+          <button type="button" (click)="setActivityTab('deleted')"
+            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition cursor-pointer">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+            <span>Deleted</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-slate-200 text-slate-700">
+              {{ deletedCountries().length }}
+            </span>
+          </button>
         </div>
 
-        <button type="button" (click)="closeHistoryModal()"
-          class="w-7 h-7 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer"
-          title="Close">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
+        <!-- Round Close Button with light red hover (Matching Lookup popup per Point 42) -->
+        <button type="button" (click)="closeActivityModal()"
+          class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-black dark:text-white bg-transparent hover:text-[#f87171] hover:border-[#f87171] hover:bg-transparent flex items-center justify-center transition cursor-pointer"
+          data-tooltip="Close" data-tooltip-pos="bottom" data-tooltip-theme="light-red-nobg">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -5196,6 +5259,126 @@
   }
 
   <!-- ========================================================================= -->
+  <!-- MOD-EXPORT: POPUP — Export (Point 37: One Export popup with PDF and Print) -->
+  <!-- ========================================================================= -->
+  @if (isExportModalOpen()) {
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+    (click)="closeExportModal()">
+    <div
+      class="bg-white dark:bg-slate-800 rounded-3xl max-w-3xl lg:max-w-4xl w-full shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-slate-700 animate-in zoom-in-95"
+      (click)="$event.stopPropagation()">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 dark:border-slate-700">
+        <div class="flex items-center gap-2.5">
+          <div
+            class="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-slate-900 dark:text-white">Export Record</h3>
+            <p class="text-xs text-slate-400">Select fields and export format</p>
+          </div>
+        </div>
+
+        <button type="button" (click)="closeExportModal()"
+          class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-black dark:text-white bg-transparent hover:text-[#f87171] hover:border-[#f87171] hover:bg-transparent flex items-center justify-center transition cursor-pointer"
+          data-tooltip="Close" data-tooltip-pos="bottom" data-tooltip-theme="light-red-nobg">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Search & Select All Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-3.5 border-b border-slate-100 dark:border-slate-700/60 bg-white dark:bg-slate-800">
+        <div class="relative flex-1 max-w-sm">
+          <input type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
+            placeholder="Search fields..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+            class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
+          <svg xmlns="http://www.w3.org/2000/svg"
+            class="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+
+        <label
+          class="form-switch flex items-center justify-between sm:justify-end gap-3 cursor-pointer select-none">
+          <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Select All</span>
+          <input type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
+            (change)="setAllExportFields($any($event.target).checked)" />
+          <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+        </label>
+      </div>
+
+      <!-- Field Options Grid (arranged in clean rows of 3 to 4) -->
+      <div class="p-6 max-h-[55vh] overflow-y-auto custom-scrollbar">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          @for (f of visibleExportFields(); track f.key) {
+          <label
+            class="form-switch flex items-center justify-between w-full px-4 py-2.5 rounded-2xl border transition-all duration-150 cursor-pointer select-none"
+            [class.border-[#00a6f4]]="exportFields().has(f.key)"
+            [class.bg-sky-50/40]="exportFields().has(f.key)"
+            [class.dark:bg-sky-950/20]="exportFields().has(f.key)"
+            [class.border-slate-200]="!exportFields().has(f.key)"
+            [class.dark:border-slate-700/80]="!exportFields().has(f.key)"
+            [class.bg-slate-50/60]="!exportFields().has(f.key)"
+            [class.dark:bg-slate-900/40]="!exportFields().has(f.key)"
+            [class.hover:border-[#00a6f4]/60]="!exportFields().has(f.key)">
+            <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate pr-2">{{ f.label }}</span>
+            <input type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
+              (change)="toggleExportField(f.key)" />
+            <span class="form-switch-track shrink-0"><span class="form-switch-thumb"></span></span>
+          </label>
+          } @empty {
+          <div class="col-span-full py-10 text-center text-xs text-slate-400">No matching fields found</div>
+          }
+        </div>
+      </div>
+
+      <!-- Footer Bar with PDF and Print actions (One PDF and One Print Only) -->
+      <div
+        class="flex items-center justify-between gap-3 px-6 py-3.5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40">
+        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          {{ exportFields().size }} of {{ visibleExportFields().length }} selected
+        </span>
+
+        <div class="flex items-center gap-2.5">
+          <!-- Download PDF Button -->
+          <button type="button" (click)="exportPdfDirect()"
+            class="h-9 px-4 rounded-full border border-rose-300 dark:border-rose-700 bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs">
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+            <span>PDF</span>
+          </button>
+
+          <!-- Print Button -->
+          <button type="button" (click)="exportPrintDirect()"
+            class="h-9 px-4.5 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            <span>Print</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- ========================================================================= -->
   <!-- 7d. EXPORT PROMPT (View page, nothing switched on)                        -->
   <!-- ========================================================================= -->
   @if (isExportPromptOpen()) {
@@ -5299,7 +5482,7 @@
     class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 animate-in fade-in duration-200"
     (click)="closeAiModal()">
     <div
-      class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl w-full max-w-lg p-6 overflow-hidden flex flex-col gap-4 animate-in zoom-in-95 duration-200"
+      class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl w-full max-w-4xl p-6 sm:p-7 overflow-hidden flex flex-col gap-4 animate-in zoom-in-95 duration-200"
       (click)="$event.stopPropagation()">
       <!-- Modal Header -->
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700">
@@ -5316,9 +5499,14 @@
             <p class="text-xs text-slate-400">Paste raw text or notes to extract country master attributes</p>
           </div>
         </div>
+        <!-- Close button: round grey style like lookup popup (Point 42) -->
         <button type="button" (click)="closeAiModal()"
-          class="w-7 h-7 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer transition">
-          ✕
+          class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-black dark:text-white bg-transparent hover:text-[#f87171] hover:border-[#f87171] hover:bg-transparent flex items-center justify-center transition cursor-pointer"
+          data-tooltip="Close" data-tooltip-pos="bottom" data-tooltip-theme="light-red-nobg">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
         </button>
       </div>
 
@@ -5339,14 +5527,14 @@
         </button>
       </div>
 
-      <!-- Text Editor Area (Section 14.2) -->
+      <!-- Text Editor Area: Larger size and removed placeholder (Points 40 & 43) -->
       <div class="space-y-1">
         <label for="ai-textarea" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
           Raw Country Information / Unstructured Notes
         </label>
-        <textarea id="ai-textarea" rows="4" [ngModel]="aiInputText()" (ngModelChange)="aiInputText.set($event)"
-          placeholder="e.g. Country: United Arab Emirates, ISO code AE / ARE, ISO numeric 784, Calling code +971, Currency AED UAE Dirham, Nationality Emirati..."
-          class="w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 transition resize-none"></textarea>
+        <textarea id="ai-textarea" rows="8" [ngModel]="aiInputText()" (ngModelChange)="aiInputText.set($event)"
+          placeholder="" autofocus
+          class="w-full min-h-[190px] p-4 rounded-2xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 transition resize-none"></textarea>
       </div>
 
       <!-- Error / Status message -->
@@ -5407,32 +5595,25 @@
       </div>
       }
 
-      <!-- Modal Footer Actions: Start, Clear, Confirm (Section 14.3) -->
-      <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700">
+      <!-- Modal Footer Actions: Keep 2 buttons Start and Clear only (Point 41) -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-700">
         <button type="button" (click)="clearAiInput()"
-          class="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition">
+          class="px-5 py-2 rounded-full border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition">
           Clear
         </button>
 
-        <div class="flex items-center gap-2">
-          <button type="button" (click)="startAiExtraction()" [disabled]="aiIsProcessing()"
-            class="px-5 py-2 rounded-full border border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50">
-            @if (aiIsProcessing()) {
-            <svg class="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <circle cx="12" cy="12" r="10" stroke-width="4" class="opacity-25" />
-              <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" class="opacity-75" />
-            </svg>
-            <span>Processing...</span>
-            } @else {
-            <span>Start</span>
-            }
-          </button>
-
-          <button type="button" (click)="onAiConfirmClick()" [disabled]="!aiExtractedData()"
-            class="px-6 py-2 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25 disabled:opacity-40 disabled:cursor-not-allowed">
-            Confirm & Transfer
-          </button>
-        </div>
+        <button type="button" (click)="startAiExtraction()" [disabled]="aiIsProcessing()"
+          class="px-7 py-2 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-[#00a6f4]/25 disabled:opacity-50">
+          @if (aiIsProcessing()) {
+          <svg class="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10" stroke-width="4" class="opacity-25" />
+            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" class="opacity-75" />
+          </svg>
+          <span>Processing...</span>
+          } @else {
+          <span>Start</span>
+          }
+        </button>
       </div>
     </div>
   </div>
@@ -5570,14 +5751,13 @@
             </svg>
           </div>
           <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">World Country Lookup Table</h3>
-            <p class="text-xs text-slate-400">Search and select a country from the official Lookup Table (60+ standard
-              records)</p>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Country Lookup</h3>
+
           </div>
         </div>
         <button type="button" (click)="closeLookupModal()"
-          class="w-8 h-8 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center transition cursor-pointer"
-          title="Close (Esc)">
+          class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-black dark:text-white bg-transparent hover:text-[#f87171] hover:border-[#f87171] hover:bg-transparent flex items-center justify-center transition cursor-pointer"
+          data-tooltip="Close" data-tooltip-pos="bottom" data-tooltip-theme="light-red-nobg">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round">
             <path d="M18 6 6 18M6 6l12 12" />
@@ -5588,54 +5768,55 @@
       <!-- Search & Continent Filter Bar -->
       <div
         class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40 shrink-0 space-y-3">
+        <!-- Search bar is round shape with permanent voice input (Points 15 & 21) -->
         <div class="relative w-full">
           <input id="lookup-search-input" type="text" [ngModel]="lookupSearch()"
-            (ngModelChange)="lookupSearch.set($event); lookupSelectedIndex.set(0)"
-            placeholder="Search by country name, ISO code, dial code, currency, or capital... (↑ / ↓ to navigate, Enter to select)"
-            class="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 transition" />
+            (ngModelChange)="lookupSearch.set($event); lookupSelectedIndex.set(-1)" placeholder="Search"
+            class="w-full h-11 pl-10 pr-16 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 transition" />
           <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
-          @if (lookupSearch()) {
-          <button type="button" (click)="lookupSearch.set(''); lookupSelectedIndex.set(0)"
-            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-          </button>
-          }
+          <div class="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+            @if (lookupSearch()) {
+            <button type="button" (click)="lookupSearch.set(''); lookupSelectedIndex.set(-1)"
+              class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-0.5">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+            }
+            <button type="button" (click)="toggleVoiceInput('lookupSearch')"
+              class="p-0.5 text-[#00a6f4] hover:text-[#0092d6] cursor-pointer"
+              [class.text-red-500]="activeListeningField() === 'lookupSearch'"
+              [class.animate-pulse]="activeListeningField() === 'lookupSearch'" title="Voice input for Search">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <!-- Continent Filter Chips -->
+        <!-- Continent Filter Chips: black label, blue border and black text by default, blue on hover, solid blue when selected (Point 20) -->
         <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 text-xs">
-          <span class="text-slate-400 font-semibold shrink-0 mr-1">Continent:</span>
+          <span class="text-slate-900 dark:text-white font-bold shrink-0 mr-1">Continent:</span>
           @for (continent of lookupContinents; track continent) {
-          <button type="button" (click)="lookupContinentFilter.set(continent); lookupSelectedIndex.set(0)"
-            class="px-3 py-1 rounded-full font-semibold transition cursor-pointer shrink-0"
+          <button type="button" (click)="lookupContinentFilter.set(continent); lookupSelectedIndex.set(-1)"
+            class="px-3 py-1 rounded-full font-semibold border transition cursor-pointer shrink-0"
             [class.bg-[#00a6f4]]="lookupContinentFilter() === continent"
-            [class.text-white]="lookupContinentFilter() === continent"
+            [class.text-white]="lookupContinentFilter() === continent" [class.border-[#00a6f4]]="true"
             [class.bg-white]="lookupContinentFilter() !== continent"
             [class.dark:bg-slate-800]="lookupContinentFilter() !== continent"
-            [class.border]="lookupContinentFilter() !== continent"
-            [class.border-slate-200]="lookupContinentFilter() !== continent"
-            [class.dark:border-slate-700]="lookupContinentFilter() !== continent"
-            [class.text-slate-600]="lookupContinentFilter() !== continent"
-            [class.dark:text-slate-300]="lookupContinentFilter() !== continent">
+            [class.text-slate-900]="lookupContinentFilter() !== continent"
+            [class.dark:text-white]="lookupContinentFilter() !== continent"
+            [class.hover:text-[#00a6f4]]="lookupContinentFilter() !== continent"
+            [class.hover:border-[#0092d6]]="lookupContinentFilter() !== continent">
             {{ continent }}
           </button>
           }
         </div>
-      </div>
-
-      <!-- Informational banner -->
-      <div
-        class="px-6 py-2 bg-sky-50/60 dark:bg-sky-950/30 border-b border-sky-100 dark:border-sky-900/40 text-[11px] text-slate-600 dark:text-slate-300 flex items-center justify-between shrink-0">
-        <span>Showing <strong>{{ filteredLookupRecords().length }}</strong> matching records in World Lookup
-          Table</span>
-        <span class="text-slate-400 italic">Selecting a record fills the fields without saving. You can modify text
-          before saving.</span>
       </div>
 
       <!-- Records Table -->
@@ -5651,10 +5832,11 @@
           <p class="text-xs">Try searching by official country name, ISO 2 or 3 letter code, or calling code.</p>
         </div>
         } @else {
+        <!-- Cards: only keep country flag and name rest of all removed (Point 13) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           @for (rec of filteredLookupRecords(); track rec.code; let idx = $index) {
           <div role="button" tabindex="0" (click)="selectLookupRecord(rec)" (keydown.enter)="selectLookupRecord(rec)"
-            class="p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 text-left group"
+            class="p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center gap-3 text-left group"
             [class.border-[#00a6f4]]="lookupSelectedIndex() === idx" [class.ring-2]="lookupSelectedIndex() === idx"
             [class.ring-[#00a6f4]/30]="lookupSelectedIndex() === idx"
             [class.bg-sky-50/60]="lookupSelectedIndex() === idx"
@@ -5663,60 +5845,25 @@
             [class.dark:border-slate-700]="lookupSelectedIndex() !== idx"
             [class.bg-white]="lookupSelectedIndex() !== idx" [class.dark:bg-slate-800]="lookupSelectedIndex() !== idx"
             [class.hover:border-[#00a6f4]]="true">
-            <div class="flex items-center gap-3 min-w-0">
-              <img [src]="rec.flag" [alt]="rec.name"
-                class="w-9 h-6 object-cover rounded shadow-2xs border border-slate-200 dark:border-slate-700 shrink-0"
-                (error)="onFlagError($event)" />
-              <div class="min-w-0">
-                <div class="flex items-center gap-2">
-                  <span
-                    class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#00a6f4] transition-colors truncate">
-                    {{ rec.name }}
-                  </span>
-                  <span
-                    class="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
-                    {{ rec.code }} / {{ rec.isoCode3 }}
-                  </span>
-                </div>
-                <div class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
-                  <span>ISD: <strong class="text-slate-600 dark:text-slate-300 font-mono">{{ rec.isd }}</strong></span>
-                  <span>·</span>
-                  <span>Currency: <strong class="text-slate-600 dark:text-slate-300">{{ rec.currency }}</strong></span>
-                  <span>·</span>
-                  <span class="truncate">{{ rec.continent }}</span>
-                </div>
-              </div>
-            </div>
-            <button type="button" (click)="selectLookupRecord(rec); $event.stopPropagation()"
-              class="px-3.5 py-1.5 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] group-hover:bg-[#00a6f4] group-hover:text-white border border-sky-200/80 dark:border-sky-800 text-xs font-bold transition cursor-pointer shrink-0">
-              Select
-            </button>
+            <img [src]="rec.flag" [alt]="rec.name"
+              class="w-9 h-6 object-cover rounded shadow-2xs border border-slate-200 dark:border-slate-700 shrink-0"
+              (error)="onFlagError($event)" />
+            <span
+              class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#00a6f4] transition-colors truncate">
+              {{ rec.name }}
+            </span>
           </div>
           }
         </div>
         }
       </div>
 
-      <!-- Modal Footer -->
+      <!-- Modal Footer (Point 18: showing label in look up make it grey) -->
       <div
-        class="px-6 py-3.5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-between text-xs text-slate-500 shrink-0">
-        <div class="flex items-center gap-3">
-          <span><kbd
-              class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[10px]">↑</kbd>
-            <kbd
-              class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[10px]">↓</kbd>
-            to navigate</span>
-          <span><kbd
-              class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[10px]">Enter</kbd>
-            to select</span>
-          <span><kbd
-              class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[10px]">Esc</kbd>
-            to close</span>
-        </div>
-        <button type="button" (click)="closeLookupModal()"
-          class="px-5 py-1.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer">
-          Close
-        </button>
+        class="px-6 py-3.5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-center text-xs shrink-0">
+        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">
+          Showing {{ filteredLookupRecords().length }} matching records in World Lookup Table
+        </span>
       </div>
 
     </div>

@@ -34,6 +34,7 @@ export class App implements OnInit {
     const hideTooltip = () => {
       if (tooltipEl) {
         tooltipEl.classList.remove('active');
+        tooltipEl.removeAttribute('data-theme');
       }
       currentTarget = null;
     };
@@ -55,6 +56,13 @@ export class App implements OnInit {
 
       currentTarget = target;
       textEl.textContent = text;
+
+      const theme = target.getAttribute('data-tooltip-theme');
+      if (theme) {
+        tooltipEl!.setAttribute('data-theme', theme);
+      } else {
+        tooltipEl!.removeAttribute('data-theme');
+      }
 
       // Position logic: calculate target bounds
       const rect = target.getBoundingClientRect();

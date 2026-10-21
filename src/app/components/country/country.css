@@ -279,7 +279,7 @@
 /* ========================================================================= */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #80d6fb #f8fafc;
+  scrollbar-color: #cbd5e1 #f8fafc;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -293,19 +293,19 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #80d6fb;
+  background: #cbd5e1;
   border-radius: 9999px;
   border: 1px solid transparent;
   background-clip: padding-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #52c5f8;
+  background: #94a3b8;
 }
 
 :host-context(.dark) .custom-scrollbar,
 .dark .custom-scrollbar {
-  scrollbar-color: #38bdf8 #0f172a;
+  scrollbar-color: #64748b #0f172a;
 }
 
 :host-context(.dark) .custom-scrollbar::-webkit-scrollbar-track,
@@ -315,12 +315,12 @@
 
 :host-context(.dark) .custom-scrollbar::-webkit-scrollbar-thumb,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #38bdf8;
+  background: #64748b;
 }
 
 :host-context(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #0284c7;
+  background: #94a3b8;
 }
 
 /* ========================================================================= */
@@ -958,7 +958,7 @@
 
 .page-dropdown-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #5ecafc #edf8fd;
+  scrollbar-color: #cbd5e1 #edf8fd;
 }
 
 .page-dropdown-scroll::-webkit-scrollbar {
@@ -966,17 +966,17 @@
 }
 .page-dropdown-scroll::-webkit-scrollbar-track {
   background: #edf8fd;
-  border: 1px solid #d4effd;
+  border: 1px solid #e2e8f0;
   border-radius: 9999px;
   margin: 6px 0;
 }
 .page-dropdown-scroll::-webkit-scrollbar-thumb {
-  background: #5ecafc;
+  background: #cbd5e1;
   border-radius: 9999px;
   border: 1.5px solid #edf8fd;
 }
 .page-dropdown-scroll::-webkit-scrollbar-thumb:hover {
-  background: #00a6f4;
+  background: #94a3b8;
 }
 
 :host-context(.dark) .page-dropdown-scroll::-webkit-scrollbar-track,
@@ -986,7 +986,7 @@
 }
 :host-context(.dark) .page-dropdown-scroll::-webkit-scrollbar-thumb,
 .dark .page-dropdown-scroll::-webkit-scrollbar-thumb {
-  background: #38bdf8;
+  background: #64748b;
   border-color: #0f172a;
 }
 
@@ -1001,17 +1001,16 @@
   z-index: 1000 !important;
 }
 
-/* Middle scrollable columns container: Table scrollbars (Image 1 sky blue theme for both vertical & horizontal) */
-/* Middle scrollable columns container: Table scrollbars (Exact reference #20b7fa sky blue) */
+/* Middle scrollable columns container: Table scrollbars (Grey theme for both vertical & horizontal per Point 33) */
 .country-table-scroll {
   overflow-y: auto !important;
   scrollbar-width: thin !important;
-  scrollbar-color: #20b7fa #f8fafc !important;
+  scrollbar-color: #cbd5e1 #f8fafc !important;
 }
 
 :host-context(.dark) .country-table-scroll,
 .dark .country-table-scroll {
-  scrollbar-color: #20b7fa #0f172a !important;
+  scrollbar-color: #64748b #0f172a !important;
 }
 
 .country-table-scroll::-webkit-scrollbar {
@@ -1036,25 +1035,25 @@
 }
 
 .country-table-scroll::-webkit-scrollbar-thumb:vertical {
-  background: #20b7fa;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 
 .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
-  background: #1a9ee6;
+  background: #94a3b8;
 }
 
 :host-context(.dark) .country-table-scroll::-webkit-scrollbar-thumb:vertical,
 .dark .country-table-scroll::-webkit-scrollbar-thumb:vertical {
-  background: #20b7fa;
+  background: #64748b;
 }
 
 :host-context(.dark) .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover,
 .dark .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
-  background: #1a9ee6;
+  background: #94a3b8;
 }
 
-/* Vertical scrollbar buttons (Image 1 replica: blue up & down arrows) */
+/* Vertical scrollbar buttons (Grey up & down arrows per Point 33) */
 .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement {
   display: block !important;
   height: 13px !important;
@@ -1062,7 +1061,7 @@
   background-color: transparent !important;
   background-repeat: no-repeat !important;
   background-position: center 3px !important;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,4 3,20 21,20'/></svg>") !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2394a3b8'><polygon points='12,4 3,20 21,20'/></svg>") !important;
 }
 
 .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment {
@@ -1072,20 +1071,20 @@
   background-color: transparent !important;
   background-repeat: no-repeat !important;
   background-position: center 3px !important;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,20 3,4 21,4'/></svg>") !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2394a3b8'><polygon points='12,20 3,4 21,4'/></svg>") !important;
 }
 
 :host-context(.dark) .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement,
 .dark .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,4 3,20 21,20'/></svg>") !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2364748b'><polygon points='12,4 3,20 21,20'/></svg>") !important;
 }
 
 :host-context(.dark) .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment,
 .dark .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,20 3,4 21,4'/></svg>") !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2364748b'><polygon points='12,20 3,4 21,4'/></svg>") !important;
 }
 
-/* Middle Columns Horizontal Scrollbar: Reference #20b7fa thin line */
+/* Middle Columns Horizontal Scrollbar: Grey line per Point 33 */
 .middle-columns-scrollbar-track {
   height: 6px;
   background: #ffffff;
@@ -1095,14 +1094,14 @@
   overflow-y: hidden;
   overflow-x: auto;
   scrollbar-width: thin;
-  scrollbar-color: #20b7fa #ffffff;
+  scrollbar-color: #cbd5e1 #ffffff;
 }
 
 :host-context(.dark) .middle-columns-scrollbar-track,
 .dark .middle-columns-scrollbar-track {
   background: #1e293b;
   border-color: #334155;
-  scrollbar-color: #20b7fa #1e293b;
+  scrollbar-color: #64748b #1e293b;
 }
 
 .middle-columns-scrollbar-track::-webkit-scrollbar {
@@ -1129,22 +1128,22 @@
 }
 
 .middle-columns-scrollbar-track::-webkit-scrollbar-thumb {
-  background: #20b7fa;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 
 .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover {
-  background: #1a9ee6;
+  background: #94a3b8;
 }
 
 :host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-thumb,
 .dark .middle-columns-scrollbar-track::-webkit-scrollbar-thumb {
-  background: #20b7fa;
+  background: #64748b;
 }
 
 :host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover,
 .dark .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover {
-  background: #1a9ee6;
+  background: #94a3b8;
 }
 
 /* Right Side Panel Accordion Circular Toggle Button (Image 4 Replica) */
@@ -1729,3 +1728,17 @@
   }
 }
 
+/* Custom light-blue scrollbar for Currency Master dropdown (matching user screenshot) */
+.currency-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.currency-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.currency-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #38bdf8;
+  border-radius: 9999px;
+}
+.currency-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #00a6f4;
+}
