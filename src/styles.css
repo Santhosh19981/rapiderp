@@ -28,12 +28,12 @@
 /* ========================================================================= */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #80d6fb #f8fafc;
+  scrollbar-color: #20b7fa #f8fafc;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -42,37 +42,66 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #80d6fb;
+  background: #20b7fa;
   border-radius: 9999px;
-  border: 1px solid transparent;
-  background-clip: padding-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #52c5f8;
+  background: #1a9ee6;
 }
 
-/* Table vertical scrollbar is explicitly enabled; horizontal scrollbar is handled exclusively by middle-columns-scrollbar-track between fixed columns */
+/* Scrollbar triangle arrow buttons matching Image 1 replica */
+.custom-scrollbar::-webkit-scrollbar-button:vertical:start:decrement,
+.country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement {
+  display: block !important;
+  height: 13px !important;
+  width: 8px !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center 3px !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,4 3,20 21,20'/></svg>") !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-button:vertical:end:increment,
+.country-table-scroll::-webkit-scrollbar-button:vertical:end:increment {
+  display: block !important;
+  height: 13px !important;
+  width: 8px !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center 3px !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,20 3,4 21,4'/></svg>") !important;
+}
+
+/* Horizontal scrollbar buttons: completely hidden (clean scrollbar, no buttons or borders) */
+.custom-scrollbar::-webkit-scrollbar-button:horizontal,
+.country-table-scroll::-webkit-scrollbar-button:horizontal,
+.middle-columns-scrollbar-track::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+
+/* Table scrollbars (Image 1 sky blue theme for both vertical & horizontal) */
 .country-table-scroll {
   overflow-y: auto !important;
-  overflow-x: hidden !important;
   scrollbar-width: thin !important;
-  scrollbar-color: #cbd5e1 #f8fafc !important;
+  scrollbar-color: #20b7fa #f8fafc !important;
 }
 
 html.dark .country-table-scroll,
 .dark .country-table-scroll {
-  scrollbar-color: #475569 #0f172a !important;
+  scrollbar-color: #20b7fa #0f172a !important;
 }
 
 .country-table-scroll::-webkit-scrollbar {
-  width: 8px !important;
-  height: 0px !important;
+  width: 6px !important;
+  height: 6px !important;
   display: block !important;
 }
 
 .country-table-scroll::-webkit-scrollbar:vertical {
-  width: 8px !important;
+  width: 6px !important;
   display: block !important;
 }
 
@@ -82,12 +111,12 @@ html.dark .country-table-scroll,
 }
 
 .country-table-scroll::-webkit-scrollbar-thumb:vertical {
-  background: #cbd5e1 !important;
+  background: #20b7fa !important;
   border-radius: 9999px !important;
 }
 
 .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
-  background: #00a6f4 !important;
+  background: #1a9ee6 !important;
 }
 
 html.dark .country-table-scroll::-webkit-scrollbar-track:vertical,
@@ -98,34 +127,48 @@ html.dark .country-table-scroll::-webkit-scrollbar-track:vertical,
 
 html.dark .country-table-scroll::-webkit-scrollbar-thumb:vertical,
 .dark .country-table-scroll::-webkit-scrollbar-thumb:vertical {
-  background: #475569 !important;
+  background: #20b7fa !important;
 }
 
 html.dark .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover,
 .dark .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
-  background: #38bdf8 !important;
+  background: #1a9ee6 !important;
 }
 
 .country-table-scroll::-webkit-scrollbar:horizontal {
-  display: none !important;
-  height: 0px !important;
-  width: 0px !important;
+  height: 6px !important;
+  display: block !important;
 }
 
-.country-table-scroll::-webkit-scrollbar-button,
-.country-table-scroll::-webkit-scrollbar-button:horizontal {
-  display: none !important;
-  width: 0px !important;
-  height: 0px !important;
-}
-
-.country-table-scroll::-webkit-scrollbar-track:horizontal,
-.country-table-scroll::-webkit-scrollbar-thumb:horizontal,
-.country-table-scroll::-webkit-scrollbar-corner {
-  display: none !important;
+.country-table-scroll::-webkit-scrollbar-track:horizontal {
   background: transparent !important;
-  height: 0px !important;
-  width: 0px !important;
+  border: none !important;
+  border-radius: 9999px !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-thumb:horizontal {
+  background: #20b7fa !important;
+  border-radius: 9999px !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-thumb:horizontal:hover {
+  background: #1a9ee6 !important;
+}
+
+html.dark .country-table-scroll::-webkit-scrollbar-track:horizontal,
+.dark .country-table-scroll::-webkit-scrollbar-track:horizontal {
+  background: transparent !important;
+  border: none !important;
+}
+
+html.dark .country-table-scroll::-webkit-scrollbar-thumb:horizontal,
+.dark .country-table-scroll::-webkit-scrollbar-thumb:horizontal {
+  background: #20b7fa !important;
+}
+
+html.dark .country-table-scroll::-webkit-scrollbar-thumb:horizontal:hover,
+.dark .country-table-scroll::-webkit-scrollbar-thumb:horizontal:hover {
+  background: #1a9ee6 !important;
 }
 
 html.dark .custom-scrollbar,
@@ -146,6 +189,21 @@ html.dark .custom-scrollbar::-webkit-scrollbar-thumb,
 html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #0ea5e9;
+}
+
+/* Dark mode vertical scrollbar arrows */
+html.dark .custom-scrollbar::-webkit-scrollbar-button:vertical:start:decrement,
+.dark .custom-scrollbar::-webkit-scrollbar-button:vertical:start:decrement,
+html.dark .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement,
+.dark .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2338bdf8'><polygon points='12,4 3,20 21,20'/></svg>") !important;
+}
+
+html.dark .custom-scrollbar::-webkit-scrollbar-button:vertical:end:increment,
+.dark .custom-scrollbar::-webkit-scrollbar-button:vertical:end:increment,
+html.dark .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment,
+.dark .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2338bdf8'><polygon points='12,20 3,4 21,4'/></svg>") !important;
 }
 
 /* ========================================================================= */

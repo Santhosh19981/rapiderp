@@ -1001,33 +1001,27 @@
   z-index: 1000 !important;
 }
 
-/* Middle scrollable columns container: hide native horizontal scrollbar completely so only custom middle track shows, but RE-ENABLE vertical scrollbar */
+/* Middle scrollable columns container: Table scrollbars (Image 1 sky blue theme for both vertical & horizontal) */
+/* Middle scrollable columns container: Table scrollbars (Exact reference #20b7fa sky blue) */
 .country-table-scroll {
   overflow-y: auto !important;
-  overflow-x: hidden !important;
   scrollbar-width: thin !important;
-  scrollbar-color: #cbd5e1 #f8fafc !important;
+  scrollbar-color: #20b7fa #f8fafc !important;
 }
 
 :host-context(.dark) .country-table-scroll,
 .dark .country-table-scroll {
-  scrollbar-color: #475569 #0f172a !important;
+  scrollbar-color: #20b7fa #0f172a !important;
 }
 
 .country-table-scroll::-webkit-scrollbar {
-  width: 8px !important;
-  height: 0px !important;
-}
-
-.country-table-scroll::-webkit-scrollbar:horizontal {
-  display: none !important;
-  height: 0px !important;
-  width: 0px !important;
+  width: 6px !important;
+  height: 6px !important;
 }
 
 .country-table-scroll::-webkit-scrollbar:vertical {
   display: block !important;
-  width: 8px !important;
+  width: 6px !important;
 }
 
 .country-table-scroll::-webkit-scrollbar-track:vertical {
@@ -1042,39 +1036,73 @@
 }
 
 .country-table-scroll::-webkit-scrollbar-thumb:vertical {
-  background: #cbd5e1;
+  background: #20b7fa;
   border-radius: 9999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
 }
 
 .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
-  background: #00a6f4;
+  background: #1a9ee6;
 }
 
 :host-context(.dark) .country-table-scroll::-webkit-scrollbar-thumb:vertical,
 .dark .country-table-scroll::-webkit-scrollbar-thumb:vertical {
-  background: #475569;
+  background: #20b7fa;
 }
 
 :host-context(.dark) .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover,
 .dark .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
-  background: #38bdf8;
+  background: #1a9ee6;
 }
 
-/* Middle Columns Horizontal Scrollbar: strictly starts from where scrollable columns start and ends before fixed columns */
+/* Vertical scrollbar buttons (Image 1 replica: blue up & down arrows) */
+.country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement {
+  display: block !important;
+  height: 13px !important;
+  width: 8px !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center 3px !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,4 3,20 21,20'/></svg>") !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-button:vertical:end:increment {
+  display: block !important;
+  height: 13px !important;
+  width: 8px !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center 3px !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,20 3,4 21,4'/></svg>") !important;
+}
+
+:host-context(.dark) .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement,
+.dark .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,4 3,20 21,20'/></svg>") !important;
+}
+
+:host-context(.dark) .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment,
+.dark .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2320b7fa'><polygon points='12,20 3,4 21,4'/></svg>") !important;
+}
+
+/* Middle Columns Horizontal Scrollbar: Reference #20b7fa thin line */
 .middle-columns-scrollbar-track {
   height: 6px;
-  background: rgba(226, 232, 240, 0.75);
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
   border-radius: 9999px;
   overflow-y: hidden;
   overflow-x: auto;
   scrollbar-width: thin;
+  scrollbar-color: #20b7fa #ffffff;
 }
 
 :host-context(.dark) .middle-columns-scrollbar-track,
 .dark .middle-columns-scrollbar-track {
-  background: rgba(51, 65, 85, 0.75);
+  background: #1e293b;
+  border-color: #334155;
+  scrollbar-color: #20b7fa #1e293b;
 }
 
 .middle-columns-scrollbar-track::-webkit-scrollbar {
@@ -1088,18 +1116,50 @@
 }
 
 .middle-columns-scrollbar-track::-webkit-scrollbar-track {
-  background: transparent;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
   border-radius: 9999px;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-track,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-color: #334155;
 }
 
 .middle-columns-scrollbar-track::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #00a6f4, #0284c7);
+  background: #20b7fa;
   border-radius: 9999px;
-  box-shadow: 0 1px 3px rgba(0, 166, 244, 0.35);
 }
 
 .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, #38bdf8, #00a6f4);
+  background: #1a9ee6;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-thumb,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-thumb {
+  background: #20b7fa;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover {
+  background: #1a9ee6;
+}
+
+/* Right Side Panel Accordion Circular Toggle Button (Image 4 Replica) */
+.side-accordion-toggle {
+  box-shadow: 0 4px 14px -2px rgba(0, 166, 244, 0.22), 0 2px 6px -1px rgba(15, 23, 42, 0.08);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.side-accordion-toggle:hover {
+  box-shadow: 0 8px 22px -3px rgba(0, 166, 244, 0.38), 0 3px 8px -2px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px) scale(1.05);
+}
+
+.side-accordion-toggle:active {
+  transform: translateY(0) scale(0.95);
 }
 
 /* Keyboard Grid Navigation Focus Box Outline */

@@ -1742,8 +1742,7 @@
                           [class.bg-sky-50/60]="selectedIds().has(c.id) && highlightedCountryId() !== c.id"
                           [class.active-status-editing]="activeTableStatusMenu() === c.id"
                           [style.z-index]="activeTableStatusMenu() === c.id ? 999 : null"
-                          [style.position]="activeTableStatusMenu() === c.id ? 'relative' : null"
-                          (click)="openView(c)">
+                          [style.position]="activeTableStatusMenu() === c.id ? 'relative' : null" (click)="openView(c)">
                           @if (isSelectColumnVisible()) {
                           <td class="col-select sticky-col sticky-left-0 py-3 px-4 text-center cursor-pointer"
                             [id]="'cell-' + rIdx + '-select'"
@@ -2098,8 +2097,7 @@
                               </div>
                               } @else {
                               <!-- Default: Label badge ONLY (Clean display, double click to edit) -->
-                              <div (dblclick)="openTableStatusEditor(c.id, $event)"
-                                title="Double click to edit status"
+                              <div (dblclick)="openTableStatusEditor(c.id, $event)" title="Double click to edit status"
                                 class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all border shadow-2xs select-none cursor-pointer hover:ring-2 hover:ring-[#00a6f4]/35"
                                 [class.bg-emerald-50]="c.status === 'Active'"
                                 [class.border-emerald-200]="c.status === 'Active'"
@@ -2149,7 +2147,8 @@
                               </span>
                               <button type="button" (click)="openView(c)"
                                 class="w-7 h-7 rounded-full bg-[#00a6f4] hover:bg-sky-500 text-white flex items-center justify-center shadow-xs cursor-pointer transition-all duration-150 shrink-0 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:scale-110 active:scale-95"
-                                [class.!opacity-100]="selectedIds().has(c.id)" [class.!pointer-events-auto]="selectedIds().has(c.id)" title="View Details">
+                                [class.!opacity-100]="selectedIds().has(c.id)"
+                                [class.!pointer-events-auto]="selectedIds().has(c.id)" title="View Details">
                                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                   stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                   <path d="m9 18 6-6-6-6" />
@@ -2172,37 +2171,17 @@
                   </div>
 
                   <!-- Single Horizontal Scrollbar Bar strictly between Fixed Left Columns (Name, Code) and Fixed Right Columns (Status, Action) -->
-                  <div class="middle-scrollbar-bar shrink-0 relative h-7 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 select-none flex items-center">
-                    <div
-                      class="custom-middle-scrollbar-dock absolute flex items-center gap-1.5 px-2.5 py-0.5 bg-sky-50/90 dark:bg-slate-700/80 backdrop-blur-md rounded-full border border-sky-100 dark:border-slate-600 shadow-2xs transition-all select-none"
+                  <div
+                    class="middle-scrollbar-bar shrink-0 relative h-[6px] bg-white dark:bg-slate-800 select-none flex items-center border-t border-slate-200/60 dark:border-slate-700">
+                    <div class="custom-middle-scrollbar-dock absolute flex items-center transition-all select-none"
                       [style.left.px]="isSelectColumnVisible() ? 396 : 340"
                       [style.right.px]="(hiddenColumns().has('status') ? 140 : 270) + 8">
 
-                      <!-- Left Scroll Arrow Button -->
-                      <button type="button" (click)="scrollColumnsBy(-220)"
-                        class="w-4 h-4 rounded-full flex items-center justify-center text-slate-500 hover:text-[#00a6f4] hover:bg-white dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
-                        title="Scroll Columns Left">
-                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                          <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                      </button>
-
-                      <!-- Middle Scroll Track -->
-                      <div
-                        class="middle-columns-scrollbar-track flex-1 flex items-center overflow-x-auto"
-                        #middleScrollbarTrack
-                        (scroll)="onMiddleScrollbarScroll($event)">
+                      <!-- Middle Scroll Track: Pure clean ultra-thin scrollbar matching reference image -->
+                      <div class="middle-columns-scrollbar-track flex-1 flex items-center overflow-x-auto"
+                        #middleScrollbarTrack (scroll)="onMiddleScrollbarScroll($event)">
                         <div [style.width.px]="scrollableScrollWidth()" class="h-[6px] shrink-0"></div>
                       </div>
-
-                      <!-- Right Scroll Arrow Button -->
-                      <button type="button" (click)="scrollColumnsBy(220)"
-                        class="w-4 h-4 rounded-full flex items-center justify-center text-slate-500 hover:text-[#00a6f4] hover:bg-white dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
-                        title="Scroll Columns Right">
-                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                          <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                      </button>
                     </div>
                   </div>
 
@@ -2313,43 +2292,57 @@
                   }
                   }
 
-                  <!-- Pagination (Exact Replica of Screenshots 1 & 2) -->
+                  <!-- Pagination (Exact Replica of Reference App) -->
                   <div
-                    class="relative z-30 shrink-0 flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs">
-                    <!-- Left: Page Size Selectors (Screenshot 1 replica) -->
-                    <div class="flex items-center gap-1.5 relative">
+                    class="relative z-30 shrink-0 flex flex-wrap items-center justify-between gap-4 px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
+                    <!-- Left: Page Size Selectors (Exact match to reference app: 10 active #0070ba, 25 50 75 ... border-sky-300 text-sky-500) -->
+                    <div class="flex items-center space-x-2 relative">
                       @for (size of pageSizeOptions; track size) {
                       <button type="button" (click)="setPageSize(size)"
-                        class="h-8 min-w-[36px] px-2 rounded-full border text-xs font-medium cursor-pointer transition flex items-center justify-center"
-                        [class.border-[#00a6f4]]="pageSize() === size" [class.bg-[#00a6f4]]="pageSize() === size"
-                        [class.text-white]="pageSize() === size" [class.border-[#38bdf8]]="pageSize() !== size"
-                        [class.bg-white]="pageSize() !== size" [class.text-[#0284c7]]="pageSize() !== size"
-                        [class.dark:bg-slate-800]="pageSize() !== size">
+                        class="h-8 min-w-[60px] px-4 rounded-full border text-sm font-medium cursor-pointer transition-all flex items-center justify-center select-none shadow-xs"
+                        [class.border-[#0070ba]]="pageSize() === size" [class.bg-[#0070ba]]="pageSize() === size"
+                        [class.text-white]="pageSize() === size" [class.hover:bg-[#005a96]]="pageSize() === size"
+                        [class.border-sky-300]="pageSize() !== size" [class.bg-white]="pageSize() !== size"
+                        [class.text-sky-500]="pageSize() !== size" [class.hover:bg-[#0070ba]]="pageSize() !== size"
+                        [class.hover:border-[#0070ba]]="pageSize() !== size"
+                        [class.hover:text-white]="pageSize() !== size" [class.dark:bg-slate-800]="pageSize() !== size"
+                        [class.dark:text-white]="pageSize() !== size" [class.dark:border-sky-800]="pageSize() !== size">
                         {{ size }}
                       </button>
                       }
 
-                      <!-- '...' more page sizes button (Screenshot 1 replica) -->
+                      <!-- '...' more page sizes button (Exact match to reference app: ellipsis icon in pill) -->
                       <div class="relative" data-popover>
                         <button type="button" (click)="togglePageSizeMenu($event)"
-                          class="h-8 min-w-[36px] px-2 rounded-full border text-xs font-medium cursor-pointer transition flex items-center justify-center"
-                          [class.border-[#00a6f4]]="isPageSizeMenuOpen() || pageSize() > 75"
-                          [class.bg-[#00a6f4]]="isPageSizeMenuOpen() || pageSize() > 75"
+                          class="h-8 min-w-[60px] px-4 rounded-full border text-sm font-medium cursor-pointer transition-all flex items-center justify-center select-none shadow-xs"
+                          [class.border-[#0070ba]]="isPageSizeMenuOpen() || pageSize() > 75"
+                          [class.bg-[#0070ba]]="isPageSizeMenuOpen() || pageSize() > 75"
                           [class.text-white]="isPageSizeMenuOpen() || pageSize() > 75"
-                          [class.border-[#38bdf8]]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.border-sky-300]="!isPageSizeMenuOpen() && pageSize() <= 75"
                           [class.bg-white]="!isPageSizeMenuOpen() && pageSize() <= 75"
-                          [class.text-[#0284c7]]="!isPageSizeMenuOpen() && pageSize() <= 75"
-                          [class.dark:bg-slate-800]="!isPageSizeMenuOpen() && pageSize() <= 75" title="More page sizes">
-                          ...
+                          [class.text-sky-500]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.hover:bg-[#0070ba]]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.hover:border-[#0070ba]]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.hover:text-white]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.dark:bg-slate-800]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.dark:text-white]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          [class.dark:border-sky-800]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                          title="More page sizes">
+                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
+                            <circle cx="19" cy="12" r="1.5" fill="currentColor"></circle>
+                            <circle cx="5" cy="12" r="1.5" fill="currentColor"></circle>
+                          </svg>
                         </button>
 
-                        <!-- Extended page size popup menu (Screenshot 5 exact replica) -->
+                        <!-- Extended page size popup menu -->
                         @if (isPageSizeMenuOpen()) {
                         <div
                           class="absolute bottom-full mb-3 left-0 w-36 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-sky-200 dark:border-slate-700 p-3 flex flex-col gap-2 z-40 animate-in fade-in duration-150">
                           @for (opt of extendedPageSizes; track opt) {
                           <button type="button" (click)="selectExtendedPageSize(opt)"
-                            class="w-full py-1.5 px-3 rounded-full border border-sky-200 dark:border-slate-700 text-[#00a6f4] text-xs font-bold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer"
+                            class="w-full py-1.5 px-3 rounded-full border border-sky-200 dark:border-slate-700 text-[#0070ba] text-xs font-bold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer"
                             [class.bg-[#e6f6fe]]="pageSize() === opt">
                             {{ opt }}
                           </button>
@@ -2357,7 +2350,7 @@
                           <!-- Custom Size option (default is Custom button, on click shows Size input) -->
                           @if (!isCustomPageSizeOpen()) {
                           <button type="button" (click)="isCustomPageSizeOpen.set(true)"
-                            class="w-full py-1.5 px-3 rounded-full border border-sky-200 dark:border-slate-700 text-[#00a6f4] text-xs font-bold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer">
+                            class="w-full py-1.5 px-3 rounded-full border border-sky-200 dark:border-slate-700 text-[#0070ba] text-xs font-bold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer">
                             Custom
                           </button>
                           } @else {
@@ -2371,13 +2364,13 @@
                                 [class.border-rose-400]="pageSizeErrorMessage() && customPageSizeInput()"
                                 [class.text-rose-600]="pageSizeErrorMessage() && customPageSizeInput()"
                                 [class.border-sky-300]="!pageSizeErrorMessage() || !customPageSizeInput()"
-                                [class.text-[#00a6f4]]="!pageSizeErrorMessage() || !customPageSizeInput()" />
+                                [class.text-[#0070ba]]="!pageSizeErrorMessage() || !customPageSizeInput()" />
                               <button type="button" (click)="applyCustomPageSize()"
                                 [disabled]="!isCustomPageSizeValid()" [class.opacity-40]="!isCustomPageSizeValid()"
                                 [class.cursor-not-allowed]="!isCustomPageSizeValid()"
                                 [class.cursor-pointer]="isCustomPageSizeValid()"
-                                [class.hover:bg-[#0091ea]]="isCustomPageSizeValid()"
-                                class="flex-1 py-1 px-2.5 rounded-full bg-[#00a6f4] text-white text-xs font-bold transition shadow-2xs">
+                                [class.hover:bg-[#005a96]]="isCustomPageSizeValid()"
+                                class="flex-1 py-1 px-2.5 rounded-full bg-[#0070ba] text-white text-xs font-bold transition shadow-2xs">
                                 Go
                               </button>
                             </div>
@@ -2393,43 +2386,47 @@
                       </div>
                     </div>
 
-                    <!-- Center: Range Label -->
-                    <span class="text-slate-500 dark:text-slate-400 text-xs font-normal">{{ pageRangeLabel() }}</span>
+                    <!-- Center: Range Label (Exact match to reference) -->
+                    <div class="text-sm text-gray-600 dark:text-slate-300 font-normal select-none">
+                      {{ pageRangeLabel() }}
+                    </div>
 
-                    <!-- Right: Pagination Navigation Controls (Exact Replica of Screenshot 1) -->
-                    <div class="flex items-center gap-2">
+                    <!-- Right: Pagination Navigation Controls (Exact Replica of Reference App) -->
+                    <div class="flex items-center space-x-2">
                       <!-- First Page («) -->
                       <button type="button" (click)="goToPage(1)" [disabled]="currentPage() === 1"
-                        class="pagination-nav-circle pagination-nav-first" title="First page" aria-label="First page">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="m11 17-5-5 5-5M18 17l-5-5 5-5" />
+                        class="h-8 px-3.5 min-w-[44px] rounded-full flex items-center justify-center bg-sky-200 border border-sky-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
+                        title="First page" aria-label="First page">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m11 17-5-5 5-5" />
+                          <path d="m18 17-5-5 5-5" />
                         </svg>
                       </button>
 
                       <!-- Previous Page (‹) -->
                       <button type="button" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
-                        class="pagination-nav-circle pagination-nav-prev" title="Previous page"
-                        aria-label="Previous page">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        class="h-8 px-3.5 min-w-[44px] rounded-full flex items-center justify-center bg-sky-200 border border-sky-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
+                        title="Previous page" aria-label="Previous page">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round">
                           <path d="m15 18-6-6 6-6" />
                         </svg>
                       </button>
 
-                      <!-- Active Page Number Pill with input & dropdown (Screenshot 4 replica) -->
+                      <!-- Active Page Number Pill (Exact match: rounded-full w-16 h-8 text-center border-sky-200 bg-sky-50 text-sky-500) -->
                       <div class="relative z-50" data-popover>
                         <div (click)="togglePageDropdown($event)"
-                          class="pagination-page-pill is-active flex items-center justify-center cursor-pointer min-w-[58px] px-2 py-1 select-none transition hover:shadow-xs"
+                          class="h-8 w-16 px-2 rounded-full border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-slate-800 flex items-center justify-center cursor-pointer select-none transition hover:border-[#0070ba] shadow-xs"
                           title="Click to select page or type page number">
                           <input type="number" min="1" [max]="totalPages()" [value]="pageInputValue()"
                             (input)="onPageInputKey($any($event.target).value)"
                             (keydown.enter)="commitPageInput(); isPageDropdownOpen.set(false)"
                             (blur)="commitPageInput()" (click)="togglePageDropdown($event)"
-                            class="w-7 text-center text-sm font-bold text-[#00a6f4] bg-transparent outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-pointer" />
+                            class="w-full text-center text-sm font-semibold text-sky-500 dark:text-[#38bdf8] bg-transparent outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-pointer" />
                         </div>
 
-                        <!-- Screenshot 4 Dropdown Popover -->
+                        <!-- Dropdown Popover -->
                         @if (isPageDropdownOpen()) {
                         <div
                           class="page-dropdown-container absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-32 bg-[#f8fcff] dark:bg-slate-800 rounded-[28px] border-2 border-[#a5e3fd] dark:border-slate-600 p-2.5 z-50 animate-in fade-in duration-150"
@@ -2446,7 +2443,7 @@
                           <div class="page-dropdown-scroll max-h-56 overflow-y-auto pr-1 flex flex-col gap-1.5">
                             @for (p of pagesList(); track p) {
                             <button type="button" (click)="selectPageFromDropdown(p)"
-                              class="w-full py-1 rounded-xl text-center text-lg font-medium transition cursor-pointer text-[#00a6f4] hover:bg-[#e0f4fe] dark:hover:bg-slate-700/80"
+                              class="w-full py-1 rounded-xl text-center text-lg font-medium transition cursor-pointer text-[#0070ba] hover:bg-[#e0f4fe] dark:hover:bg-slate-700/80"
                               [class.font-bold]="currentPage() === p" [class.bg-[#dff3fd]]="currentPage() === p">
                               {{ p }}
                             </button>
@@ -2458,20 +2455,23 @@
 
                       <!-- Next Page (›) -->
                       <button type="button" (click)="goToPage(currentPage() + 1)"
-                        [disabled]="currentPage() === totalPages()" class="pagination-nav-circle pagination-nav-next"
+                        [disabled]="currentPage() === totalPages()"
+                        class="h-8 px-3.5 min-w-[44px] rounded-full flex items-center justify-center bg-sky-200 border border-sky-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
                         title="Next page" aria-label="Next page">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round">
                           <path d="m9 18 6-6-6-6" />
                         </svg>
                       </button>
 
                       <!-- Last Page (») -->
                       <button type="button" (click)="goToPage(totalPages())" [disabled]="currentPage() === totalPages()"
-                        class="pagination-nav-circle pagination-nav-last" title="Last page" aria-label="Last page">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="m13 17 5-5-5-5M6 17l5-5-5-5" />
+                        class="h-8 px-3.5 min-w-[44px] rounded-full flex items-center justify-center bg-sky-200 border border-sky-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
+                        title="Last page" aria-label="Last page">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m6 17 5-5-5-5" />
+                          <path d="m13 17 5-5-5-5" />
                         </svg>
                       </button>
                     </div>
@@ -3845,184 +3845,197 @@
 
             </div>
 
-            <!-- Right-Side Action Panel with Increased Width (w-64 sm:w-72) & Best UI -->
-            @if (!isSideSectionOpen()) {
-            <div class="shrink-0 flex items-start pt-5 pr-3 z-20">
-              <button type="button" (click)="isSideSectionOpen.set(true)"
-                class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white dark:bg-slate-800 shadow-md border border-slate-200/90 dark:border-slate-700 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 hover:scale-105 active:scale-95 transition-all cursor-pointer font-bold text-xs"
-                title="Open Quick Actions">
-                <svg class="w-4 h-4 text-[#00a6f4]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-                <span>Actions</span>
-              </button>
-            </div>
-            } @else {
+            <!-- Right-Side Action Panel with Circular Accordion Open/Close Toggle (Image 3 & Image 4 Replica) -->
             <aside
-              class="shrink-0 pt-3 pr-3.5 pb-3 flex flex-col z-20 transition-all duration-300">
-              <!-- Slim Vertical Floating Toolbar: Display only icons with theme-blue pointed tooltips (Exact match to User Reference Image 2) -->
-              <div
-                class="w-12 sm:w-13 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xl py-2.5 px-1.5 flex flex-col items-center gap-1.5 select-none">
+              class="shrink-0 pt-6 sm:pt-7 pr-3.5 pb-3 flex flex-col items-center z-20 transition-all duration-300 select-none">
+              <!-- Circular Accordion Open/Close Button (Image 4 Replica) -->
+              <button type="button" (click)="toggleSideSection()"
+                class="side-accordion-toggle w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer group shrink-0 relative"
+                [attr.title]="isSideSectionOpen() ? 'Collapse Quick Actions Panel' : 'Expand Quick Actions Panel'"
+                [attr.data-tooltip]="isSideSectionOpen() ? 'Collapse Actions' : 'Expand Actions'"
+                data-tooltip-pos="left">
+                <svg class="w-4.5 h-4.5 transition-transform duration-300" [class.rotate-180]="isSideSectionOpen()"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
 
-                <!-- Record Number / Total (Navigator) -->
+              <!-- Collapsible Toolbar Container (Smooth Accordion Expand/Collapse) -->
+              <div class="transition-all duration-300 ease-in-out flex flex-col items-center origin-top overflow-hidden"
+                [class.max-h-[calc(100vh-180px)]]="isSideSectionOpen()" [class.opacity-100]="isSideSectionOpen()"
+                [class.mt-2.5]="isSideSectionOpen()" [class.scale-y-100]="isSideSectionOpen()"
+                [class.max-h-0]="!isSideSectionOpen()" [class.opacity-0]="!isSideSectionOpen()"
+                [class.mt-0]="!isSideSectionOpen()" [class.scale-y-0]="!isSideSectionOpen()"
+                [class.pointer-events-none]="!isSideSectionOpen()">
+
+                <!-- Slim Vertical Floating Toolbar: Display only icons with theme-blue pointed tooltips (Scrollable to access all options) -->
                 <div
-                  class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-slate-700/80 border border-sky-200 dark:border-sky-800/80 text-[#00a6f4] dark:text-[#38bdf8] font-black text-xs flex items-center justify-center cursor-default select-none shadow-2xs"
-                  [attr.data-tooltip]="'Record #' + currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 42)"
-                  data-tooltip-pos="left">
-                  {{ currentCountryDisplayNumber() }}
+                  class="w-12 sm:w-13 max-h-[calc(100vh-210px)] overflow-y-auto overflow-x-hidden custom-scrollbar rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xl py-2.5 px-1.5 flex flex-col items-center gap-1.5 select-none animate-in fade-in duration-200">
+
+                  <!-- Record Number / Total (Navigator) -->
+                  <div
+                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-slate-700/80 border border-sky-200 dark:border-sky-800/80 text-[#00a6f4] dark:text-[#38bdf8] font-black text-xs flex items-center justify-center cursor-default select-none shadow-2xs shrink-0"
+                    [attr.data-tooltip]="'Record #' + currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 42)"
+                    data-tooltip-pos="left">
+                    {{ currentCountryDisplayNumber() }}
+                  </div>
+                  <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 leading-none shrink-0"
+                    [attr.data-tooltip]="'Total: ' + (sortedCountries().length || 42) + ' countries'"
+                    data-tooltip-pos="left">
+                    {{ sortedCountries().length || 42 }}
+                  </span>
+
+                  <!-- Previous Country Button (Up Arrow) -->
+                  <button type="button" (click)="goToPreviousCountry()"
+                    class="w-8 h-7 mt-0.5 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Previous Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="18 15 12 9 6 15" />
+                    </svg>
+                  </button>
+
+                  <!-- Next Country Button (Down Arrow) -->
+                  <button type="button" (click)="goToNextCountry()"
+                    class="w-8 h-7 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Next Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+
+                  <!-- Divider -->
+                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
+
+                  <!-- AI Assistance -->
+                  <button type="button" (click)="openAiModal()"
+                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="AI Assistance" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path
+                        d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+                    </svg>
+                  </button>
+
+                  <!-- Add Country -->
+                  @if (viewMode() !== 'add') {
+                  <button type="button" (click)="openCreate()"
+                    class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Add Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 4v16m8-8H4" />
+                    </svg>
+                  </button>
+                  }
+
+                  <!-- Edit Country (shown when in view mode) -->
+                  @if (viewMode() === 'view') {
+                  <button type="button" (click)="openEditForActiveCountry()"
+                    class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Edit Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                  </button>
+                  }
+
+                  <!-- View Country (shown when in add or edit mode) -->
+                  @if (viewMode() !== 'view') {
+                  <button type="button" (click)="openViewForActiveCountry()"
+                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="View Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                  }
+
+                  <!-- Executive Overview -->
+                  <button type="button" (click)="switchView('overview')"
+                    class="w-8 h-8 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Executive Overview" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="7" height="7" />
+                      <rect x="14" y="3" width="7" height="7" />
+                      <rect x="14" y="14" width="7" height="7" />
+                      <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                  </button>
+
+                  <!-- Divider -->
+                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
+
+                  <!-- Activity History -->
+                  <button type="button" (click)="openHistoryModal(currentCountryId() ? 'current' : 'all')"
+                    class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Activity History" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                  </button>
+
+                  <!-- Recycle Bin -->
+                  <button type="button" (click)="openRecycleBinModal()"
+                    class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Recycle Bin" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                  </button>
+
+                  <!-- Divider -->
+                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
+
+                  <!-- Download PDF -->
+                  <button type="button" (click)="exportPdfDirect()"
+                    class="w-8 h-8 rounded-xl bg-violet-50 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Download PDF" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                  </button>
+
+                  <!-- Print -->
+                  <button type="button" (click)="exportPrintDirect()"
+                    class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Print Record" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6 9 6 2 18 2 18 9" />
+                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                      <rect x="6" y="14" width="12" height="8" />
+                    </svg>
+                  </button>
+
+                  <!-- Share Email -->
+                  <button type="button" (click)="openShare('email')"
+                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Share via Email" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                      <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                  </button>
+
+                  <!-- Share WhatsApp -->
+                  <button type="button" (click)="openShare('whatsapp')"
+                    class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Share via WhatsApp" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path
+                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                    </svg>
+                  </button>
                 </div>
-                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 leading-none"
-                  [attr.data-tooltip]="'Total: ' + (sortedCountries().length || 42) + ' countries'"
-                  data-tooltip-pos="left">
-                  {{ sortedCountries().length || 42 }}
-                </span>
-
-                <!-- Previous Country Button (Up Arrow) -->
-                <button type="button" (click)="goToPreviousCountry()"
-                  class="w-8 h-7 mt-0.5 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Previous Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="18 15 12 9 6 15" />
-                  </svg>
-                </button>
-
-                <!-- Next Country Button (Down Arrow) -->
-                <button type="button" (click)="goToNextCountry()"
-                  class="w-8 h-7 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Next Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </button>
-
-                <!-- Divider -->
-                <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5"></div>
-
-                <!-- AI Assistance -->
-                <button type="button" (click)="openAiModal()"
-                  class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="AI Assistance" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
-                  </svg>
-                </button>
-
-                <!-- Add Country -->
-                @if (viewMode() !== 'add') {
-                <button type="button" (click)="openCreate()"
-                  class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Add Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 4v16m8-8H4" />
-                  </svg>
-                </button>
-                }
-
-                <!-- Edit Country (shown when in view mode) -->
-                @if (viewMode() === 'view') {
-                <button type="button" (click)="openEditForActiveCountry()"
-                  class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Edit Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
-                </button>
-                }
-
-                <!-- View Country (shown when in add or edit mode) -->
-                @if (viewMode() !== 'view') {
-                <button type="button" (click)="openViewForActiveCountry()"
-                  class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="View Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </button>
-                }
-
-                <!-- Executive Overview -->
-                <button type="button" (click)="switchView('overview')"
-                  class="w-8 h-8 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Executive Overview" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
-                  </svg>
-                </button>
-
-                <!-- Divider -->
-                <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5"></div>
-
-                <!-- Activity History -->
-                <button type="button" (click)="openHistoryModal(currentCountryId() ? 'current' : 'all')"
-                  class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Activity History" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                </button>
-
-                <!-- Recycle Bin -->
-                <button type="button" (click)="openRecycleBinModal()"
-                  class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Recycle Bin" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                  </svg>
-                </button>
-
-                <!-- Divider -->
-                <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5"></div>
-
-                <!-- Download PDF -->
-                <button type="button" (click)="exportPdfDirect()"
-                  class="w-8 h-8 rounded-xl bg-violet-50 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Download PDF" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                </button>
-
-                <!-- Print -->
-                <button type="button" (click)="exportPrintDirect()"
-                  class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Print Record" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 6 2 18 2 18 9" />
-                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                    <rect x="6" y="14" width="12" height="8" />
-                  </svg>
-                </button>
-
-                <!-- Share Email -->
-                <button type="button" (click)="openShare('email')"
-                  class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Share via Email" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                  </svg>
-                </button>
-
-                <!-- Share WhatsApp -->
-                <button type="button" (click)="openShare('whatsapp')"
-                  class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Share via WhatsApp" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                  </svg>
-                </button>
               </div>
             </aside>
-            }
           </div>
 
           <!-- Section 11 & 14: Fixed Footer Bar -->
@@ -4080,45 +4093,58 @@
               <div class="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-7">
                 <div>
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Code</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.code || sc.isoCode2 || '—' }}</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.code ||
+                    sc.isoCode2 || '—' }}</span>
                 </div>
 
                 <div>
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISD</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isd || '—' }}</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isd || '—'
+                    }}</span>
                 </div>
 
                 <div>
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Country</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.name || '—' }}</span>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Country</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.name || '—'
+                    }}</span>
                 </div>
 
                 <div>
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isDefault ? 'Yes' : 'No' }}</span>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isDefault ? 'Yes'
+                    : 'No' }}</span>
                 </div>
 
                 <div>
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Status</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.status || 'Active' }}</span>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Status</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.status || 'Active'
+                    }}</span>
                 </div>
 
                 <div>
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Action</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.actionMessage || '2 hours ago' }}</span>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Action</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.actionMessage ||
+                    '2 hours ago' }}</span>
                 </div>
 
                 @if (sc.currency) {
                 <div>
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Currency</span>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Currency</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.currency }}</span>
                 </div>
                 }
 
                 @if (sc.nationality) {
                 <div>
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.nationality }}</span>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.nationality
+                    }}</span>
                 </div>
                 }
               </div>
@@ -4138,7 +4164,8 @@
               <!-- Translations if available -->
               @if (sc.translations && (sc.translations | keyvalue).length) {
               <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-700">
-                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Translations</span>
+                <span
+                  class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Translations</span>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   @for (t of sc.translations | keyvalue; track t.key) {
                   <div
@@ -4152,168 +4179,181 @@
               }
             </div>
 
-            <!-- Right-Side Action Panel with Increased Width (w-64 sm:w-72) & Best UI -->
-            @if (!isSideSectionOpen()) {
-            <div class="shrink-0 flex items-start pt-5 pr-3 z-20">
-              <button type="button" (click)="isSideSectionOpen.set(true)"
-                class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white dark:bg-slate-800 shadow-md border border-slate-200/90 dark:border-slate-700 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 hover:scale-105 active:scale-95 transition-all cursor-pointer font-bold text-xs"
-                title="Open Quick Actions">
-                <svg class="w-4 h-4 text-[#00a6f4]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-                <span>Actions</span>
-              </button>
-            </div>
-            } @else {
+            <!-- Right-Side Action Panel with Circular Accordion Open/Close Toggle (Image 3 & Image 4 Replica) -->
             <aside
-              class="shrink-0 pt-3 pr-3.5 pb-3 flex flex-col z-20 transition-all duration-300">
-              <!-- Slim Vertical Floating Toolbar: Display only icons with theme-blue pointed tooltips (Exact match to User Reference Image 2) -->
-              <div
-                class="w-12 sm:w-13 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xl py-2.5 px-1.5 flex flex-col items-center gap-1.5 select-none">
+              class="shrink-0 pt-6 sm:pt-7 pr-3.5 pb-3 flex flex-col items-center z-20 transition-all duration-300 select-none">
+              <!-- Circular Accordion Open/Close Button (Image 4 Replica) -->
+              <button type="button" (click)="toggleSideSection()"
+                class="side-accordion-toggle w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer group shrink-0 relative"
+                [attr.title]="isSideSectionOpen() ? 'Collapse Quick Actions Panel' : 'Expand Quick Actions Panel'"
+                [attr.data-tooltip]="isSideSectionOpen() ? 'Collapse Actions' : 'Expand Actions'"
+                data-tooltip-pos="left">
+                <svg class="w-4.5 h-4.5 transition-transform duration-300" [class.rotate-180]="!isSideSectionOpen()"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
 
-                <!-- Record Number / Total (Navigator) -->
+              <!-- Collapsible Toolbar Container (Smooth Accordion Expand/Collapse) -->
+              <div class="transition-all duration-300 ease-in-out flex flex-col items-center origin-top overflow-hidden"
+                [class.max-h-[calc(100vh-180px)]]="isSideSectionOpen()" [class.opacity-100]="isSideSectionOpen()"
+                [class.mt-2.5]="isSideSectionOpen()" [class.scale-y-100]="isSideSectionOpen()"
+                [class.max-h-0]="!isSideSectionOpen()" [class.opacity-0]="!isSideSectionOpen()"
+                [class.mt-0]="!isSideSectionOpen()" [class.scale-y-0]="!isSideSectionOpen()"
+                [class.pointer-events-none]="!isSideSectionOpen()">
+
+                <!-- Slim Vertical Floating Toolbar: Display only icons with theme-blue pointed tooltips (Scrollable to access all options) -->
                 <div
-                  class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-slate-700/80 border border-sky-200 dark:border-sky-800/80 text-[#00a6f4] dark:text-[#38bdf8] font-black text-xs flex items-center justify-center cursor-default select-none shadow-2xs"
-                  [attr.data-tooltip]="'Record #' + currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 42)"
-                  data-tooltip-pos="left">
-                  {{ currentCountryDisplayNumber() }}
+                  class="w-12 sm:w-13 max-h-[calc(100vh-210px)] overflow-y-auto overflow-x-hidden custom-scrollbar rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xl py-2.5 px-1.5 flex flex-col items-center gap-1.5 select-none animate-in fade-in duration-200">
+
+                  <!-- Record Number / Total (Navigator) -->
+                  <div
+                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-slate-700/80 border border-sky-200 dark:border-sky-800/80 text-[#00a6f4] dark:text-[#38bdf8] font-black text-xs flex items-center justify-center cursor-default select-none shadow-2xs shrink-0"
+                    [attr.data-tooltip]="'Record #' + currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 42)"
+                    data-tooltip-pos="left">
+                    {{ currentCountryDisplayNumber() }}
+                  </div>
+                  <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 leading-none shrink-0"
+                    [attr.data-tooltip]="'Total: ' + (sortedCountries().length || 42) + ' countries'"
+                    data-tooltip-pos="left">
+                    {{ sortedCountries().length || 42 }}
+                  </span>
+
+                  <!-- Previous Country Button (Up Arrow) -->
+                  <button type="button" (click)="goToPreviousCountry()"
+                    class="w-8 h-7 mt-0.5 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Previous Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="18 15 12 9 6 15" />
+                    </svg>
+                  </button>
+
+                  <!-- Next Country Button (Down Arrow) -->
+                  <button type="button" (click)="goToNextCountry()"
+                    class="w-8 h-7 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Next Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+
+                  <!-- Divider -->
+                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
+
+                  <!-- AI Assistance -->
+                  <button type="button" (click)="openAiModal()"
+                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="AI Assistance" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path
+                        d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+                    </svg>
+                  </button>
+
+                  <!-- Add Country -->
+                  <button type="button" (click)="openCreate()"
+                    class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Add Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 4v16m8-8H4" />
+                    </svg>
+                  </button>
+
+                  <!-- Edit Country -->
+                  <button type="button" (click)="openEdit(sc)"
+                    class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Edit Country" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                  </button>
+
+                  <!-- Executive Overview -->
+                  <button type="button" (click)="switchView('overview')"
+                    class="w-8 h-8 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Executive Overview" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="7" height="7" />
+                      <rect x="14" y="3" width="7" height="7" />
+                      <rect x="14" y="14" width="7" height="7" />
+                      <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                  </button>
+
+                  <!-- Divider -->
+                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
+
+                  <!-- Activity History -->
+                  <button type="button" (click)="openHistoryModal('current')"
+                    class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Activity History" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                  </button>
+
+                  <!-- Recycle Bin -->
+                  <button type="button" (click)="openRecycleBinModal()"
+                    class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Recycle Bin" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                  </button>
+
+                  <!-- Divider -->
+                  <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5 shrink-0"></div>
+
+                  <!-- Download PDF -->
+                  <button type="button" (click)="downloadCountryPdf(sc)"
+                    class="w-8 h-8 rounded-xl bg-violet-50 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Download PDF" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                  </button>
+
+                  <!-- Print -->
+                  <button type="button" (click)="printCountry(sc)"
+                    class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Print Record" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6 9 6 2 18 2 18 9" />
+                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                      <rect x="6" y="14" width="12" height="8" />
+                    </svg>
+                  </button>
+
+                  <!-- Share Email -->
+                  <button type="button" (click)="openShare('email')"
+                    class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Share via Email" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                      <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                  </button>
+
+                  <!-- Share WhatsApp -->
+                  <button type="button" (click)="openShare('whatsapp')"
+                    class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer shrink-0"
+                    data-tooltip="Share via WhatsApp" data-tooltip-pos="left">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path
+                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                    </svg>
+                  </button>
                 </div>
-                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 leading-none"
-                  [attr.data-tooltip]="'Total: ' + (sortedCountries().length || 42) + ' countries'"
-                  data-tooltip-pos="left">
-                  {{ sortedCountries().length || 42 }}
-                </span>
-
-                <!-- Previous Country Button (Up Arrow) -->
-                <button type="button" (click)="goToPreviousCountry()"
-                  class="w-8 h-7 mt-0.5 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Previous Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="18 15 12 9 6 15" />
-                  </svg>
-                </button>
-
-                <!-- Next Country Button (Down Arrow) -->
-                <button type="button" (click)="goToNextCountry()"
-                  class="w-8 h-7 rounded-lg text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700/80 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Next Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </button>
-
-                <!-- Divider -->
-                <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5"></div>
-
-                <!-- AI Assistance -->
-                <button type="button" (click)="openAiModal()"
-                  class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="AI Assistance" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
-                  </svg>
-                </button>
-
-                <!-- Add Country -->
-                <button type="button" (click)="openCreate()"
-                  class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Add Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 4v16m8-8H4" />
-                  </svg>
-                </button>
-
-                <!-- Edit Country -->
-                <button type="button" (click)="openEdit(sc)"
-                  class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Edit Country" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
-                </button>
-
-                <!-- Executive Overview -->
-                <button type="button" (click)="switchView('overview')"
-                  class="w-8 h-8 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Executive Overview" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
-                  </svg>
-                </button>
-
-                <!-- Divider -->
-                <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5"></div>
-
-                <!-- Activity History -->
-                <button type="button" (click)="openHistoryModal('current')"
-                  class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Activity History" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                </button>
-
-                <!-- Recycle Bin -->
-                <button type="button" (click)="openRecycleBinModal()"
-                  class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Recycle Bin" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                  </svg>
-                </button>
-
-                <!-- Divider -->
-                <div class="w-6 h-px bg-slate-200 dark:bg-slate-700 my-0.5"></div>
-
-                <!-- Download PDF -->
-                <button type="button" (click)="downloadCountryPdf(sc)"
-                  class="w-8 h-8 rounded-xl bg-violet-50 dark:bg-violet-950/70 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Download PDF" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                </button>
-
-                <!-- Print -->
-                <button type="button" (click)="printCountry(sc)"
-                  class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Print Record" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 6 2 18 2 18 9" />
-                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                    <rect x="6" y="14" width="12" height="8" />
-                  </svg>
-                </button>
-
-                <!-- Share Email -->
-                <button type="button" (click)="openShare('email')"
-                  class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] hover:bg-sky-100 dark:hover:bg-sky-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Share via Email" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                  </svg>
-                </button>
-
-                <!-- Share WhatsApp -->
-                <button type="button" (click)="openShare('whatsapp')"
-                  class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:scale-105 active:scale-95 flex items-center justify-center transition cursor-pointer"
-                  data-tooltip="Share via WhatsApp" data-tooltip-pos="left">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                  </svg>
-                </button>
               </div>
             </aside>
-            }
           </div>
 
           <!-- Bottom Action Toolbar (Image 1 & 2 replica: 3 round cyan action buttons on left, Export on right) -->

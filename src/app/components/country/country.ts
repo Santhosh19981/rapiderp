@@ -875,9 +875,13 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isIsdFocused = signal<boolean>(false);
   isNameFocused = signal<boolean>(false);
 
-  // Right side section accordion state (open by default on desktop)
+  // Right side section accordion state (collapsed by default, click to expand)
   isSideSectionOpen = signal<boolean>(true);
   selectedReferenceRecordName = signal<string | null>(null);
+
+  toggleSideSection(): void {
+    this.isSideSectionOpen.update(open => !open);
+  }
 
   // Floating notch label computed states: keep label on top notch so placeholder is clean & crisp
   isNameFloating = computed(() => true);
@@ -2992,7 +2996,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.currentCountryId.set(null);
     this.selectedMasterCountry.set(null);
     this.clearForm();
-    this.isSideSectionOpen.set(true);
+    this.isSideSectionOpen.set(false);
     this.switchView('add');
   }
 
