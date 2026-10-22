@@ -129,11 +129,13 @@ export class App implements OnInit {
       tooltipEl!.style.top = `${Math.round(top)}px`;
       tooltipEl!.style.left = `${Math.round(left)}px`;
       if (preferredPos === 'bottom' || preferredPos === 'top') {
-        caretEl.style.left = caretLeft;
+        caretEl.style.left = '50%';
         caretEl.style.top = '';
+        caretEl.style.transform = 'translateX(-50%)';
       } else {
-        caretEl.style.top = caretTop;
+        caretEl.style.top = '50%';
         caretEl.style.left = '';
+        caretEl.style.transform = 'translateY(-50%)';
       }
     };
 

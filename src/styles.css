@@ -478,24 +478,25 @@ button.accordion-trigger-btn:not(:disabled):hover div,
 
 /* ========================================================================= */
 /* ========================================================================= */
-/* 5. GLOBAL FLOATING THEME BLUE POINTER TOOLTIP (Marked Type - Image 3)     */
+/* 5. GLOBAL FLOATING VIBRANT PURPLE POINTER TOOLTIP (Image 2 Reference)      */
 /* Rendered on document.body: Never clipped by overflow:hidden, precise caret */
 /* ========================================================================= */
 #rapiderp-global-tooltip {
   position: fixed;
   z-index: 9999999;
   pointer-events: none;
-  background: #e0f2fe;
-  color: #0369a1;
-  border: 1px solid #7dd3fc;
+  background: #00a6f4;
+  color: #ffffff;
+  border: none;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.015em;
-  padding: 4.5px 9.5px;
-  border-radius: 7px;
-  white-space: nowrap;
-  box-shadow: 0 4px 14px -2px rgba(2, 132, 199, 0.25), 0 2px 6px -1px rgba(0, 0, 0, 0.08);
-  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: pre-line;
+  text-align: left;
+  box-shadow: 0 4px 16px -2px rgba(0, 166, 244, 0.45), 0 2px 6px -1px rgba(0, 0, 0, 0.15);
+  line-height: 1.35;
   transition: opacity 0.14s cubic-bezier(0.16, 1, 0.3, 1), transform 0.14s cubic-bezier(0.16, 1, 0.3, 1);
   opacity: 0;
   visibility: hidden;
@@ -519,29 +520,37 @@ button.accordion-trigger-btn:not(:disabled):hover div,
 /* Caret pointing UP ▲ (Tooltip is below element) */
 #rapiderp-global-tooltip[data-pos="bottom"] #rapiderp-tooltip-caret {
   top: -6px;
-  border-width: 0 5px 6px 5px;
-  border-color: transparent transparent #e0f2fe transparent;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border-width: 0 6px 6px 6px;
+  border-color: transparent transparent #00a6f4 transparent;
 }
 
 /* Caret pointing DOWN ▼ (Tooltip is above element) */
 #rapiderp-global-tooltip[data-pos="top"] #rapiderp-tooltip-caret {
   bottom: -6px;
-  border-width: 6px 5px 0 5px;
-  border-color: #e0f2fe transparent transparent transparent;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border-width: 6px 6px 0 6px;
+  border-color: #00a6f4 transparent transparent transparent;
 }
 
 /* Caret pointing RIGHT ▶ (Tooltip is to the left of element) */
 #rapiderp-global-tooltip[data-pos="left"] #rapiderp-tooltip-caret {
   right: -6px;
-  border-width: 5px 0 5px 6px;
-  border-color: transparent transparent transparent #e0f2fe;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  border-width: 6px 0 6px 6px;
+  border-color: transparent transparent transparent #00a6f4;
 }
 
 /* Caret pointing LEFT ◀ (Tooltip is to the right of element) */
 #rapiderp-global-tooltip[data-pos="right"] #rapiderp-tooltip-caret {
   left: -6px;
-  border-width: 5px 6px 5px 0;
-  border-color: transparent #e0f2fe transparent transparent;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  border-width: 6px 6px 6px 0;
+  border-color: transparent #00a6f4 transparent transparent;
 }
 
 /* Light-red text only tooltip with NO background and NO caret (Image 2 & Change 2) */

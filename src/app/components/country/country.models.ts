@@ -5,6 +5,7 @@ export interface Country {
   isd: string;
   currency: string;
   status: 'Active' | 'Inactive' | 'Draft' | 'Deleted';
+  approval?: 'Approved' | 'Pending' | 'Rejected';
   isDefault: boolean;
   isoCode2?: string;
   isoCode3?: string;
@@ -94,3 +95,38 @@ export interface MinimizedCountryForm {
     printOnSubmit: boolean;
   };
 }
+
+export interface CurrencyOption {
+  code: string;
+  name: string;
+  symbol: string;
+}
+
+export const DEFAULT_CURRENCY_OPTIONS: CurrencyOption[] = [
+  { code: 'USD', name: 'US Dollar', symbol: '$' },
+  { code: 'EUR', name: 'Euro', symbol: '€' },
+  { code: 'GBP', name: 'British Pound', symbol: '£' },
+  { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' },
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+  { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+  { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼' },
+  { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' },
+  { code: 'TRY', name: 'Turkish Lira', symbol: '₺' },
+  { code: 'KRW', name: 'South Korean Won', symbol: '₩' },
+  { code: 'MXN', name: 'Mexican Peso', symbol: '$' },
+  { code: 'QAR', name: 'Qatari Riyal', symbol: '﷼' },
+  { code: 'KWD', name: 'Kuwaiti Dinar', symbol: 'KD' },
+  { code: 'OMR', name: 'Omani Rial', symbol: 'RO' },
+  { code: 'BHD', name: 'Bahraini Dinar', symbol: 'BD' },
+  { code: 'EGP', name: 'Egyptian Pound', symbol: 'E£' },
+  { code: 'ZAR', name: 'South African Rand', symbol: 'R' },
+  { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$' },
+  { code: 'SEK', name: 'Swedish Krona', symbol: 'kr' },
+  { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr' },
+];
+

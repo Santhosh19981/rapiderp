@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CountryService } from './country.service';
-import { Country, CountryHistoryEntry, MinimizedCountryForm, CountryLookupRecord } from './country.models';
+import { Country, CountryHistoryEntry, MinimizedCountryForm, CountryLookupRecord, CurrencyOption, DEFAULT_CURRENCY_OPTIONS } from './country.models';
 import { NavigationService } from '../../services/navigation.service';
 import { AuditService } from '../../services/audit.service';
 import { DropdownOption, SelectDropdown } from '../select-dropdown/select-dropdown';
@@ -40,6 +40,7 @@ export type ListSortKey =
   | 'createdAt'
   | 'updatedAt'
   | 'draftedAt'
+  | 'approval'
   | 'status';
 
 export type ExportFieldKey =
@@ -618,6 +619,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   historyActivityFilter = signal<string>('All Activities');
   historyStartDate = signal<string>('');
   historyEndDate = signal<string>('');
+  historyDatePreset = signal<string>('');
   isHistoryDateFilterOpen = signal<boolean>(false);
   expandedHistoryIds = signal<Set<string>>(new Set(['H-003', 'A-10048']));
 
@@ -628,17 +630,19 @@ export class CountryComponent implements OnInit, AfterViewInit {
   clearHistoryDateFilter(): void {
     this.historyStartDate.set('');
     this.historyEndDate.set('');
+    this.historyDatePreset.set('');
   }
 
-  setHistoryDatePreset(preset: 'today' | '7days' | '30days' | 'thisMonth'): void {
+  setHistoryDatePreset(preset: 'today' | 'week' | 'month' | 'year' | '7days' | '30days' | 'thisMonth'): void {
     const today = new Date();
     const pad = (n: number) => String(n).padStart(2, '0');
     const toStr = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
+    this.historyDatePreset.set(preset);
     this.historyEndDate.set(toStr(today));
     if (preset === 'today') {
       this.historyStartDate.set(toStr(today));
-    } else if (preset === '7days') {
+    } else if (preset === 'week' || preset === '7days') {
       const d = new Date(today);
       d.setDate(d.getDate() - 7);
       this.historyStartDate.set(toStr(d));
@@ -646,8 +650,11 @@ export class CountryComponent implements OnInit, AfterViewInit {
       const d = new Date(today);
       d.setDate(d.getDate() - 30);
       this.historyStartDate.set(toStr(d));
-    } else if (preset === 'thisMonth') {
+    } else if (preset === 'month' || preset === 'thisMonth') {
       const d = new Date(today.getFullYear(), today.getMonth(), 1);
+      this.historyStartDate.set(toStr(d));
+    } else if (preset === 'year') {
+      const d = new Date(today.getFullYear(), 0, 1);
       this.historyStartDate.set(toStr(d));
     }
   }
@@ -662,14 +669,26 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.expandedHistoryIds.set(next);
   }
 
+  historySelectedCountryId = signal<string | null>(null);
+
+  onHistoryCountryChange(idOrVal: any): void {
+    this.historySelectedCountryId.set(idOrVal ? String(idOrVal) : null);
+  }
+
   openHistoryModal(scope?: 'current' | 'all'): void {
     this.historySearch.set('');
     this.historyActivityFilter.set('All Activities');
     this.historyStartDate.set('');
     this.historyEndDate.set('');
     this.isHistoryDateFilterOpen.set(false);
-    this.expandedHistoryIds.set(new Set(['H-003', 'A-10048']));
+    this.expandedHistoryIds.set(new Set(['H-004', 'H-003']));
     this.historyScope.set(scope || (this.viewMode() === 'view' || this.viewMode() === 'edit' ? 'current' : 'all'));
+    const sc = this.selectedCountry();
+    if (sc) {
+      this.historySelectedCountryId.set(sc.id);
+    } else if (this.sortedCountries().length > 0) {
+      this.historySelectedCountryId.set(this.sortedCountries()[0].id);
+    }
     this.activityModalTab.set('history');
     this.isHistoryModalOpen.set(true);
     this.isActivityModalOpen.set(true);
@@ -686,16 +705,23 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   countryAuditSummary = computed(() => {
-    const sc = this.selectedCountry();
+    const selId = this.historySelectedCountryId();
+    const list = this.sortedCountries();
+    const cFromId = selId ? list.find((c: Country) => c.id === selId) : null;
+    const sc = cFromId || this.selectedCountry() || list[0];
     const name = sc?.name || this.formName() || 'United Arab Emirates';
     const code = sc?.isoCode2 || sc?.code || this.formIsoCode2() || 'AE';
+    const id = sc?.id ?? 'CNT-0001';
+    const iso2 = code;
     const iso3 = sc?.isoCode3 || this.formIsoCode3() || (code === 'AE' ? 'ARE' : 'USA');
+    const isoNumeric = sc?.isoNumeric || this.formIsoNumeric() || (code === 'AE' ? '784' : '840');
+    const flagUrl = sc?.flag || this.formFlag() || `https://flagcdn.com/${code.toLowerCase()}.svg`;
     const refId = sc ? `CNT-00${sc.id}` : 'CNT-0001';
     const status = sc?.status || 'Active';
 
     const allActivities = [
       {
-        id: 'H-003',
+        id: 'H-004',
         action: 'Updated',
         actionType: 'updated',
         dotColor: 'bg-blue-500',
@@ -706,6 +732,20 @@ export class CountryComponent implements OnInit, AfterViewInit {
         hasDetails: true,
         previousValue: '+971',
         newValue: '+971',
+        referenceId: 'H-004',
+      },
+      {
+        id: 'H-003',
+        action: 'Drafted',
+        actionType: 'drafted',
+        dotColor: 'bg-amber-500',
+        description: 'Country saved as draft revision',
+        user: 'Admin User',
+        date: '18 Oct 2026, 04:30 PM',
+        isoDate: '2026-10-18',
+        hasDetails: true,
+        previousValue: 'Active',
+        newValue: 'Draft',
         referenceId: 'H-003',
       },
       {
@@ -753,14 +793,26 @@ export class CountryComponent implements OnInit, AfterViewInit {
       filtered = filtered.filter((a) => a.isoDate <= endDate);
     }
 
-    const createdCount = filtered.filter((a) => a.action === 'Created').length;
-    const modifiedCount = filtered.filter((a) => a.action !== 'Created').length;
+    const updatedCount = filtered.filter((a) => a.action === 'Updated' || a.action === 'Status Changed').length;
+    const deletedCount = this.deletedCountries().length;
+    const restoredCount = filtered.filter((a) => a.action === 'Restored').length;
+    const approvedCount = filtered.filter((a) => a.action === 'Approved' || a.action === 'Created').length;
+    const pendingCount = filtered.filter((a) => a.action === 'Drafted' || a.action === 'Pending').length;
+    const lastUpdateEvent = allActivities.find((a) => a.action === 'Updated') || allActivities[0];
+    const lastUpdatedAt = lastUpdateEvent ? lastUpdateEvent.date : '19 Oct 2026, 10:42 AM';
+    const lastUpdatedBy = lastUpdateEvent ? lastUpdateEvent.user : 'Admin User';
 
     return {
-      country: { name, code, iso3, refId, status },
+      country: { id, name, code, iso2, iso3, isoNumeric, flagUrl, refId, status },
       totalEvents: filtered.length,
-      created: createdCount,
-      modified: modifiedCount,
+      updated: updatedCount,
+      deleted: deletedCount,
+      restored: restoredCount,
+      approved: approvedCount,
+      pending: pendingCount,
+      rejected: filtered.filter((a) => a.action === 'Rejected').length || 0,
+      lastUpdatedAt,
+      lastUpdatedBy,
       activities: filtered,
     };
   });
@@ -931,6 +983,35 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   closeExportModal(): void {
     this.isExportModalOpen.set(false);
+  }
+
+  exportPdfToggle = signal<boolean>(true);
+  exportPrintToggle = signal<boolean>(false);
+
+  executeExportProceed(): void {
+    if (this.exportFields().size === 0) {
+      this.showToast('Please select at least one column to export');
+      return;
+    }
+    if (!this.exportPdfToggle() && !this.exportPrintToggle()) {
+      this.isExportPromptOpen.set(true);
+      return;
+    }
+    if (this.exportPdfToggle() && this.exportPrintToggle()) {
+      this.runExport('pdf');
+      this.runExport('print');
+      this.closeExportModal();
+      return;
+    }
+    if (this.exportPdfToggle()) {
+      this.exportPdfDirect();
+    } else if (this.exportPrintToggle()) {
+      this.exportPrintDirect();
+    }
+  }
+
+  clearAllExportFields(): void {
+    this.setAllExportFields(false);
   }
 
   openShareModalUnified(channel: 'email' | 'whatsapp' = 'email'): void {
@@ -1123,45 +1204,22 @@ export class CountryComponent implements OnInit, AfterViewInit {
   );
 
   // Currency Master Selection Options
-  readonly currencyMasterList = [
-    { code: 'USD', name: 'US Dollar', symbol: '$' },
-    { code: 'EUR', name: 'Euro', symbol: '€' },
-    { code: 'GBP', name: 'British Pound', symbol: '£' },
-    { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' },
-    { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
-    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
-    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
-    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
-    { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
-    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
-    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$' },
-    { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼' },
-    { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' },
-    { code: 'TRY', name: 'Turkish Lira', symbol: '₺' },
-    { code: 'KRW', name: 'South Korean Won', symbol: '₩' },
-    { code: 'MXN', name: 'Mexican Peso', symbol: '$' },
-  ];
+  readonly currencyMasterList: CurrencyOption[] = DEFAULT_CURRENCY_OPTIONS;
   isCurrencyDropdownOpen = signal<boolean>(false);
+  currencySearch = signal<string>('');
 
-  filteredCurrencyList = computed(() => {
-    const raw = this.formCurrency();
-    const query = raw ? raw.trim().toLowerCase() : '';
+  filteredCurrencyList = computed<CurrencyOption[]>(() => {
+    const query = (this.currencySearch() || '').trim().toLowerCase();
+    const list = this.currencyMasterList || DEFAULT_CURRENCY_OPTIONS;
     if (!query) {
-      return this.currencyMasterList;
+      return list;
     }
-    const isExact = this.currencyMasterList.some(
-      (c) => `${c.code} — ${c.name}`.toLowerCase() === query || c.code.toLowerCase() === query
-    );
-    if (isExact) {
-      return this.currencyMasterList;
-    }
-    const filtered = this.currencyMasterList.filter(
+    return list.filter(
       (c) =>
         c.code.toLowerCase().includes(query) ||
         c.name.toLowerCase().includes(query) ||
-        c.symbol.toLowerCase().includes(query)
+        (c.symbol && c.symbol.toLowerCase().includes(query))
     );
-    return filtered.length > 0 ? filtered : this.currencyMasterList;
   });
 
   toggleCurrencyDropdown(event?: Event): void {
@@ -1169,11 +1227,15 @@ export class CountryComponent implements OnInit, AfterViewInit {
       event.stopPropagation();
     }
     this.isCurrencyDropdownOpen.update((v) => !v);
+    if (!this.isCurrencyDropdownOpen()) {
+      this.currencySearch.set('');
+    }
   }
 
-  selectCurrencyOption(c: { code: string; name: string }): void {
+  selectCurrencyOption(c: CurrencyOption): void {
     this.formCurrency.set(`${c.code} — ${c.name}`);
     this.isCurrencyDropdownOpen.set(false);
+    this.currencySearch.set('');
     this.markFieldTouched('currency');
   }
 
@@ -1256,6 +1318,19 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isDraggingFlag = signal<boolean>(false);
   gallerySearch = signal<string>('');
   galleryVisibleCount = signal<number>(16);
+
+  // Flag Lookup Modal (Item 11)
+  isFlagLookupModalOpen = signal<boolean>(false);
+  flagLookupTab = signal<'gallery' | 'upload' | 'drop'>('gallery');
+
+  openFlagLookupModal(tab: 'gallery' | 'upload' | 'drop' = 'gallery'): void {
+    this.flagLookupTab.set(tab);
+    this.isFlagLookupModalOpen.set(true);
+  }
+
+  closeFlagLookupModal(): void {
+    this.isFlagLookupModalOpen.set(false);
+  }
 
   // Section 7: Popular flags gallery with 36 world flags
   galleryFlags: GalleryFlag[] = [
@@ -1374,6 +1449,23 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.aiErrorMessage.set(null);
   }
 
+  confirmAiData(): void {
+    if (this.aiExtractedData()) {
+      this.onAiConfirmClick();
+    } else if (this.aiInputText().trim()) {
+      const text = this.aiInputText().trim();
+      const extracted = this.parseAiCountryText(text);
+      if (extracted && (extracted.name || extracted.isoCode2)) {
+        this.aiExtractedData.set(extracted);
+        this.onAiConfirmClick();
+      } else {
+        this.aiErrorMessage.set('Could not extract sufficient country data. Please review your input.');
+      }
+    } else {
+      this.aiErrorMessage.set('Please enter or paste country details in the editor.');
+    }
+  }
+
   startAiExtraction(): void {
     const text = this.aiInputText().trim();
     if (!text) {
@@ -1395,7 +1487,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         }
         this.aiExtractedData.set(extracted);
         this.aiIsProcessing.set(false);
-        this.onAiConfirmClick();
+        this.showToast('Country data extracted. Click Confirm to apply.');
       } catch (err: any) {
         this.aiErrorMessage.set('Failed to process text. Preserving your input for review.');
         this.aiIsProcessing.set(false);
@@ -2001,6 +2093,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:keydown.escape')
   closePopovers(): void {
+    this.isCurrencyDropdownOpen.set(false);
     this.isTranslationOpen.set(false);
     this.isActionListOpen.set(false);
     this.isPageSizeMenuOpen.set(false);
@@ -2357,10 +2450,33 @@ export class CountryComponent implements OnInit, AfterViewInit {
     { key: 'createdAt', label: 'Created' },
     { key: 'updatedAt', label: 'Updated' },
     { key: 'draftedAt', label: 'Drafted' },
+    { key: 'approval', label: 'Approval' },
     { key: 'status', label: 'Status' },
   ];
   readonly pageSizeOptions = [10, 25, 50, 75];
   readonly dateColumns: ListSortKey[] = ['createdAt', 'updatedAt', 'draftedAt'];
+
+  readonly approvalMetadataTypes = [
+    { atLabel: 'Approved At', date: '18 Oct 2026', byLabel: 'Approved By', user: 'Admin' },
+    { atLabel: 'Updated At', date: '19 Oct 2026', byLabel: 'Updated By', user: 'Admin' },
+    { atLabel: 'Created At', date: '15 Oct 2026', byLabel: 'Created By', user: 'Admin' },
+    { atLabel: 'Pending At', date: '18 Oct 2026', byLabel: 'Pending By', user: 'Admin' },
+    { atLabel: 'Restored At', date: '17 Oct 2026', byLabel: 'Restored By', user: 'Admin' },
+    { atLabel: 'Deleted At', date: '16 Oct 2026', byLabel: 'Deleted By', user: 'Admin' },
+    { atLabel: 'Rejected At', date: '17 Oct 2026', byLabel: 'Rejected By', user: 'Admin' },
+  ];
+
+  getApprovalStatus(c: Country): 'Approved' | 'Pending' | 'Rejected' {
+    if (c.approval) return c.approval;
+    const charCode = (c.name || c.id || '').charCodeAt(0) || 0;
+    const mod = charCode % 3;
+    return mod === 0 ? 'Approved' : (mod === 1 ? 'Pending' : 'Rejected');
+  }
+
+  getApprovalMeta(c: Country, index: number): { atLabel: string; date: string; byLabel: string; user: string } {
+    const charCode = (c.name || '').length + index;
+    return this.approvalMetadataTypes[charCode % this.approvalMetadataTypes.length];
+  }
 
   hiddenColumns = signal<Set<ListSortKey>>(new Set());
   isVisibilityOpen = signal<boolean>(false);
@@ -3635,6 +3751,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (fieldName === 'translationSearch') sample = 'Arabic';
       if (fieldName.startsWith('translation-')) sample = 'Emirates';
       if (fieldName === 'viewName') sample = 'United Arab Emirates';
+      if (fieldName === 'aiInput') sample = 'Country: Germany, ISO Code: DE, Currency: EUR, Dial Code: +49';
+      if (fieldName === 'currencySearch') sample = 'USD';
 
       this.applySpokenText(fieldName, sample);
       this.activeListeningField.set(null);
@@ -3645,6 +3763,11 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const clean = text.trim();
     if (fieldName === 'search') {
       this.searchQuery.set(clean);
+    } else if (fieldName === 'currencySearch') {
+      this.currencySearch.set(clean);
+    } else if (fieldName === 'aiInput') {
+      const current = this.aiInputText();
+      this.aiInputText.set(current ? `${current} ${clean}` : clean);
     } else if (fieldName === 'flagSearch') {
       this.gallerySearch.set(clean);
     } else if (fieldName === 'lookupSearch') {

@@ -1371,10 +1371,17 @@
 
 .share-field {
   position: relative;
-  border: 1px solid #00a6f4;
+  border: 1px solid #cbd5e1;
   border-radius: 9999px;
   padding: 12px 20px;
   background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.share-field:hover,
+.share-field:focus-within {
+  border-color: #00a6f4;
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.2);
 }
 
 .share-input {
@@ -1382,18 +1389,27 @@
   background: transparent;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #1e293b;
+  color: #64748b;
   outline: none;
 }
 
 :host-context(.dark) .share-field,
 .dark .share-field {
+  border-color: #334155;
   background: #1e293b;
+}
+
+:host-context(.dark) .share-field:hover,
+.dark .share-field:hover,
+:host-context(.dark) .share-field:focus-within,
+.dark .share-field:focus-within {
+  border-color: #00a6f4;
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.2);
 }
 
 :host-context(.dark) .share-input,
 .dark .share-input {
-  color: #f1f5f9;
+  color: #94a3b8;
 }
 
 /* Export & Share panels: one field per row */
@@ -1742,3 +1758,53 @@
 .currency-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #00a6f4;
 }
+
+/* Flag Gallery Cards: High contrast text on hover and normal states */
+.flag-gallery-card,
+button.flag-gallery-card {
+  background-color: #ffffff !important;
+}
+
+.flag-gallery-card:hover,
+button.flag-gallery-card:hover {
+  background-color: #f8fafc !important;
+  border-color: #00a6f4 !important;
+}
+
+.flag-gallery-card .flag-card-code,
+.flag-gallery-card:hover .flag-card-code,
+button.flag-gallery-card:hover .flag-card-code {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+}
+
+.flag-gallery-card .flag-card-name,
+.flag-gallery-card:hover .flag-card-name,
+button.flag-gallery-card:hover .flag-card-name {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+:host-context(.dark) .flag-gallery-card,
+.dark .flag-gallery-card {
+  background-color: #0f172a !important;
+}
+
+:host-context(.dark) .flag-gallery-card:hover,
+.dark .flag-gallery-card:hover {
+  background-color: #1e293b !important;
+  border-color: #00a6f4 !important;
+}
+
+:host-context(.dark) .flag-gallery-card .flag-card-code,
+:host-context(.dark) .flag-gallery-card:hover .flag-card-code,
+.dark .flag-gallery-card:hover .flag-card-code {
+  color: #ffffff !important;
+}
+
+:host-context(.dark) .flag-gallery-card .flag-card-name,
+:host-context(.dark) .flag-gallery-card:hover .flag-card-name,
+.dark .flag-gallery-card:hover .flag-card-name {
+  color: #cbd5e1 !important;
+}
+
