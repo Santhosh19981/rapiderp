@@ -12,6 +12,7 @@ export interface Country {
   isoNumeric?: string;
   nationality?: string;
   continent?: string;
+  capital?: string;
   population?: string;
   states?: number;
   cities?: number;
@@ -25,6 +26,7 @@ export interface Country {
   isUpdated?: boolean;
   // Country name in other languages, keyed by language code (ar, hi, ur, bn)
   translations?: Record<string, string>;
+  customFields?: Record<string, any>;
 }
 
 export interface CountryLookupRecord {
@@ -88,7 +90,9 @@ export interface MinimizedCountryForm {
     status: 'Active' | 'Inactive' | 'Draft' | 'Delete';
     flag: string | null;
     continent: string;
+    capital?: string;
     translations: Record<string, string>;
+    customFields?: Record<string, any>;
     flagTab: 'drop' | 'upload' | 'attachment' | 'gallery';
     keepOnPage: boolean;
     pdfOnSubmit: boolean;

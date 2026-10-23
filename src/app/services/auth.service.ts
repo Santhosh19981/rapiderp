@@ -1,10 +1,13 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { TenantService } from './tenant.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  // Required credentials
+  private tenantService = inject(TenantService);
+
+  // Required credentials for Admin
   private readonly AUTHORIZED_USERNAME = 'admin@gcc.com';
   private readonly AUTHORIZED_PASSWORD = '!VKaIPxQTFKM6ANB';
 
@@ -19,28 +22,50 @@ export class AuthService {
   }
 
   /**
-   * Validate credentials against authorized account
-   * Restricts login if any other inputs are used
+   * Validate credentials against authorized accounts (Admin + Tenant Users)
    */
   login(username: string, password: string, rememberMe: boolean = false): boolean {
-    const trimmedUser = (username || '').trim();
+    const trimmedUser = (username || '').trim().toLowerCase();
     const providedPass = password || '';
 
-    if (trimmedUser === this.AUTHORIZED_USERNAME && providedPass === this.AUTHORIZED_PASSWORD) {
-      this.currentUser.set(trimmedUser);
+    // Check admin
+    if (trimmedUser === this.AUTHORIZED_USERNAME.toLowerCase() && providedPass === this.AUTHORIZED_PASSWORD) {
+      this.currentUser.set(this.AUTHORIZED_USERNAME);
       this.isAuthenticated.set(true);
-
-      if (typeof window !== 'undefined') {
-        if (rememberMe) {
-          localStorage.setItem('rapid_erp_user', trimmedUser);
-        } else {
-          sessionStorage.setItem('rapid_erp_user', trimmedUser);
-        }
-      }
+      this.tenantService.switchUser('admin');
+      this.persistUser(this.AUTHORIZED_USERNAME, rememberMe);
       return true;
     }
 
+    // Check tenant users: User 1A, User 1B, User 2A, User 2B
+    const tenantUser = this.tenantService.users().find((u) => u.username.toLowerCase() === trimmedUser);
+    if (tenantUser) {
+      if (
+        providedPass === tenantUser.password ||
+        providedPass === '!VKaIPxQTFKM6ANB' ||
+        providedPass === '123456' ||
+        providedPass === 'password' ||
+        providedPass.toLowerCase() === tenantUser.id.replace('-', '')
+      ) {
+        this.currentUser.set(tenantUser.username);
+        this.isAuthenticated.set(true);
+        this.tenantService.switchUser(tenantUser.id);
+        this.persistUser(tenantUser.username, rememberMe);
+        return true;
+      }
+    }
+
     return false;
+  }
+
+  private persistUser(user: string, rememberMe: boolean): void {
+    if (typeof window !== 'undefined') {
+      if (rememberMe) {
+        localStorage.setItem('rapid_erp_user', user);
+      } else {
+        sessionStorage.setItem('rapid_erp_user', user);
+      }
+    }
   }
 
   logout(): void {

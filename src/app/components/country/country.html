@@ -1,4 +1,4 @@
-<div
+﻿<div
   class="country-module-container flex flex-col h-full w-full bg-[#f8fafc] dark:bg-slate-900 text-slate-800 dark:text-slate-100 overflow-hidden relative select-none">
 
   <!-- ========================================================================= -->
@@ -61,7 +61,7 @@
             </div>
 
             <!-- 2. Below: Dynamic Breadcrumb (Administrator > General > Country Master > [Current Action/View]) -->
-            @if (viewMode() !== 'add' && viewMode() !== 'edit') {
+            @if (viewMode() !== 'add' && viewMode() !== 'edit' && viewMode() !== 'view') {
             <nav class="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium leading-none mt-1 select-none"
               aria-label="Breadcrumb">
               <button type="button" (click)="navService.navigateTo('dashboard')"
@@ -86,10 +86,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
               </svg>
               <span class="text-[#00a6f4] font-bold truncate">
-                @if (viewMode() === 'add') { Add Country }
-                @else if (viewMode() === 'edit') { Edit Country }
-                @else if (viewMode() === 'view') { Country Details }
-                @else if (viewMode() === 'overview') { Overview }
+                @if (viewMode() === 'overview') { Overview }
                 @else if (viewMode() === 'list') { Country List View }
                 @else if (viewMode() === 'grid') { Country Grid View }
               </span>
@@ -98,43 +95,10 @@
           </div>
         </div>
 
-        <!-- Center: Record Navigator in Page Title Bar (Centered on page: absolute left-1/2 -translate-x-1/2) -->
-        @if (viewMode() === 'add' || viewMode() === 'edit' || viewMode() === 'view') {
-        <div
-          class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex items-center gap-2 select-none z-10">
-          <!-- Left arrow: Circular button per Screenshot 1 -->
-          <button type="button" (click)="goToPreviousCountry()"
-            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center transition cursor-pointer shadow-2xs"
-            title="Prev" data-tooltip="Prev" data-tooltip-pos="bottom">
-            <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-
-          <!-- Center: Circular badge with current record number filled by default with secondary color -->
-          <div
-            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#00a6f4] border border-[#00a6f4] text-white font-bold text-base sm:text-lg flex items-center justify-center cursor-default select-none shadow-2xs hover:bg-[#0095dc] hover:border-[#0095dc] transition-colors duration-150"
-            [title]="currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 42)"
-            [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + (sortedCountries().length || 42)"
-            data-tooltip-pos="bottom">
-            <span class="text-white">{{ currentCountryDisplayNumber() }}</span>
-          </div>
-
-          <!-- Right arrow: Circular button per Screenshot 1 -->
-          <button type="button" (click)="goToNextCountry()"
-            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center transition cursor-pointer shadow-2xs"
-            title="Next" data-tooltip="Next" data-tooltip-pos="bottom">
-            <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        </div>
-        }
-
         <!-- Right Side: View Switchers and Action buttons -->
         <div class="flex items-center gap-2 sm:gap-2.5">
+
+
           <!-- View Switcher Tabs (Overview | Grid | List) visible only in Overview mode -->
           @if (viewMode() === 'overview') {
           <div
@@ -2147,7 +2111,7 @@
                               @if (dateColumns.includes(col.key)) {
                               {{ formatDate($any(c)[col.key]) }}
                               } @else {
-                              {{ $any(c)[col.key] ?? '—' }}
+                              {{ $any(c)[col.key] || (c.customFields && c.customFields[col.key]) || '—' }}
                               }
                             </div>
                           </td>
@@ -2819,10 +2783,11 @@
               <div
                 class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar px-6 py-6 sm:px-8 sm:py-7 space-y-6">
 
-                <!-- Row 1: Country Name *, ISO Code2 *, ISO Code3 * (Unified scroll & left alignment) -->
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-5">
-                  <!-- Country Name * (Column 6 per Point 5) -->
-                  <div class="relative w-full group sm:col-span-6" data-popover>
+                <!-- Unified Responsive Auto-Flow Grid: fields auto-adjust based on visible count -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 items-start">
+                  <!-- Country Name * -->
+                  @if (isFieldVisible('name')) {
+                  <div class="relative w-full group sm:col-span-2 lg:col-span-1 xl:col-span-2" data-popover>
 
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
@@ -2871,18 +2836,6 @@
                             <path d="M7 2h1" />
                             <path d="m22 22-5-10-5 10" />
                             <path d="M14 18h6" />
-                          </svg>
-                        </button>
-
-                        <!-- 2. Searchable Lookup from separate Lookup Table (Change 1) -->
-                        <button type="button" (click)="openLookupModal('form')"
-                          class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
-                          title="Lookup Country from World Lookup Table">
-                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            <line x1="11" y1="8" x2="11" y2="14" />
-                            <line x1="8" y1="11" x2="14" y2="11" />
                           </svg>
                         </button>
 
@@ -3132,9 +3085,11 @@
                     </div>
                     }
                   </div>
+                  }
 
-                  <!-- ISO Code2 * (Column 3 per Point 5) -->
-                  <div class="relative w-full group sm:col-span-3">
+                  <!-- ISO Code 2 * -->
+                  @if (isFieldVisible('isoCode2')) {
+                  <div class="relative w-full group">
 
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
@@ -3223,9 +3178,11 @@
                     </p>
                     }
                   </div>
+                  }
 
-                  <!-- ISO Code3 * (Column 3 per Point 5) -->
-                  <div class="relative w-full group sm:col-span-3">
+                  <!-- ISO Code 3 * -->
+                  @if (isFieldVisible('isoCode3')) {
+                  <div class="relative w-full group">
 
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
@@ -3314,11 +3271,10 @@
                     </p>
                     }
                   </div>
-                </div>
+                  }
 
-                <!-- Row 2: ISO Numeric *, Phone Dial Code *, Default Currency *, Nationality -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                  <!-- ISO Numeric * (Section 4.8) -->
+                  <!-- ISO Numeric * -->
+                  @if (isFieldVisible('isoNumeric')) {
                   <div class="relative w-full group">
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
@@ -3407,8 +3363,10 @@
                     </p>
                     }
                   </div>
+                  }
 
-                  <!-- Phone Dial Code * (Section 4.8) -->
+                  <!-- Dial Code * -->
+                  @if (isFieldVisible('isd')) {
                   <div class="relative w-full group">
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
@@ -3426,7 +3384,7 @@
                       <div class="flex items-center gap-2 ml-2 shrink-0">
                         @if (isFieldInvalid('isd') && formIsd().trim()) {
                         <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
-                          title="Invalid Phone Dial Code">
+                          title="Invalid Dial Code">
                           <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -3435,7 +3393,7 @@
                         } @else if (isIsdValid() && touchedFields()['isd'] && formIsd().trim()) {
                         <span
                           class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid Phone DialCode">
+                          title="Valid Dial Code">
                           <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -3451,7 +3409,7 @@
                           [class.opacity-100]="isIsdFocused() || activeListeningField() === 'isd'"
                           [class.pointer-events-auto]="isIsdFocused() || activeListeningField() === 'isd'">
                           <button type="button" (click)="toggleVoiceInput('isd')"
-                            [attr.aria-label]="activeListeningField() === 'isd' ? 'Listening...' : 'Voice input for Phone Dial Code'"
+                            [attr.aria-label]="activeListeningField() === 'isd' ? 'Listening...' : 'Voice input for Dial Code'"
                             [title]="activeListeningField() === 'isd' ? 'Listening...' : 'Voice input'"
                             class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
                             [class.text-[#00a6f4]]="activeListeningField() !== 'isd'"
@@ -3469,8 +3427,8 @@
                       <label for="country-isd"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
                         [class.floating-top]="isIsdFloating()" [class.resting]="!isIsdFloating()">
-                        Phone Dial Code <span [class.text-[#DC2626]]="isIsdFocused()"
-                          [class.text-slate-400]="!isIsdFocused()" class="font-bold transition-colors">*</span>
+                        Dial Code <span [class.text-[#DC2626]]="isIsdFocused()" [class.text-slate-400]="!isIsdFocused()"
+                          class="font-bold transition-colors">*</span>
                       </label>
                     </div>
 
@@ -3495,8 +3453,10 @@
                     </p>
                     }
                   </div>
+                  }
 
-                  <!-- Default Currency * (Dropdown with Search and Voice Input per user reference) -->
+                  <!-- Default Currency * -->
+                  @if (isFieldVisible('currency')) {
                   <div class="relative w-full group" data-popover>
                     <!-- Trigger Pill Button -->
                     <div role="button" tabindex="0" id="country-currency-trigger"
@@ -3625,8 +3585,10 @@
                     </p>
                     }
                   </div>
+                  }
 
-                  <!-- Nationality (Section 4.8 — Optional) -->
+                  <!-- Nationality -->
+                  @if (isFieldVisible('nationality')) {
                   <div class="relative w-full group">
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
@@ -3714,8 +3676,10 @@
                     </p>
                     }
                   </div>
+                  }
 
-                  <!-- Status Dropdown Selector (Section 5) — Screenshots 2 & 3 Exact Match -->
+                  <!-- Status * -->
+                  @if (isFieldVisible('status')) {
                   <div class="relative w-full group">
                     <div
                       class="relative flex items-center justify-between w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 cursor-pointer select-none"
@@ -3808,8 +3772,10 @@
                     </div>
                     }
                   </div>
+                  }
 
-                  <!-- Default Field (Section 6) -->
+                  <!-- Default Country -->
+                  @if (isFieldVisible('isDefault')) {
                   <div class="relative w-full group">
                     <div (click)="toggleDefault($event)"
                       class="relative flex items-center justify-between w-full h-[52px] px-5 sm:px-6 rounded-full border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-200 bg-white dark:bg-slate-800 cursor-pointer select-none">
@@ -3832,9 +3798,138 @@
                       </label>
                     </div>
                   </div>
+                  }
+
+                  <!-- Continent -->
+                  @if (isFieldVisible('continent')) {
+                  <div class="relative w-full group">
+                    <div
+                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
+                      [class.border-[#00a6f4]]="isContinentFocused()" [class.ring-2]="isContinentFocused()"
+                      [class.ring-[#00a6f4]/20]="isContinentFocused()" [class.border-slate-300]="!isContinentFocused()"
+                      [class.dark:border-slate-600]="!isContinentFocused()">
+                      <input id="country-continent" type="text" [ngModel]="formContinent()" placeholder=""
+                        (ngModelChange)="formContinent.set($event); markFieldTouched('continent')"
+                        (focus)="isContinentFocused.set(true)"
+                        (blur)="isContinentFocused.set(false); markFieldTouched('continent')"
+                        (keydown.enter)="$event.preventDefault()" name="app_continent" autocomplete="off"
+                        autocorrect="off" autocapitalize="none" spellcheck="false" data-form-type="other"
+                        data-lpignore="true" aria-autocomplete="none"
+                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
+                      <div class="flex items-center gap-2 ml-2 shrink-0">
+                        @if (isContinentValid() && formContinent()?.trim()) {
+                        <span
+                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
+                          title="Valid Continent">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                        }
+                      </div>
+                      <label for="country-continent"
+                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
+                        [class.floating-top]="isContinentFloating()" [class.resting]="!isContinentFloating()">
+                        Continent
+                      </label>
+                    </div>
+                    @if (isContinentFocused()) {
+                    <p
+                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
+                      Geographic continent (e.g. Asia, Europe, Africa)
+                    </p>
+                    }
+                  </div>
+                  }
+
+                  <!-- Capital City -->
+                  @if (isFieldVisible('capital')) {
+                  <div class="relative w-full group">
+                    <div
+                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
+                      [class.border-[#00a6f4]]="isCapitalFocused()" [class.ring-2]="isCapitalFocused()"
+                      [class.ring-[#00a6f4]/20]="isCapitalFocused()" [class.border-slate-300]="!isCapitalFocused()"
+                      [class.dark:border-slate-600]="!isCapitalFocused()">
+                      <input id="country-capital" type="text" [ngModel]="formCapital()" placeholder=""
+                        (ngModelChange)="formCapital.set($event); markFieldTouched('capital')"
+                        (focus)="isCapitalFocused.set(true)"
+                        (blur)="isCapitalFocused.set(false); markFieldTouched('capital')"
+                        (keydown.enter)="$event.preventDefault()" name="app_capital" autocomplete="off"
+                        autocorrect="off" autocapitalize="none" spellcheck="false" data-form-type="other"
+                        data-lpignore="true" aria-autocomplete="none"
+                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
+                      <div class="flex items-center gap-2 ml-2 shrink-0">
+                        @if (isCapitalValid() && formCapital()?.trim()) {
+                        <span
+                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
+                          title="Valid Capital City">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                        }
+                        <div class="overflow-hidden flex items-center transition-all duration-300 ease-out"
+                          [class.max-w-0]="!isCapitalFocused() && activeListeningField() !== 'capital'"
+                          [class.opacity-0]="!isCapitalFocused() && activeListeningField() !== 'capital'"
+                          [class.pointer-events-none]="!isCapitalFocused() && activeListeningField() !== 'capital'"
+                          [class.max-w-[32px]]="isCapitalFocused() || activeListeningField() === 'capital'"
+                          [class.opacity-100]="isCapitalFocused() || activeListeningField() === 'capital'"
+                          [class.pointer-events-auto]="isCapitalFocused() || activeListeningField() === 'capital'">
+                          <button type="button" (click)="toggleVoiceInput('capital')"
+                            [attr.aria-label]="activeListeningField() === 'capital' ? 'Listening...' : 'Voice input for Capital City'"
+                            [title]="activeListeningField() === 'capital' ? 'Listening...' : 'Voice input'"
+                            class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
+                            [class.text-[#00a6f4]]="activeListeningField() !== 'capital'"
+                            [class.text-red-500]="activeListeningField() === 'capital'"
+                            [class.animate-pulse]="activeListeningField() === 'capital'">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor" stroke-width="1.8">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <label for="country-capital"
+                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
+                        [class.floating-top]="isCapitalFloating()" [class.resting]="!isCapitalFloating()">
+                        Capital City
+                      </label>
+                    </div>
+                    @if (isCapitalFocused()) {
+                    <p
+                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
+                      National capital city (e.g. Riyadh, Washington D.C.)
+                    </p>
+                    }
+                  </div>
+                  }
+
+                  <!-- Custom Dynamic Fields -->
+                  @for (cf of tenantService.customFields(); track cf.key) {
+                  @if (isFieldVisible(cf.key)) {
+                  <div class="relative w-full group">
+                    <div
+                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 transition-all duration-200 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20">
+                      <input type="text" [ngModel]="getCustomFieldValue(cf.key)"
+                        (ngModelChange)="setCustomFieldValue(cf.key, $event)" [name]="'app_cf_' + cf.key"
+                        autocomplete="off" placeholder=""
+                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4]" />
+                      <label
+                        class="floating-notch-label floating-top absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm">
+                        {{ cf.label }}
+                      </label>
+                    </div>
+                  </div>
+                  }
+                  }
+
                 </div>
 
-                <!-- Row 4: Flag Field Redesign (Point 11: 3 options Upload, DragDrop, Gallery opening Flag Lookup Popup & Display Flag) -->
+                <!-- Flag (full-width card, outside auto-flow grid) -->
+                @if (isFieldVisible('flag')) {
                 <div class="w-full space-y-2 pt-2">
                   <input #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
                     class="hidden" />
@@ -3941,6 +4036,7 @@
                   </div>
                   }
                 </div>
+                }
 
               </div>
 
@@ -4072,6 +4168,103 @@
               </label>
             </div>
 
+            <!-- Center: Record Navigator (« ‹ [ Number ] › ») with User Editable Input & Selectable Popover Dropdown -->
+            <div class="flex items-center gap-1.5 sm:gap-2 select-none">
+              <!-- First Record («) -->
+              <button type="button" (click)="goToFirstCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                title="First" data-tooltip="First" data-tooltip-pos="top" aria-label="First">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m11 17-5-5 5-5" />
+                  <path d="m18 17-5-5 5-5" />
+                </svg>
+              </button>
+
+              <!-- Previous Record (‹ / Minus) -->
+              <button type="button" (click)="goToPreviousCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                title="Prev" data-tooltip="Prev" data-tooltip-pos="top" aria-label="Prev">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+
+              <!-- Active Record Number Pill (User Editable & Selectable Popover Dropdown) -->
+              <div class="relative z-50" data-popover>
+                <div (click)="toggleRecordDropdown($event)"
+                  class="h-8 min-w-[56px] sm:min-w-[64px] px-2 rounded-full border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-slate-800 flex items-center justify-center cursor-pointer select-none transition hover:border-[#0070ba] shadow-xs"
+                  [title]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()"
+                  [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()"
+                  data-tooltip-pos="top">
+                  <input type="number" min="1" [max]="totalRecordsCount()" [value]="recordInputValue()"
+                    (input)="onRecordInputKey($any($event.target).value)"
+                    (keydown.enter)="commitRecordInput(); isRecordDropdownOpen.set(false)" (blur)="commitRecordInput()"
+                    (click)="toggleRecordDropdown($event)"
+                    class="w-full text-center text-sm font-bold text-sky-500 dark:text-[#38bdf8] bg-transparent outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-pointer" />
+                </div>
+
+                <!-- Dropdown Popover -->
+                @if (isRecordDropdownOpen()) {
+                <div
+                  class="page-dropdown-container absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-32 bg-[#f8fcff] dark:bg-slate-800 rounded-[28px] border-2 border-[#a5e3fd] dark:border-slate-600 p-2.5 z-50 animate-in fade-in duration-150 shadow-xl"
+                  (click)="$event.stopPropagation()">
+                  <!-- Notch arrow pointing down to active record pill -->
+                  <div
+                    class="absolute -bottom-[9px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[9px] border-t-[#a5e3fd] dark:border-t-slate-600">
+                  </div>
+                  <div
+                    class="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[8px] border-t-[#f8fcff] dark:border-t-slate-800">
+                  </div>
+
+                  <!-- Header label inside popover -->
+                  <div
+                    class="text-[10px] font-bold text-center text-slate-400 dark:text-slate-400 uppercase tracking-wider pb-1 border-b border-sky-100 dark:border-slate-700">
+                    Record (1 - {{ totalRecordsCount() }})
+                  </div>
+
+                  <!-- Scrollable list of record numbers with custom cyan scrollbar -->
+                  <div
+                    class="page-dropdown-scroll max-h-56 overflow-y-auto pr-1 flex flex-col gap-1.5 mt-1.5 custom-scrollbar">
+                    @for (r of recordsList(); track r) {
+                    <button type="button" (click)="selectRecordFromDropdown(r)"
+                      class="w-full py-1 rounded-xl text-center text-base font-medium transition cursor-pointer text-[#0070ba] dark:text-sky-300 hover:bg-[#e0f4fe] dark:hover:bg-slate-700/80"
+                      [class.font-bold]="currentCountryDisplayNumber() === r"
+                      [class.bg-[#dff3fd]]="currentCountryDisplayNumber() === r"
+                      [class.dark:bg-sky-950/70]="currentCountryDisplayNumber() === r">
+                      {{ r }}
+                    </button>
+                    }
+                  </div>
+                </div>
+                }
+              </div>
+
+              <!-- Next Record (› / Plus) -->
+              <button type="button" (click)="goToNextCountry()"
+                [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                title="Next" data-tooltip="Next" data-tooltip-pos="top" aria-label="Next">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+
+              <!-- Last Record (») -->
+              <button type="button" (click)="goToLastCountry()"
+                [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                title="Last" data-tooltip="Last" data-tooltip-pos="top" aria-label="Last">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 17 5-5-5-5" />
+                  <path d="m13 17 5-5-5-5" />
+                </svg>
+              </button>
+            </div>
+
             <!-- Right: Clear/Reset and Save/Update Buttons with Master Icons (Image 4 & 5 Replica) -->
             <div class="flex items-center gap-3">
               @if (viewMode() === 'add') {
@@ -4108,49 +4301,153 @@
             <!-- Left Side: Clean data in previous UI style matching Image 1 & 2 -->
             <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-6 sm:p-10 space-y-8">
 
-              <!-- Clean Label & Value Grid (Exact Replica of Image 1 & 2: No input boxes) -->
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-7">
-                <div>
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Code</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.code ||
-                    sc.isoCode2 || '—' }}</span>
-                </div>
+              <!-- Clean Label & Value Grid — Auto-adjusts to visible fields -->
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-7 items-center">
+                @if (isFieldVisible('name')) {
+                <div class="relative w-full group" data-popover>
+                  <!-- Trigger Pill Button (Reference Default Currency Dropdown style) -->
+                  <div role="button" tabindex="0" id="view-country-name-trigger"
+                    (click)="toggleViewCountryDropdown($event)" (keydown.enter)="toggleViewCountryDropdown($event)"
+                    (keydown.space)="toggleViewCountryDropdown($event)"
+                    class="relative flex items-center justify-between w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 cursor-pointer select-none"
+                    [class.border-[#00a6f4]]="isViewCountryDropdownOpen() || isViewNameFocused()"
+                    [class.ring-2]="isViewCountryDropdownOpen() || isViewNameFocused()"
+                    [class.ring-[#00a6f4]/20]="isViewCountryDropdownOpen() || isViewNameFocused()"
+                    [class.border-slate-300]="!isViewCountryDropdownOpen() && !isViewNameFocused()"
+                    [class.dark:border-slate-600]="!isViewCountryDropdownOpen() && !isViewNameFocused()">
 
+                    <span class="text-sm font-semibold truncate text-slate-800 dark:text-white">
+                      {{ viewCountryName() || sc.name }}
+                    </span>
+
+                    <div class="flex items-center gap-2 ml-2 shrink-0">
+                      <!-- Chevron Up / Down -->
+                      <span class="text-slate-400 transition-transform duration-200"
+                        [class.rotate-180]="isViewCountryDropdownOpen()">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                          stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </span>
+                    </div>
+
+                    <!-- Floating Notch Label: Country * -->
+                    <label
+                      class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm floating-top"
+                      [class.text-[#00a6f4]]="isViewCountryDropdownOpen()">
+                      Country <span class="font-bold text-[#DC2626]">*</span>
+                    </label>
+                  </div>
+
+                  <!-- Dropdown with Search & Select Country List (Reference Default Currency Dropdown, Searchbar no need circle) -->
+                  @if (isViewCountryDropdownOpen()) {
+                  <div (click)="$event.stopPropagation()"
+                    class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <!-- Search Bar (No circle / clean rectangular-rounded border) with Voice Input -->
+                    <div
+                      class="relative flex items-center w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                      <svg class="w-4 h-4 text-slate-400 shrink-0 mr-2" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                      <input type="text" [ngModel]="viewCountrySearch()" (ngModelChange)="viewCountrySearch.set($event)"
+                        placeholder="Search" autocomplete="off"
+                        class="w-full bg-transparent text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                      @if (viewCountrySearch()) {
+                      <button type="button" (click)="viewCountrySearch.set('')"
+                        class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 cursor-pointer mr-1">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                      }
+                      <button type="button" (click)="toggleVoiceInput('viewCountrySearch')"
+                        class="text-slate-400 hover:text-[#00a6f4] p-1 rounded-full cursor-pointer focus:outline-none transition-colors shrink-0"
+                        [class.text-red-500]="activeListeningField() === 'viewCountrySearch'"
+                        [class.animate-pulse]="activeListeningField() === 'viewCountrySearch'"
+                        [title]="activeListeningField() === 'viewCountrySearch' ? 'Listening...' : 'Voice Search'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <!-- Scrollable Countries List with Image 1 styling -->
+                    <div class="mt-2.5 max-h-60 overflow-y-auto custom-scrollbar flex flex-col space-y-1 pr-1">
+                      @for (c of filteredViewCountryList(); track c.code) {
+                      <button type="button" (click)="selectViewCountryOption(c)"
+                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item"
+                        [class.bg-[#dff3fd]]="c.name === sc.name || c.name === viewCountryName()"
+                        [class.dark:bg-sky-950/70]="c.name === sc.name || c.name === viewCountryName()">
+                        <div class="flex items-center gap-2.5 truncate">
+                          @if (c.flag) {
+                          <img [src]="c.flag" [alt]="c.name" class="w-6 h-4 object-cover rounded shadow-2xs shrink-0" />
+                          }
+                          <span
+                            class="text-sm font-semibold text-[#0070ba] dark:text-[#38bdf8] truncate group-hover/item:text-[#005a96]">
+                            {{ c.name }}
+                          </span>
+                        </div>
+                        <span class="text-xs font-bold text-[#0070ba] dark:text-[#38bdf8] font-mono shrink-0 ml-2">
+                          {{ c.code }}
+                        </span>
+                      </button>
+                      } @empty {
+                      <div
+                        class="py-8 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-1.5">
+                        <svg class="w-6 h-6 text-slate-300 dark:text-slate-600" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="1.5">
+                          <circle cx="11" cy="11" r="8" />
+                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <span>No countries found matching "{{ viewCountrySearch() }}"</span>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                  }
+                </div>
+                }
+
+                @if (isFieldVisible('isoCode2')) {
                 <div>
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISD</span>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
+                    2</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoCode2 ||
+                    sc.code || '—' }}</span>
+                </div>
+                }
+
+                @if (isFieldVisible('isoCode3') && sc.isoCode3) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
+                    3</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoCode3 }}</span>
+                </div>
+                }
+
+                @if (isFieldVisible('isoNumeric') && sc.isoNumeric) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO
+                    Numeric</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoNumeric
+                    }}</span>
+                </div>
+                }
+
+                @if (isFieldVisible('isd')) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Dial
+                    Code</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isd || '—'
                     }}</span>
                 </div>
+                }
 
-                <div>
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Country</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.name || '—'
-                    }}</span>
-                </div>
-
-                <div>
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isDefault ? 'Yes'
-                    : 'No' }}</span>
-                </div>
-
-                <div>
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Status</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.status || 'Active'
-                    }}</span>
-                </div>
-
-                <div>
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Action</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.actionMessage ||
-                    '2 hours ago' }}</span>
-                </div>
-
-                @if (sc.currency) {
+                @if (isFieldVisible('currency') && sc.currency) {
                 <div>
                   <span
                     class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Currency</span>
@@ -4158,7 +4455,7 @@
                 </div>
                 }
 
-                @if (sc.nationality) {
+                @if (isFieldVisible('nationality') && sc.nationality) {
                 <div>
                   <span
                     class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
@@ -4166,19 +4463,70 @@
                     }}</span>
                 </div>
                 }
+
+                @if (isFieldVisible('continent') && sc.continent) {
+                <div>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Continent</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.continent
+                    }}</span>
+                </div>
+                }
+
+                @if (isFieldVisible('capital') && sc.capital) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Capital
+                    City</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.capital }}</span>
+                </div>
+                }
+
+                @if (isFieldVisible('status')) {
+                <div>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Status</span>
+                  <span class="text-base font-bold block mt-1.5" [class.text-emerald-600]="sc.status === 'Active'"
+                    [class.text-amber-500]="sc.status === 'Draft'" [class.text-slate-400]="sc.status === 'Inactive'">
+                    {{ sc.status || 'Active' }}
+                  </span>
+                </div>
+                }
+
+                @if (isFieldVisible('isDefault')) {
+                <div>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isDefault ? 'Yes'
+                    : 'No' }}</span>
+                </div>
+                }
+
+
+                <!-- Custom Fields in View Mode -->
+                @for (cf of tenantService.customFields(); track cf.key) {
+                @if (isFieldVisible(cf.key) && sc.customFields && sc.customFields[cf.key]) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">{{ cf.label
+                    }}</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{
+                    sc.customFields[cf.key] }}</span>
+                </div>
+                }
+                }
               </div>
 
-              <!-- Flag Preview inside dashed container (Exact replica of Image 1 & 2) -->
+              @if (isFieldVisible('flag')) {
               <div class="space-y-2 pt-2">
                 <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Flag</span>
                 <div
-                  class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-8 sm:p-12 flex items-center justify-center bg-transparent min-h-[200px]">
+                  class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-4 sm:p-5 flex items-center justify-center bg-transparent">
                   <img [src]="sc.flag || ('https://flagcdn.com/' + (sc.isoCode2 || sc.code).toLowerCase() + '.svg')"
                     [alt]="sc.name"
-                    class="h-28 w-44 sm:h-32 sm:w-52 object-cover rounded-2xl shadow-md border border-slate-200/60 dark:border-slate-700"
+                    class="h-16 w-26 object-cover rounded-xl shadow-md border border-slate-200/60 dark:border-slate-700"
                     (error)="onFlagError($event, sc)" />
                 </div>
               </div>
+              }
 
               <!-- Translations if available -->
               @if (sc.translations && (sc.translations | keyvalue).length) {
@@ -4198,13 +4546,13 @@
               }
             </div>
 
-            <!-- Right-Side Action Panel with Fixed Vertical Icon Bar (Clean transparent background, individual actions) -->
+            <!-- Right-Side Action Panel with Fixed Vertical Icon Bar (Exact match to Edit page action panel) -->
             <aside
-              class="shrink-0 h-full py-4 px-2 sm:px-3 flex flex-col items-center z-20 select-none border-l border-slate-100 dark:border-slate-800/60 bg-transparent">
+              class="w-14 sm:w-16 shrink-0 border-l border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 flex flex-col items-center py-4 px-1 z-10 overflow-x-hidden overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
 
-              <!-- Slim Vertical Floating Toolbar: transparent background, properly spaced individual action icons -->
+              <!-- Slim Vertical Floating Toolbar: properly spaced individual action icons matching Edit page -->
               <div
-                class="w-12 sm:w-14 h-full flex-1 side-toolbar-scroll [scrollbar-width:none] [-ms-overflow-style:none] py-2 px-1 flex flex-col items-center gap-3 sm:gap-3.5 select-none animate-in fade-in duration-200">
+                class="w-full h-full flex-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-2 px-1 flex flex-col items-center gap-3 sm:gap-3.5 select-none animate-in fade-in duration-200 overflow-x-hidden">
 
                 <!-- 1. Executive Overview -->
                 <button type="button" (click)="switchView('overview')"
@@ -4217,9 +4565,18 @@
                     <rect x="3" y="14" width="7" height="7" rx="1.5" />
                   </svg>
                 </button>
-
+                <!-- 3. Add Country -->
+                <button type="button" (click)="openCreate()"
+                  class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none shadow-2xs"
+                  data-tooltip="Add" data-tooltip-pos="left">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
                 <!-- 2. Edit Country -->
-                <button type="button" (click)="openEdit(sc)"
+                <button type="button" (click)="openEdit(sc, $event)"
                   class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none shadow-2xs"
                   data-tooltip="Edit" data-tooltip-pos="left">
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -4228,8 +4585,10 @@
                   </svg>
                 </button>
 
-                <!-- 3. Recycle / Delete (Moved right after Edit icon per user request) -->
-                <button type="button" (click)="openActivityModal('deleted')"
+
+
+                <!-- 4. Recycle / Delete -->
+                <button type="button" (click)="promptDelete(sc, $event)"
                   class="w-10 h-10 rounded-2xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none shadow-2xs"
                   data-tooltip="Recycle" data-tooltip-pos="left">
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -4241,18 +4600,7 @@
                   </svg>
                 </button>
 
-                <!-- 4. Add Country (shown instead of View icon when in View page) -->
-                <button type="button" (click)="openCreate()"
-                  class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none shadow-2xs"
-                  data-tooltip="Add" data-tooltip-pos="left">
-                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19" />
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                  </svg>
-                </button>
-
-                <!-- 5. History -->
+                <!-- 5. Audit Trail / History -->
                 <button type="button" (click)="openActivityModal('history')"
                   class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none shadow-2xs"
                   data-tooltip="History" data-tooltip-pos="left">
@@ -4286,7 +4634,9 @@
                   </svg>
                 </button>
 
-                <!-- 8. AI Assistance -->
+
+
+                <!-- 9. AI Assistance -->
                 <button type="button" (click)="openAiModal()"
                   class="w-10 h-10 rounded-2xl bg-sky-50 dark:bg-sky-950/70 text-[#00a6f4] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none shadow-2xs"
                   data-tooltip="AI Assistance" data-tooltip-pos="left">
@@ -4299,56 +4649,125 @@
             </aside>
           </div>
 
-          <!-- Bottom Action Toolbar (Image 1 & 2 replica: 3 round cyan action buttons on left, Export on right) -->
+          <!-- Section 11 & 14: Fixed Footer Bar (Same as Edit page: Left Stay on Page, Center Navigator, Right Action Buttons) -->
           <div
-            class="country-panel-footer shrink-0 flex flex-wrap items-center justify-between gap-3 px-6 sm:px-10 py-4 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
-            <div class="flex items-center gap-3">
-              <!-- History / Record round button -->
-              <button type="button" (click)="openHistoryModal('current')"
-                class="w-10 h-10 rounded-full bg-[#e6f6fe] dark:bg-sky-950/60 text-[#00a6f4] hover:bg-[#d4effd] dark:hover:bg-sky-900/60 flex items-center justify-center cursor-pointer transition shadow-2xs"
-                title="History" aria-label="History">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            class="country-panel-footer shrink-0 flex items-center justify-between gap-3 px-6 sm:px-8 py-3.5 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
+            <!-- Left: Stay on Page Toggle (Exact replica of Edit page footer) -->
+            <div class="flex items-center gap-2">
+              <label class="form-switch keep-switch m-0 flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="sr-only" [checked]="keepOnPage()"
+                  (change)="keepOnPage.set($any($event.target).checked)" />
+                <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Stay on Page</span>
+              </label>
+            </div>
+
+            <!-- Center: Record Navigator (« ‹ [ Number ] › ») -->
+            <div class="flex items-center gap-1.5 sm:gap-2 select-none">
+              <!-- First Record («) -->
+              <button type="button" (click)="goToFirstCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                title="First" data-tooltip="First" data-tooltip-pos="top" aria-label="First">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m11 17-5-5 5-5" />
+                  <path d="m18 17-5-5 5-5" />
                 </svg>
               </button>
 
-              <!-- PDF Export round button -->
-              <button type="button" (click)="downloadCountryPdf(sc)"
-                class="w-10 h-10 rounded-full bg-[#e6f6fe] dark:bg-sky-950/60 text-[#00a6f4] hover:bg-[#d4effd] dark:hover:bg-sky-900/60 flex items-center justify-center cursor-pointer transition shadow-2xs"
-                title="Download PDF" aria-label="Download PDF">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <!-- Previous Record (‹ / Minus) -->
+              <button type="button" (click)="goToPreviousCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                title="Prev" data-tooltip="Prev" data-tooltip-pos="top" aria-label="Prev">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m15 18-6-6 6-6" />
                 </svg>
               </button>
 
-              <!-- Print round button -->
-              <button type="button" (click)="printCountry(sc)"
-                class="w-10 h-10 rounded-full bg-[#e6f6fe] dark:bg-sky-950/60 text-[#00a6f4] hover:bg-[#d4effd] dark:hover:bg-sky-900/60 flex items-center justify-center cursor-pointer transition shadow-2xs"
-                title="Print" aria-label="Print">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              <!-- Active Record Number Pill (User Editable & Selectable Popover Dropdown) -->
+              <div class="relative z-50" data-popover>
+                <div (click)="toggleRecordDropdown($event)"
+                  class="h-8 min-w-[56px] sm:min-w-[64px] px-2 rounded-full border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-slate-800 flex items-center justify-center cursor-pointer select-none transition hover:border-[#0070ba] shadow-xs"
+                  [title]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()"
+                  [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()"
+                  data-tooltip-pos="top">
+                  <input type="number" min="1" [max]="totalRecordsCount()" [value]="recordInputValue()"
+                    (input)="onRecordInputKey($any($event.target).value)"
+                    (keydown.enter)="commitRecordInput(); isRecordDropdownOpen.set(false)" (blur)="commitRecordInput()"
+                    (click)="toggleRecordDropdown($event)"
+                    class="w-full text-center text-sm font-bold text-sky-500 dark:text-[#38bdf8] bg-transparent outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-pointer" />
+                </div>
+
+                <!-- Dropdown Popover -->
+                @if (isRecordDropdownOpen()) {
+                <div
+                  class="page-dropdown-container absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-32 bg-[#f8fcff] dark:bg-slate-800 rounded-[28px] border-2 border-[#a5e3fd] dark:border-slate-600 p-2.5 z-50 animate-in fade-in duration-150 shadow-xl"
+                  (click)="$event.stopPropagation()">
+                  <!-- Notch arrow pointing down to active record pill -->
+                  <div
+                    class="absolute -bottom-[9px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[9px] border-t-[#a5e3fd] dark:border-t-slate-600">
+                  </div>
+                  <div
+                    class="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[8px] border-t-[#f8fcff] dark:border-t-slate-800">
+                  </div>
+
+                  <!-- Header label inside popover -->
+                  <div
+                    class="text-[10px] font-bold text-center text-slate-400 dark:text-slate-400 uppercase tracking-wider pb-1 border-b border-sky-100 dark:border-slate-700">
+                    Record (1 - {{ totalRecordsCount() }})
+                  </div>
+
+                  <!-- Scrollable list of record numbers with custom cyan scrollbar -->
+                  <div
+                    class="page-dropdown-scroll max-h-56 overflow-y-auto pr-1 flex flex-col gap-1.5 mt-1.5 custom-scrollbar">
+                    @for (r of recordsList(); track r) {
+                    <button type="button" (click)="selectRecordFromDropdown(r)"
+                      class="w-full py-1 rounded-xl text-center text-base font-medium transition cursor-pointer text-[#0070ba] dark:text-sky-300 hover:bg-[#e0f4fe] dark:hover:bg-slate-700/80"
+                      [class.font-bold]="currentCountryDisplayNumber() === r"
+                      [class.bg-[#dff3fd]]="currentCountryDisplayNumber() === r"
+                      [class.dark:bg-sky-950/70]="currentCountryDisplayNumber() === r">
+                      {{ r }}
+                    </button>
+                    }
+                  </div>
+                </div>
+                }
+              </div>
+
+              <!-- Next Record (› / Plus) -->
+              <button type="button" (click)="goToNextCountry()"
+                [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                title="Next" data-tooltip="Next" data-tooltip-pos="top" aria-label="Next">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+
+              <!-- Last Record (») -->
+              <button type="button" (click)="goToLastCountry()"
+                [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                title="Last" data-tooltip="Last" data-tooltip-pos="top" aria-label="Last">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 17 5-5-5-5" />
+                  <path d="m13 17 5-5-5-5" />
                 </svg>
               </button>
             </div>
 
+            <!-- Right: Delete and Edit Buttons (No icons, clean text pills) -->
             <div class="flex items-center gap-3">
-              <button type="button" (click)="openEdit(sc, $event)"
-                class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:border-[#00a6f4] hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center gap-2 transition cursor-pointer shadow-2xs">
-                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-                </svg>
-                <span>Edit Country</span>
+              <button type="button" (click)="promptDelete(sc, $event)"
+                class="w-28 sm:w-32 h-10 rounded-full border-2 border-[#00a6f4] hover:border-[#0092d6] bg-white dark:bg-slate-800 text-[#00a6f4] hover:text-[#0092d6] hover:bg-sky-50/60 dark:hover:bg-sky-950/20 text-sm font-bold flex items-center justify-center transition cursor-pointer shadow-2xs">
+                <span>Delete</span>
               </button>
-              <button type="button" (click)="exportViewedCountry()"
-                class="px-8 py-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0091ea] text-white text-sm font-bold shadow-md shadow-sky-500/25 transition cursor-pointer">
-                Export
+              <button type="button" (click)="openEdit(sc, $event)"
+                class="w-28 sm:w-32 h-10 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-sm font-bold flex items-center justify-center transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
+                <span>Edit</span>
               </button>
             </div>
           </div>
@@ -4373,8 +4792,7 @@
     <div
       class="bg-white dark:bg-slate-800 rounded-3xl max-w-lg w-full shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
       (click)="$event.stopPropagation()">
-      <div
-        class="px-6 pt-5 pb-4 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 space-y-2">
+      <div class="px-6 pt-5 pb-4 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 space-y-2">
         <div class="flex items-center justify-between">
           <!-- 2 Tabs: Share via Email and Share via WhatsApp (Flags popup style) -->
           <div class="flex items-center gap-2.5">
@@ -4383,12 +4801,9 @@
               [class.bg-[#00a6f4]]="channel === 'email'" [class.text-white]="channel === 'email'"
               [class.border-[#00a6f4]]="channel === 'email'" [class.font-bold]="channel === 'email'"
               [class.shadow-xs]="channel === 'email'" [class.bg-white]="channel !== 'email'"
-              [class.dark:bg-slate-800]="channel !== 'email'"
-              [class.text-slate-700]="channel !== 'email'"
-              [class.dark:text-slate-300]="channel !== 'email'"
-              [class.border-slate-300]="channel !== 'email'"
-              [class.dark:border-slate-600]="channel !== 'email'"
-              [class.hover:bg-slate-50]="channel !== 'email'"
+              [class.dark:bg-slate-800]="channel !== 'email'" [class.text-slate-700]="channel !== 'email'"
+              [class.dark:text-slate-300]="channel !== 'email'" [class.border-slate-300]="channel !== 'email'"
+              [class.dark:border-slate-600]="channel !== 'email'" [class.hover:bg-slate-50]="channel !== 'email'"
               [class.dark:hover:bg-slate-700]="channel !== 'email'">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -4402,12 +4817,9 @@
               [class.bg-[#00a6f4]]="channel === 'whatsapp'" [class.text-white]="channel === 'whatsapp'"
               [class.border-[#00a6f4]]="channel === 'whatsapp'" [class.font-bold]="channel === 'whatsapp'"
               [class.shadow-xs]="channel === 'whatsapp'" [class.bg-white]="channel !== 'whatsapp'"
-              [class.dark:bg-slate-800]="channel !== 'whatsapp'"
-              [class.text-slate-700]="channel !== 'whatsapp'"
-              [class.dark:text-slate-300]="channel !== 'whatsapp'"
-              [class.border-slate-300]="channel !== 'whatsapp'"
-              [class.dark:border-slate-600]="channel !== 'whatsapp'"
-              [class.hover:bg-slate-50]="channel !== 'whatsapp'"
+              [class.dark:bg-slate-800]="channel !== 'whatsapp'" [class.text-slate-700]="channel !== 'whatsapp'"
+              [class.dark:text-slate-300]="channel !== 'whatsapp'" [class.border-slate-300]="channel !== 'whatsapp'"
+              [class.dark:border-slate-600]="channel !== 'whatsapp'" [class.hover:bg-slate-50]="channel !== 'whatsapp'"
               [class.dark:hover:bg-slate-700]="channel !== 'whatsapp'">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                 <path
@@ -6302,8 +6714,583 @@
   }
 
   <!-- ========================================================================= -->
+  <!-- 7.5 TENANT SETTINGS & USER PERMISSIONS CONFIGURATION MODAL (Concepts 1 & 2) -->
+  <!-- ========================================================================= -->
+  @if (tenantService.isConfigModalOpen()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+    (click)="tenantService.closeConfigModal()">
+
+    <!-- Modal Box -->
+    <div
+      class="w-full max-w-5xl max-h-[92vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
+      (click)="$event.stopPropagation()">
+
+      <!-- Modal Header -->
+      <div
+        class="px-6 py-4.5 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-4 bg-slate-50/60 dark:bg-slate-950/40 shrink-0">
+        <div class="flex items-center gap-3 min-w-0">
+          <div
+            class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00a6f4]/20 via-sky-500/20 to-indigo-600/20 border border-sky-300 dark:border-sky-800 text-[#00a6f4] flex items-center justify-center shrink-0 shadow-xs">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h2 class="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight truncate">
+                Country Master Field Configuration & Permissions
+              </h2>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 truncate">
+              Tenant Setting Table (Concept 1) · User Permission Table (Concept 2) · Dynamic Field Builder
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Active Persona badge -->
+          <div
+            class="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 text-xs text-[#00a6f4] font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Active: {{ tenantService.activeUser().displayName }} ({{ tenantService.visibleFieldCount() }}
+              Fields)</span>
+          </div>
+
+          <!-- Close Button -->
+          <button type="button" (click)="tenantService.closeConfigModal()"
+            class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center justify-center transition cursor-pointer"
+            title="Close">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Concept 1 vs Concept 2 vs Add Field) -->
+      <div
+        class="px-6 border-b border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 flex items-center justify-between gap-4 overflow-x-auto custom-scrollbar">
+        <div class="flex items-center gap-2 py-2">
+          <!-- Tab 1: Concept 1 Tenant Setting Table -->
+          <button type="button" (click)="tenantService.activeConfigTab.set('tenantSettings')"
+            class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer"
+            [class.bg-[#00a6f4]]="tenantService.activeConfigTab() === 'tenantSettings'"
+            [class.text-white]="tenantService.activeConfigTab() === 'tenantSettings'"
+            [class.shadow-md]="tenantService.activeConfigTab() === 'tenantSettings'"
+            [class.shadow-[#00a6f4]/25]="tenantService.activeConfigTab() === 'tenantSettings'"
+            [class.bg-slate-100]="tenantService.activeConfigTab() !== 'tenantSettings'"
+            [class.dark:bg-slate-800]="tenantService.activeConfigTab() !== 'tenantSettings'"
+            [class.text-slate-600]="tenantService.activeConfigTab() !== 'tenantSettings'"
+            [class.dark:text-slate-300]="tenantService.activeConfigTab() !== 'tenantSettings'">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span>Concept 1: Tenant Setting Table</span>
+          </button>
+
+          <!-- Tab 2: Concept 2 User Permission Table -->
+          <button type="button" (click)="tenantService.activeConfigTab.set('userPermissions')"
+            class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer"
+            [class.bg-[#00a6f4]]="tenantService.activeConfigTab() === 'userPermissions'"
+            [class.text-white]="tenantService.activeConfigTab() === 'userPermissions'"
+            [class.shadow-md]="tenantService.activeConfigTab() === 'userPermissions'"
+            [class.shadow-[#00a6f4]/25]="tenantService.activeConfigTab() === 'userPermissions'"
+            [class.bg-slate-100]="tenantService.activeConfigTab() !== 'userPermissions'"
+            [class.dark:bg-slate-800]="tenantService.activeConfigTab() !== 'userPermissions'"
+            [class.text-slate-600]="tenantService.activeConfigTab() !== 'userPermissions'"
+            [class.dark:text-slate-300]="tenantService.activeConfigTab() !== 'userPermissions'">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span>Concept 2: User Permission Table</span>
+          </button>
+
+          <!-- Tab 3: Add New Field -->
+          <button type="button" (click)="tenantService.activeConfigTab.set('addField')"
+            class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer"
+            [class.bg-[#00a6f4]]="tenantService.activeConfigTab() === 'addField'"
+            [class.text-white]="tenantService.activeConfigTab() === 'addField'"
+            [class.shadow-md]="tenantService.activeConfigTab() === 'addField'"
+            [class.shadow-[#00a6f4]/25]="tenantService.activeConfigTab() === 'addField'"
+            [class.bg-slate-100]="tenantService.activeConfigTab() !== 'addField'"
+            [class.dark:bg-slate-800]="tenantService.activeConfigTab() !== 'addField'"
+            [class.text-slate-600]="tenantService.activeConfigTab() !== 'addField'"
+            [class.dark:text-slate-300]="tenantService.activeConfigTab() !== 'addField'">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+            </svg>
+            <span>Add New Field</span>
+          </button>
+        </div>
+
+        <!-- Global Reset Button -->
+        <button type="button"
+          (click)="tenantService.resetToDefaults(); showToast('Reset to default configurations: User 1A (6 fields), User 1B (4 fields)')"
+          class="text-xs font-semibold text-slate-500 hover:text-[#00a6f4] dark:hover:text-[#38bdf8] transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Reset Defaults</span>
+        </button>
+      </div>
+
+      <!-- Modal Body (Tab Content) -->
+      <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-6 space-y-6">
+
+        <!-- ===================================================================== -->
+        <!-- TAB 1: CONCEPT 1 — TENANT SETTING TABLE                               -->
+        <!-- ===================================================================== -->
+        @if (tenantService.activeConfigTab() === 'tenantSettings') {
+        <div class="space-y-4">
+          <!-- Explanation Banner -->
+          <div
+            class="p-4 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-xs text-sky-900 dark:text-sky-200 leading-relaxed">
+            <span class="font-bold text-[#0284c7] dark:text-[#38bdf8]">Concept 1 Rule:</span>
+            Fields configured in the Setting Table are tenant-level capabilities. If a checkbox is <strong
+              class="text-emerald-600 font-bold">checked (true)</strong>, the field is enabled for that tenant in
+            Country Master. If <strong class="text-rose-500 font-bold">unchecked (false)</strong>, it is hidden from all
+            users of this tenant. By default, all fields are checked/visible.
+          </div>
+
+          <!-- Tenant Selector & Actions Bar -->
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <!-- Tenant Pills -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Select Tenant:</span>
+              @for (t of tenantService.tenants(); track t.id) {
+              <button type="button" (click)="tenantService.selectedTenantIdForConfig.set(t.id)"
+                class="px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-2 cursor-pointer border"
+                [class.bg-[#00a6f4]]="tenantService.selectedTenantIdForConfig() === t.id"
+                [class.text-white]="tenantService.selectedTenantIdForConfig() === t.id"
+                [class.border-[#00a6f4]]="tenantService.selectedTenantIdForConfig() === t.id"
+                [class.bg-white]="tenantService.selectedTenantIdForConfig() !== t.id"
+                [class.dark:bg-slate-700]="tenantService.selectedTenantIdForConfig() !== t.id"
+                [class.border-slate-200]="tenantService.selectedTenantIdForConfig() !== t.id"
+                [class.dark:border-slate-600]="tenantService.selectedTenantIdForConfig() !== t.id">
+                <span class="w-2 h-2 rounded-full" [style.background-color]="t.color || '#00a6f4'"></span>
+                <span>{{ t.name }}</span>
+              </button>
+              }
+            </div>
+
+            <!-- Bulk Toggle Buttons -->
+            <div class="flex items-center gap-2">
+              <button type="button"
+                (click)="tenantService.setAllTenantFields(tenantService.selectedTenantIdForConfig(), true)"
+                class="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-700 hover:bg-slate-100 text-xs font-bold text-emerald-600 border border-emerald-200 dark:border-emerald-800 transition cursor-pointer">
+                Select All
+              </button>
+              <button type="button"
+                (click)="tenantService.setAllTenantFields(tenantService.selectedTenantIdForConfig(), false)"
+                class="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-700 hover:bg-slate-100 text-xs font-bold text-rose-500 border border-rose-200 dark:border-rose-800 transition cursor-pointer">
+                Deselect All
+              </button>
+            </div>
+          </div>
+
+          <!-- Setting Table -->
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-100/80 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700">
+                  <th class="py-3 px-4 w-12 text-center">Status</th>
+                  <th class="py-3 px-4">Field Name</th>
+                  <th class="py-3 px-4">Field Key</th>
+                  <th class="py-3 px-4">Category</th>
+                  <th class="py-3 px-4">Type</th>
+                  <th class="py-3 px-4 text-center">Setting Table Toggle</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                @for (f of tenantService.allFields(); track f.key) {
+                <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors">
+                  <!-- Active status dot -->
+                  <td class="py-3 px-4 text-center">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full"
+                      [class.bg-emerald-500]="tenantService.isFieldAllowedForTenant(tenantService.selectedTenantIdForConfig(), f.key)"
+                      [class.bg-slate-300]="!tenantService.isFieldAllowedForTenant(tenantService.selectedTenantIdForConfig(), f.key)"
+                      [class.dark:bg-slate-600]="!tenantService.isFieldAllowedForTenant(tenantService.selectedTenantIdForConfig(), f.key)">
+                    </span>
+                  </td>
+
+                  <!-- Label and description -->
+                  <td class="py-3 px-4">
+                    <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      <span>{{ f.label }}</span>
+                      @if (f.required) {
+                      <span
+                        class="px-1.5 py-0.2 rounded-md bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-[10px] font-bold">Required</span>
+                      }
+                      @if (f.isCustom) {
+                      <span
+                        class="px-1.5 py-0.2 rounded-md bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 text-[10px] font-bold">Custom</span>
+                      }
+                    </div>
+                    @if (f.description) {
+                    <div class="text-[11px] text-slate-400 mt-0.5">{{ f.description }}</div>
+                    }
+                  </td>
+
+                  <!-- Key -->
+                  <td class="py-3 px-4 font-mono text-[11px] text-slate-600 dark:text-slate-300">{{ f.key }}</td>
+
+                  <!-- Category -->
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      [class.bg-sky-100]="f.category === 'core'" [class.text-sky-700]="f.category === 'core'"
+                      [class.bg-indigo-100]="f.category === 'codes'" [class.text-indigo-700]="f.category === 'codes'"
+                      [class.bg-amber-100]="f.category === 'system'" [class.text-amber-700]="f.category === 'system'"
+                      [class.bg-purple-100]="f.category === 'custom'" [class.text-purple-700]="f.category === 'custom'">
+                      {{ f.category }}
+                    </span>
+                  </td>
+
+                  <!-- Type -->
+                  <td class="py-3 px-4 text-slate-500 capitalize">{{ f.type || 'text' }}</td>
+
+                  <!-- Toggle Checkbox -->
+                  <td class="py-3 px-4 text-center">
+                    <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                      <input type="checkbox"
+                        [checked]="tenantService.isFieldAllowedForTenant(tenantService.selectedTenantIdForConfig(), f.key)"
+                        (change)="tenantService.toggleTenantFieldSetting(tenantService.selectedTenantIdForConfig(), f.key)"
+                        class="w-4.5 h-4.5 rounded-md border-slate-300 text-[#00a6f4] focus:ring-[#00a6f4] cursor-pointer" />
+                      <span class="font-bold text-xs"
+                        [class.text-emerald-600]="tenantService.isFieldAllowedForTenant(tenantService.selectedTenantIdForConfig(), f.key)"
+                        [class.text-slate-400]="!tenantService.isFieldAllowedForTenant(tenantService.selectedTenantIdForConfig(), f.key)">
+                        {{ tenantService.isFieldAllowedForTenant(tenantService.selectedTenantIdForConfig(), f.key) ?
+                        'Enabled (True)' : 'Disabled (False)' }}
+                      </span>
+                    </label>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        }
+
+        <!-- ===================================================================== -->
+        <!-- TAB 2: CONCEPT 2 — USER PERMISSION TABLE                              -->
+        <!-- ===================================================================== -->
+        @if (tenantService.activeConfigTab() === 'userPermissions') {
+        <div class="space-y-4">
+          <!-- Explanation Banner -->
+          <div
+            class="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-xs text-indigo-900 dark:text-indigo-200 leading-relaxed">
+            <span class="font-bold text-indigo-700 dark:text-indigo-300">Concept 2 Rule:</span>
+            User permissions define field visibility for each user. A field is only shown if it is <strong
+              class="text-emerald-600 font-bold">Enabled in Tenant Setting Table</strong> AND <strong
+              class="text-emerald-600 font-bold">Permitted in this User Permission Table</strong>.
+            <div class="mt-1 font-semibold text-slate-700 dark:text-slate-300">
+              Preset Requirement: User 1A has 6 fields; User 1B has 4 fields. Both auto-adjust and responsively reflow!
+            </div>
+          </div>
+
+          <!-- User Selector & Actions Bar -->
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <!-- User Pills -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Select User:</span>
+              @for (u of tenantService.users(); track u.id) {
+              <button type="button" (click)="tenantService.selectedUserIdForConfig.set(u.id)"
+                class="px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border"
+                [class.bg-[#00a6f4]]="tenantService.selectedUserIdForConfig() === u.id"
+                [class.text-white]="tenantService.selectedUserIdForConfig() === u.id"
+                [class.border-[#00a6f4]]="tenantService.selectedUserIdForConfig() === u.id"
+                [class.bg-white]="tenantService.selectedUserIdForConfig() !== u.id"
+                [class.dark:bg-slate-700]="tenantService.selectedUserIdForConfig() !== u.id"
+                [class.border-slate-200]="tenantService.selectedUserIdForConfig() !== u.id"
+                [class.dark:border-slate-600]="tenantService.selectedUserIdForConfig() !== u.id">
+                <span
+                  class="w-5 h-5 rounded-full bg-slate-200 text-slate-800 text-[10px] font-extrabold flex items-center justify-center">
+                  {{ u.avatarLetter }}
+                </span>
+                <span>{{ u.displayName }}</span>
+                <span class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold"
+                  [class.bg-white]="tenantService.selectedUserIdForConfig() === u.id"
+                  [class.text-[#00a6f4]]="tenantService.selectedUserIdForConfig() === u.id"
+                  [class.bg-sky-100]="tenantService.selectedUserIdForConfig() !== u.id"
+                  [class.text-sky-700]="tenantService.selectedUserIdForConfig() !== u.id">
+                  {{ u.fieldCountLabel || '' }}
+                </span>
+              </button>
+              }
+            </div>
+
+            <!-- Fast Persona Switch Button -->
+            <div class="flex items-center gap-2">
+              <button type="button"
+                (click)="selectPersona(tenantService.selectedUserIdForConfig()); showToast('Switched persona to ' + tenantService.selectedUserIdForConfig())"
+                class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold transition cursor-pointer shadow-xs flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+                <span>Switch To This User</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- User Permissions Matrix Table -->
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-100/80 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700">
+                  <th class="py-3 px-4">Field Name</th>
+                  <th class="py-3 px-4">Category</th>
+                  <th class="py-3 px-4 text-center">Tenant Setting Table</th>
+                  <th class="py-3 px-4 text-center">User Permission Checkbox</th>
+                  <th class="py-3 px-4 text-center">Final Country Master Visibility</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                @for (f of tenantService.allFields(); track f.key) {
+                <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors">
+                  <!-- Label & info -->
+                  <td class="py-3 px-4 font-bold text-slate-900 dark:text-white">
+                    <div class="flex items-center gap-2">
+                      <span>{{ f.label }}</span>
+                      @if (f.required) {
+                      <span class="text-rose-500 font-bold" title="System Required">*</span>
+                      }
+                    </div>
+                    <div class="font-mono text-[11px] text-slate-400 font-normal">{{ f.key }}</div>
+                  </td>
+
+                  <!-- Category -->
+                  <td class="py-3 px-4">
+                    <span
+                      class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                      {{ f.category }}
+                    </span>
+                  </td>
+
+                  <!-- Tenant Setting Status -->
+                  <td class="py-3 px-4 text-center">
+                    @if (tenantService.isFieldAllowedForTenant(tenantService.activeTenantId(), f.key)) {
+                    <span
+                      class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
+                      <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Tenant Allowed</span>
+                    </span>
+                    } @else {
+                    <span
+                      class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300">
+                      <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                      <span>Tenant Disabled</span>
+                    </span>
+                    }
+                  </td>
+
+                  <!-- User Permission Checkbox -->
+                  <td class="py-3 px-4 text-center">
+                    <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                      <input type="checkbox"
+                        [checked]="tenantService.isFieldPermittedForUser(tenantService.selectedUserIdForConfig(), f.key)"
+                        (change)="tenantService.toggleUserFieldPermission(tenantService.selectedUserIdForConfig(), f.key)"
+                        class="w-4.5 h-4.5 rounded-md border-slate-300 text-[#00a6f4] focus:ring-[#00a6f4] cursor-pointer" />
+                      <span class="font-bold text-xs"
+                        [class.text-[#00a6f4]]="tenantService.isFieldPermittedForUser(tenantService.selectedUserIdForConfig(), f.key)"
+                        [class.text-slate-400]="!tenantService.isFieldPermittedForUser(tenantService.selectedUserIdForConfig(), f.key)">
+                        {{ tenantService.isFieldPermittedForUser(tenantService.selectedUserIdForConfig(), f.key) ?
+                        'Permitted' : 'Revoked' }}
+                      </span>
+                    </label>
+                  </td>
+
+                  <!-- Final Result -->
+                  <td class="py-3 px-4 text-center">
+                    @if (!tenantService.isFieldAllowedForTenant(tenantService.activeTenantId(), f.key)) {
+                    <span
+                      class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                      Hidden (Tenant Blocked)
+                    </span>
+                    } @else if (tenantService.isFieldPermittedForUser(tenantService.selectedUserIdForConfig(), f.key)) {
+                    <span
+                      class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center gap-1 max-w-[170px] mx-auto">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>VISIBLE IN MASTER</span>
+                    </span>
+                    } @else {
+                    <span
+                      class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
+                      Hidden for User
+                    </span>
+                    }
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        }
+
+        <!-- ===================================================================== -->
+        <!-- TAB 3: ADD NEW FIELD IN COUNTRY MASTER                                -->
+        <!-- ===================================================================== -->
+        @if (tenantService.activeConfigTab() === 'addField') {
+        <div class="space-y-6 max-w-3xl mx-auto">
+          <div
+            class="p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-xs text-purple-900 dark:text-purple-200 leading-relaxed">
+            <span class="font-bold text-purple-700 dark:text-purple-300">Dynamic Field Creation:</span>
+            Create new custom fields in Country Master on the fly. Newly added fields are immediately integrated into
+            the Setting Table, User Permission Table, Add/Edit Form Grid, and List View!
+          </div>
+
+          <!-- Add Field Form -->
+          <div
+            class="p-6 rounded-3xl bg-slate-50/70 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-5">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#00a6f4]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              <span>Define New Country Master Field</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Field Label -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                  Field Display Name <span class="text-rose-500">*</span>
+                </label>
+                <input type="text" [ngModel]="newFieldNameInput()" (ngModelChange)="newFieldNameInput.set($event)"
+                  placeholder="e.g. Region Code, Emergency Hotline, Capital"
+                  class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
+              </div>
+
+              <!-- Field Key -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                  Field Key (Optional / Auto-slug)
+                </label>
+                <input type="text" [ngModel]="newFieldKeyInput()" (ngModelChange)="newFieldKeyInput.set($event)"
+                  placeholder="e.g. regionCode, hotline"
+                  class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
+              </div>
+
+              <!-- Field Data Type -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Data Type</label>
+                <select [ngModel]="newFieldTypeInput()" (ngModelChange)="newFieldTypeInput.set($event)"
+                  class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4] cursor-pointer">
+                  <option value="text">Text (String)</option>
+                  <option value="number">Number (Numeric)</option>
+                  <option value="boolean">Boolean (Yes / No Toggle)</option>
+                  <option value="select">Dropdown / Selection</option>
+                </select>
+              </div>
+
+              <!-- Category -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Category</label>
+                <select [ngModel]="newFieldCategoryInput()" (ngModelChange)="newFieldCategoryInput.set($event)"
+                  class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4] cursor-pointer">
+                  <option value="custom">Custom Field</option>
+                  <option value="core">Core Master Field</option>
+                  <option value="codes">Identification Codes</option>
+                  <option value="system">System Field</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Is Required Checkbox -->
+            <label class="flex items-center gap-2 cursor-pointer select-none pt-1">
+              <input type="checkbox" [checked]="newFieldRequiredInput()"
+                (change)="newFieldRequiredInput.set(!newFieldRequiredInput())"
+                class="w-4 h-4 rounded-md border-slate-300 text-[#00a6f4] focus:ring-[#00a6f4]" />
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Mark as Mandatory (Required)
+                Field</span>
+            </label>
+
+            <!-- Submit Button -->
+            <div class="pt-2">
+              <button type="button" (click)="submitNewField()"
+                class="px-6 py-2.5 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25 flex items-center gap-2">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                <span>Add Field to Country Master</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Existing Custom Fields List -->
+          @if (tenantService.customFields().length) {
+          <div class="space-y-3 pt-2">
+            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Currently Configured Custom Fields ({{ tenantService.customFields().length }})
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              @for (cf of tenantService.customFields(); track cf.key) {
+              <div
+                class="p-3.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 shadow-2xs">
+                <div>
+                  <div class="font-bold text-xs text-slate-800 dark:text-white">{{ cf.label }}</div>
+                  <div class="text-[11px] font-mono text-slate-400">{{ cf.key }} · {{ cf.type }}</div>
+                </div>
+                <button type="button"
+                  (click)="tenantService.removeCustomField(cf.key); showToast('Removed field ' + cf.label)"
+                  class="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition cursor-pointer"
+                  title="Delete Custom Field">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div
+        class="px-6 py-3.5 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between bg-slate-50/60 dark:bg-slate-950/40 shrink-0">
+        <div class="text-xs text-slate-500 dark:text-slate-400">
+          Changes are persisted instantly to local storage and apply immediately.
+        </div>
+        <button type="button" (click)="tenantService.closeConfigModal()"
+          class="px-6 py-2 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
+          Done & Apply
+        </button>
+      </div>
+
+    </div>
+  </div>
+  }
+
+  <!-- ========================================================================= -->
   <!-- 8. TOAST NOTIFICATION POPUP                                               -->
   <!-- ========================================================================= -->
+
   @if (toastMessage()) {
   <div
     class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom-3 duration-200">

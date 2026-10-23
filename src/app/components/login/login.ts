@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
+import { TenantService } from '../../services/tenant.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class Login {
   private router = inject(Router);
   private authService = inject(AuthService);
   private navService = inject(NavigationService);
+  private tenantService = inject(TenantService);
 
   username = signal<string>('');
   password = signal<string>('');
@@ -64,6 +66,7 @@ export class Login {
     }
   }
 
+
   onLogin(): void {
     this.usernameError.set('');
     this.passwordError.set('');
@@ -95,16 +98,16 @@ export class Login {
 
       if (isValid) {
         this.navService.closeAllPanels();
-        this.router.navigate(['/landing/dashboard']);
+        this.router.navigate(['/landing/countries']);
       } else {
-        if (u !== 'admin@gcc.com') {
+        const knownUsers = this.tenantService.users().map((user) => user.username.toLowerCase());
+        if (!knownUsers.includes(u.toLowerCase())) {
           this.usernameError.set('Invalid username. Access restricted to authorized accounts.');
-        }
-        if (p !== '!VKaIPxQTFKM6ANB') {
+        } else {
           this.passwordError.set('Invalid password. Please check your credentials.');
         }
       }
-    }, 400);
+    }, 300);
   }
 
   toggleRememberMe(): void {

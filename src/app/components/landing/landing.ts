@@ -7,6 +7,7 @@ import { CountryComponent } from '../country/country';
 import { AuditHistoryComponent } from '../audit-history/audit-history';
 import { NavigationService, SearchEntry } from '../../services/navigation.service';
 import { AuthService } from '../../services/auth.service';
+import { TenantService } from '../../services/tenant.service';
 
 @Component({
   selector: 'app-landing',
@@ -19,7 +20,8 @@ export class Landing implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   public navService = inject(NavigationService);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
+  public tenantService = inject(TenantService);
 
   @ViewChild('fileInput') fileInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('cameraInput') cameraInputRef?: ElementRef<HTMLInputElement>;

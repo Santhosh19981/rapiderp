@@ -18,13 +18,14 @@ import { CountryService } from './country.service';
 import { Country, CountryHistoryEntry, MinimizedCountryForm, CountryLookupRecord, CurrencyOption, DEFAULT_CURRENCY_OPTIONS } from './country.models';
 import { NavigationService } from '../../services/navigation.service';
 import { AuditService } from '../../services/audit.service';
+import { TenantService, ConfigurableField } from '../../services/tenant.service';
 import { DropdownOption, SelectDropdown } from '../select-dropdown/select-dropdown';
 
 export type CountryViewMode = 'overview' | 'grid' | 'list' | 'add' | 'edit' | 'view';
 
 export type FormStatus = 'Active' | 'Inactive' | 'Draft' | 'Delete';
 
-export type FilterFieldKey = 'name' | 'code' | 'isd' | 'currency' | 'status' | 'isDefault' | 'continent';
+export type FilterFieldKey = 'name' | 'code' | 'isd' | 'currency' | 'status' | 'isDefault' | 'continent' | 'capital';
 
 export type ListSortKey =
   | 'name'
@@ -35,13 +36,16 @@ export type ListSortKey =
   | 'cities'
   | 'areas'
   | 'continent'
+  | 'capital'
+  | 'nationality'
   | 'population'
   | 'isDefault'
   | 'createdAt'
   | 'updatedAt'
   | 'draftedAt'
   | 'approval'
-  | 'status';
+  | 'status'
+  | string;
 
 export type ExportFieldKey =
   | 'name' | 'code' | 'isd' | 'currency' | 'status' | 'isDefault'
@@ -85,6 +89,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   public countryService = inject(CountryService);
   public navService = inject(NavigationService);
   public auditService = inject(AuditService);
+  public tenantService = inject(TenantService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -850,6 +855,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
       isDefault: this.formDefault() === 'Yes',
       flag: this.formFlag() || '',
       continent: this.formContinent() || '',
+      capital: this.formCapital() || '',
+      customFields: this.formCustomFields() || {},
       translations: this.formTranslations() || {},
       actionMessage: 'Updated',
       createdAt: '2023-01-01',
@@ -886,6 +893,30 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isStatusDropdownOpen.set(false);
   }
 
+  // Footer record navigator state (Add, Edit, View mode)
+  isRecordDropdownOpen = signal<boolean>(false);
+  recordInputValue = signal<string>('1');
+
+  totalRecordsCount = computed<number>(() => {
+    return this.sortedCountries().length || 42;
+  });
+
+  recordsList = computed<number[]>(() => {
+    const total = this.totalRecordsCount();
+    const arr: number[] = [];
+    for (let i = 1; i <= total; i++) {
+      arr.push(i);
+    }
+    return arr;
+  });
+
+  syncRecordInputEffect = effect(() => {
+    const num = this.currentCountryDisplayNumber();
+    untracked(() => {
+      this.recordInputValue.set(String(num));
+    });
+  });
+
   currentCountryDisplayNumber = computed<number>(() => {
     const list = this.sortedCountries();
     const curId = this.currentCountryId();
@@ -894,35 +925,80 @@ export class CountryComponent implements OnInit, AfterViewInit {
     return idx >= 0 ? idx + 1 : 1;
   });
 
-  goToPreviousCountry(): void {
+  toggleRecordDropdown(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.isRecordDropdownOpen.update((v) => !v);
+  }
+
+  selectRecordFromDropdown(recordNum: number): void {
+    this.goToCountryByDisplayNumber(recordNum);
+    this.isRecordDropdownOpen.set(false);
+  }
+
+  onRecordInputKey(val: any): void {
+    this.recordInputValue.set(String(val));
+  }
+
+  commitRecordInput(): void {
+    const raw = parseInt(this.recordInputValue().trim(), 10);
+    if (!isNaN(raw)) {
+      this.goToCountryByDisplayNumber(raw);
+      this.isRecordDropdownOpen.set(false);
+    } else {
+      this.recordInputValue.set(String(this.currentCountryDisplayNumber()));
+    }
+  }
+
+  goToCountryByDisplayNumber(displayNum: number): void {
     const list = this.sortedCountries();
     if (!list.length) return;
-    const curId = this.currentCountryId();
-    const idx = curId ? list.findIndex(c => c.id === curId) : -1;
-    const prevIdx = idx > 0 ? idx - 1 : list.length - 1;
-    const target = list[prevIdx];
+    const clamped = Math.max(1, Math.min(list.length, displayNum));
+    const target = list[clamped - 1];
+    this.currentCountryId.set(target.id);
+    this.recordInputValue.set(String(clamped));
     if (this.viewMode() === 'edit') {
       this.openEdit(target);
-    } else {
+    } else if (this.viewMode() === 'view') {
       this.openView(target);
+    } else {
+      this.openEdit(target);
+    }
+  }
+
+  goToFirstCountry(): void {
+    this.goToCountryByDisplayNumber(1);
+  }
+
+  goToPreviousCountry(): void {
+    const cur = this.currentCountryDisplayNumber();
+    if (cur > 1) {
+      this.goToCountryByDisplayNumber(cur - 1);
+    } else {
+      this.goToCountryByDisplayNumber(1);
     }
   }
 
   goToNextCountry(): void {
     const list = this.sortedCountries();
-    if (!list.length) return;
-    const curId = this.currentCountryId();
-    const idx = curId ? list.findIndex(c => c.id === curId) : -1;
-    const nextIdx = idx >= 0 && idx < list.length - 1 ? idx + 1 : 0;
-    const target = list[nextIdx];
-    if (this.viewMode() === 'edit') {
-      this.openEdit(target);
+    const cur = this.currentCountryDisplayNumber();
+    if (cur < list.length) {
+      this.goToCountryByDisplayNumber(cur + 1);
     } else {
-      this.openView(target);
+      this.goToCountryByDisplayNumber(list.length || 1);
     }
+  }
+
+  goToLastCountry(): void {
+    const list = this.sortedCountries();
+    this.goToCountryByDisplayNumber(list.length || 1);
   }
   formFlag = signal<string | null>(null);
   formContinent = signal<string>('');
+  formCapital = signal<string>('');
+  formCustomFields = signal<Record<string, any>>({});
   formTranslations = signal<Record<string, string>>({});
 
   // Form field focus tracking for floating label
@@ -931,9 +1007,88 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isIsoCode3Focused = signal<boolean>(false);
   isIsoNumericFocused = signal<boolean>(false);
   isNationalityFocused = signal<boolean>(false);
+  isContinentFocused = signal<boolean>(false);
+  isCapitalFocused = signal<boolean>(false);
   isCurrencyFocused = signal<boolean>(false);
   isIsdFocused = signal<boolean>(false);
   isNameFocused = signal<boolean>(false);
+  isViewNameFocused = signal<boolean>(false);
+
+  // Active Persona switcher dropdown (Tenant 1: User 1A, User 1B, Tenant 2: User 2A, User 2B, Admin)
+  isPersonaDropdownOpen = signal<boolean>(false);
+
+  togglePersonaDropdown(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isPersonaDropdownOpen.update((v) => !v);
+  }
+
+  selectPersona(userId: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.tenantService.switchUser(userId);
+    this.isPersonaDropdownOpen.set(false);
+    this.showToast(
+      `Switched to ${this.tenantService.activeUser().displayName} (${this.tenantService.activeTenant().name}) · ${this.tenantService.visibleFieldCount()} fields visible`
+    );
+  }
+
+  /**
+   * Field visibility resolution connecting Concept 1 (Tenant Setting Table) and Concept 2 (User Permission Table)
+   */
+  isFieldVisible(fieldKey: string): boolean {
+    return this.tenantService.isFieldVisible(fieldKey);
+  }
+
+  /**
+   * Determine column visibility for List View Table
+   */
+  isColumnVisibleForTenantUser(colKey: string): boolean {
+    let fieldKey = colKey;
+    if (colKey === 'code') fieldKey = 'isoCode2';
+    const fieldDef = this.tenantService.allFields().find((f) => f.key === fieldKey);
+    if (fieldDef) {
+      return this.tenantService.isFieldVisible(fieldKey);
+    }
+    return true;
+  }
+
+  getCustomFieldValue(key: string): any {
+    return this.formCustomFields()[key] ?? '';
+  }
+
+  setCustomFieldValue(key: string, val: any): void {
+    this.formCustomFields.update((curr) => ({ ...curr, [key]: val }));
+  }
+
+  // Adding new field in Country Master dialog state
+  newFieldNameInput = signal<string>('');
+  newFieldKeyInput = signal<string>('');
+  newFieldTypeInput = signal<'text' | 'number' | 'boolean' | 'select'>('text');
+  newFieldCategoryInput = signal<'core' | 'codes' | 'system' | 'custom'>('custom');
+  newFieldRequiredInput = signal<boolean>(false);
+
+  submitNewField(): void {
+    const label = this.newFieldNameInput().trim();
+    if (!label) {
+      this.showToast('Please enter a field name');
+      return;
+    }
+    const created = this.tenantService.addNewField({
+      name: label,
+      key: this.newFieldKeyInput().trim() || undefined,
+      type: this.newFieldTypeInput(),
+      category: this.newFieldCategoryInput(),
+      required: this.newFieldRequiredInput(),
+    });
+
+    if (!this.listColumns.some((c) => c.key === created.key)) {
+      this.listColumns.push({ key: created.key as any, label: created.label });
+    }
+
+    this.newFieldNameInput.set('');
+    this.newFieldKeyInput.set('');
+    this.showToast(`New field "${created.label}" added to Country Master!`);
+    this.tenantService.activeConfigTab.set('tenantSettings');
+  }
 
   // Right side section accordion state (collapsed by default, click to expand)
   isSideSectionOpen = signal<boolean>(true);
@@ -1076,6 +1231,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isIsdFloating = computed(() => true);
   isCurrencyFloating = computed(() => true);
   isNationalityFloating = computed(() => true);
+  isContinentFloating = computed(() => true);
+  isCapitalFloating = computed(() => true);
 
   // Form Interaction & Touched Tracking (Section 4.5)
   touchedFields = signal<Record<string, boolean>>({});
@@ -1096,6 +1253,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
       case 'isd': return !!this.isdError();
       case 'currency': return !!this.currencyError();
       case 'nationality': return !!this.nationalityError();
+      case 'continent': return !!this.continentError();
+      case 'capital': return !!this.capitalError();
       default: return false;
     }
   }
@@ -1158,9 +1317,9 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isdError = computed<string | null>(() => {
     const raw = this.formIsd();
     const val = raw ? raw.trim() : '';
-    if (!val) return 'Phone Dial Code is required.';
+    if (!val) return 'Dial Code is required.';
     if (!/^\+[0-9]{1,5}$/.test(val)) {
-      return 'Phone Dial Code must start with + followed by 1 to 5 digits (e.g. +1, +971).';
+      return 'Dial Code must start with + followed by 1 to 5 digits (e.g. +1, +971).';
     }
     return null;
   });
@@ -1185,6 +1344,9 @@ export class CountryComponent implements OnInit, AfterViewInit {
     return null;
   });
 
+  continentError = computed<string | null>(() => null);
+  capitalError = computed<string | null>(() => null);
+
   // Input validity states for green checkmark icon
   isNameValid = computed(() => !!this.formName()?.trim() && !this.nameError());
   isIsoCode2Valid = computed(() => !!this.formIsoCode2()?.trim() && !this.isoCode2Error());
@@ -1193,15 +1355,21 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isIsdValid = computed(() => !!this.formIsd()?.trim() && !this.isdError());
   isCurrencyValid = computed(() => !!this.formCurrency()?.trim() && !this.currencyError());
   isNationalityValid = computed(() => !!this.formNationality()?.trim() && !this.nationalityError());
+  isContinentValid = computed(() => !this.continentError());
+  isCapitalValid = computed(() => !this.capitalError());
 
-  isFormValid = computed(() =>
-    !this.nameError() &&
-    !this.isoCode2Error() &&
-    !this.isoCode3Error() &&
-    !this.isoNumericError() &&
-    !this.isdError() &&
-    !this.currencyError()
-  );
+  isFormValid = computed(() => {
+    if (this.isFieldVisible('name') && this.nameError()) return false;
+    if (this.isFieldVisible('isoCode2') && this.isoCode2Error()) return false;
+    if (this.isFieldVisible('isoCode3') && this.isoCode3Error()) return false;
+    if (this.isFieldVisible('isoNumeric') && this.isoNumericError()) return false;
+    if (this.isFieldVisible('isd') && this.isdError()) return false;
+    if (this.isFieldVisible('currency') && this.currencyError()) return false;
+    if (this.isFieldVisible('nationality') && this.nationalityError()) return false;
+    if (this.isFieldVisible('continent') && this.continentError()) return false;
+    if (this.isFieldVisible('capital') && this.capitalError()) return false;
+    return true;
+  });
 
   // Currency Master Selection Options
   readonly currencyMasterList: CurrencyOption[] = DEFAULT_CURRENCY_OPTIONS;
@@ -1422,6 +1590,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     currency?: string;
     nationality?: string;
     continent?: string;
+    capital?: string;
   } | null>(null);
   aiShowConflictPrompt = signal<boolean>(false);
 
@@ -1634,6 +1803,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (data.currency) this.formCurrency.set(data.currency);
       if (data.nationality) this.formNationality.set(data.nationality);
       if (data.continent) this.formContinent.set(data.continent);
+      if (data.capital) this.formCapital.set(data.capital);
     } else {
       // Merge: only set if currently empty
       if (data.name && !this.formName().trim()) this.formName.set(data.name);
@@ -1648,6 +1818,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (data.currency && !this.formCurrency().trim()) this.formCurrency.set(data.currency);
       if (data.nationality && !this.formNationality().trim()) this.formNationality.set(data.nationality);
       if (data.continent && !this.formContinent().trim()) this.formContinent.set(data.continent);
+      if (data.capital && !this.formCapital().trim()) this.formCapital.set(data.capital);
     }
 
     // Mark touched so validation states update
@@ -1801,6 +1972,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.formIsd.set(r.isd);
       this.formCurrency.set(r.currency);
       this.formContinent.set(r.continent);
+      this.formCapital.set(r.capital || '');
       this.selectedMasterCountry.set(null); // Explicitly came from separate Lookup Table
       this.selectedReferenceRecordName.set(r.name);
       this.markFieldTouched('name');
@@ -1940,6 +2112,56 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isViewNameEdited = computed<boolean>(() => {
     return this.viewCountryName().trim() !== this.originalViewCountryName().trim();
   });
+
+  isViewCountryDropdownOpen = signal<boolean>(false);
+  viewCountrySearch = signal<string>('');
+
+  filteredViewCountryList = computed<CountryLookupRecord[]>(() => {
+    const query = (this.viewCountrySearch() || '').trim().toLowerCase();
+    const list = this.lookupTableData;
+    if (!query) {
+      return list;
+    }
+    return list.filter(
+      (c) =>
+        c.name.toLowerCase().includes(query) ||
+        c.code.toLowerCase().includes(query) ||
+        (c.isoCode3 && c.isoCode3.toLowerCase().includes(query)) ||
+        (c.continent && c.continent.toLowerCase().includes(query))
+    );
+  });
+
+  toggleViewCountryDropdown(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.isViewCountryDropdownOpen.update((v) => !v);
+    if (!this.isViewCountryDropdownOpen()) {
+      this.viewCountrySearch.set('');
+    }
+  }
+
+  selectViewCountryOption(c: CountryLookupRecord): void {
+    this.viewCountryName.set(c.name);
+    this.isViewCountryDropdownOpen.set(false);
+    this.viewCountrySearch.set('');
+    const curId = this.currentCountryId();
+    if (curId) {
+      this.countryService.updateCountry(curId, {
+        name: c.name,
+        code: c.code,
+        isoCode2: c.code,
+        isoCode3: c.isoCode3,
+        isoNumeric: c.isoNumeric,
+        isd: c.isd,
+        currency: c.currency,
+        continent: c.continent,
+        flag: c.flag,
+      });
+      this.originalViewCountryName.set(c.name);
+      this.showToast(`Updated to "${c.name}" from Master Countries.`);
+    }
+  }
 
   viewNameSuggestions = computed<Country[]>(() => {
     const q = this.viewNameAutocompleteQuery().trim().toLowerCase();
@@ -2094,11 +2316,13 @@ export class CountryComponent implements OnInit, AfterViewInit {
   @HostListener('document:keydown.escape')
   closePopovers(): void {
     this.isCurrencyDropdownOpen.set(false);
+    this.isViewCountryDropdownOpen.set(false);
     this.isTranslationOpen.set(false);
     this.isActionListOpen.set(false);
     this.isPageSizeMenuOpen.set(false);
     this.isCustomPageSizeOpen.set(false);
     this.isPageDropdownOpen.set(false);
+    this.isRecordDropdownOpen.set(false);
     this.isSharePanelOpen.set(false);
     this.activeColumnMenu.set(null);
     this.columnMenuPos.set(null);
@@ -2441,11 +2665,13 @@ export class CountryComponent implements OnInit, AfterViewInit {
     { key: 'code', label: 'country Code' },
     { key: 'isd', label: 'ISD' },
     { key: 'currency', label: 'Currency' },
+    { key: 'continent', label: 'Continent' },
+    { key: 'capital' as any, label: 'Capital' },
+    { key: 'nationality' as any, label: 'Nationality' },
     { key: 'isDefault', label: 'Default' },
     { key: 'states', label: 'States' },
     { key: 'cities', label: 'Cities' },
     { key: 'areas', label: 'Areas' },
-    { key: 'continent', label: 'Continent' },
     { key: 'population', label: 'Population' },
     { key: 'createdAt', label: 'Created' },
     { key: 'updatedAt', label: 'Updated' },
@@ -2549,7 +2775,11 @@ export class CountryComponent implements OnInit, AfterViewInit {
   page = signal<number>(1);
   selectedIds = signal<Set<string>>(new Set());
 
-  visibleColumns = computed(() => this.listColumns.filter((c) => !this.hiddenColumns().has(c.key)));
+  visibleColumns = computed(() =>
+    this.listColumns
+      .filter((c) => this.isColumnVisibleForTenantUser(c.key))
+      .filter((c) => !this.hiddenColumns().has(c.key))
+  );
 
   sortedCountries = computed<Country[]>(() => {
     const list = this.filteredCountries();
@@ -2557,8 +2787,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
     if (!key) return list;
     const dir = this.sortDir() === 'asc' ? 1 : -1;
     return [...list].sort((a, b) => {
-      const av = a[key] ?? '';
-      const bv = b[key] ?? '';
+      const av = (a as any)[key] ?? (a.customFields && a.customFields[key]) ?? '';
+      const bv = (b as any)[key] ?? (b.customFields && b.customFields[key]) ?? '';
       if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * dir;
       return String(av).localeCompare(String(bv)) * dir;
     });
@@ -3363,6 +3593,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.formStatus.set(country.status === 'Deleted' ? 'Delete' : country.status);
     this.formFlag.set(country.flag || null);
     this.formContinent.set(country.continent || '');
+    this.formCapital.set(country.capital || '');
+    this.formCustomFields.set({ ...(country.customFields || {}) });
     this.formTranslations.set({ ...(country.translations || {}) });
     this.selectedReferenceRecordName.set(country.name);
     this.selectedMasterCountry.set(country);
@@ -3382,6 +3614,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.formStatus.set('Active');
     this.formFlag.set(null);
     this.formContinent.set('');
+    this.formCapital.set('');
+    this.formCustomFields.set({});
     this.formTranslations.set({});
     this.selectedReferenceRecordName.set(null);
     this.selectedMasterCountry.set(null);
@@ -3420,6 +3654,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
         status: this.formStatus(),
         flag: this.formFlag(),
         continent: this.formContinent(),
+        capital: this.formCapital(),
+        customFields: { ...this.formCustomFields() },
         translations: { ...this.formTranslations() },
         flagTab: this.flagTab(),
         keepOnPage: this.keepOnPage(),
@@ -3468,6 +3704,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.formStatus.set(s.status);
     this.formFlag.set(s.flag);
     this.formContinent.set(s.continent);
+    this.formCapital.set(s.capital || '');
+    this.formCustomFields.set({ ...(s.customFields || {}) });
     this.formTranslations.set({ ...s.translations });
     this.flagTab.set(s.flagTab);
     this.keepOnPage.set(s.keepOnPage);
@@ -3753,6 +3991,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (fieldName === 'viewName') sample = 'United Arab Emirates';
       if (fieldName === 'aiInput') sample = 'Country: Germany, ISO Code: DE, Currency: EUR, Dial Code: +49';
       if (fieldName === 'currencySearch') sample = 'USD';
+      if (fieldName === 'viewCountrySearch') sample = 'Canada';
 
       this.applySpokenText(fieldName, sample);
       this.activeListeningField.set(null);
@@ -3765,6 +4004,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.searchQuery.set(clean);
     } else if (fieldName === 'currencySearch') {
       this.currencySearch.set(clean);
+    } else if (fieldName === 'viewCountrySearch') {
+      this.viewCountrySearch.set(clean);
     } else if (fieldName === 'aiInput') {
       const current = this.aiInputText();
       this.aiInputText.set(current ? `${current} ${clean}` : clean);
@@ -3940,6 +4181,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
       ...(status === 'Delete' ? {} : { status }),
       flag: this.formFlag() || undefined,
       continent: this.formContinent(),
+      capital: this.formCapital().trim() || undefined,
+      customFields: Object.keys(this.formCustomFields()).length ? this.formCustomFields() : undefined,
       translations: Object.keys(translations).length ? translations : undefined,
     };
 
@@ -4104,7 +4347,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.countryService.deleteCountry(target.id);
       this.showToast(`Country "${target.name}" moved to Deleted.`);
       // Deleted from its own edit page: leave the form, nothing left to edit
-      if (this.viewMode() === 'edit' && this.currentCountryId() === target.id) {
+      if ((this.viewMode() === 'edit' || this.viewMode() === 'view') && this.currentCountryId() === target.id) {
         this.viewMode.set('grid');
       }
     }
