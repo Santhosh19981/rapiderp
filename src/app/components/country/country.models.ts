@@ -4,6 +4,9 @@ export interface Country {
   code: string;
   isd: string;
   currency: string;
+  currencyCode?: string;
+  currencySymbol?: string;
+  subregion?: string;
   status: 'Active' | 'Inactive' | 'Draft' | 'Deleted';
   approval?: 'Approved' | 'Pending' | 'Rejected';
   isDefault: boolean;
@@ -38,7 +41,10 @@ export interface CountryLookupRecord {
   nationality: string;
   isd: string;
   currency: string;
+  currencyCode?: string;
+  currencySymbol?: string;
   continent: string;
+  subregion?: string;
   capital?: string;
   flag?: string;
 }

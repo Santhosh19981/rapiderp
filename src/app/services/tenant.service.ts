@@ -31,16 +31,19 @@ export interface ConfigurableField {
 
 export const DEFAULT_COUNTRY_FIELDS: ConfigurableField[] = [
   { key: 'name', label: 'Country Name', category: 'core', required: true, description: 'Official Country Name' },
-  { key: 'isoCode2', label: 'ISO Code 2', category: 'codes', required: true, description: '2-letter country code (e.g. US, AE)' },
-  { key: 'isoCode3', label: 'ISO Code 3', category: 'codes', required: false, description: '3-letter country code (e.g. USA, ARE)' },
+  { key: 'isDefault', label: 'Default Country', category: 'system', required: false, description: 'System-wide default toggle' },
+  { key: 'isoCode2', label: 'ISO Country Code 2', category: 'codes', required: true, description: '2-letter country code (e.g. US, AE)' },
+  { key: 'isoCode3', label: 'ISO Country Code 3', category: 'codes', required: false, description: '3-letter country code (e.g. USA, ARE)' },
   { key: 'isoNumeric', label: 'ISO Numeric', category: 'codes', required: false, description: '3-digit numeric code (e.g. 840, 784)' },
-  { key: 'isd', label: 'Dial Code', category: 'core', required: true, description: 'International dialing code (e.g. +1, +971)' },
+  { key: 'isd', label: 'ISD Code', category: 'core', required: true, description: 'International dialing code (e.g. +1, +971)' },
+  { key: 'currencyCode', label: 'Currency Code', category: 'core', required: false, description: 'Currency standard code (e.g. USD, EUR, AED)' },
+  { key: 'currencySymbol', label: 'Currency Symbol', category: 'core', required: false, description: 'Currency symbol (e.g. $, €, د.إ)' },
+  { key: 'continent', label: 'Continent', category: 'core', required: false, description: 'Geographical continent' },
+  { key: 'subregion', label: 'Subregion', category: 'core', required: false, description: 'Geographical sub-region or zone' },
+  { key: 'status', label: 'Status', category: 'system', required: true, description: 'Record status (Active / Inactive)' },
   { key: 'currency', label: 'Default Currency', category: 'core', required: true, description: 'Default transaction currency' },
   { key: 'nationality', label: 'Nationality', category: 'core', required: false, description: 'Demonym or nationality name' },
-  { key: 'continent', label: 'Continent', category: 'core', required: false, description: 'Geographical continent' },
   { key: 'capital', label: 'Capital City', category: 'core', required: false, description: 'National capital city' },
-  { key: 'status', label: 'Status', category: 'system', required: true, description: 'Record status (Active / Inactive / Draft)' },
-  { key: 'isDefault', label: 'Default Country', category: 'system', required: false, description: 'System-wide default toggle' },
   { key: 'flag', label: 'Country Flag', category: 'core', required: false, description: 'National flag display & upload' },
 ];
 
@@ -488,8 +491,8 @@ export class TenantService {
       adminPerms[f.key] = true;
     });
 
-    // User 1A: 6 fields: Country Name, ISO Code 2, Phone Dial Code, Default Currency, Continent, Status
-    const user1aFields = ['name', 'status', 'capital'];
+    // User 1A: 6 fields: Country Name, Default Country, ISO Country Code 2, ISD Code, Continent, Status
+    const user1aFields = ['name', 'isDefault', 'isoCode2', 'isd', 'continent', 'status'];
     user1aFields.forEach((k) => (user1aPerms[k] = true));
 
     // User 1B: 4 fields: Country Name, ISO Code 2, Phone Dial Code, Default Currency

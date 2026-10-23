@@ -997,6 +997,9 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
   formFlag = signal<string | null>(null);
   formContinent = signal<string>('');
+  formSubregion = signal<string>('');
+  formCurrencyCode = signal<string>('');
+  formCurrencySymbol = signal<string>('');
   formCapital = signal<string>('');
   formCustomFields = signal<Record<string, any>>({});
   formTranslations = signal<Record<string, string>>({});
@@ -1008,6 +1011,9 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isIsoNumericFocused = signal<boolean>(false);
   isNationalityFocused = signal<boolean>(false);
   isContinentFocused = signal<boolean>(false);
+  isSubregionFocused = signal<boolean>(false);
+  isCurrencyCodeFocused = signal<boolean>(false);
+  isCurrencySymbolFocused = signal<boolean>(false);
   isCapitalFocused = signal<boolean>(false);
   isCurrencyFocused = signal<boolean>(false);
   isIsdFocused = signal<boolean>(false);
@@ -1230,8 +1236,11 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isIsoNumericFloating = computed(() => true);
   isIsdFloating = computed(() => true);
   isCurrencyFloating = computed(() => true);
+  isCurrencyCodeFloating = computed(() => true);
+  isCurrencySymbolFloating = computed(() => true);
   isNationalityFloating = computed(() => true);
   isContinentFloating = computed(() => true);
+  isSubregionFloating = computed(() => true);
   isCapitalFloating = computed(() => true);
 
   // Form Interaction & Touched Tracking (Section 4.5)
@@ -1402,21 +1411,18 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   selectCurrencyOption(c: CurrencyOption): void {
     this.formCurrency.set(`${c.code} — ${c.name}`);
+    this.formCurrencyCode.set(c.code);
+    this.formCurrencySymbol.set(c.symbol || '');
     this.isCurrencyDropdownOpen.set(false);
     this.currencySearch.set('');
     this.markFieldTouched('currency');
   }
 
-  // Create allows Active/Draft only; Inactive and Delete are edit-only
+  // Requirement 3: Status field keep only Active and Inactive
   statusOptions = computed<DropdownOption[]>(() => {
-    const active = { value: 'Active', label: 'Active', description: 'Set active country' };
-    const draft = { value: 'Draft', label: 'Draft', description: 'Set draft country' };
-    if (this.viewMode() !== 'edit') return [active, draft];
     return [
-      active,
+      { value: 'Active', label: 'Active', description: 'Set active country' },
       { value: 'Inactive', label: 'Inactive', description: 'Set inactive country' },
-      draft,
-      { value: 'Delete', label: 'Delete', description: 'Set delete country' },
     ];
   });
 
@@ -1973,6 +1979,11 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.formCurrency.set(r.currency);
       this.formContinent.set(r.continent);
       this.formCapital.set(r.capital || '');
+      if (r.flag) {
+        this.formFlag.set(r.flag);
+      } else if (r.code) {
+        this.formFlag.set(`https://flagcdn.com/${r.code.toLowerCase()}.svg`);
+      }
       this.selectedMasterCountry.set(null); // Explicitly came from separate Lookup Table
       this.selectedReferenceRecordName.set(r.name);
       this.markFieldTouched('name');
@@ -2052,6 +2063,13 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.nameDebounceTimer = setTimeout(() => {
       this.nameAutocompleteQuery.set(val.trim());
       this.isNameAutocompleteOpen.set(!!val.trim());
+      this.countryDropdownSearch.set(val.trim());
+      const exact = this.lookupTableData.find(
+        (c) => c.name.toLowerCase() === val.trim().toLowerCase()
+      );
+      if (exact) {
+        this.selectCountryFromDropdown(exact);
+      }
     }, 180);
   }
 
@@ -2061,6 +2079,22 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.selectedReferenceRecordName.set(c.name);
     this.isNameAutocompleteOpen.set(false);
     this.markFieldTouched('name');
+    if (c.code) {
+      this.formCode.set(c.code);
+      this.formIsoCode2.set(c.code);
+    }
+    if (c.isoCode3) this.formIsoCode3.set(c.isoCode3);
+    if (c.isoNumeric) this.formIsoNumeric.set(c.isoNumeric);
+    if (c.isd) this.formIsd.set(c.isd);
+    if (c.currency) this.formCurrency.set(c.currency);
+    if (c.nationality) this.formNationality.set(c.nationality);
+    if (c.continent) this.formContinent.set(c.continent);
+    if (c.capital) this.formCapital.set(c.capital);
+    if (c.flag) {
+      this.formFlag.set(c.flag);
+    } else if (c.code) {
+      this.formFlag.set(`https://flagcdn.com/${c.code.toLowerCase()}.svg`);
+    }
     this.showToast(`Selected "${c.name}" from Country Master.`);
   }
 
@@ -2112,6 +2146,101 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isViewNameEdited = computed<boolean>(() => {
     return this.viewCountryName().trim() !== this.originalViewCountryName().trim();
   });
+
+  isCountryNameDropdownOpen = signal<boolean>(false);
+  countryDropdownSearch = signal<string>('');
+
+  currentFormFlagUrl = computed<string | null>(() => {
+    if (this.formFlag()) return this.formFlag();
+    const code = (this.formIsoCode2() || this.formCode() || '').trim().toLowerCase();
+    if (code && code.length >= 2) {
+      return `https://flagcdn.com/${code}.svg`;
+    }
+    return null;
+  });
+
+  filteredCountryDropdownList = computed<CountryLookupRecord[]>(() => {
+    const query = (this.countryDropdownSearch() || '').trim().toLowerCase();
+    const lookupList = this.lookupTableData || [];
+    const serviceCountries: CountryLookupRecord[] = (this.countryService?.countries() || []).map((sc) => ({
+      code: sc.code || sc.isoCode2 || '',
+      name: sc.name,
+      isoCode2: sc.isoCode2 || sc.code || '',
+      isoCode3: sc.isoCode3 || '',
+      isoNumeric: sc.isoNumeric || '',
+      nationality: sc.nationality || '',
+      isd: sc.isd || '',
+      currency: sc.currency || '',
+      currencyCode: sc.currencyCode || '',
+      currencySymbol: sc.currencySymbol || '',
+      continent: sc.continent || '',
+      subregion: sc.subregion || '',
+      capital: sc.capital || '',
+      flag: sc.flag || '',
+    }));
+
+    const map = new Map<string, CountryLookupRecord>();
+    for (const item of serviceCountries) {
+      if (item.name) map.set(item.name.toLowerCase(), item);
+    }
+    for (const item of lookupList) {
+      if (item.name) map.set(item.name.toLowerCase(), item);
+    }
+    const list = Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
+    if (!query) {
+      return list;
+    }
+    return list.filter(
+      (c) =>
+        c.name.toLowerCase().includes(query) ||
+        c.code.toLowerCase().includes(query) ||
+        (c.isoCode3 && c.isoCode3.toLowerCase().includes(query)) ||
+        (c.currency && c.currency.toLowerCase().includes(query)) ||
+        (c.continent && c.continent.toLowerCase().includes(query))
+    );
+  });
+
+  toggleCountryNameDropdown(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.isCountryNameDropdownOpen.update((v) => !v);
+    this.countryDropdownSearch.set('');
+  }
+
+  selectCountryFromDropdown(c: CountryLookupRecord): void {
+    this.formName.set(c.name);
+    this.formCode.set(c.code);
+    this.formIsoCode2.set(c.code);
+    this.formIsoCode3.set(c.isoCode3 || (c.code ? `${c.code}A` : ''));
+    this.formIsoNumeric.set(c.isoNumeric ? c.isoNumeric.toString().padStart(3, '0') : '');
+    this.formNationality.set(c.nationality || `${c.name} citizen`);
+    this.formIsd.set(c.isd ? (c.isd.startsWith('+') ? c.isd : `+${c.isd}`) : '');
+    let currVal = c.currency || '';
+    if (currVal.includes(' — ')) {
+      currVal = currVal.split(' — ')[0].trim();
+    }
+    this.formCurrency.set(currVal);
+    this.formCurrencyCode.set(currVal);
+    this.formContinent.set(c.continent || '');
+    this.formCapital.set(c.capital || '');
+    if (c.flag) {
+      this.formFlag.set(c.flag);
+    } else if (c.code) {
+      this.formFlag.set(`https://flagcdn.com/${c.code.toLowerCase()}.svg`);
+    }
+    this.selectedMasterCountry.set(null);
+    this.selectedReferenceRecordName.set(c.name);
+    this.markFieldTouched('name');
+    this.markFieldTouched('isoCode2');
+    this.markFieldTouched('isoCode3');
+    this.markFieldTouched('isoNumeric');
+    this.markFieldTouched('isd');
+    this.markFieldTouched('currency');
+    this.isCountryNameDropdownOpen.set(false);
+    this.countryDropdownSearch.set('');
+    this.showToast(`Loaded details for "${c.name}". Review and save.`);
+  }
 
   isViewCountryDropdownOpen = signal<boolean>(false);
   viewCountrySearch = signal<string>('');
@@ -2315,6 +2444,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:keydown.escape')
   closePopovers(): void {
+    this.isCountryNameDropdownOpen.set(false);
     this.isCurrencyDropdownOpen.set(false);
     this.isViewCountryDropdownOpen.set(false);
     this.isTranslationOpen.set(false);
@@ -3991,6 +4121,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (fieldName === 'viewName') sample = 'United Arab Emirates';
       if (fieldName === 'aiInput') sample = 'Country: Germany, ISO Code: DE, Currency: EUR, Dial Code: +49';
       if (fieldName === 'currencySearch') sample = 'USD';
+      if (fieldName === 'countryDropdownSearch') sample = 'United States';
       if (fieldName === 'viewCountrySearch') sample = 'Canada';
 
       this.applySpokenText(fieldName, sample);
@@ -4002,6 +4133,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const clean = text.trim();
     if (fieldName === 'search') {
       this.searchQuery.set(clean);
+    } else if (fieldName === 'countryDropdownSearch') {
+      this.countryDropdownSearch.set(clean);
     } else if (fieldName === 'currencySearch') {
       this.currencySearch.set(clean);
     } else if (fieldName === 'viewCountrySearch') {
@@ -4837,10 +4970,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
   onFlagError(event: Event, country?: Country): void {
     const target = event.target as HTMLImageElement;
     if (target) {
-      if (country?.isoCode2) {
-        target.src = `https://flagcdn.com/${country.isoCode2.toLowerCase()}.svg`;
-      } else if (country?.code) {
-        target.src = `https://flagcdn.com/${country.code.toLowerCase()}.svg`;
+      target.style.display = '';
+      const code = country?.isoCode2 || country?.code || this.formIsoCode2() || this.formCode();
+      if (code && !target.src.includes(`flagcdn.com/${code.toLowerCase()}.svg`)) {
+        target.src = `https://flagcdn.com/${code.toLowerCase()}.svg`;
       } else {
         target.style.display = 'none';
       }

@@ -1,4 +1,4 @@
-﻿<div
+<div
   class="country-module-container flex flex-col h-full w-full bg-[#f8fafc] dark:bg-slate-900 text-slate-800 dark:text-slate-100 overflow-hidden relative select-none">
 
   <!-- ========================================================================= -->
@@ -33,7 +33,7 @@
       <!-- 1. HEADER: ▶ title + Add (list)  |  ← title + List/Add/Edit/View tabs     -->
       <!-- ========================================================================= -->
       <div
-        class="country-header relative flex items-center justify-between gap-3 px-5 h-16 border-b border-slate-200/70 dark:border-slate-700 shrink-0">
+        class="country-header relative flex items-center justify-between gap-3 px-5 h-16 border-b border-slate-200 dark:border-slate-700 shrink-0 bg-[#f8fafc] dark:bg-slate-850/90">
 
         <!-- Left: Dynamic Title on top, Breadcrumb below Title across all pages -->
         <div class="flex items-center gap-3 min-w-0">
@@ -2783,17 +2783,19 @@
               <div
                 class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar px-6 py-6 sm:px-8 sm:py-7 space-y-6">
 
-                <!-- Unified Responsive Auto-Flow Grid: fields auto-adjust based on visible count -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 items-start">
-                  <!-- Country Name * -->
+                <!-- Unified Responsive Auto-Flow Grid: Row 1 containing the 3 inputs (Country Name: col 6, Default: col 3, Status: col 3) -->
+                <div class="grid grid-cols-12 gap-5 items-start">
+                  <!-- Country Name * (col 6) -->
                   @if (isFieldVisible('name')) {
-                  <div class="relative w-full group sm:col-span-2 lg:col-span-1 xl:col-span-2" data-popover>
+                  <div class="col-span-12 lg:col-span-6 relative w-full group" data-popover>
 
                     <div
                       class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#00a6f4]]="isNameFocused()" [class.ring-2]="isNameFocused()"
-                      [class.ring-[#00a6f4]/20]="isNameFocused()" [class.border-slate-300]="!isNameFocused()"
-                      [class.dark:border-slate-600]="!isNameFocused()">
+                      [class.border-[#00a6f4]]="isNameFocused() || isCountryNameDropdownOpen()"
+                      [class.ring-2]="isNameFocused() || isCountryNameDropdownOpen()"
+                      [class.ring-[#00a6f4]/20]="isNameFocused() || isCountryNameDropdownOpen()"
+                      [class.border-slate-300]="!isNameFocused() && !isCountryNameDropdownOpen()"
+                      [class.dark:border-slate-600]="!isNameFocused() && !isCountryNameDropdownOpen()">
                       <input id="country-name" type="text" [ngModel]="formName()" placeholder=""
                         (ngModelChange)="onCountryNameInput($event)" (focus)="isNameFocused.set(true)"
                         (blur)="isNameFocused.set(false); markFieldTouched('name'); closeNameAutocomplete()"
@@ -2825,18 +2827,28 @@
                         </span>
                         }
 
-                        <!-- 1. Translation Trigger Button (Change 1) -->
-                        <button type="button" (click)="toggleTranslations()"
+                        <!-- 1. Lookup Trigger Button (Requirement 3: In Country Name input in Add and Edit) -->
+                        <button type="button" (click)="openLookupModal('form'); $event.stopPropagation()"
                           class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
-                          [class.text-[#00a6f4]]="isTranslationOpen() || translationCount() > 0" title="Translation">
-                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="m5 8 6 6" />
-                            <path d="m4 14 6-6 2-3" />
-                            <path d="M2 5h12" />
-                            <path d="M7 2h1" />
-                            <path d="m22 22-5-10-5 10" />
-                            <path d="M14 18h6" />
+                          title="Browse World Country Lookup" data-tooltip="Lookup Country" data-tooltip-pos="top">
+                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            <path d="M11 8v6M8 11h6" />
                           </svg>
+                        </button>
+
+                        <!-- 2. Dropdown Trigger Button (Requirement 5: Dropdown UI same like default currency dropdown) -->
+                        <button type="button" (click)="toggleCountryNameDropdown($event)"
+                          class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition">
+                          <span class="inline-block transition-transform duration-200"
+                            [class.rotate-180]="isCountryNameDropdownOpen()">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                          </span>
                         </button>
 
                         <!-- 3. Voice Input: shown ONLY when clicked/focused (NOT on hover per Item 5) -->
@@ -2869,8 +2881,9 @@
                       <label for="country-name"
                         class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
                         [class.floating-top]="isNameFloating()" [class.resting]="!isNameFloating()">
-                        Country Name <span [class.text-[#DC2626]]="isNameFocused()"
-                          [class.text-slate-400]="!isNameFocused()" class="font-bold transition-colors">*</span>
+                        Country Name <span [class.text-[#DC2626]]="isNameFocused() || isCountryNameDropdownOpen()"
+                          [class.text-slate-400]="!isNameFocused() && !isCountryNameDropdownOpen()"
+                          class="font-bold transition-colors">*</span>
                       </label>
                     </div>
 
@@ -2880,6 +2893,80 @@
                       class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
                       Official country name in English or approved Unicode script
                     </p>
+                    }
+
+                    <!-- Dropdown with Search & Select Country List (Reference Default Currency Dropdown) -->
+                    @if (isCountryNameDropdownOpen()) {
+                    <div (click)="$event.stopPropagation()"
+                      class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                      <!-- Search Bar with Voice Input -->
+                      <div
+                        class="relative flex items-center w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <svg class="w-4 h-4 text-slate-400 shrink-0 mr-2" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="11" cy="11" r="8" />
+                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" [ngModel]="countryDropdownSearch()"
+                          (ngModelChange)="countryDropdownSearch.set($event)" name="countryDropdownSearch"
+                          [ngModelOptions]="{ standalone: true }" placeholder="Search" autocomplete="off"
+                          class="w-full bg-transparent text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        @if (countryDropdownSearch()) {
+                        <button type="button" (click)="countryDropdownSearch.set('')"
+                          class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 cursor-pointer mr-1">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                          </svg>
+                        </button>
+                        }
+                        <button type="button" (click)="toggleVoiceInput('countryDropdownSearch')"
+                          class="text-slate-400 hover:text-[#00a6f4] p-1 rounded-full cursor-pointer focus:outline-none transition-colors shrink-0"
+                          [class.text-red-500]="activeListeningField() === 'countryDropdownSearch'"
+                          [class.animate-pulse]="activeListeningField() === 'countryDropdownSearch'"
+                          [title]="activeListeningField() === 'countryDropdownSearch' ? 'Listening...' : 'Voice Search'">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      <!-- Scrollable Countries List with Image 1 styling -->
+                      <div class="mt-2.5 max-h-60 overflow-y-auto custom-scrollbar flex flex-col space-y-1 pr-1">
+                        @for (c of filteredCountryDropdownList(); track c.code) {
+                        <button type="button" (click)="selectCountryFromDropdown(c)"
+                          class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item"
+                          [class.bg-[#dff3fd]]="c.name === formName()"
+                          [class.dark:bg-sky-950/70]="c.name === formName()">
+                          <div class="flex items-center gap-2.5 truncate">
+                            @if (c.flag) {
+                            <img [src]="c.flag" [alt]="c.name"
+                              class="w-6 h-4 object-cover rounded shadow-2xs shrink-0" />
+                            }
+                            <span
+                              class="text-sm font-semibold text-[#0070ba] dark:text-[#38bdf8] truncate group-hover/item:text-[#005a96]">
+                              {{ c.name }}
+                            </span>
+                          </div>
+                          <span class="text-xs font-bold text-[#0070ba] dark:text-[#38bdf8] font-mono shrink-0 ml-2">
+                            {{ c.code }}
+                          </span>
+                        </button>
+                        } @empty {
+                        <div
+                          class="py-8 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-1.5">
+                          <svg class="w-6 h-6 text-slate-300 dark:text-slate-600" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                          </svg>
+                          <span>No countries found matching "{{ countryDropdownSearch() }}"</span>
+                        </div>
+                        }
+                      </div>
+                    </div>
                     }
 
                     <!-- Requirement 1.B: Autocomplete Suggestions Dropdown from Permanent Country Master Table (Point 14: Flag & Name only) -->
@@ -2908,53 +2995,7 @@
                     </div>
                     }
 
-                    <!-- Requirement 1: Warning if entered name differs from a selected master or lookup record -->
-                    @if (isNameDifferingFromRecord()) {
-                    <div id="difference-warning-banner"
-                      class="mt-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 text-[11px] text-amber-800 dark:text-amber-300 flex items-start gap-2 animate-in fade-in">
-                      <svg class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      <span>
-                        <strong>Notice:</strong> Modified name differs from selected record: <strong>{{
-                          selectedReferenceRecordName() }}</strong>. The record will not silently overwrite the original
-                        master record.
-                      </span>
-                    </div>
-                    }
 
-                    <!-- Requirement 1: Uniqueness duplicate name warning -->
-                    @if (duplicateNameWarning(); as dup) {
-                    <div
-                      class="mt-1.5 px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200/80 dark:border-sky-800/60 text-[11px] text-[#00a6f4] dark:text-sky-300 flex items-start gap-2 animate-in fade-in">
-                      <svg class="w-4 h-4 text-[#00a6f4] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="16" x2="12" y2="12" />
-                        <line x1="12" y1="8" x2="12.01" y2="8" />
-                      </svg>
-                      <span>
-                        Notice: "<strong>{{ dup.name }}</strong>" is already registered in Country Master (Code:
-                        <strong>{{ dup.code }}</strong>).
-                      </span>
-                    </div>
-                    }
-
-                    <!-- Validation Message directly below text box (Section 4.3 & 12.1) -->
-                    @if (isFieldInvalid('name') && nameError()) {
-                    <p
-                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
-                      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                      {{ nameError() }}
-                    </p>
-                    }
 
                     <!-- Section 13: Country Name Translation Popover Panel (Image 3 eye-catching design) -->
                     @if (isTranslationOpen()) {
@@ -3087,600 +3128,35 @@
                   </div>
                   }
 
-                  <!-- ISO Code 2 * -->
-                  @if (isFieldVisible('isoCode2')) {
-                  <div class="relative w-full group">
-
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#00a6f4]]="isIsoCode2Focused()" [class.ring-2]="isIsoCode2Focused()"
-                      [class.ring-[#00a6f4]/20]="isIsoCode2Focused()" [class.border-slate-300]="!isIsoCode2Focused()"
-                      [class.dark:border-slate-600]="!isIsoCode2Focused()">
-                      <input id="country-iso2" type="text" [ngModel]="formIsoCode2()" placeholder=""
-                        (ngModelChange)="onIsoCode2Change($event); markFieldTouched('isoCode2')"
-                        (focus)="isIsoCode2Focused.set(true)"
-                        (blur)="isIsoCode2Focused.set(false); markFieldTouched('isoCode2')"
-                        (keydown.enter)="focusNextField('isoCode2', 'country-iso3', $event)" name="app_iso2"
-                        maxlength="2" required autocomplete="off" autocorrect="off" autocapitalize="none"
-                        spellcheck="false" data-form-type="other" data-lpignore="true" aria-autocomplete="none"
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold uppercase focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal placeholder:normal-case" />
-
-                      <!-- Right Actions: Red Error / Green Checkmark & Mic Icon -->
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
-                        @if (isFieldInvalid('isoCode2') && formIsoCode2().trim()) {
-                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
-                          title="Invalid ISO Code 2">
-                          <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                            stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </span>
-                        } @else if (isIsoCode2Valid() && touchedFields()['isoCode2'] && formIsoCode2().trim()) {
-                        <span
-                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid ISO Code2">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                        }
-
-                        <div class="overflow-hidden flex items-center transition-all duration-300 ease-out"
-                          [class.max-w-0]="!isIsoCode2Focused() && activeListeningField() !== 'isoCode2'"
-                          [class.opacity-0]="!isIsoCode2Focused() && activeListeningField() !== 'isoCode2'"
-                          [class.pointer-events-none]="!isIsoCode2Focused() && activeListeningField() !== 'isoCode2'"
-                          [class.max-w-[32px]]="isIsoCode2Focused() || activeListeningField() === 'isoCode2'"
-                          [class.opacity-100]="isIsoCode2Focused() || activeListeningField() === 'isoCode2'"
-                          [class.pointer-events-auto]="isIsoCode2Focused() || activeListeningField() === 'isoCode2'">
-                          <button type="button" (click)="toggleVoiceInput('isoCode2')"
-                            [attr.aria-label]="activeListeningField() === 'isoCode2' ? 'Listening...' : 'Voice input for ISO Code 2'"
-                            [title]="activeListeningField() === 'isoCode2' ? 'Listening...' : 'Voice input'"
-                            class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
-                            [class.text-[#00a6f4]]="activeListeningField() !== 'isoCode2'"
-                            [class.text-red-500]="activeListeningField() === 'isoCode2'"
-                            [class.animate-pulse]="activeListeningField() === 'isoCode2'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                              stroke="currentColor" stroke-width="1.8">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-
-                      <label for="country-iso2"
-                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isIsoCode2Floating()" [class.resting]="!isIsoCode2Floating()">
-                        ISO Code 2 <span [class.text-[#DC2626]]="isIsoCode2Focused()"
-                          [class.text-slate-400]="!isIsoCode2Focused()" class="font-bold transition-colors">*</span>
-                      </label>
-                    </div>
-
-                    <!-- Helper text below text box (Point 2) -->
-                    @if (isIsoCode2Focused() && !isFieldInvalid('isoCode2')) {
-                    <p
-                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
-                      2-letter ISO country code (e.g. US, AE, DE)
-                    </p>
-                    }
-
-                    @if (isFieldInvalid('isoCode2') && isoCode2Error()) {
-                    <p
-                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
-                      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                      {{ isoCode2Error() }}
-                    </p>
-                    }
-                  </div>
-                  }
-
-                  <!-- ISO Code 3 * -->
-                  @if (isFieldVisible('isoCode3')) {
-                  <div class="relative w-full group">
-
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#00a6f4]]="isIsoCode3Focused()" [class.ring-2]="isIsoCode3Focused()"
-                      [class.ring-[#00a6f4]/20]="isIsoCode3Focused()" [class.border-slate-300]="!isIsoCode3Focused()"
-                      [class.dark:border-slate-600]="!isIsoCode3Focused()">
-                      <input id="country-iso3" type="text" [ngModel]="formIsoCode3()" placeholder=""
-                        (ngModelChange)="formIsoCode3.set($event.toUpperCase()); markFieldTouched('isoCode3')"
-                        (focus)="isIsoCode3Focused.set(true)"
-                        (blur)="isIsoCode3Focused.set(false); markFieldTouched('isoCode3')"
-                        (keydown.enter)="focusNextField('isoCode3', 'country-numeric', $event)" name="app_iso3"
-                        maxlength="3" required autocomplete="off" autocorrect="off" autocapitalize="none"
-                        spellcheck="false" data-form-type="other" data-lpignore="true" aria-autocomplete="none"
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold uppercase focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal placeholder:normal-case" />
-
-                      <!-- Right Actions: Red Error / Green Checkmark & Mic Icon -->
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
-                        @if (isFieldInvalid('isoCode3') && formIsoCode3().trim()) {
-                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
-                          title="Invalid ISO Code 3">
-                          <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                            stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </span>
-                        } @else if (isIsoCode3Valid() && touchedFields()['isoCode3'] && formIsoCode3().trim()) {
-                        <span
-                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid ISO Code3">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                        }
-
-                        <div class="overflow-hidden flex items-center transition-all duration-300 ease-out"
-                          [class.max-w-0]="!isIsoCode3Focused() && activeListeningField() !== 'isoCode3'"
-                          [class.opacity-0]="!isIsoCode3Focused() && activeListeningField() !== 'isoCode3'"
-                          [class.pointer-events-none]="!isIsoCode3Focused() && activeListeningField() !== 'isoCode3'"
-                          [class.max-w-[32px]]="isIsoCode3Focused() || activeListeningField() === 'isoCode3'"
-                          [class.opacity-100]="isIsoCode3Focused() || activeListeningField() === 'isoCode3'"
-                          [class.pointer-events-auto]="isIsoCode3Focused() || activeListeningField() === 'isoCode3'">
-                          <button type="button" (click)="toggleVoiceInput('isoCode3')"
-                            [attr.aria-label]="activeListeningField() === 'isoCode3' ? 'Listening...' : 'Voice input for ISO Code 3'"
-                            [title]="activeListeningField() === 'isoCode3' ? 'Listening...' : 'Voice input'"
-                            class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
-                            [class.text-[#00a6f4]]="activeListeningField() !== 'isoCode3'"
-                            [class.text-red-500]="activeListeningField() === 'isoCode3'"
-                            [class.animate-pulse]="activeListeningField() === 'isoCode3'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                              stroke="currentColor" stroke-width="1.8">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-
-                      <label for="country-iso3"
-                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isIsoCode3Floating()" [class.resting]="!isIsoCode3Floating()">
-                        ISO Code 3 <span [class.text-[#DC2626]]="isIsoCode3Focused()"
-                          [class.text-slate-400]="!isIsoCode3Focused()" class="font-bold transition-colors">*</span>
-                      </label>
-                    </div>
-
-                    <!-- Helper text below text box (Point 2) -->
-                    @if (isIsoCode3Focused() && !isFieldInvalid('isoCode3')) {
-                    <p
-                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
-                      3-letter ISO country code (e.g. USA, ARE, DEU)
-                    </p>
-                    }
-
-                    @if (isFieldInvalid('isoCode3') && isoCode3Error()) {
-                    <p
-                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
-                      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                      {{ isoCode3Error() }}
-                    </p>
-                    }
-                  </div>
-                  }
-
-                  <!-- ISO Numeric * -->
-                  @if (isFieldVisible('isoNumeric')) {
-                  <div class="relative w-full group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#00a6f4]]="isIsoNumericFocused()" [class.ring-2]="isIsoNumericFocused()"
-                      [class.ring-[#00a6f4]/20]="isIsoNumericFocused()"
-                      [class.border-slate-300]="!isIsoNumericFocused()"
-                      [class.dark:border-slate-600]="!isIsoNumericFocused()">
-                      <input id="country-numeric" type="text" [ngModel]="formIsoNumeric()" placeholder=""
-                        (ngModelChange)="formIsoNumeric.set($event); markFieldTouched('isoNumeric')"
-                        (focus)="isIsoNumericFocused.set(true)"
-                        (blur)="isIsoNumericFocused.set(false); markFieldTouched('isoNumeric')"
-                        (keydown.enter)="focusNextField('isoNumeric', 'country-isd', $event)" name="app_numeric"
-                        maxlength="3" required autocomplete="off" autocorrect="off" autocapitalize="none"
-                        spellcheck="false" data-form-type="other" data-lpignore="true" aria-autocomplete="none"
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
-
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
-                        @if (isFieldInvalid('isoNumeric') && formIsoNumeric().trim()) {
-                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
-                          title="Invalid ISO Numeric">
-                          <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                            stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </span>
-                        } @else if (isIsoNumericValid() && touchedFields()['isoNumeric'] && formIsoNumeric().trim()) {
-                        <span
-                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid ISO Numeric">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                        }
-
-                        <div class="overflow-hidden flex items-center transition-all duration-300 ease-out"
-                          [class.max-w-0]="!isIsoNumericFocused() && activeListeningField() !== 'isoNumeric'"
-                          [class.opacity-0]="!isIsoNumericFocused() && activeListeningField() !== 'isoNumeric'"
-                          [class.pointer-events-none]="!isIsoNumericFocused() && activeListeningField() !== 'isoNumeric'"
-                          [class.max-w-[32px]]="isIsoNumericFocused() || activeListeningField() === 'isoNumeric'"
-                          [class.opacity-100]="isIsoNumericFocused() || activeListeningField() === 'isoNumeric'"
-                          [class.pointer-events-auto]="isIsoNumericFocused() || activeListeningField() === 'isoNumeric'">
-                          <button type="button" (click)="toggleVoiceInput('isoNumeric')"
-                            [attr.aria-label]="activeListeningField() === 'isoNumeric' ? 'Listening...' : 'Voice input for ISO Numeric'"
-                            [title]="activeListeningField() === 'isoNumeric' ? 'Listening...' : 'Voice input'"
-                            class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
-                            [class.text-[#00a6f4]]="activeListeningField() !== 'isoNumeric'"
-                            [class.text-red-500]="activeListeningField() === 'isoNumeric'"
-                            [class.animate-pulse]="activeListeningField() === 'isoNumeric'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                              stroke="currentColor" stroke-width="1.8">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-
-                      <label for="country-numeric"
-                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isIsoNumericFloating()" [class.resting]="!isIsoNumericFloating()">
-                        ISO Numeric <span [class.text-[#DC2626]]="isIsoNumericFocused()"
-                          [class.text-slate-400]="!isIsoNumericFocused()" class="font-bold transition-colors">*</span>
-                      </label>
-                    </div>
-
-                    <!-- Helper text below text box (Point 2) -->
-                    @if (isIsoNumericFocused() && !isFieldInvalid('isoNumeric')) {
-                    <p
-                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
-                      Exactly 3 digits (e.g. 840, 784, 076)
-                    </p>
-                    }
-
-                    @if (isFieldInvalid('isoNumeric') && isoNumericError()) {
-                    <p
-                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
-                      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                      {{ isoNumericError() }}
-                    </p>
-                    }
-                  </div>
-                  }
-
-                  <!-- Dial Code * -->
-                  @if (isFieldVisible('isd')) {
-                  <div class="relative w-full group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#00a6f4]]="isIsdFocused()" [class.ring-2]="isIsdFocused()"
-                      [class.ring-[#00a6f4]/20]="isIsdFocused()" [class.border-slate-300]="!isIsdFocused()"
-                      [class.dark:border-slate-600]="!isIsdFocused()">
-                      <input id="country-isd" type="text" [ngModel]="formIsd()" placeholder=""
-                        (ngModelChange)="formIsd.set($event); markFieldTouched('isd')" (focus)="isIsdFocused.set(true)"
-                        (blur)="isIsdFocused.set(false); markFieldTouched('isd')"
-                        (keydown.enter)="focusNextField('isd', 'country-currency', $event)" name="app_isd" required
-                        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
-                        data-form-type="other" data-lpignore="true" aria-autocomplete="none"
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
-
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
-                        @if (isFieldInvalid('isd') && formIsd().trim()) {
-                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
-                          title="Invalid Dial Code">
-                          <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                            stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </span>
-                        } @else if (isIsdValid() && touchedFields()['isd'] && formIsd().trim()) {
-                        <span
-                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid Dial Code">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                        }
-
-                        <div class="overflow-hidden flex items-center transition-all duration-300 ease-out"
-                          [class.max-w-0]="!isIsdFocused() && activeListeningField() !== 'isd'"
-                          [class.opacity-0]="!isIsdFocused() && activeListeningField() !== 'isd'"
-                          [class.pointer-events-none]="!isIsdFocused() && activeListeningField() !== 'isd'"
-                          [class.max-w-[32px]]="isIsdFocused() || activeListeningField() === 'isd'"
-                          [class.opacity-100]="isIsdFocused() || activeListeningField() === 'isd'"
-                          [class.pointer-events-auto]="isIsdFocused() || activeListeningField() === 'isd'">
-                          <button type="button" (click)="toggleVoiceInput('isd')"
-                            [attr.aria-label]="activeListeningField() === 'isd' ? 'Listening...' : 'Voice input for Dial Code'"
-                            [title]="activeListeningField() === 'isd' ? 'Listening...' : 'Voice input'"
-                            class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
-                            [class.text-[#00a6f4]]="activeListeningField() !== 'isd'"
-                            [class.text-red-500]="activeListeningField() === 'isd'"
-                            [class.animate-pulse]="activeListeningField() === 'isd'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                              stroke="currentColor" stroke-width="1.8">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-
-                      <label for="country-isd"
-                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isIsdFloating()" [class.resting]="!isIsdFloating()">
-                        Dial Code <span [class.text-[#DC2626]]="isIsdFocused()" [class.text-slate-400]="!isIsdFocused()"
-                          class="font-bold transition-colors">*</span>
-                      </label>
-                    </div>
-
-                    <!-- Helper text below text box (Point 2) -->
-                    @if (isIsdFocused() && !isFieldInvalid('isd')) {
-                    <p
-                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
-                      International code with leading + (e.g. +1, +971, +44)
-                    </p>
-                    }
-
-                    @if (isFieldInvalid('isd') && isdError()) {
-                    <p
-                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
-                      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                      {{ isdError() }}
-                    </p>
-                    }
-                  </div>
-                  }
-
-                  <!-- Default Currency * -->
-                  @if (isFieldVisible('currency')) {
-                  <div class="relative w-full group" data-popover>
-                    <!-- Trigger Pill Button -->
-                    <div role="button" tabindex="0" id="country-currency-trigger"
-                      (click)="toggleCurrencyDropdown($event)" (keydown.enter)="toggleCurrencyDropdown($event)"
-                      (keydown.space)="toggleCurrencyDropdown($event)"
-                      class="relative flex items-center justify-between w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 cursor-pointer select-none"
-                      [class.border-[#00a6f4]]="isCurrencyDropdownOpen() || isCurrencyFocused()"
-                      [class.ring-2]="isCurrencyDropdownOpen() || isCurrencyFocused()"
-                      [class.ring-[#00a6f4]/20]="isCurrencyDropdownOpen() || isCurrencyFocused()"
-                      [class.border-slate-300]="!isCurrencyDropdownOpen() && !isCurrencyFocused()"
-                      [class.dark:border-slate-600]="!isCurrencyDropdownOpen() && !isCurrencyFocused()">
-
-                      <span class="text-sm font-semibold truncate" [class.text-slate-800]="formCurrency()"
-                        [class.dark:text-white]="formCurrency()" [class.text-slate-400]="!formCurrency()"
-                        [class.dark:text-slate-500]="!formCurrency()">
-                        {{ formCurrency() || '' }}
+                  <!-- Default Country (col 3) -->
+                  @if (isFieldVisible('isDefault')) {
+                  <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative w-full group">
+                    <div (click)="toggleDefault($event)"
+                      class="relative flex items-center justify-between w-full h-[52px] px-5 sm:px-6 rounded-full border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-200 bg-white dark:bg-slate-800 cursor-pointer select-none">
+                      <span class="text-slate-400 dark:text-slate-500 text-sm font-medium">
+                        Set as Default
                       </span>
 
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
-                        @if (isCurrencyValid() && formCurrency()?.trim()) {
-                        <span class="text-emerald-500 flex items-center justify-center shrink-0" title="Valid Currency">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
+                      <label class="form-switch m-0 cursor-pointer shrink-0" for="country-default-switch"
+                        (click)="$event.stopPropagation()">
+                        <input type="checkbox" id="country-default-switch" class="sr-only"
+                          [checked]="formDefault() === 'Yes'" (change)="toggleDefault($event)" />
+                        <span class="form-switch-track" [class.!bg-[#00a6f4]]="formDefault() === 'Yes'">
+                          <span class="form-switch-thumb"></span>
                         </span>
-                        }
-                        <!-- Chevron Up / Down -->
-                        <span class="text-slate-400 transition-transform duration-200"
-                          [class.rotate-180]="isCurrencyDropdownOpen()">
-                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9" />
-                          </svg>
-                        </span>
-                      </div>
+                      </label>
 
                       <label
-                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm floating-top"
-                        [class.text-[#00a6f4]]="isCurrencyDropdownOpen()">
-                        Default Currency <span class="font-bold text-[#DC2626]">*</span>
+                        class="floating-notch-label floating-top absolute pointer-events-none select-none md:text-base text-sm">
+                        Default Country
                       </label>
                     </div>
-
-                    <!-- Dropdown Overlay Card -->
-                    @if (isCurrencyDropdownOpen()) {
-                    <div (click)="$event.stopPropagation()"
-                      class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-                      <!-- Search Bar with Voice Input & Magnifier (Theme Color #00a6f4) -->
-                      <div
-                        class="relative flex items-center w-full h-10 px-3.5 rounded-full border-2 border-[#00a6f4] dark:border-[#00a6f4] bg-white dark:bg-slate-900 focus-within:ring-2 focus-within:ring-[#00a6f4]/25 transition-all">
-                        <input type="text" [ngModel]="currencySearch()" (ngModelChange)="currencySearch.set($event)"
-                          placeholder="Search..." autocomplete="off"
-                          class="w-full bg-transparent text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
-
-                        <div class="flex items-center gap-1.5 ml-2 shrink-0">
-                          <!-- Voice Input Microphone -->
-                          <button type="button" (click)="toggleVoiceInput('currencySearch')"
-                            [attr.aria-label]="activeListeningField() === 'currencySearch' ? 'Listening...' : 'Voice Search'"
-                            [title]="activeListeningField() === 'currencySearch' ? 'Listening...' : 'Voice Search'"
-                            class="p-1 rounded-full text-[#00a6f4] hover:text-[#0088cc] transition cursor-pointer"
-                            [class.!text-red-500]="activeListeningField() === 'currencySearch'"
-                            [class.animate-pulse]="activeListeningField() === 'currencySearch'">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                              stroke-linecap="round" stroke-linejoin="round">
-                              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                              <line x1="12" y1="19" x2="12" y2="22" />
-                            </svg>
-                          </button>
-
-                          <!-- Search Magnifying Glass in theme color -->
-                          <svg class="w-4 h-4 text-[#00a6f4]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      <!-- Currency Options List with guaranteed min-height -->
-                      <div
-                        class="mt-2.5 max-h-60 min-h-[140px] overflow-y-auto custom-scrollbar flex flex-col space-y-1 pr-1">
-                        @for (c of filteredCurrencyList(); track c.code) {
-                        <button type="button" (click)="selectCurrencyOption(c)"
-                          class="w-full text-left px-3.5 py-2 rounded-xl hover:bg-sky-50 dark:hover:bg-slate-700/60 transition-colors flex items-center justify-between cursor-pointer group/opt">
-                          <div class="flex items-center gap-2.5">
-                            <span
-                              class="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0 border border-sky-100 dark:border-sky-900/40">
-                              {{ c.symbol }}
-                            </span>
-                            <span
-                              class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover/opt:text-[#00a6f4] dark:group-hover/opt:text-[#38bdf8] transition-colors">
-                              {{ c.code }} — {{ c.name }}
-                            </span>
-                          </div>
-                          <span
-                            class="text-xs font-bold text-slate-400 group-hover/opt:text-[#00a6f4] font-mono transition-colors">{{
-                            c.code }}</span>
-                        </button>
-                        } @empty {
-                        <div
-                          class="py-8 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-1.5">
-                          <svg class="w-6 h-6 text-slate-300 dark:text-slate-600" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="1.5">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                          </svg>
-                          <span>No currencies found for "{{ currencySearch() }}"</span>
-                        </div>
-                        }
-                      </div>
-                    </div>
-                    }
-
-                    @if (isFieldInvalid('currency') && currencyError()) {
-                    <p
-                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
-                      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                      {{ currencyError() }}
-                    </p>
-                    }
                   </div>
                   }
 
-                  <!-- Nationality -->
-                  @if (isFieldVisible('nationality')) {
-                  <div class="relative w-full group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#00a6f4]]="isNationalityFocused()" [class.ring-2]="isNationalityFocused()"
-                      [class.ring-[#00a6f4]/20]="isNationalityFocused()"
-                      [class.border-slate-300]="!isNationalityFocused()"
-                      [class.dark:border-slate-600]="!isNationalityFocused()">
-                      <input id="country-nationality" type="text" [ngModel]="formNationality()" placeholder=""
-                        (ngModelChange)="formNationality.set($event); markFieldTouched('nationality')"
-                        (focus)="isNationalityFocused.set(true)"
-                        (blur)="isNationalityFocused.set(false); markFieldTouched('nationality')"
-                        (keydown.enter)="$event.preventDefault()" name="app_nationality" autocomplete="off"
-                        autocorrect="off" autocapitalize="none" spellcheck="false" data-form-type="other"
-                        data-lpignore="true" aria-autocomplete="none"
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
-
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
-                        @if (isFieldInvalid('nationality') && formNationality().trim()) {
-                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
-                          title="Invalid Nationality">
-                          <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                            stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </span>
-                        } @else if (isNationalityValid() && formNationality()?.trim()) {
-                        <span
-                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid Nationality">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                        }
-
-                        <div class="overflow-hidden flex items-center transition-all duration-300 ease-out"
-                          [class.max-w-0]="!isNationalityFocused() && activeListeningField() !== 'nationality'"
-                          [class.opacity-0]="!isNationalityFocused() && activeListeningField() !== 'nationality'"
-                          [class.pointer-events-none]="!isNationalityFocused() && activeListeningField() !== 'nationality'"
-                          [class.max-w-[32px]]="isNationalityFocused() || activeListeningField() === 'nationality'"
-                          [class.opacity-100]="isNationalityFocused() || activeListeningField() === 'nationality'"
-                          [class.pointer-events-auto]="isNationalityFocused() || activeListeningField() === 'nationality'">
-                          <button type="button" (click)="toggleVoiceInput('nationality')"
-                            [attr.aria-label]="activeListeningField() === 'nationality' ? 'Listening...' : 'Voice input for Nationality'"
-                            [title]="activeListeningField() === 'nationality' ? 'Listening...' : 'Voice input'"
-                            class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
-                            [class.text-[#00a6f4]]="activeListeningField() !== 'nationality'"
-                            [class.text-red-500]="activeListeningField() === 'nationality'"
-                            [class.animate-pulse]="activeListeningField() === 'nationality'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                              stroke="currentColor" stroke-width="1.8">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-
-                      <label for="country-nationality"
-                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isNationalityFloating()" [class.resting]="!isNationalityFloating()">
-                        Nationality
-                      </label>
-                    </div>
-
-                    <!-- Helper text below text box (Point 2) -->
-                    @if (isNationalityFocused() && !isFieldInvalid('nationality')) {
-                    <p
-                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
-                      Demonym or nationality (e.g. American, Emirati, German)
-                    </p>
-                    }
-
-                    @if (isFieldInvalid('nationality') && nationalityError()) {
-                    <p
-                      class="text-[11px] text-[#f87171] font-semibold mt-1 px-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
-                      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                      {{ nationalityError() }}
-                    </p>
-                    }
-                  </div>
-                  }
-
-                  <!-- Status * -->
+                  <!-- Status * (col 3) -->
                   @if (isFieldVisible('status')) {
-                  <div class="relative w-full group">
+                  <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative w-full group">
                     <div
                       class="relative flex items-center justify-between w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 cursor-pointer select-none"
                       [class.border-[#00a6f4]]="isStatusDropdownOpen()" [class.ring-2]="isStatusDropdownOpen()"
@@ -3774,267 +3250,122 @@
                   </div>
                   }
 
-                  <!-- Default Country -->
-                  @if (isFieldVisible('isDefault')) {
-                  <div class="relative w-full group">
-                    <div (click)="toggleDefault($event)"
-                      class="relative flex items-center justify-between w-full h-[52px] px-5 sm:px-6 rounded-full border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-200 bg-white dark:bg-slate-800 cursor-pointer select-none">
-                      <span class="text-slate-400 dark:text-slate-500 text-sm font-medium">
-                        Set as Default
-                      </span>
-
-                      <label class="form-switch m-0 cursor-pointer shrink-0" for="country-default-switch"
-                        (click)="$event.stopPropagation()">
-                        <input type="checkbox" id="country-default-switch" class="sr-only"
-                          [checked]="formDefault() === 'Yes'" (change)="toggleDefault($event)" />
-                        <span class="form-switch-track" [class.!bg-[#00a6f4]]="formDefault() === 'Yes'">
-                          <span class="form-switch-thumb"></span>
-                        </span>
-                      </label>
-
-                      <label
-                        class="floating-notch-label floating-top absolute pointer-events-none select-none md:text-base text-sm">
-                        Default Country
-                      </label>
-                    </div>
-                  </div>
-                  }
-
-                  <!-- Continent -->
-                  @if (isFieldVisible('continent')) {
-                  <div class="relative w-full group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#00a6f4]]="isContinentFocused()" [class.ring-2]="isContinentFocused()"
-                      [class.ring-[#00a6f4]/20]="isContinentFocused()" [class.border-slate-300]="!isContinentFocused()"
-                      [class.dark:border-slate-600]="!isContinentFocused()">
-                      <input id="country-continent" type="text" [ngModel]="formContinent()" placeholder=""
-                        (ngModelChange)="formContinent.set($event); markFieldTouched('continent')"
-                        (focus)="isContinentFocused.set(true)"
-                        (blur)="isContinentFocused.set(false); markFieldTouched('continent')"
-                        (keydown.enter)="$event.preventDefault()" name="app_continent" autocomplete="off"
-                        autocorrect="off" autocapitalize="none" spellcheck="false" data-form-type="other"
-                        data-lpignore="true" aria-autocomplete="none"
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
-                        @if (isContinentValid() && formContinent()?.trim()) {
-                        <span
-                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid Continent">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                        }
-                      </div>
-                      <label for="country-continent"
-                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isContinentFloating()" [class.resting]="!isContinentFloating()">
-                        Continent
-                      </label>
-                    </div>
-                    @if (isContinentFocused()) {
-                    <p
-                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
-                      Geographic continent (e.g. Asia, Europe, Africa)
-                    </p>
-                    }
-                  </div>
-                  }
-
-                  <!-- Capital City -->
-                  @if (isFieldVisible('capital')) {
-                  <div class="relative w-full group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800"
-                      [class.border-[#00a6f4]]="isCapitalFocused()" [class.ring-2]="isCapitalFocused()"
-                      [class.ring-[#00a6f4]/20]="isCapitalFocused()" [class.border-slate-300]="!isCapitalFocused()"
-                      [class.dark:border-slate-600]="!isCapitalFocused()">
-                      <input id="country-capital" type="text" [ngModel]="formCapital()" placeholder=""
-                        (ngModelChange)="formCapital.set($event); markFieldTouched('capital')"
-                        (focus)="isCapitalFocused.set(true)"
-                        (blur)="isCapitalFocused.set(false); markFieldTouched('capital')"
-                        (keydown.enter)="$event.preventDefault()" name="app_capital" autocomplete="off"
-                        autocorrect="off" autocapitalize="none" spellcheck="false" data-form-type="other"
-                        data-lpignore="true" aria-autocomplete="none"
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
-                      <div class="flex items-center gap-2 ml-2 shrink-0">
-                        @if (isCapitalValid() && formCapital()?.trim()) {
-                        <span
-                          class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
-                          title="Valid Capital City">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                        }
-                        <div class="overflow-hidden flex items-center transition-all duration-300 ease-out"
-                          [class.max-w-0]="!isCapitalFocused() && activeListeningField() !== 'capital'"
-                          [class.opacity-0]="!isCapitalFocused() && activeListeningField() !== 'capital'"
-                          [class.pointer-events-none]="!isCapitalFocused() && activeListeningField() !== 'capital'"
-                          [class.max-w-[32px]]="isCapitalFocused() || activeListeningField() === 'capital'"
-                          [class.opacity-100]="isCapitalFocused() || activeListeningField() === 'capital'"
-                          [class.pointer-events-auto]="isCapitalFocused() || activeListeningField() === 'capital'">
-                          <button type="button" (click)="toggleVoiceInput('capital')"
-                            [attr.aria-label]="activeListeningField() === 'capital' ? 'Listening...' : 'Voice input for Capital City'"
-                            [title]="activeListeningField() === 'capital' ? 'Listening...' : 'Voice input'"
-                            class="p-1 rounded-full cursor-pointer focus:outline-none transition-all duration-150 shrink-0"
-                            [class.text-[#00a6f4]]="activeListeningField() !== 'capital'"
-                            [class.text-red-500]="activeListeningField() === 'capital'"
-                            [class.animate-pulse]="activeListeningField() === 'capital'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24"
-                              stroke="currentColor" stroke-width="1.8">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                      <label for="country-capital"
-                        class="floating-notch-label absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm"
-                        [class.floating-top]="isCapitalFloating()" [class.resting]="!isCapitalFloating()">
-                        Capital City
-                      </label>
-                    </div>
-                    @if (isCapitalFocused()) {
-                    <p
-                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
-                      National capital city (e.g. Riyadh, Washington D.C.)
-                    </p>
-                    }
-                  </div>
-                  }
-
-                  <!-- Custom Dynamic Fields -->
-                  @for (cf of tenantService.customFields(); track cf.key) {
-                  @if (isFieldVisible(cf.key)) {
-                  <div class="relative w-full group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 transition-all duration-200 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20">
-                      <input type="text" [ngModel]="getCustomFieldValue(cf.key)"
-                        (ngModelChange)="setCustomFieldValue(cf.key, $event)" [name]="'app_cf_' + cf.key"
-                        autocomplete="off" placeholder=""
-                        class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4]" />
-                      <label
-                        class="floating-notch-label floating-top absolute pointer-events-none transition-all duration-200 select-none md:text-base text-sm">
-                        {{ cf.label }}
-                      </label>
-                    </div>
-                  </div>
-                  }
-                  }
-
                 </div>
 
-                <!-- Flag (full-width card, outside auto-flow grid) -->
-                @if (isFieldVisible('flag')) {
-                <div class="w-full space-y-2 pt-2">
-                  <input #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
-                    class="hidden" />
-                  <div class="flex items-center justify-between">
-                    <label class="text-xs font-bold text-slate-700 dark:text-slate-200 tracking-wider">
-                      Flag <span class="text-slate-400 font-bold">*</span>
-                    </label>
-                  </div>
+                <!-- Hidden Flag File Input for @ViewChild -->
+                <input #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
+                  class="hidden" />
 
-                  <!-- Flag Display Card: Selected Flag Preview (Screenshot 1 Right Box) or Clean Selector Box -->
-                  @if (formFlag()) {
-                  <div
-                    class="p-4 sm:p-5 rounded-2xl border-2 border-dashed border-[#00a6f4]/50 bg-sky-50/20 dark:bg-sky-950/20 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-200">
-                    <div class="flex items-center gap-4">
-                      <!-- Selected Flag with Remove Button -->
-                      <div class="relative group/flag shrink-0">
-                        <img [src]="formFlag()" alt="Selected Flag Preview"
-                          class="h-16 w-26 object-cover rounded-xl border border-slate-200 dark:border-slate-600 shadow-md transition group-hover/flag:scale-102"
-                          (error)="onFlagError($event)" />
-                        <button type="button" (click)="removeFlag()"
-                          class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-md transition cursor-pointer"
-                          title="Remove flag">
-                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5">
-                            <path d="M18 6 6 18M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-
-                      <div class="space-y-0.5">
-                        <h4 class="text-sm font-bold text-slate-800 dark:text-white">
-                          {{ formName() || 'Selected Flag' }}
-                        </h4>
-                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                          {{ formIsoCode2() || 'Custom Flag' }}
-                        </p>
-                        <span
-                          class="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
-                          <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                          Flag Ready
-                        </span>
-                      </div>
-                    </div>
-
-                    <!-- Change & Download Actions -->
-                    <div class="flex items-center gap-2 shrink-0">
-                      <button type="button" (click)="openFlagLookupModal('gallery')"
-                        class="px-4 py-2 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-xs font-bold flex items-center gap-2 transition cursor-pointer shadow-2xs">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                          <polyline points="17 8 12 3 7 8" />
-                          <line x1="12" y1="3" x2="12" y2="15" />
-                        </svg>
-                        <span>Change</span>
-                      </button>
-                      <button type="button" (click)="downloadFlag(formFlag(), formName() || 'Country')"
-                        class="p-2 rounded-full text-slate-400 hover:text-[#00a6f4] hover:bg-white dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition cursor-pointer shadow-2xs"
-                        title="Download Flag">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                          <polyline points="7 10 12 15 17 10" />
-                          <line x1="12" y1="15" x2="12" y2="3" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  } @else {
-                  <!-- No Flag Selected: Clean Interactive Card with the 3 options and drop support -->
-                  <div (click)="openFlagLookupModal('gallery')" (dragover)="onFlagDragOver($event)"
-                    (dragleave)="onFlagDragLeave($event)" (drop)="onFlagDrop($event)"
-                    class="p-6 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-[#00a6f4] bg-white dark:bg-slate-800 hover:bg-sky-50/20 dark:hover:bg-sky-950/20 flex flex-col sm:flex-row items-center justify-between gap-4 cursor-pointer transition-all duration-200 group">
-                    <div class="flex items-center gap-3.5">
-                      <div
-                        class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center shrink-0 group-hover:scale-105 transition">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                          <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
-                          <path d="M12 12v9"></path>
-                          <path d="m8 17 4 4 4-4"></path>
-                        </svg>
-                      </div>
-                      <div class="text-left">
-                        <h4
-                          class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-[#00a6f4] transition">
-                          Drag and Drop
-                        </h4>
-                        <p class="text-[11px] text-slate-400 dark:text-slate-500">
-                          Drag and drop flag file here, or choose from standard gallery or upload
-                        </p>
-                      </div>
-                    </div>
-
-                    <div hidden class="flex items-center gap-2 shrink-0" (click)="$event.stopPropagation()">
-                      <button type="button" (click)="openFlagLookupModal('gallery')"
-                        class="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:border-[#00a6f4] text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-[#00a6f4] bg-white dark:bg-slate-800 transition cursor-pointer shadow-2xs">
-                        Browse Gallery
-                      </button>
-                      <button type="button" (click)="openFlagLookupModal('upload')"
-                        class="px-3.5 py-1.5 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/20">
-                        Upload Flag
-                      </button>
-                    </div>
+                <!-- Clean Label & Value Grid matching View Mode (Image 2) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-7 items-center pt-2">
+                  @if (isFieldVisible('isoCode2')) {
+                  <div>
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
+                      2</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsoCode2() ||
+                      formCode() || '—' }}</span>
                   </div>
                   }
+
+                  @if (isFieldVisible('isoCode3') && formIsoCode3()) {
+                  <div>
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
+                      3</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsoCode3()
+                      }}</span>
+                  </div>
+                  }
+
+                  @if (isFieldVisible('isoNumeric') && formIsoNumeric()) {
+                  <div>
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO
+                      Numeric</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsoNumeric()
+                      }}</span>
+                  </div>
+                  }
+
+                  @if (isFieldVisible('isd')) {
+                  <div>
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Dial
+                      Code</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsd() || '—'
+                      }}</span>
+                  </div>
+                  }
+
+                  @if (isFieldVisible('currency') && formCurrency()) {
+                  <div>
+                    <span
+                      class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Currency</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formCurrency()
+                      }}</span>
+                  </div>
+                  }
+
+                  @if (isFieldVisible('nationality') && formNationality()) {
+                  <div>
+                    <span
+                      class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formNationality()
+                      }}</span>
+                  </div>
+                  }
+
+                  @if (isFieldVisible('continent') && formContinent()) {
+                  <div>
+                    <span
+                      class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Continent</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formContinent()
+                      }}</span>
+                  </div>
+                  }
+
+                  @if (isFieldVisible('subregion') && formSubregion()) {
+                  <div>
+                    <span
+                      class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Subregion</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formSubregion()
+                      }}</span>
+                  </div>
+                  }
+
+                  @if (isFieldVisible('capital') && formCapital()) {
+                  <div>
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Capital
+                      City</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formCapital()
+                      }}</span>
+                  </div>
+                  }
+
+                  <!-- Custom Dynamic Fields in View Mode format -->
+                  @for (cf of tenantService.customFields(); track cf.key) {
+                  @if (isFieldVisible(cf.key) && getCustomFieldValue(cf.key)) {
+                  <div>
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">{{
+                      cf.label }}</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{
+                      getCustomFieldValue(cf.key) }}</span>
+                  </div>
+                  }
+                  }
+                </div>
+
+                <!-- Flag (matching View Mode UI: centered inside rounded-2xl dashed border) -->
+                @if (isFieldVisible('flag')) {
+                <div class="space-y-2 pt-2">
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Flag</span>
+                  <div
+                    class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-4 sm:p-5 flex items-center justify-center bg-transparent min-h-[96px]">
+                    @if (currentFormFlagUrl()) {
+                    <img
+                      [src]="currentFormFlagUrl()"
+                      [alt]="formName()"
+                      class="h-16 w-26 object-cover rounded-xl shadow-md border border-slate-200/60 dark:border-slate-700"
+                      (error)="onFlagError($event)" />
+                    }
+                  </div>
                 </div>
                 }
 
@@ -4170,16 +3501,7 @@
 
             <!-- Center: Record Navigator (« ‹ [ Number ] › ») with User Editable Input & Selectable Popover Dropdown -->
             <div class="flex items-center gap-1.5 sm:gap-2 select-none">
-              <!-- First Record («) -->
-              <button type="button" (click)="goToFirstCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
-                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
-                title="First" data-tooltip="First" data-tooltip-pos="top" aria-label="First">
-                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m11 17-5-5 5-5" />
-                  <path d="m18 17-5-5 5-5" />
-                </svg>
-              </button>
+
 
               <!-- Previous Record (‹ / Minus) -->
               <button type="button" (click)="goToPreviousCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
@@ -4205,40 +3527,6 @@
                     class="w-full text-center text-sm font-bold text-sky-500 dark:text-[#38bdf8] bg-transparent outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-pointer" />
                 </div>
 
-                <!-- Dropdown Popover -->
-                @if (isRecordDropdownOpen()) {
-                <div
-                  class="page-dropdown-container absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-32 bg-[#f8fcff] dark:bg-slate-800 rounded-[28px] border-2 border-[#a5e3fd] dark:border-slate-600 p-2.5 z-50 animate-in fade-in duration-150 shadow-xl"
-                  (click)="$event.stopPropagation()">
-                  <!-- Notch arrow pointing down to active record pill -->
-                  <div
-                    class="absolute -bottom-[9px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[9px] border-t-[#a5e3fd] dark:border-t-slate-600">
-                  </div>
-                  <div
-                    class="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[8px] border-t-[#f8fcff] dark:border-t-slate-800">
-                  </div>
-
-                  <!-- Header label inside popover -->
-                  <div
-                    class="text-[10px] font-bold text-center text-slate-400 dark:text-slate-400 uppercase tracking-wider pb-1 border-b border-sky-100 dark:border-slate-700">
-                    Record (1 - {{ totalRecordsCount() }})
-                  </div>
-
-                  <!-- Scrollable list of record numbers with custom cyan scrollbar -->
-                  <div
-                    class="page-dropdown-scroll max-h-56 overflow-y-auto pr-1 flex flex-col gap-1.5 mt-1.5 custom-scrollbar">
-                    @for (r of recordsList(); track r) {
-                    <button type="button" (click)="selectRecordFromDropdown(r)"
-                      class="w-full py-1 rounded-xl text-center text-base font-medium transition cursor-pointer text-[#0070ba] dark:text-sky-300 hover:bg-[#e0f4fe] dark:hover:bg-slate-700/80"
-                      [class.font-bold]="currentCountryDisplayNumber() === r"
-                      [class.bg-[#dff3fd]]="currentCountryDisplayNumber() === r"
-                      [class.dark:bg-sky-950/70]="currentCountryDisplayNumber() === r">
-                      {{ r }}
-                    </button>
-                    }
-                  </div>
-                </div>
-                }
               </div>
 
               <!-- Next Record (› / Plus) -->
@@ -4252,17 +3540,7 @@
                 </svg>
               </button>
 
-              <!-- Last Record (») -->
-              <button type="button" (click)="goToLastCountry()"
-                [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
-                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
-                title="Last" data-tooltip="Last" data-tooltip-pos="top" aria-label="Last">
-                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m6 17 5-5-5-5" />
-                  <path d="m13 17 5-5-5-5" />
-                </svg>
-              </button>
+
             </div>
 
             <!-- Right: Clear/Reset and Save/Update Buttons with Master Icons (Image 4 & 5 Replica) -->
@@ -4412,6 +3690,26 @@
                 </div>
                 }
 
+                @if (isFieldVisible('isDefault')) {
+                <div>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isDefault ? 'Yes'
+                    : 'No' }}</span>
+                </div>
+                }
+
+                @if (isFieldVisible('status')) {
+                <div>
+                  <span
+                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Status</span>
+                  <span class="text-base font-bold block mt-1.5" [class.text-emerald-600]="sc.status === 'Active'"
+                    [class.text-amber-500]="sc.status === 'Draft'" [class.text-slate-400]="sc.status === 'Inactive'">
+                    {{ sc.status || 'Active' }}
+                  </span>
+                </div>
+                }
+
                 @if (isFieldVisible('isoCode2')) {
                 <div>
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
@@ -4481,25 +3779,7 @@
                 </div>
                 }
 
-                @if (isFieldVisible('status')) {
-                <div>
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Status</span>
-                  <span class="text-base font-bold block mt-1.5" [class.text-emerald-600]="sc.status === 'Active'"
-                    [class.text-amber-500]="sc.status === 'Draft'" [class.text-slate-400]="sc.status === 'Inactive'">
-                    {{ sc.status || 'Active' }}
-                  </span>
-                </div>
-                }
 
-                @if (isFieldVisible('isDefault')) {
-                <div>
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isDefault ? 'Yes'
-                    : 'No' }}</span>
-                </div>
-                }
 
 
                 <!-- Custom Fields in View Mode -->

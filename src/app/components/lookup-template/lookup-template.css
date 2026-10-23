@@ -1,0 +1,1810 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ========================================================================= */
+/* 1. FLOATING NOTCH LABEL (Matches Login Page Username UI Specification)    */
+/* ========================================================================= */
+.floating-notch-label {
+  position: absolute;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Resting State: Inside the pill input */
+.floating-notch-label.resting {
+  top: 50%;
+  transform: translateY(-50%);
+  left: 20px;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 400;
+  background: transparent;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .floating-notch-label.resting {
+    font-size: 16px; /* Section 8.2 desktop standard 16px */
+  }
+}
+
+/* Floating State: Jump onto top border notch with white background */
+.floating-notch-label.floating-top {
+  top: 0;
+  transform: translateY(-50%);
+  left: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0 8px;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  color: #64748b;
+  transition: color 0.15s ease-in-out;
+}
+
+/* Dark mode floating label background */
+:host-context(.dark) .floating-notch-label.floating-top,
+.dark .floating-notch-label.floating-top {
+  background-color: #1e293b;
+  color: #94a3b8;
+}
+
+/* When parent group/input is focused */
+.group:focus-within .floating-notch-label.floating-top {
+  color: #00a6f4;
+}
+
+:host-context(.dark) .group:focus-within .floating-notch-label.floating-top,
+.dark .group:focus-within .floating-notch-label.floating-top {
+  color: #38bdf8;
+}
+
+.floating-notch-label.is-error {
+  color: #DC2626 !important; /* Section 4.2 exact error color */
+}
+
+/* ========================================================================= */
+/* 2. STAT SUMMARY CAPSULE CARDS (Exact Replica of React VerticalSummaryCards)*/
+/* ========================================================================= */
+/* ========================================================================= */
+/* 2. STAT SUMMARY CAPSULE CARDS (Exact Replica of React VerticalSummaryCards)*/
+/* ========================================================================= */
+.capsule-card {
+  width: 100%;
+  height: 58px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.capsule-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.12);
+}
+
+.capsule-circle-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  filter: drop-shadow(2px 2px 6px rgba(255, 255, 255, 0.14));
+}
+
+/* 1. Blue / Total */
+.capsule-total {
+  background: linear-gradient(100deg, #70D3FC 24.22%, #D2F1FE 73.78%);
+}
+.circle-total {
+  background-color: #20B7FA;
+}
+
+/* 2. Green / Active */
+.capsule-active {
+  background: linear-gradient(98deg, #6BE4A0 25.78%, #C4FFDD 76.35%);
+}
+.circle-active {
+  background-color: #6BE4A0;
+}
+
+/* 3. Teal-Gray / Inactive */
+.capsule-inactive {
+  background: linear-gradient(276deg, #E2FBFF 15.76%, #82CAD2 82.53%);
+}
+.circle-inactive {
+  background-color: #82CAD2;
+}
+
+/* 4. Yellow / Draft */
+.capsule-draft {
+  background: linear-gradient(96deg, #F8D56B 28.65%, #FFF4D3 85.82%);
+}
+.circle-draft {
+  background-color: #FFCC2F;
+}
+
+/* 5. Purple / Updated */
+.capsule-updated {
+  background: linear-gradient(96deg, #9A78FF 18.47%, #D6C8FF 74.92%);
+}
+.circle-updated {
+  background-color: #9A78FF;
+}
+
+/* 6. Red-Coral / Deleted */
+.capsule-deleted {
+  background: linear-gradient(96deg, #FC9296 22.14%, #FFDFE0 76.81%);
+}
+.circle-deleted {
+  background-color: #FC9296;
+}
+
+/* Capsule Text */
+.capsule-title {
+  color: #4E516C;
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 120%;
+  white-space: nowrap;
+}
+
+.capsule-count {
+  color: #4E516C;
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 120%;
+  white-space: nowrap;
+}
+
+/* Capsule grid spacing */
+.capsule-grid {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* ========================================================================= */
+/* 3. COUNTRY GRID CARDS (Exact Match to React Project Specification)        */
+/* ========================================================================= */
+.country-card {
+  background: #ffffff;
+  border: 1px solid #E2E4EB;
+  border-radius: 14px;
+  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.08);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 168px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.writing-vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.country-card:hover {
+  border-color: #20B7FA;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  transform: scale(1.035) translateY(-2px);
+  z-index: 20;
+}
+
+:host-context(.dark) .country-card,
+.dark .country-card {
+  background: #1f2937;
+  border-color: #374151;
+  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.25);
+}
+
+:host-context(.dark) .country-card:hover,
+.dark .country-card:hover {
+  border-color: #20B7FA;
+  box-shadow: 0 10px 25px -5px rgba(32, 183, 250, 0.25);
+  transform: scale(1.035) translateY(-2px);
+  z-index: 20;
+}
+
+/* Floating hover actions toolbar on country card (Edit, Delete, Status Toggle) */
+.country-card .card-hover-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-2px);
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 30;
+}
+
+.country-card:hover .card-hover-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+:host-context(.dark) .country-card .card-hover-actions,
+.dark .country-card .card-hover-actions {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ========================================================================= */
+/* 4. BUTTONS & UTILITIES                                                    */
+/* ========================================================================= */
+.btn-primary-pill {
+  background: linear-gradient(135deg, #00a6f4 0%, #0091ea 100%);
+  box-shadow: 0 6px 16px -2px rgba(0, 166, 244, 0.38);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-pill:hover {
+  background: linear-gradient(135deg, #02b1ff 0%, #0084d6 100%);
+  box-shadow: 0 8px 20px -2px rgba(0, 166, 244, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ========================================================================= */
+/* Custom Scrollbars: Light Cyan/Sky Pill Thumb (Image 1 replica)            */
+/* Applied across Grid, Table, Add, Edit, View pages, and popups/modals      */
+/* ========================================================================= */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+:host-context(.dark) .custom-scrollbar,
+.dark .custom-scrollbar {
+  scrollbar-color: #64748b #0f172a;
+}
+
+:host-context(.dark) .custom-scrollbar::-webkit-scrollbar-track,
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+:host-context(.dark) .custom-scrollbar::-webkit-scrollbar-thumb,
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #64748b;
+}
+
+:host-context(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover,
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ========================================================================= */
+/* IMPORT WIZARD MODAL                                                       */
+/* ========================================================================= */
+.import-step-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4E516C;
+  background: #E9EBF0;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.import-step-circle.is-active {
+  background: #ffffff;
+  border-color: #00a6f4;
+  color: #4E516C;
+}
+
+.import-step-circle.is-done {
+  background: #00a6f4;
+  border-color: #00a6f4;
+  color: #ffffff;
+}
+
+.import-step-line {
+  flex: 1;
+  height: 2px;
+  margin: 0 16px;
+  min-width: 24px;
+  border-radius: 9999px;
+  background: #E2E4EB;
+  transition: background 0.2s ease;
+}
+
+.import-step-line.is-done {
+  background: #00a6f4;
+}
+
+.import-dropzone {
+  min-height: 350px;
+  padding: 32px 24px;
+  border: 1.5px dashed #D5D9E2;
+  border-radius: 4px;
+  background: #F7F8FA;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.import-dropzone.cursor-pointer:hover,
+.import-dropzone.is-dragging {
+  border-color: #00a6f4;
+  background: #F0F9FF;
+}
+
+.import-btn-outline,
+.import-btn-primary {
+  height: 52px;
+  padding: 0 30px;
+  border-radius: 9999px;
+  font-size: 18px;
+  font-weight: 400;
+  border: 1.5px solid #00a6f4;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.import-btn-outline {
+  background: #ffffff;
+  color: #00a6f4;
+}
+
+.import-btn-outline:hover {
+  background: #F0F9FF;
+}
+
+.import-btn-primary {
+  background: #00a6f4;
+  color: #ffffff;
+}
+
+.import-btn-primary:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+/* Disabled state matches the faded "Import Now" in the client reference */
+.import-btn-primary:disabled {
+  background: #DCEFFA;
+  border-color: #9FD8F5;
+  color: #8A9AAE;
+  cursor: not-allowed;
+}
+
+:host-context(.dark) .import-step-circle,
+.dark .import-step-circle {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+:host-context(.dark) .import-step-circle.is-active,
+.dark .import-step-circle.is-active {
+  background: #1e293b;
+  border-color: #00a6f4;
+}
+
+:host-context(.dark) .import-step-circle.is-done,
+.dark .import-step-circle.is-done {
+  background: #00a6f4;
+  color: #ffffff;
+}
+
+:host-context(.dark) .import-step-line,
+.dark .import-step-line {
+  background: #475569;
+}
+
+:host-context(.dark) .import-step-line.is-done,
+.dark .import-step-line.is-done {
+  background: #00a6f4;
+}
+
+:host-context(.dark) .import-dropzone,
+.dark .import-dropzone {
+  background: #0f172a;
+  border-color: #475569;
+}
+
+:host-context(.dark) .import-dropzone.cursor-pointer:hover,
+:host-context(.dark) .import-dropzone.is-dragging,
+.dark .import-dropzone.cursor-pointer:hover,
+.dark .import-dropzone.is-dragging {
+  background: #0c2a3d;
+  border-color: #00a6f4;
+}
+
+
+:host-context(.dark) .import-btn-outline,
+.dark .import-btn-outline {
+  background: transparent;
+}
+
+:host-context(.dark) .import-btn-primary:disabled,
+.dark .import-btn-primary:disabled {
+  background: #1e3a4c;
+  border-color: #2b5670;
+  color: #7c8ea3;
+}
+
+/* ========================================================================= */
+/* FORM / VIEW PANEL FOOTER SWITCHES (Keep / PDF / Print)                    */
+/* ========================================================================= */
+.form-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-switch-track {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #cbd5e1;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.form-switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.form-switch input:checked + .form-switch-track {
+  background: #00a6f4;
+}
+
+.form-switch input:checked + .form-switch-track .form-switch-thumb {
+  transform: translateX(16px);
+}
+
+.form-switch input:focus-visible + .form-switch-track {
+  outline: 2px solid #00a6f4;
+  outline-offset: 2px;
+}
+
+.form-switch-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+:host-context(.dark) .form-switch-track,
+.dark .form-switch-track {
+  background: #475569;
+}
+
+:host-context(.dark) .form-switch-label,
+.dark .form-switch-label {
+  color: #e2e8f0;
+}
+
+/* Section 9: Keep Toggle specific styling */
+.keep-switch .form-switch-track {
+  background: #bae6fd; /* light secondary blue default (Section 9.1) */
+  border: 1px solid #7dd3fc;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+:host-context(.dark) .keep-switch .form-switch-track,
+.dark .keep-switch .form-switch-track {
+  background: #0369a1;
+  border: 1px solid #0284c7;
+}
+
+.keep-switch:hover .form-switch-track {
+  background: #7dd3fc;
+  border-color: #38bdf8;
+}
+
+.keep-switch input:checked + .form-switch-track {
+  background: #00a6f4; /* approved primary theme color (Section 9.2) */
+  border-color: #0284c7;
+}
+
+.keep-switch input:checked:hover + .form-switch-track {
+  background: #0284c7;
+}
+
+.keep-switch input:focus-visible + .form-switch-track {
+  outline: 2px solid #00a6f4;
+  outline-offset: 2px;
+}
+
+/* ========================================================================= */
+/* LIST TABLE: sticky left (Select, Name, Code) & sticky right (Status, Action) */
+/* ========================================================================= */
+.country-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.country-table thead th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 25 !important;
+  background: #f8fafc !important;
+}
+
+:host-context(.dark) .country-table thead th,
+.dark .country-table thead th {
+  background: #1e293b !important;
+}
+
+.country-table .sticky-col {
+  position: sticky !important;
+  background: #ffffff;
+}
+
+.country-table thead th.sticky-col,
+.country-table thead .sticky-col {
+  position: sticky !important;
+  top: 0 !important;
+  background: #f8fafc !important;
+  z-index: 45 !important;
+}
+
+:host-context(.dark) .country-table thead th.sticky-col,
+:host-context(.dark) .country-table thead .sticky-col,
+.dark .country-table thead th.sticky-col,
+.dark .country-table thead .sticky-col {
+  background: #1e293b !important;
+}
+
+.country-table tbody .sticky-col {
+  background: #ffffff;
+  z-index: 10;
+}
+
+:host-context(.dark) .country-table tbody .sticky-col,
+.dark .country-table tbody .sticky-col {
+  background: #1e293b;
+}
+
+.country-table tbody tr:hover .sticky-col {
+  background: #f8fafc;
+}
+
+:host-context(.dark) .country-table tbody tr:hover .sticky-col,
+.dark .country-table tbody tr:hover .sticky-col {
+  background: #334155;
+}
+
+.country-table tbody tr.bg-sky-50\/60 .sticky-col,
+.country-table tbody tr[class*="bg-sky-50"] .sticky-col {
+  background: #f0f9ff;
+}
+
+:host-context(.dark) .country-table tbody tr.bg-sky-50\/60 .sticky-col,
+:host-context(.dark) .country-table tbody tr[class*="bg-sky-50"] .sticky-col,
+.dark .country-table tbody tr.bg-sky-50\/60 .sticky-col,
+.dark .country-table tbody tr[class*="bg-sky-50"] .sticky-col {
+  background: #0c4a6e;
+}
+
+/* Left frozen columns: Checkbox (56px), Name (210px), Code (130px) -> Total 396px */
+.country-table .sticky-left-0 {
+  left: 0;
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  border-right: none !important;
+}
+
+.country-table .sticky-left-name {
+  left: 56px;
+  width: 210px !important;
+  min-width: 210px !important;
+  max-width: 210px !important;
+  border-right: none !important;
+  border-left: none !important;
+}
+
+.country-table .sticky-left-code {
+  left: 266px;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+}
+
+/* Support when select checkbox column is hidden */
+.country-table.no-select-col .sticky-left-name {
+  left: 0;
+}
+.country-table.no-select-col .sticky-left-code {
+  left: 210px;
+}
+
+/* Right frozen columns: Status (130px at right 140px) and Action (140px at right 0) -> Total 270px */
+.country-table .sticky-right-status {
+  right: 140px !important;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+  z-index: 20;
+}
+
+.country-table .sticky-right-action {
+  right: 0 !important;
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  border-right: none !important;
+  border-left: none !important;
+  z-index: 20;
+}
+
+/* Support when status column is hidden */
+.country-table.no-status-col .sticky-right-action {
+  right: 0 !important;
+}
+
+.country-table th,
+.country-table td {
+  border-right: none !important;
+  border-left: none !important;
+}
+
+.country-table th.sticky-left-name,
+.country-table td.sticky-left-name,
+.country-table th.sticky-left-code,
+.country-table td.sticky-left-code,
+.country-table th.sticky-right-status,
+.country-table td.sticky-right-status,
+.country-table th.sticky-right-action,
+.country-table td.sticky-right-action {
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+}
+
+:host-context(.dark) .country-table .sticky-left-0,
+:host-context(.dark) .country-table .sticky-left-name,
+:host-context(.dark) .country-table .sticky-left-code,
+:host-context(.dark) .country-table .sticky-right-status,
+.dark .country-table .sticky-left-0,
+.dark .country-table .sticky-left-name,
+.dark .country-table .sticky-left-code,
+.dark .country-table .sticky-right-status {
+  border-color: #334155;
+}
+
+/* Table Row Hover: light blue color on row hover across all cells including sticky columns */
+.country-table tbody tr:hover,
+.country-table tbody tr:hover td,
+.country-table tbody tr:hover td.sticky-col {
+  background-color: #f0f9ff !important;
+}
+
+:host-context(.dark) .country-table tbody tr:hover,
+:host-context(.dark) .country-table tbody tr:hover td,
+:host-context(.dark) .country-table tbody tr:hover td.sticky-col,
+.dark .country-table tbody tr:hover,
+.dark .country-table tbody tr:hover td,
+.dark .country-table tbody tr:hover td.sticky-col {
+  background-color: #1e293b !important;
+}
+
+/* Highlighted Row (e.g. returned from view or active row) */
+.country-table tbody tr.highlighted-row,
+.country-table tbody tr.highlighted-row td,
+.country-table tbody tr.highlighted-row td.sticky-col,
+.country-table tbody tr.highlighted-row .sticky-col {
+  background-color: #e0f2fe !important;
+}
+
+:host-context(.dark) .country-table tbody tr.highlighted-row,
+:host-context(.dark) .country-table tbody tr.highlighted-row td,
+:host-context(.dark) .country-table tbody tr.highlighted-row td.sticky-col,
+:host-context(.dark) .country-table tbody tr.highlighted-row .sticky-col,
+.dark .country-table tbody tr.highlighted-row,
+.dark .country-table tbody tr.highlighted-row td,
+.dark .country-table tbody tr.highlighted-row td.sticky-col,
+.dark .country-table tbody tr.highlighted-row .sticky-col {
+  background-color: #0c4a6e !important;
+}
+
+/* AG-Grid Header label: primary color, ALWAYS in the middle */
+.ag-header-col-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  min-height: 28px;
+}
+
+.ag-header-label {
+  color: #00a6f4;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-size: 12px;
+  text-align: center;
+}
+
+:host-context(.dark) .ag-header-label,
+.dark .ag-header-label {
+  color: #38bdf8;
+}
+
+/* Side-by-side header action icons (Filter + 3-Dots) right next to label on hover */
+.ag-header-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  transition: opacity 0.18s ease, max-width 0.18s ease, margin-left 0.18s ease;
+}
+
+.country-table thead th:hover .ag-header-icons,
+.ag-header-col-wrap.has-filter-open .ag-header-icons {
+  opacity: 1;
+  max-width: 52px;
+  margin-left: 6px;
+  pointer-events: auto;
+  overflow: visible;
+}
+
+/* Ensure column widths are ample enough so text never collides with header icons and everything displays fully */
+.country-table th,
+.country-table td {
+  box-sizing: border-box;
+}
+
+.country-table th.col-select,
+.country-table td.col-select {
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  text-align: center;
+}
+
+.country-table th.col-name,
+.country-table td.col-name {
+  width: 210px !important;
+  min-width: 210px !important;
+  max-width: 210px !important;
+}
+
+.country-table th.col-code,
+.country-table td.col-code {
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
+}
+
+.country-table th.col-isd,
+.country-table td.col-isd {
+  width: 115px !important;
+  min-width: 115px !important;
+  max-width: 115px !important;
+  text-align: center;
+}
+
+.country-table th.col-currency,
+.country-table td.col-currency {
+  width: 145px !important;
+  min-width: 145px !important;
+  max-width: 145px !important;
+}
+
+.country-table th.col-states,
+.country-table td.col-states {
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
+}
+
+.country-table th.col-cities,
+.country-table td.col-cities {
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
+}
+
+.country-table th.col-areas,
+.country-table td.col-areas {
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
+}
+
+.country-table th.col-continent,
+.country-table td.col-continent {
+  width: 175px !important;
+  min-width: 175px !important;
+  max-width: 175px !important;
+}
+
+.country-table th.col-population,
+.country-table td.col-population {
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  text-align: center;
+}
+
+.country-table th.col-isDefault,
+.country-table td.col-isDefault {
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
+}
+
+.country-table th.col-createdAt,
+.country-table td.col-createdAt,
+.country-table th.col-updatedAt,
+.country-table td.col-updatedAt,
+.country-table th.col-draftedAt,
+.country-table td.col-draftedAt {
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  text-align: center;
+}
+
+.country-table th.col-status,
+.country-table td.col-status {
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  text-align: center;
+}
+
+.country-table th.col-action,
+.country-table td.col-action {
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+}
+
+/* Screenshot 4 / Image 1: Page Dropdown custom cyan scrollbar & container */
+.page-dropdown-container {
+  background: #f8fcff;
+  border: 1.5px solid #a5e3fd;
+  border-radius: 28px;
+  box-shadow: 0 12px 32px -4px rgba(0, 166, 244, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+}
+
+:host-context(.dark) .page-dropdown-container,
+.dark .page-dropdown-container {
+  background: #1e293b;
+  border-color: #475569;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.5);
+}
+
+.page-dropdown-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #edf8fd;
+}
+
+.page-dropdown-scroll::-webkit-scrollbar {
+  width: 9px;
+}
+.page-dropdown-scroll::-webkit-scrollbar-track {
+  background: #edf8fd;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  margin: 6px 0;
+}
+.page-dropdown-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+  border: 1.5px solid #edf8fd;
+}
+.page-dropdown-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+:host-context(.dark) .page-dropdown-scroll::-webkit-scrollbar-track,
+.dark .page-dropdown-scroll::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-color: #334155;
+}
+:host-context(.dark) .page-dropdown-scroll::-webkit-scrollbar-thumb,
+.dark .page-dropdown-scroll::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-color: #0f172a;
+}
+
+/* Ensure row and cell editing status dropdown always floats in front of all table rows */
+.country-table tr.active-status-editing {
+  position: relative !important;
+  z-index: 999 !important;
+}
+.country-table tr.active-status-editing td,
+.country-table tr.active-status-editing td.sticky-col,
+.country-table td.editing-status-cell {
+  z-index: 1000 !important;
+}
+
+/* Middle scrollable columns container: Table scrollbars (Grey theme for both vertical & horizontal per Point 33) */
+.country-table-scroll {
+  overflow-y: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #cbd5e1 #f8fafc !important;
+}
+
+:host-context(.dark) .country-table-scroll,
+.dark .country-table-scroll {
+  scrollbar-color: #64748b #0f172a !important;
+}
+
+.country-table-scroll::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+.country-table-scroll::-webkit-scrollbar:vertical {
+  display: block !important;
+  width: 6px !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-track:vertical {
+  background: #f8fafc;
+  border-left: 1px solid #e2e8f0;
+}
+
+:host-context(.dark) .country-table-scroll::-webkit-scrollbar-track:vertical,
+.dark .country-table-scroll::-webkit-scrollbar-track:vertical {
+  background: #0f172a;
+  border-left: 1px solid #334155;
+}
+
+.country-table-scroll::-webkit-scrollbar-thumb:vertical {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
+  background: #94a3b8;
+}
+
+:host-context(.dark) .country-table-scroll::-webkit-scrollbar-thumb:vertical,
+.dark .country-table-scroll::-webkit-scrollbar-thumb:vertical {
+  background: #64748b;
+}
+
+:host-context(.dark) .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover,
+.dark .country-table-scroll::-webkit-scrollbar-thumb:vertical:hover {
+  background: #94a3b8;
+}
+
+/* Vertical scrollbar buttons (Grey up & down arrows per Point 33) */
+.country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement {
+  display: block !important;
+  height: 13px !important;
+  width: 8px !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center 3px !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2394a3b8'><polygon points='12,4 3,20 21,20'/></svg>") !important;
+}
+
+.country-table-scroll::-webkit-scrollbar-button:vertical:end:increment {
+  display: block !important;
+  height: 13px !important;
+  width: 8px !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center 3px !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2394a3b8'><polygon points='12,20 3,4 21,4'/></svg>") !important;
+}
+
+:host-context(.dark) .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement,
+.dark .country-table-scroll::-webkit-scrollbar-button:vertical:start:decrement {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2364748b'><polygon points='12,4 3,20 21,20'/></svg>") !important;
+}
+
+:host-context(.dark) .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment,
+.dark .country-table-scroll::-webkit-scrollbar-button:vertical:end:increment {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='%2364748b'><polygon points='12,20 3,4 21,4'/></svg>") !important;
+}
+
+/* Middle Columns Horizontal Scrollbar: Grey line per Point 33 */
+.middle-columns-scrollbar-track {
+  height: 6px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  overflow-y: hidden;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #ffffff;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track,
+.dark .middle-columns-scrollbar-track {
+  background: #1e293b;
+  border-color: #334155;
+  scrollbar-color: #64748b #1e293b;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 9999px;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-track,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-thumb,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-thumb {
+  background: #64748b;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Right Side Panel Accordion Circular Toggle Button (Image 4 Replica) */
+.side-accordion-toggle {
+  box-shadow: 0 4px 14px -2px rgba(0, 166, 244, 0.22), 0 2px 6px -1px rgba(15, 23, 42, 0.08);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.side-accordion-toggle:hover {
+  box-shadow: 0 8px 22px -3px rgba(0, 166, 244, 0.38), 0 3px 8px -2px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px) scale(1.05);
+}
+
+.side-accordion-toggle:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* Keyboard Grid Navigation Focus Box Outline */
+.cell-focus-box {
+  border: 2px solid #00a6f4 !important;
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.25) !important;
+  background-color: rgba(0, 166, 244, 0.07) !important;
+  border-radius: 6px !important;
+}
+
+/* Visibility panel slide-in from right animation */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+:host-context(.dark) .country-table tbody tr[class*="bg-sky-50"] .sticky-col,
+.dark .country-table tbody tr[class*="bg-sky-50"] .sticky-col {
+  background: #0c4a6e;
+}
+/* ========================================================================= */
+/* PAGINATION NAVIGATION BUTTONS (Exact Match to Reference Screenshot)       */
+/* ========================================================================= */
+/* ========================================================================= */
+/* PAGINATION NAVIGATION BUTTONS (Exact Match to Reference Screenshot 2)     */
+/* ========================================================================= */
+.pagination-nav-circle,
+.pagination-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  background: #cbebfd;
+  color: #334155;
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.pagination-nav-circle:hover:not(:disabled),
+.pagination-nav-btn:hover:not(:disabled) {
+  background: #b5e4fc;
+  color: #0f172a;
+}
+
+.pagination-nav-first,
+.pagination-nav-prev,
+.pagination-nav-next,
+.pagination-nav-last {
+  background: #cbebfd;
+  color: #334155;
+}
+
+.pagination-nav-first:hover:not(:disabled),
+.pagination-nav-prev:hover:not(:disabled),
+.pagination-nav-next:hover:not(:disabled),
+.pagination-nav-last:hover:not(:disabled) {
+  background: #b5e4fc;
+  color: #0f172a;
+}
+
+.pagination-nav-circle:disabled,
+.pagination-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+:host-context(.dark) .pagination-nav-first,
+:host-context(.dark) .pagination-nav-prev,
+:host-context(.dark) .pagination-nav-next,
+:host-context(.dark) .pagination-nav-last,
+.dark .pagination-nav-first,
+.dark .pagination-nav-prev,
+.dark .pagination-nav-next,
+.dark .pagination-nav-last {
+  background: rgba(56, 189, 248, 0.22);
+  color: #bae6fd;
+}
+
+:host-context(.dark) .pagination-nav-circle:hover:not(:disabled),
+:host-context(.dark) .pagination-nav-btn:hover:not(:disabled),
+.dark .pagination-nav-circle:hover:not(:disabled),
+.dark .pagination-nav-btn:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.38);
+  color: #ffffff;
+}
+
+/* Page number pill: Wide rounded pill in Screenshot 2 */
+.pagination-page-pill,
+.pagination-page-btn {
+  min-width: 58px;
+  height: 32px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid #7dd3fc;
+  color: #00a6f4;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+}
+
+.pagination-page-pill:hover,
+.pagination-page-btn:hover {
+  background: #f0f9ff;
+  border-color: #38bdf8;
+}
+
+.pagination-page-pill.is-active,
+.pagination-page-btn.is-active {
+  border: 1.5px solid #38bdf8;
+  background: #ffffff;
+  color: #00a6f4;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(56, 189, 248, 0.18);
+}
+
+:host-context(.dark) .pagination-page-pill,
+:host-context(.dark) .pagination-page-btn,
+.dark .pagination-page-pill,
+.dark .pagination-page-btn {
+  background: #1e293b;
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+/* Backward compatibility for .page-btn */
+.page-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: #e6f6fe;
+  color: #00a6f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+/* Table header row stays visible while rows scroll */
+.country-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #f8fafc;
+}
+
+.country-table thead th.sticky-col {
+  z-index: 4;
+}
+
+:host-context(.dark) .country-table thead th,
+.dark .country-table thead th {
+  background: #0f172a;
+}
+
+/* Clean padding inside the scrolling grid area with breathing room for scrollbar and zoom effect */
+.country-grid-scroll {
+  padding: 6px 12px 20px 6px;
+}
+
+/* ========================================================================= */
+/* EXPORT PANEL + SHARE DIALOG                                               */
+/* ========================================================================= */
+.export-format-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.export-format-btn:hover {
+  transform: scale(1.06);
+  border-color: currentColor;
+  box-shadow: 0 4px 10px -2px rgba(15, 23, 42, 0.15);
+}
+
+:host-context(.dark) .export-format-btn,
+.dark .export-format-btn {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.share-field {
+  position: relative;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 12px 20px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.share-field:hover,
+.share-field:focus-within {
+  border-color: #00a6f4;
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.2);
+}
+
+.share-input {
+  width: 100%;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  outline: none;
+}
+
+:host-context(.dark) .share-field,
+.dark .share-field {
+  border-color: #334155;
+  background: #1e293b;
+}
+
+:host-context(.dark) .share-field:hover,
+.dark .share-field:hover,
+:host-context(.dark) .share-field:focus-within,
+.dark .share-field:focus-within {
+  border-color: #00a6f4;
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.2);
+}
+
+:host-context(.dark) .share-input,
+.dark .share-input {
+  color: #94a3b8;
+}
+
+/* Export & Share panels: one field per row */
+.export-panel .form-switch,
+.share-panel .form-switch {
+  display: flex;
+  width: 100%;
+}
+
+/* ========================================================================= */
+/* SIDE PANELS (Filter / Export) slide in from the right                     */
+/* ========================================================================= */
+@keyframes side-panel-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.side-panel-slide {
+  animation: side-panel-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .side-panel-slide {
+    animation: none;
+  }
+}
+
+/* ========================================================================= */
+/* HEADER ROUNDED PILL TABS (List / Add / Edit / View) - Image 2 replica     */
+/* ========================================================================= */
+.header-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  line-height: 1.35;
+  user-select: none;
+}
+
+.header-tab:hover {
+  border-color: #00a6f4;
+  color: #00a6f4;
+}
+
+.header-tab.is-active {
+  border-color: #00a6f4;
+  background-color: #e6f6fe;
+  color: #00a6f4;
+  font-weight: 600;
+}
+
+/* ========================================================================= */
+/* MINIMIZED FORM TABS                                                       */
+/* ========================================================================= */
+.minimized-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 240px;
+  padding: 10px 14px 10px 16px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.minimized-tab:hover {
+  background: #f0f9ff;
+}
+
+.minimized-tab:focus-visible {
+  outline: 2px solid #00a6f4;
+  outline-offset: -2px;
+}
+
+.minimized-tab-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2.5px solid #1d6fdc;
+  flex-shrink: 0;
+}
+
+.minimized-tab-close {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  opacity: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.minimized-tab:hover .minimized-tab-close,
+.minimized-tab:focus-within .minimized-tab-close {
+  opacity: 1;
+}
+
+.minimized-tab-close:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+:host-context(.dark) .minimized-tab,
+.dark .minimized-tab {
+  background: #1e293b;
+  border-right-color: #334155;
+  color: #e2e8f0;
+}
+
+:host-context(.dark) .header-tab,
+.dark .header-tab {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+:host-context(.dark) .header-tab:hover,
+.dark .header-tab:hover {
+  border-color: #00a6f4;
+  color: #38bdf8;
+}
+
+:host-context(.dark) .header-tab.is-active,
+.dark .header-tab.is-active {
+  background-color: rgba(0, 166, 244, 0.18);
+  border-color: #00a6f4;
+  color: #38bdf8;
+}
+
+/* ========================================================================= */
+/* CUSTOM CHECKBOX (Exact Replica of Screenshot 3 Reference)                 */
+/* ========================================================================= */
+.custom-checkbox-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.custom-checkbox-box {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  background-color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease-in-out;
+  flex-shrink: 0;
+  color: #00a6f4;
+}
+
+:host-context(.dark) .custom-checkbox-box,
+.dark .custom-checkbox-box {
+  background-color: #1e293b;
+  border-color: #475569;
+}
+
+/* Hover effect */
+.custom-checkbox-wrap:hover .custom-checkbox-box {
+  border-color: #00a6f4;
+}
+
+/* Checked state: Cyan border, pure white background, cyan checkmark */
+.custom-checkbox-input:checked + .custom-checkbox-box,
+.custom-checkbox-box.is-checked {
+  border-color: #00a6f4 !important;
+  background-color: #ffffff !important;
+  color: #00a6f4 !important;
+}
+
+:host-context(.dark) .custom-checkbox-input:checked + .custom-checkbox-box,
+.dark .custom-checkbox-input:checked + .custom-checkbox-box {
+  background-color: #0f172a !important;
+  border-color: #00a6f4 !important;
+  color: #38bdf8 !important;
+}
+
+.custom-checkbox-input:focus-visible + .custom-checkbox-box {
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.35);
+}
+
+.custom-checkbox-input:checked + .custom-checkbox-box .check-icon {
+  display: block;
+}
+
+.custom-checkbox-icon {
+  width: 12px;
+  height: 12px;
+  display: none;
+}
+
+/* Indeterminate state */
+.custom-checkbox-input:indeterminate + .custom-checkbox-box {
+  border-color: #00a6f4 !important;
+  background-color: #ffffff !important;
+  color: #00a6f4 !important;
+}
+
+:host-context(.dark) .custom-checkbox-input:indeterminate + .custom-checkbox-box,
+.dark .custom-checkbox-input:indeterminate + .custom-checkbox-box {
+  background-color: #0f172a !important;
+  border-color: #00a6f4 !important;
+  color: #38bdf8 !important;
+}
+
+.custom-checkbox-input:indeterminate + .custom-checkbox-box .check-icon {
+  display: none !important;
+}
+
+.custom-checkbox-input:indeterminate + .custom-checkbox-box .dash-icon {
+  display: block !important;
+}
+
+/* ========================================================================= */
+/* COUNTRY MASTER OVERVIEW DASHBOARD STYLES (MOD-8 / Enterprise Analytics)   */
+/* ========================================================================= */
+.overview-kpi-card {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
+}
+
+.overview-kpi-card:hover {
+  transform: translateY(-2px);
+}
+
+.country-overview-page {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Status Chart Graphical Presentation Animations --- */
+.pillar-column {
+  transform-origin: bottom;
+  animation: pillarRise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.pillar-column:hover {
+  transform: translateY(-4px) scaleY(1.02);
+  filter: brightness(1.08);
+}
+
+@keyframes pillarRise {
+  0% {
+    transform: scaleY(0.08);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.pillar-glow-halo {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.wave-spline-path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawWave 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawWave {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.wave-node-pulse {
+  animation: nodeRadar 2s infinite ease-out;
+}
+
+@keyframes nodeRadar {
+  0% {
+    r: 5;
+    opacity: 1;
+    stroke-width: 2;
+  }
+  100% {
+    r: 14;
+    opacity: 0;
+    stroke-width: 0.5;
+  }
+}
+
+/* Custom light-blue scrollbar for Currency Master dropdown (matching user screenshot) */
+.currency-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.currency-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.currency-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #38bdf8;
+  border-radius: 9999px;
+}
+.currency-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #00a6f4;
+}
+
+/* Flag Gallery Cards: High contrast text on hover and normal states */
+.flag-gallery-card,
+button.flag-gallery-card {
+  background-color: #ffffff !important;
+}
+
+.flag-gallery-card:hover,
+button.flag-gallery-card:hover {
+  background-color: #f8fafc !important;
+  border-color: #00a6f4 !important;
+}
+
+.flag-gallery-card .flag-card-code,
+.flag-gallery-card:hover .flag-card-code,
+button.flag-gallery-card:hover .flag-card-code {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+}
+
+.flag-gallery-card .flag-card-name,
+.flag-gallery-card:hover .flag-card-name,
+button.flag-gallery-card:hover .flag-card-name {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+:host-context(.dark) .flag-gallery-card,
+.dark .flag-gallery-card {
+  background-color: #0f172a !important;
+}
+
+:host-context(.dark) .flag-gallery-card:hover,
+.dark .flag-gallery-card:hover {
+  background-color: #1e293b !important;
+  border-color: #00a6f4 !important;
+}
+
+:host-context(.dark) .flag-gallery-card .flag-card-code,
+:host-context(.dark) .flag-gallery-card:hover .flag-card-code,
+.dark .flag-gallery-card:hover .flag-card-code {
+  color: #ffffff !important;
+}
+
+:host-context(.dark) .flag-gallery-card .flag-card-name,
+:host-context(.dark) .flag-gallery-card:hover .flag-card-name,
+.dark .flag-gallery-card:hover .flag-card-name {
+  color: #cbd5e1 !important;
+}
+
