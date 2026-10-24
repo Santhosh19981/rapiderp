@@ -3505,9 +3505,9 @@
             <div class="flex items-center gap-1.5 sm:gap-2 select-none">
 
 
-              <!-- Previous Record (‹ / Minus) -->
+              <!-- Previous Record (‹ / Minus) - Secondary Background (Reversed Req 19) -->
               <button type="button" (click)="goToPreviousCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
-                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-slate-100 border border-slate-200/90 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
                 title="Prev" data-tooltip="Prev" data-tooltip-pos="top" aria-label="Prev">
                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3531,10 +3531,10 @@
 
               </div>
 
-              <!-- Next Record (› / Plus) -->
+              <!-- Next Record (› / Plus) - Primary Background (Reversed Req 19) -->
               <button type="button" (click)="goToNextCountry()"
                 [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
-                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-[#00a6f4] border border-[#00a6f4] text-white hover:bg-[#0092d6] hover:border-[#0092d6] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
                 title="Next" data-tooltip="Next" data-tooltip-pos="top" aria-label="Next">
                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3936,9 +3936,9 @@
                 </svg>
               </button>
 
-              <!-- Previous Record (‹ / Minus) -->
+              <!-- Previous Record (‹ / Minus) - Secondary Background (Reversed Req 19) -->
               <button type="button" (click)="goToPreviousCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
-                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-slate-100 border border-slate-200/90 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
                 title="Prev" data-tooltip="Prev" data-tooltip-pos="top" aria-label="Prev">
                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3996,10 +3996,10 @@
                 }
               </div>
 
-              <!-- Next Record (› / Plus) -->
+              <!-- Next Record (› / Plus) - Primary Background (Reversed Req 19) -->
               <button type="button" (click)="goToNextCountry()"
                 [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
-                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-sky-100/80 border border-sky-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-2xs"
+                class="h-8 px-2.5 sm:px-3 min-w-[36px] sm:min-w-[40px] rounded-full flex items-center justify-center bg-[#00a6f4] border border-[#00a6f4] text-white hover:bg-[#0092d6] hover:border-[#0092d6] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
                 title="Next" data-tooltip="Next" data-tooltip-pos="top" aria-label="Next">
                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -6769,18 +6769,18 @@
               }}</strong></span>
           @if (translationTotalPages() > 1 && !translationSearch()) {
           <div class="flex items-center gap-1.5 ml-2">
-            <!-- Prev Icon Button: Primary Background with increased disabled opacity (Requirements 15 & 19) -->
+            <!-- Prev Icon Button: Secondary Background (Reversed per Req 19) -->
             <button type="button" (click)="prevTranslationPage()" [disabled]="translationPage() === 1"
-              class="w-6 h-6 rounded-full flex items-center justify-center bg-[#00a6f4] text-white hover:bg-[#0095dc] shadow-xs disabled:opacity-60 disabled:cursor-not-allowed transition-all cursor-pointer"
+              class="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-xs disabled:opacity-60 disabled:cursor-not-allowed transition-all cursor-pointer"
               title="Previous">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="m15 18-6-6 6-6" />
               </svg>
             </button>
-            <!-- Next Icon Button: Secondary Background (Requirement 19) -->
+            <!-- Next Icon Button: Primary Background (Reversed per Req 19) -->
             <button type="button" (click)="nextTranslationPage()"
               [disabled]="translationPage() === translationTotalPages()"
-              class="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
+              class="w-6 h-6 rounded-full flex items-center justify-center bg-[#00a6f4] text-white hover:bg-[#0095dc] shadow-xs disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
               title="Next">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="m9 18 6-6-6-6" />
