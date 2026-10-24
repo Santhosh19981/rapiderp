@@ -2804,11 +2804,57 @@
             <!-- Left Side: Add / Edit Country Info (Full unified scroll & left alignment per Point 17) -->
             <div class="flex-1 flex flex-col min-h-0 overflow-hidden">
               <div
-                class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar px-6 py-6 sm:px-8 sm:py-7 space-y-6">
+                class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar px-6 py-6 sm:px-8 sm:py-7 space-y-4">
 
-                <!-- Unified Responsive Auto-Flow Grid: Row 1 containing the 3 inputs (Country Name: col 6, Default: col 3, Status: col 3) -->
-                <div class="grid grid-cols-12 gap-5 items-start">
-                  <!-- Country Name * (col 6) -->
+                <!-- Expand All / Collapse All Header Bar -->
+                <div class="flex items-center justify-between pb-1 select-none">
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    Sections ({{ areAllSectionsExpanded() ? 'All 5 Expanded' : 'Section 1 Active' }})
+                  </span>
+                  <button type="button" (click)="areAllSectionsExpanded() ? collapseAllSections() : expandAllSections()"
+                    class="text-xs font-bold text-[#00a6f4] hover:text-[#008ccf] hover:underline flex items-center gap-1.5 cursor-pointer transition">
+                    <span>{{ areAllSectionsExpanded() ? 'Collapse All' : 'Expand All' }}</span>
+                  </button>
+                </div>
+
+                <!-- Hidden Flag File Input for @ViewChild -->
+                <input #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
+                  class="hidden" />
+
+                <!-- ================================================================= -->
+                <!-- ACCORDION 1: Section 1 — General Information                      -->
+                <!-- ================================================================= -->
+                <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+                  <!-- Accordion Header: Clickable to expand/collapse with chevron up/down -->
+                  <div role="button" tabindex="0" (click)="toggleSection(1, $event)" (keydown.enter)="toggleSection(1, $event)" (keydown.space)="toggleSection(1, $event)"
+                    class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+                    <div class="flex items-center gap-3">
+                      <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">01</span>
+                      <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 1 — General Information</h3>
+                    </div>
+                    <!-- Up / Down Arrow Chevron Circle -->
+                    <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                      [class.bg-[#00a6f4]]="isSectionExpanded(1)"
+                      [class.text-white]="isSectionExpanded(1)"
+                      [class.bg-sky-50]="!isSectionExpanded(1)"
+                      [class.dark:bg-slate-700]="!isSectionExpanded(1)"
+                      [class.text-[#00a6f4]]="!isSectionExpanded(1)"
+                      [class.border]="!isSectionExpanded(1)"
+                      [class.border-sky-200]="!isSectionExpanded(1)"
+                      [class.dark:border-slate-600]="!isSectionExpanded(1)">
+                      <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(1)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
+                  </div>
+
+                  <!-- Accordion Body: Contains editable 3 inputs + read-only remaining fields -->
+                  @if (isSectionExpanded(1)) {
+                  <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-6 animate-in fade-in duration-150">
+
+                    <!-- Unified Responsive Auto-Flow Grid: Row 1 containing the 3 inputs (Country Name: col 6, Default: col 3, Status: col 3) -->
+                    <div class="grid grid-cols-12 gap-5 items-start">
+                      <!-- Country Name * (col 6) -->
                   @if (isFieldVisible('name')) {
                   <div class="col-span-12 lg:col-span-6 relative w-full group" data-popover>
 
@@ -3253,113 +3299,307 @@
 
                 </div>
 
-                <!-- Hidden Flag File Input for @ViewChild -->
-                <input #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
-                  class="hidden" />
+                    <!-- Clean Label & Value Grid for Section 1 Remaining Fields: Short Name, ISO 2, ISO 3, Numeric, Dial Code, Currency, Nationality -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center pt-2 border-t border-slate-100 dark:border-slate-700/60">
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Short Name</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formShortName() : '-' }}</span>
+                      </div>
 
-                <!-- Clean Label & Value Grid matching View Mode: Always visible, displaying values or '-' (Requirement 2) -->
-                <div
-                  class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-7 items-center pt-2 animate-in fade-in duration-200">
-                  @if (isFieldVisible('isoCode2')) {
-                  <div>
-                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
-                      2</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formIsoCode2() || formCode() || '-') : '-' }}</span>
-                  </div>
-                  }
+                      @if (isFieldVisible('isoCode2')) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code 2</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formIsoCode2() || formCode() || '-') : '-' }}</span>
+                      </div>
+                      }
 
-                  @if (isFieldVisible('isoCode3')) {
-                  <div>
-                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
-                      3</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formIsoCode3() || '-') : '-' }}</span>
-                  </div>
-                  }
+                      @if (isFieldVisible('isoCode3')) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code 3</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formIsoCode3() || '-') : '-' }}</span>
+                      </div>
+                      }
 
-                  @if (isFieldVisible('isoNumeric')) {
-                  <div>
-                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO
-                      Numeric</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formIsoNumeric() || '-') : '-' }}</span>
-                  </div>
-                  }
+                      @if (isFieldVisible('isoNumeric')) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Numeric Code</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formIsoNumeric() || '-') : '-' }}</span>
+                      </div>
+                      }
 
-                  @if (isFieldVisible('isd')) {
-                  <div>
-                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Dial
-                      Code</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formIsd() || '-') : '-' }}</span>
-                  </div>
-                  }
+                      @if (isFieldVisible('isd')) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">International Dialing Code</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formIsd() || '-') : '-' }}</span>
+                      </div>
+                      }
 
-                  @if (isFieldVisible('currency')) {
-                  <div>
-                    <span
-                      class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Currency</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formCurrency() || '-') : '-' }}</span>
-                  </div>
-                  }
+                      @if (isFieldVisible('currency')) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Currency</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formCurrency() || '-') : '-' }}</span>
+                      </div>
+                      }
 
-                  @if (isFieldVisible('nationality')) {
-                  <div>
-                    <span
-                      class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formNationality() || '-') : '-' }}</span>
-                  </div>
-                  }
+                      @if (isFieldVisible('nationality')) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formNationality() || '-') : '-' }}</span>
+                      </div>
+                      }
+                    </div>
 
-                  @if (isFieldVisible('continent')) {
-                  <div>
-                    <span
-                      class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Continent</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formContinent() || '-') : '-' }}</span>
-                  </div>
-                  }
-
-                  @if (isFieldVisible('subregion')) {
-                  <div>
-                    <span
-                      class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Subregion</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formSubregion() || '-') : '-' }}</span>
-                  </div>
-                  }
-
-                  @if (isFieldVisible('capital')) {
-                  <div>
-                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Capital
-                      City</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formCapital() || '-') : '-' }}</span>
-                  </div>
-                  }
-
-                  <!-- Custom Dynamic Fields in View Mode format -->
-                  @for (cf of tenantService.customFields(); track cf.key) {
-                  @if (isFieldVisible(cf.key)) {
-                  <div>
-                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">{{
-                      cf.label }}</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (getCustomFieldValue(cf.key) || '-') : '-' }}</span>
-                  </div>
-                  }
-                  }
-                </div>
-
-                <!-- Flag (matching View Mode UI: centered inside rounded-2xl dashed border) -->
-                @if (isFieldVisible('flag')) {
-                <div class="space-y-2 pt-2 animate-in fade-in duration-200">
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Flag</span>
-                  <div
-                    class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-4 sm:p-5 flex items-center justify-center bg-transparent min-h-[96px]">
-                    @if (formName()?.trim() && currentFormFlagUrl()) {
-                    <img [src]="currentFormFlagUrl()" [alt]="formName()"
-                      class="h-16 w-26 object-cover rounded-xl shadow-md border border-slate-200/60 dark:border-slate-700"
-                      (error)="onFlagError($event)" />
-                    } @else {
-                    <span class="text-sm font-semibold text-slate-400 dark:text-slate-500">-</span>
+                    <!-- Flag in Section 1 -->
+                    @if (isFieldVisible('flag')) {
+                    <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-700/60">
+                      <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Flag</span>
+                      <div class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-4 sm:p-5 flex items-center justify-center bg-transparent min-h-[96px]">
+                        @if (formName()?.trim() && currentFormFlagUrl()) {
+                        <img [src]="currentFormFlagUrl()" [alt]="formName()"
+                          class="h-16 w-26 object-cover rounded-xl shadow-md border border-slate-200/60 dark:border-slate-700"
+                          (error)="onFlagError($event)" />
+                        } @else {
+                        <span class="text-sm font-semibold text-slate-400 dark:text-slate-500">-</span>
+                        }
+                      </div>
+                    </div>
                     }
+
                   </div>
+                  }
                 </div>
-                }
+
+                <!-- ================================================================= -->
+                <!-- ACCORDION 2: Section 2 — Geographic Information                   -->
+                <!-- ================================================================= -->
+                <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+                  <div role="button" tabindex="0" (click)="toggleSection(2, $event)" (keydown.enter)="toggleSection(2, $event)" (keydown.space)="toggleSection(2, $event)"
+                    class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+                    <div class="flex items-center gap-3">
+                      <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">02</span>
+                      <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 2 — Geographic Information</h3>
+                    </div>
+                    <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                      [class.bg-[#00a6f4]]="isSectionExpanded(2)"
+                      [class.text-white]="isSectionExpanded(2)"
+                      [class.bg-sky-50]="!isSectionExpanded(2)"
+                      [class.dark:bg-slate-700]="!isSectionExpanded(2)"
+                      [class.text-[#00a6f4]]="!isSectionExpanded(2)"
+                      [class.border]="!isSectionExpanded(2)"
+                      [class.border-sky-200]="!isSectionExpanded(2)"
+                      [class.dark:border-slate-600]="!isSectionExpanded(2)">
+                      <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(2)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
+                  </div>
+
+                  @if (isSectionExpanded(2)) {
+                  <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 animate-in fade-in duration-150">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
+                      @if (isFieldVisible('continent')) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Continent</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formContinent() || '-') : '-' }}</span>
+                      </div>
+                      }
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Geographic Region</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formGeographicRegion() : '-' }}</span>
+                      </div>
+
+                      @if (isFieldVisible('capital')) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Capital City</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (formCapital() || '-') : '-' }}</span>
+                      </div>
+                      }
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Administrative Division Name</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formAdminDivision() : '-' }}</span>
+                      </div>
+
+                      <!-- Custom Fields in Geographic info if any -->
+                      @for (cf of tenantService.customFields(); track cf.key) {
+                      @if (isFieldVisible(cf.key)) {
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">{{ cf.label }}</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? (getCustomFieldValue(cf.key) || '-') : '-' }}</span>
+                      </div>
+                      }
+                      }
+                    </div>
+                  </div>
+                  }
+                </div>
+
+                <!-- ================================================================= -->
+                <!-- ACCORDION 3: Section 3 — Localization and Regional Settings       -->
+                <!-- ================================================================= -->
+                <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+                  <div role="button" tabindex="0" (click)="toggleSection(3, $event)" (keydown.enter)="toggleSection(3, $event)" (keydown.space)="toggleSection(3, $event)"
+                    class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+                    <div class="flex items-center gap-3">
+                      <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">03</span>
+                      <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 3 — Localization and Regional Settings</h3>
+                    </div>
+                    <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                      [class.bg-[#00a6f4]]="isSectionExpanded(3)"
+                      [class.text-white]="isSectionExpanded(3)"
+                      [class.bg-sky-50]="!isSectionExpanded(3)"
+                      [class.dark:bg-slate-700]="!isSectionExpanded(3)"
+                      [class.text-[#00a6f4]]="!isSectionExpanded(3)"
+                      [class.border]="!isSectionExpanded(3)"
+                      [class.border-sky-200]="!isSectionExpanded(3)"
+                      [class.dark:border-slate-600]="!isSectionExpanded(3)">
+                      <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
+                  </div>
+
+                  @if (isSectionExpanded(3)) {
+                  <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 animate-in fade-in duration-150 space-y-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Official Languages</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formOfficialLanguages() : '-' }}</span>
+                      </div>
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Language</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formDefaultLanguage() : '-' }}</span>
+                      </div>
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Time Zone</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formDefaultTimeZone() : '-' }}</span>
+                      </div>
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Date Format</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formDefaultDateFormat() : '-' }}</span>
+                      </div>
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Number Format</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formDefaultNumberFormat() : '-' }}</span>
+                      </div>
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Postal Code Required</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formPostalCodeRequired() : '-' }}</span>
+                      </div>
+
+                      <div class="col-span-2 sm:col-span-3 md:col-span-4">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Address Format</span>
+                        <span class="text-sm sm:text-base font-bold text-slate-900 dark:text-white block mt-1.5 leading-relaxed">{{ formName()?.trim() ? formAddressFormat() : '-' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
+
+                <!-- ================================================================= -->
+                <!-- ACCORDION 4: Section 4 — Tax and Regulatory Compliance            -->
+                <!-- ================================================================= -->
+                <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+                  <div role="button" tabindex="0" (click)="toggleSection(4, $event)" (keydown.enter)="toggleSection(4, $event)" (keydown.space)="toggleSection(4, $event)"
+                    class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+                    <div class="flex items-center gap-3">
+                      <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">04</span>
+                      <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 4 — Tax and Regulatory Compliance</h3>
+                    </div>
+                    <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                      [class.bg-[#00a6f4]]="isSectionExpanded(4)"
+                      [class.text-white]="isSectionExpanded(4)"
+                      [class.bg-sky-50]="!isSectionExpanded(4)"
+                      [class.dark:bg-slate-700]="!isSectionExpanded(4)"
+                      [class.text-[#00a6f4]]="!isSectionExpanded(4)"
+                      [class.border]="!isSectionExpanded(4)"
+                      [class.border-sky-200]="!isSectionExpanded(4)"
+                      [class.dark:border-slate-600]="!isSectionExpanded(4)">
+                      <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(4)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
+                  </div>
+
+                  @if (isSectionExpanded(4)) {
+                  <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 animate-in fade-in duration-150 space-y-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Tax Configuration Required</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formTaxRequired() : '-' }}</span>
+                      </div>
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Tax Authority Name</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formTaxAuthority() : '-' }}</span>
+                      </div>
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Tax Registration Number Format</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formTrnFormat() : '-' }}</span>
+                      </div>
+
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Electronic Invoicing</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formElectronicInvoicing() : '-' }}</span>
+                      </div>
+
+                      <div class="col-span-2 sm:col-span-3 md:col-span-4">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Compliance Notes</span>
+                        <span class="text-sm sm:text-base font-bold text-slate-900 dark:text-white block mt-1.5 leading-relaxed">{{ formName()?.trim() ? formComplianceNotes() : '-' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
+
+                <!-- ================================================================= -->
+                <!-- ACCORDION 5: Section 5 — Approval                                 -->
+                <!-- ================================================================= -->
+                <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+                  <div role="button" tabindex="0" (click)="toggleSection(5, $event)" (keydown.enter)="toggleSection(5, $event)" (keydown.space)="toggleSection(5, $event)"
+                    class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+                    <div class="flex items-center gap-3">
+                      <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">05</span>
+                      <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 5 — Approval</h3>
+                    </div>
+                    <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                      [class.bg-[#00a6f4]]="isSectionExpanded(5)"
+                      [class.text-white]="isSectionExpanded(5)"
+                      [class.bg-sky-50]="!isSectionExpanded(5)"
+                      [class.dark:bg-slate-700]="!isSectionExpanded(5)"
+                      [class.text-[#00a6f4]]="!isSectionExpanded(5)"
+                      [class.border]="!isSectionExpanded(5)"
+                      [class.border-sky-200]="!isSectionExpanded(5)"
+                      [class.dark:border-slate-600]="!isSectionExpanded(5)">
+                      <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(5)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
+                  </div>
+
+                  @if (isSectionExpanded(5)) {
+                  <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 animate-in fade-in duration-150">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
+                      <div>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Approval Status</span>
+                        <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formName()?.trim() ? formApprovalStatus() : '-' }}</span>
+                      </div>
+
+                      <div class="col-span-2 sm:col-span-3 md:col-span-3">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Approval Remarks</span>
+                        <span class="text-sm sm:text-base font-bold text-slate-900 dark:text-white block mt-1.5 leading-relaxed">{{ formName()?.trim() ? formApprovalRemarks() : '-' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
 
               </div>
 
@@ -3568,12 +3808,53 @@
         <div class="country-panel w-full flex flex-col flex-1 min-h-0 bg-white dark:bg-slate-800 overflow-hidden">
           <!-- Body split into View Info on Left & Sidebar on Right -->
           <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
-            <!-- Left Side: Clean data in previous UI style matching Image 1 & 2 -->
-            <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-6 sm:p-10 space-y-8">
+            <!-- Left Side: 5 Accordion Sections matching Add/Edit Mode -->
+            <div class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar px-6 py-6 sm:px-8 sm:py-7 space-y-4">
 
-              <!-- Clean Label & Value Grid (Requirement 17: 12-column grid with Country col-6, Default col-3, Status col-3, remaining col-3) -->
-              <div class="grid grid-cols-12 gap-x-8 gap-y-7 items-center">
-                @if (isFieldVisible('name')) {
+              <!-- Expand All / Collapse All Header Bar in View Mode -->
+              <div class="flex items-center justify-between pb-1 select-none">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  Sections ({{ areAllSectionsExpanded() ? 'All 5 Expanded' : 'Section 1 Active' }})
+                </span>
+                <button type="button" (click)="areAllSectionsExpanded() ? collapseAllSections() : expandAllSections()"
+                  class="text-xs font-bold text-[#00a6f4] hover:text-[#008ccf] hover:underline flex items-center gap-1.5 cursor-pointer transition">
+                  <span>{{ areAllSectionsExpanded() ? 'Collapse All' : 'Expand All' }}</span>
+                </button>
+              </div>
+
+              <!-- ================================================================= -->
+              <!-- ACCORDION 1: Section 1 — General Information                      -->
+              <!-- ================================================================= -->
+              <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+                <!-- Accordion Header -->
+                <div role="button" tabindex="0" (click)="toggleSection(1, $event)" (keydown.enter)="toggleSection(1, $event)" (keydown.space)="toggleSection(1, $event)"
+                  class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">01</span>
+                    <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 1 — General Information</h3>
+                  </div>
+                  <!-- Up / Down Arrow Chevron Circle -->
+                  <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                    [class.bg-[#00a6f4]]="isSectionExpanded(1)"
+                    [class.text-white]="isSectionExpanded(1)"
+                    [class.bg-sky-50]="!isSectionExpanded(1)"
+                    [class.dark:bg-slate-700]="!isSectionExpanded(1)"
+                    [class.text-[#00a6f4]]="!isSectionExpanded(1)"
+                    [class.border]="!isSectionExpanded(1)"
+                    [class.border-sky-200]="!isSectionExpanded(1)"
+                    [class.dark:border-slate-600]="!isSectionExpanded(1)">
+                    <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(1)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </span>
+                </div>
+
+                @if (isSectionExpanded(1)) {
+                <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-6 animate-in fade-in duration-150">
+
+                  <!-- 1st 3 fields in Section 1: Country Trigger Pill (col 6), Default (col 3), Status (col 3) -->
+                  <div class="grid grid-cols-12 gap-x-8 gap-y-7 items-center">
+                    @if (isFieldVisible('name')) {
                 <div class="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-6 relative w-full group" data-popover>
                   <!-- Trigger Pill Button (Reference Default Currency Dropdown style) -->
                   <div role="button" tabindex="0" id="view-country-name-trigger"
@@ -3683,94 +3964,63 @@
                   </span>
                 </div>
                 }
+              </div>
+
+              <!-- Section 1 Remaining Fields: Short Name, ISO 2, ISO 3, Numeric, Dial Code, Currency, Nationality -->
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center pt-2 border-t border-slate-100 dark:border-slate-700/60">
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Short Name</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryShortName(sc.name) }}</span>
+                </div>
 
                 @if (isFieldVisible('isoCode2')) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
-                    2</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoCode2 ||
-                    sc.code || '—' }}</span>
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code 2</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoCode2 || sc.code || '—' }}</span>
                 </div>
                 }
 
-                @if (isFieldVisible('isoCode3') && sc.isoCode3) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
-                    3</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoCode3 }}</span>
+                @if (isFieldVisible('isoCode3')) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code 3</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoCode3 || '—' }}</span>
                 </div>
                 }
 
-                @if (isFieldVisible('isoNumeric') && sc.isoNumeric) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO
-                    Numeric</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoNumeric
-                    }}</span>
+                @if (isFieldVisible('isoNumeric')) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Numeric Code</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoNumeric || '—' }}</span>
                 </div>
                 }
 
                 @if (isFieldVisible('isd')) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Dial
-                    Code</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isd || '—'
-                    }}</span>
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">International Dialing Code</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isd || '—' }}</span>
                 </div>
                 }
 
-                @if (isFieldVisible('currency') && sc.currency) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Currency</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.currency }}</span>
+                @if (isFieldVisible('currency')) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Currency</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.currency || '—' }}</span>
                 </div>
                 }
 
-                @if (isFieldVisible('nationality') && sc.nationality) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.nationality
-                    }}</span>
+                @if (isFieldVisible('nationality')) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.nationality || '—' }}</span>
                 </div>
-                }
-
-                @if (isFieldVisible('continent') && sc.continent) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span
-                    class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Continent</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.continent
-                    }}</span>
-                </div>
-                }
-
-                @if (isFieldVisible('capital') && sc.capital) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Capital
-                    City</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.capital }}</span>
-                </div>
-                }
-
-                <!-- Custom Fields in View Mode -->
-                @for (cf of tenantService.customFields(); track cf.key) {
-                @if (isFieldVisible(cf.key) && sc.customFields && sc.customFields[cf.key]) {
-                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">{{ cf.label
-                    }}</span>
-                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{
-                    sc.customFields[cf.key] }}</span>
-                </div>
-                }
                 }
               </div>
 
+              <!-- Flag in Section 1 -->
               @if (isFieldVisible('flag')) {
-              <div class="space-y-2 pt-2">
+              <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-700/60">
                 <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Flag</span>
-                <div
-                  class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-4 sm:p-5 flex items-center justify-center bg-transparent">
+                <div class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-4 sm:p-5 flex items-center justify-center bg-transparent min-h-[96px]">
                   <img [src]="sc.flag || ('https://flagcdn.com/' + (sc.isoCode2 || sc.code).toLowerCase() + '.svg')"
                     [alt]="sc.name"
                     class="h-16 w-26 object-cover rounded-xl shadow-md border border-slate-200/60 dark:border-slate-700"
@@ -3779,23 +4029,258 @@
               </div>
               }
 
-              <!-- Translations if available -->
-              @if (sc.translations && (sc.translations | keyvalue).length) {
-              <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-700">
-                <span
-                  class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Translations</span>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  @for (t of sc.translations | keyvalue; track t.key) {
-                  <div
-                    class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
-                    <span class="text-[11px] text-slate-400 block">{{ translationLabel(t.key) }}</span>
-                    <span class="text-xs font-semibold text-slate-800 dark:text-white block mt-0.5">{{ t.value }}</span>
-                  </div>
-                  }
+            </div>
+            }
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- ACCORDION 2: Section 2 — Geographic Information                   -->
+          <!-- ================================================================= -->
+          <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+            <div role="button" tabindex="0" (click)="toggleSection(2, $event)" (keydown.enter)="toggleSection(2, $event)" (keydown.space)="toggleSection(2, $event)"
+              class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">02</span>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 2 — Geographic Information</h3>
+              </div>
+              <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                [class.bg-[#00a6f4]]="isSectionExpanded(2)"
+                [class.text-white]="isSectionExpanded(2)"
+                [class.bg-sky-50]="!isSectionExpanded(2)"
+                [class.dark:bg-slate-700]="!isSectionExpanded(2)"
+                [class.text-[#00a6f4]]="!isSectionExpanded(2)"
+                [class.border]="!isSectionExpanded(2)"
+                [class.border-sky-200]="!isSectionExpanded(2)"
+                [class.dark:border-slate-600]="!isSectionExpanded(2)">
+                <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(2)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </div>
+
+            @if (isSectionExpanded(2)) {
+            <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 animate-in fade-in duration-150">
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
+                @if (isFieldVisible('continent')) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Continent</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.continent || '—' }}</span>
                 </div>
+                }
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Geographic Region</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryGeographicRegion(sc.name) }}</span>
+                </div>
+
+                @if (isFieldVisible('capital')) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Capital City</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.capital || '—' }}</span>
+                </div>
+                }
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Administrative Division Name</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryAdminDivision(sc.name) }}</span>
+                </div>
+
+                <!-- Custom Fields in View Mode -->
+                @for (cf of tenantService.customFields(); track cf.key) {
+                @if (isFieldVisible(cf.key) && sc.customFields && sc.customFields[cf.key]) {
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">{{ cf.label }}</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.customFields[cf.key] }}</span>
+                </div>
+                }
+                }
+              </div>
+            </div>
+            }
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- ACCORDION 3: Section 3 — Localization and Regional Settings       -->
+          <!-- ================================================================= -->
+          <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+            <div role="button" tabindex="0" (click)="toggleSection(3, $event)" (keydown.enter)="toggleSection(3, $event)" (keydown.space)="toggleSection(3, $event)"
+              class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">03</span>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 3 — Localization and Regional Settings</h3>
+              </div>
+              <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                [class.bg-[#00a6f4]]="isSectionExpanded(3)"
+                [class.text-white]="isSectionExpanded(3)"
+                [class.bg-sky-50]="!isSectionExpanded(3)"
+                [class.dark:bg-slate-700]="!isSectionExpanded(3)"
+                [class.text-[#00a6f4]]="!isSectionExpanded(3)"
+                [class.border]="!isSectionExpanded(3)"
+                [class.border-sky-200]="!isSectionExpanded(3)"
+                [class.dark:border-slate-600]="!isSectionExpanded(3)">
+                <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </div>
+
+            @if (isSectionExpanded(3)) {
+            <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 animate-in fade-in duration-150 space-y-6">
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Official Languages</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryOfficialLanguages(sc.name) }}</span>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Language</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryDefaultLanguage(sc.name) }}</span>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Time Zone</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryDefaultTimeZone(sc.name) }}</span>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Date Format</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryDefaultDateFormat(sc.name) }}</span>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default Number Format</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryDefaultNumberFormat(sc.name) }}</span>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Postal Code Required</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryPostalCodeRequired(sc.name) }}</span>
+                </div>
+
+                <div class="col-span-2 sm:col-span-3 md:col-span-4">
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Address Format</span>
+                  <span class="text-sm sm:text-base font-bold text-slate-900 dark:text-white block mt-1.5 leading-relaxed">{{ getCountryAddressFormat(sc.name) }}</span>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- ACCORDION 4: Section 4 — Tax and Regulatory Compliance            -->
+          <!-- ================================================================= -->
+          <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+            <div role="button" tabindex="0" (click)="toggleSection(4, $event)" (keydown.enter)="toggleSection(4, $event)" (keydown.space)="toggleSection(4, $event)"
+              class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">04</span>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 4 — Tax and Regulatory Compliance</h3>
+              </div>
+              <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                [class.bg-[#00a6f4]]="isSectionExpanded(4)"
+                [class.text-white]="isSectionExpanded(4)"
+                [class.bg-sky-50]="!isSectionExpanded(4)"
+                [class.dark:bg-slate-700]="!isSectionExpanded(4)"
+                [class.text-[#00a6f4]]="!isSectionExpanded(4)"
+                [class.border]="!isSectionExpanded(4)"
+                [class.border-sky-200]="!isSectionExpanded(4)"
+                [class.dark:border-slate-600]="!isSectionExpanded(4)">
+                <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(4)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </div>
+
+            @if (isSectionExpanded(4)) {
+            <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 animate-in fade-in duration-150 space-y-6">
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Tax Configuration Required</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryTaxRequired(sc.name) }}</span>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Tax Authority Name</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryTaxAuthority(sc.name) }}</span>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Tax Registration Number Format</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryTrnFormat(sc.name) }}</span>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Electronic Invoicing</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryElectronicInvoicing(sc.name) }}</span>
+                </div>
+
+                <div class="col-span-2 sm:col-span-3 md:col-span-4">
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Compliance Notes</span>
+                  <span class="text-sm sm:text-base font-bold text-slate-900 dark:text-white block mt-1.5 leading-relaxed">{{ getCountryComplianceNotes(sc.name) }}</span>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- ACCORDION 5: Section 5 — Approval                                 -->
+          <!-- ================================================================= -->
+          <div class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-200">
+            <div role="button" tabindex="0" (click)="toggleSection(5, $event)" (keydown.enter)="toggleSection(5, $event)" (keydown.space)="toggleSection(5, $event)"
+              class="w-full px-6 py-4 sm:px-7 sm:py-4.5 flex items-center justify-between cursor-pointer select-none text-left bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="text-xs sm:text-sm font-bold text-[#00a6f4] font-mono">05</span>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">Section 5 — Approval</h3>
+              </div>
+              <span class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-2xs"
+                [class.bg-[#00a6f4]]="isSectionExpanded(5)"
+                [class.text-white]="isSectionExpanded(5)"
+                [class.bg-sky-50]="!isSectionExpanded(5)"
+                [class.dark:bg-slate-700]="!isSectionExpanded(5)"
+                [class.text-[#00a6f4]]="!isSectionExpanded(5)"
+                [class.border]="!isSectionExpanded(5)"
+                [class.border-sky-200]="!isSectionExpanded(5)"
+                [class.dark:border-slate-600]="!isSectionExpanded(5)">
+                <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isSectionExpanded(5)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </div>
+
+            @if (isSectionExpanded(5)) {
+            <div class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 animate-in fade-in duration-150">
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
+                <div>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Approval Status</span>
+                  <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ getCountryApprovalStatus(sc.name) }}</span>
+                </div>
+
+                <div class="col-span-2 sm:col-span-3 md:col-span-3">
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Approval Remarks</span>
+                  <span class="text-sm sm:text-base font-bold text-slate-900 dark:text-white block mt-1.5 leading-relaxed">{{ getCountryApprovalRemarks(sc.name) }}</span>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+
+          <!-- Translations if available in View Mode -->
+          @if (sc.translations && (sc.translations | keyvalue).length) {
+          <div class="p-6 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 block tracking-wide uppercase">Translations</span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              @for (t of sc.translations | keyvalue; track t.key) {
+              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700">
+                <span class="text-[11px] text-slate-400 block">{{ translationLabel(t.key) }}</span>
+                <span class="text-xs font-semibold text-slate-800 dark:text-white block mt-0.5">{{ t.value }}</span>
               </div>
               }
             </div>
+          </div>
+          }
+
+        </div>
 
             <!-- Right-Side Action Panel with Fixed Vertical Icon Bar (Exact match to Edit page action panel) -->
             <aside
@@ -6555,7 +7040,17 @@
 
       <!-- Top Header -->
       <div class="flex items-start justify-between">
-        <div>
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-[#00a6f4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m5 8 6 6" />
+              <path d="m4 14 6-6 2-3" />
+              <path d="M2 5h12" />
+              <path d="M7 2h1" />
+              <path d="m22 22-5-10-5 10" />
+              <path d="M14 18h6" />
+            </svg>
+          </div>
           <h2 class="text-[22px] font-bold text-slate-900 dark:text-white tracking-tight leading-tight">Translation</h2>
         </div>
         <!-- Close button: hover tooltip no background red color text (Requirement 13) -->
@@ -6751,34 +7246,34 @@
         </div>
       </div>
 
-      <!-- Footer: Showing content displayed in Middle (Centered) -->
-      <div class="flex items-center justify-center text-xs text-slate-500 dark:text-slate-400 pt-1 px-0.5 shrink-0">
-        <div class="flex items-center gap-2 justify-center">
+      <!-- Footer: Showing content on left, pagination icons on right (Requirement 22) -->
+      <div class="flex items-center justify-between w-full text-xs text-slate-500 dark:text-slate-400 pt-2.5 px-1 border-t border-slate-100 dark:border-slate-800 shrink-0">
+        <div>
           <span>Showing <strong class="font-bold text-black dark:text-white">{{ displayedTranslationRows().length
               }}</strong> of <strong class="font-bold text-black dark:text-white">{{ allTranslationRows().length
               }}</strong></span>
-          @if (translationTotalPages() > 1 && !translationSearch()) {
-          <div class="flex items-center gap-1.5 ml-2">
-            <!-- Prev Icon Button: Primary Background -->
-            <button type="button" (click)="prevTranslationPage()" [disabled]="translationPage() === 1"
-              class="w-6 h-6 rounded-full flex items-center justify-center bg-[#00a6f4] text-white hover:bg-[#0095dc] shadow-xs disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
-              title="Previous">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="m15 18-6-6 6-6" />
-              </svg>
-            </button>
-            <!-- Next Icon Button: Secondary Background -->
-            <button type="button" (click)="nextTranslationPage()"
-              [disabled]="translationPage() === translationTotalPages()"
-              class="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-xs disabled:opacity-60 disabled:cursor-not-allowed transition-all cursor-pointer"
-              title="Next">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            </button>
-          </div>
-          }
         </div>
+        @if (translationTotalPages() > 1 && !translationSearch()) {
+        <div class="flex items-center gap-1.5 ml-auto">
+          <!-- Prev Icon Button: Primary Background -->
+          <button type="button" (click)="prevTranslationPage()" [disabled]="translationPage() === 1"
+            class="w-6 h-6 rounded-full flex items-center justify-center bg-[#00a6f4] text-white hover:bg-[#0095dc] shadow-xs disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
+            title="Previous">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <!-- Next Icon Button: Secondary Background -->
+          <button type="button" (click)="nextTranslationPage()"
+            [disabled]="translationPage() === translationTotalPages()"
+            class="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-xs disabled:opacity-60 disabled:cursor-not-allowed transition-all cursor-pointer"
+            title="Next">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+        }
       </div>
 
     </div>
@@ -6786,12 +7281,12 @@
   }
 
   <!-- ========================================================================= -->
-  <!-- 8. TOAST NOTIFICATION POPUP (Requirement 20: Top-Right Animated Toast)      -->
+  <!-- 8. TOAST NOTIFICATION POPUP (Requirement 24: Dark Theme Toast Background)   -->
   <!-- ========================================================================= -->
 
   @if (toastMessage()) {
   <div
-    class="fixed top-6 right-6 z-[100] max-w-md bg-white/95 dark:bg-slate-900/95 text-slate-900 dark:text-white px-4 py-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 flex items-center gap-3 text-xs font-semibold select-none toast-notification-smooth"
+    class="fixed top-6 right-6 z-[100] max-w-md bg-[#0b1329] text-white px-4 py-3.5 rounded-2xl border border-slate-700/80 shadow-2xl shadow-black/60 flex items-center gap-3 text-xs font-semibold select-none toast-notification-smooth"
     [class.toast-error]="toastType() === 'error'"
     [class.border-l-4]="true"
     [class.border-l-[#00a6f4]]="toastType() === 'success'"
@@ -6801,14 +7296,14 @@
 
     <!-- Icon Badge: Theme Blue for success, Red for negative error -->
     @if (toastType() === 'success') {
-    <div class="w-7 h-7 rounded-full bg-[#00a6f4]/15 text-[#00a6f4] flex items-center justify-center shrink-0">
+    <div class="w-7 h-7 rounded-full bg-[#00a6f4]/20 text-[#38bdf8] flex items-center justify-center shrink-0">
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
         stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12" />
       </svg>
     </div>
     } @else {
-    <div class="w-7 h-7 rounded-full bg-red-500/15 text-red-500 flex items-center justify-center shrink-0">
+    <div class="w-7 h-7 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center shrink-0">
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
         stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10" />
@@ -6820,12 +7315,12 @@
 
     <!-- Toast Message Content -->
     <div class="flex-1 pr-1">
-      <span class="block text-slate-800 dark:text-slate-100 font-medium leading-snug">{{ toastMessage() }}</span>
+      <span class="block text-slate-100 font-medium leading-snug">{{ toastMessage() }}</span>
     </div>
 
     <!-- Dismiss Button -->
     <button type="button" (click)="dismissToast()"
-      class="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer transition-colors"
+      class="p-1 rounded-full text-slate-400 hover:text-white cursor-pointer transition-colors"
       aria-label="Dismiss notification">
       <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M18 6 6 18M6 6l12 12" />

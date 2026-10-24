@@ -1020,6 +1020,228 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isNameFocused = signal<boolean>(false);
   isViewNameFocused = signal<boolean>(false);
 
+  // =========================================================================
+  // Requirement: 5 Accordion Sections for Add, Edit, and View Modes
+  // By default Section 1 is expanded, Sections 2-5 are collapsed.
+  // Uses up and down chevron arrows instead of +/-.
+  // =========================================================================
+  expandedSections = signal<Record<number, boolean>>({
+    1: true,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+  });
+
+  toggleSection(sectionNum: number, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.expandedSections.update((curr) => ({
+      ...curr,
+      [sectionNum]: !curr[sectionNum],
+    }));
+  }
+
+  isSectionExpanded(sectionNum: number): boolean {
+    return !!this.expandedSections()[sectionNum];
+  }
+
+  expandAllSections(): void {
+    this.expandedSections.set({ 1: true, 2: true, 3: true, 4: true, 5: true });
+  }
+
+  collapseAllSections(): void {
+    this.expandedSections.set({ 1: false, 2: false, 3: false, 4: false, 5: false });
+  }
+
+  areAllSectionsExpanded = computed<boolean>(() => {
+    const s = this.expandedSections();
+    return !!(s[1] && s[2] && s[3] && s[4] && s[5]);
+  });
+
+  // Country Data mapping for 5 sections adhering to requirement document
+  getCountryShortName(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'UAE';
+    if (clean === 'united states' || clean === 'usa' || clean === 'us') return 'USA';
+    if (clean === 'canada' || clean === 'ca') return 'CAN';
+    if (clean === 'japan' || clean === 'jp') return 'JPN';
+    if (clean === 'germany' || clean === 'de') return 'DEU';
+    if (clean === 'austria' || clean === 'at') return 'AUT';
+    if (clean === 'india' || clean === 'in') return 'IND';
+    const c = this.countryService.countries().find((item) => item.name.toLowerCase() === clean);
+    return (c?.isoCode3 || c?.code || this.formIsoCode3() || this.formCode() || this.formIsoCode2() || '-').toUpperCase();
+  }
+
+  getCountryGeographicRegion(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae' || clean === 'saudi arabia' || clean === 'qatar' || clean === 'oman' || clean === 'kuwait' || clean === 'bahrain') return 'Middle East';
+    if (clean === 'united states' || clean === 'canada' || clean === 'mexico') return 'North America';
+    if (clean === 'austria' || clean === 'germany' || clean === 'france' || clean === 'italy' || clean === 'spain' || clean === 'united kingdom') return 'Western Europe';
+    if (clean === 'india' || clean === 'pakistan' || clean === 'bangladesh') return 'South Asia';
+    if (clean === 'japan' || clean === 'china' || clean === 'south korea') return 'East Asia';
+    return this.formSubregion() || 'Middle East';
+  }
+
+  getCountryAdminDivision(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'Emirate';
+    if (clean === 'united states' || clean === 'india' || clean === 'australia' || clean === 'germany' || clean === 'austria' || clean === 'brazil' || clean === 'mexico') return 'State';
+    if (clean === 'canada') return 'Province';
+    if (clean === 'japan') return 'Prefecture';
+    if (clean === 'united kingdom') return 'County';
+    if (clean === 'france') return 'Department';
+    return 'State / Province';
+  }
+
+  getCountryOfficialLanguages(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'Arabic, English';
+    if (clean === 'united states') return 'English';
+    if (clean === 'austria' || clean === 'germany') return 'German';
+    if (clean === 'canada') return 'English, French';
+    if (clean === 'japan') return 'Japanese';
+    if (clean === 'france') return 'French';
+    if (clean === 'india') return 'Hindi, English';
+    return 'English';
+  }
+
+  getCountryDefaultLanguage(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae' || clean === 'saudi arabia' || clean === 'qatar') return 'Arabic';
+    if (clean === 'austria' || clean === 'germany') return 'German';
+    if (clean === 'france') return 'French';
+    if (clean === 'japan') return 'Japanese';
+    return 'English';
+  }
+
+  getCountryDefaultTimeZone(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'Asia/Dubai';
+    if (clean === 'united states') return 'America/New_York';
+    if (clean === 'austria') return 'Europe/Vienna';
+    if (clean === 'germany') return 'Europe/Berlin';
+    if (clean === 'united kingdom') return 'Europe/London';
+    if (clean === 'canada') return 'America/Toronto';
+    if (clean === 'japan') return 'Asia/Tokyo';
+    if (clean === 'india') return 'Asia/Kolkata';
+    return 'UTC+00:00';
+  }
+
+  getCountryDefaultDateFormat(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united states') return 'MM/DD/YYYY';
+    if (clean === 'japan') return 'YYYY/MM/DD';
+    return 'DD/MM/YYYY';
+  }
+
+  getCountryDefaultNumberFormat(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'austria' || clean === 'germany' || clean === 'france') return '1.234.567,89';
+    return '1,234,567.89';
+  }
+
+  getCountryAddressFormat(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') {
+      return 'Building, Street, Area, City, Emirate, Postal Code, Country';
+    }
+    if (clean === 'united states') {
+      return 'Street Address, City, State, ZIP Code, Country';
+    }
+    return 'Building, Street, Area, City, State / Province, Postal Code, Country';
+  }
+
+  getCountryPostalCodeRequired(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'Off';
+    return 'On';
+  }
+
+  getCountryTaxRequired(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    return 'On';
+  }
+
+  getCountryTaxAuthority(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'Federal Tax Authority (FTA)';
+    if (clean === 'united states') return 'Internal Revenue Service (IRS)';
+    if (clean === 'austria') return 'Austrian Tax Office (Finanzamt)';
+    if (clean === 'germany') return 'Bundeszentralamt für Steuern (BZSt)';
+    if (clean === 'united kingdom') return 'HM Revenue & Customs (HMRC)';
+    if (clean === 'canada') return 'Canada Revenue Agency (CRA)';
+    if (clean === 'india') return 'Goods and Services Tax Network (GSTN)';
+    return 'National Tax Authority';
+  }
+
+  getCountryTrnFormat(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return '15-digit TRN';
+    if (clean === 'united states') return '9-digit EIN';
+    if (clean === 'austria') return '9-digit UID (ATU12345678)';
+    if (clean === 'germany') return '11-digit IdNr / St.-Nr.';
+    if (clean === 'united kingdom') return '9-digit VAT';
+    if (clean === 'india') return '15-digit GSTIN';
+    return 'Standard TRN / Tax ID';
+  }
+
+  getCountryElectronicInvoicing(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    return 'Yes';
+  }
+
+  getCountryComplianceNotes(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    return 'Configure tax rules in the Tax module.';
+  }
+
+  getCountryApprovalStatus(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    return 'Pending';
+  }
+
+  getCountryApprovalRemarks(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    return 'Approval notes or rejection reason';
+  }
+
+  formShortName = computed(() => this.getCountryShortName(this.formName()));
+  formGeographicRegion = computed(() => this.getCountryGeographicRegion(this.formName()));
+  formAdminDivision = computed(() => this.getCountryAdminDivision(this.formName()));
+  formOfficialLanguages = computed(() => this.getCountryOfficialLanguages(this.formName()));
+  formDefaultLanguage = computed(() => this.getCountryDefaultLanguage(this.formName()));
+  formDefaultTimeZone = computed(() => this.getCountryDefaultTimeZone(this.formName()));
+  formDefaultDateFormat = computed(() => this.getCountryDefaultDateFormat(this.formName()));
+  formDefaultNumberFormat = computed(() => this.getCountryDefaultNumberFormat(this.formName()));
+  formAddressFormat = computed(() => this.getCountryAddressFormat(this.formName()));
+  formPostalCodeRequired = computed(() => this.getCountryPostalCodeRequired(this.formName()));
+  formTaxRequired = computed(() => this.getCountryTaxRequired(this.formName()));
+  formTaxAuthority = computed(() => this.getCountryTaxAuthority(this.formName()));
+  formTrnFormat = computed(() => this.getCountryTrnFormat(this.formName()));
+  formElectronicInvoicing = computed(() => this.getCountryElectronicInvoicing(this.formName()));
+  formComplianceNotes = computed(() => this.getCountryComplianceNotes(this.formName()));
+  formApprovalStatus = computed(() => this.getCountryApprovalStatus(this.formName()));
+  formApprovalRemarks = computed(() => this.getCountryApprovalRemarks(this.formName()));
+
   // Active Persona switcher dropdown (Tenant 1: User 1A, User 1B, Tenant 2: User 2A, User 2B, Admin)
   isPersonaDropdownOpen = signal<boolean>(false);
 
