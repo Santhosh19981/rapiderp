@@ -5004,7 +5004,12 @@ export class CountryComponent implements OnInit, AfterViewInit {
     if (this.pdfOnSubmit()) this.downloadCountryPdf(saved);
     if (this.printOnSubmit()) this.printCountry(saved);
 
-    if (!this.keepOnPage()) {
+    if (this.viewMode() === 'edit') {
+      // Keep on the same edit page when update succeeds (do not move to grid page per requirement)
+      this.loadCountryIntoForm(saved);
+      this.hasSubmitAttempted.set(false);
+      this.touchedFields.set({});
+    } else if (!this.keepOnPage()) {
       this.returnFromFormView();
     } else if (this.viewMode() === 'add') {
       // Keep on: stay and start the next entry
@@ -5012,11 +5017,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.hasSubmitAttempted.set(false);
       this.touchedFields.set({});
       setTimeout(() => this.focusField('country-name'));
-    } else {
-      // Keep on while editing: stay on this record with the saved values
-      this.loadCountryIntoForm(saved);
-      this.hasSubmitAttempted.set(false);
-      this.touchedFields.set({});
     }
   }
 

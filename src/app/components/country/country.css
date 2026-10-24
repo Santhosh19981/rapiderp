@@ -1808,3 +1808,47 @@ button.flag-gallery-card:hover .flag-card-name {
   color: #cbd5e1 !important;
 }
 
+/* ========================================================================= */
+/* Ultra-Smooth Toast Notification Animation (Top-Right Floating)            */
+/* ========================================================================= */
+@keyframes toastSlideInSmooth {
+  0% {
+    opacity: 0;
+    transform: translate3d(36px, -20px, 0) scale(0.92);
+    filter: blur(4px);
+  }
+  65% {
+    opacity: 1;
+    transform: translate3d(-4px, 2px, 0) scale(1.01);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.toast-notification-smooth {
+  animation: toastSlideInSmooth 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity, filter;
+  box-shadow: 0 20px 45px -10px rgba(0, 166, 244, 0.25), 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, box-shadow 0.25s ease;
+}
+
+.toast-notification-smooth:hover {
+  transform: translateY(-2px) scale(1.005);
+  box-shadow: 0 25px 50px -10px rgba(0, 166, 244, 0.32), 0 12px 30px -5px rgba(0, 0, 0, 0.12);
+}
+
+.toast-notification-smooth.toast-error {
+  box-shadow: 0 20px 45px -10px rgba(239, 68, 68, 0.25), 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+.toast-notification-smooth.toast-error:hover {
+  box-shadow: 0 25px 50px -10px rgba(239, 68, 68, 0.32), 0 12px 30px -5px rgba(0, 0, 0, 0.12);
+}
+
+
