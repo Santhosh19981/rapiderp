@@ -1282,13 +1282,21 @@ export class CountryComponent implements OnInit, AfterViewInit {
     }
     const curId = this.currentCountryId();
     const isEdit = this.viewMode() === 'edit';
-    const isDuplicate = this.countryService.countries().some((c) =>
+    const match = this.countryService.countries().find((c) =>
       c.status !== 'Deleted' &&
-      c.name.trim().toLowerCase() === val.toLowerCase() &&
-      (!isEdit || c.id !== curId)
+      c.name.trim().toLowerCase() === val.toLowerCase()
     );
-    if (isDuplicate) {
-      return 'A country with this name already exists in Country Master.';
+    if (match) {
+      if (isEdit) {
+        // In edit mode: if currentCountryId is missing, '0', matches this record,
+        // or points to an invalid/non-existent record, it is the record being edited (NOT a duplicate)
+        if (!curId || curId === '0' || curId === match.id || !this.countryService.getCountryById(curId)) {
+          return null;
+        }
+      }
+      if (!isEdit || match.id !== curId) {
+        return 'A country with this name already exists in Country Master.';
+      }
     }
     return null;
   });
@@ -2634,9 +2642,16 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const current = this.formName().trim().toLowerCase();
     if (!current) return null;
     const currentId = this.currentCountryId();
-    return this.countryService.countries().find(
-      (c) => c.name.toLowerCase() === current && c.id !== currentId
-    ) || null;
+    const match = this.countryService.countries().find(
+      (c) => c.status !== 'Deleted' && c.name.toLowerCase() === current
+    );
+    if (!match) return null;
+    if (this.viewMode() === 'edit') {
+      if (!currentId || currentId === '0' || currentId === match.id || !this.countryService.getCountryById(currentId)) {
+        return null;
+      }
+    }
+    return match.id !== currentId ? match : null;
   });
 
   private nameDebounceTimer: any = null;
@@ -2685,10 +2700,18 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   selectMasterSuggestion(c: Country): void {
     this.formName.set(c.name);
+    this.currentCountryId.set(c.id);
     this.selectedMasterCountry.set(c);
     this.selectedReferenceRecordName.set(c.name);
     this.isNameAutocompleteOpen.set(false);
     this.markFieldTouched('name');
+    if (this.viewMode() === 'edit') {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { mode: 'edit', id: c.id },
+        queryParamsHandling: 'merge',
+      });
+    }
     if (c.code) {
       this.formCode.set(c.code);
       this.formIsoCode2.set(c.code);
@@ -2884,7 +2907,23 @@ export class CountryComponent implements OnInit, AfterViewInit {
     } else if (c.code) {
       this.formFlag.set(`https://flagcdn.com/${c.code.toLowerCase()}.svg`);
     }
-    this.selectedMasterCountry.set(null);
+    const match = this.countryService.countries().find(
+      (item) => item.name.toLowerCase() === c.name.toLowerCase() ||
+                (c.code && item.code.toUpperCase() === c.code.toUpperCase())
+    );
+    if (match) {
+      this.currentCountryId.set(match.id);
+      this.selectedMasterCountry.set(match);
+      if (this.viewMode() === 'edit') {
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { mode: 'edit', id: match.id },
+          queryParamsHandling: 'merge',
+        });
+      }
+    } else {
+      this.selectedMasterCountry.set(null);
+    }
     this.selectedReferenceRecordName.set(c.name);
     this.markFieldTouched('name');
     this.markFieldTouched('isoCode2');
@@ -4993,6 +5032,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
     // Check validation rules
     if (!this.isFormValid()) {
+      const specificErr = this.nameError() || this.isoCode2Error() || this.isoCode3Error() || this.isoNumericError() || this.isdError() || this.currencyError() || this.nationalityError();
       if (this.nameError()) {
         this.focusField('country-name');
       } else if (this.isoCode2Error()) {
@@ -5006,7 +5046,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       } else if (this.currencyError()) {
         this.focusField('country-currency');
       }
-      this.showToast('Please correct the highlighted validation errors.');
+      this.showToast(specificErr || 'Please correct the highlighted validation errors.', 'error');
       return;
     }
 
@@ -5042,12 +5082,28 @@ export class CountryComponent implements OnInit, AfterViewInit {
     if (this.viewMode() === 'add') {
       saved = this.countryService.createCountry(payload);
       this.showToast('Country created successfully.');
-    } else if (this.viewMode() === 'edit' && this.currentCountryId()) {
-      const id = this.currentCountryId()!;
-      saved = this.countryService.updateCountry(id, payload);
+    } else if (this.viewMode() === 'edit') {
+      let id = this.currentCountryId();
+      if (!id || id === '0' || !this.countryService.getCountryById(id)) {
+        const found = this.countryService.countries().find(
+          (c) => c.name.trim().toLowerCase() === name.toLowerCase() || (code && c.code.toUpperCase() === code.toUpperCase())
+        );
+        if (found) {
+          id = found.id;
+          this.currentCountryId.set(id);
+        }
+      }
+      if (id && this.countryService.getCountryById(id)) {
+        saved = this.countryService.updateCountry(id, payload);
+      } else {
+        saved = this.countryService.createCountry(payload);
+        if (saved) {
+          this.currentCountryId.set(saved.id);
+        }
+      }
       if (saved && status === 'Delete' && saved.status !== 'Deleted') {
-        this.countryService.deleteCountry(id);
-        saved = this.countryService.getCountryById(id) ?? saved;
+        this.countryService.deleteCountry(saved.id);
+        saved = this.countryService.getCountryById(saved.id) ?? saved;
       }
       this.showToast('Country updated successfully.');
     }
