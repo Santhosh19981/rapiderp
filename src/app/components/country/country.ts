@@ -1440,20 +1440,569 @@ export class CountryComponent implements OnInit, AfterViewInit {
     ...this.importHeaders().map((h, i) => ({ value: i, label: h || `Column ${i + 1}`, description: `Column ${i + 1}` })),
   ]);
 
-  // Section 13: 10 Configured Default Languages for Translation
-  readonly translationLanguages = [
-    { code: 'ar', label: 'Arabic', native: 'العربية', dir: 'rtl' },
-    { code: 'es', label: 'Spanish', native: 'Español', dir: 'ltr' },
-    { code: 'fr', label: 'French', native: 'Français', dir: 'ltr' },
-    { code: 'de', label: 'German', native: 'Deutsch', dir: 'ltr' },
-    { code: 'zh', label: 'Chinese', native: '中文', dir: 'ltr' },
-    { code: 'ja', label: 'Japanese', native: '日本語', dir: 'ltr' },
-    { code: 'ru', label: 'Russian', native: 'Русский', dir: 'ltr' },
-    { code: 'hi', label: 'Hindi', native: 'हिन्दी', dir: 'ltr' },
-    { code: 'pt', label: 'Portuguese', native: 'Português', dir: 'ltr' },
-    { code: 'it', label: 'Italian', native: 'Italiano', dir: 'ltr' },
+  // Master 25 Configured Languages for Translation Popup (Exact Replica of Client Wireframe)
+  readonly masterTranslationLanguages: {
+    code: string;
+    label: string;
+    native: string;
+    dir: 'ltr' | 'rtl';
+    defaultStatus: 'Draft' | 'Pending' | 'Approved';
+    defaultSource: 'Auto' | 'Manual';
+  }[] = [
+    { code: 'ar', label: 'Arabic', native: 'العربية', dir: 'rtl', defaultStatus: 'Draft', defaultSource: 'Auto' },
+    { code: 'hi', label: 'Hindi', native: 'हिन्दी', dir: 'ltr', defaultStatus: 'Pending', defaultSource: 'Manual' },
+    { code: 'ur', label: 'Urdu', native: 'اردو', dir: 'rtl', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'fr', label: 'French', native: 'Français', dir: 'ltr', defaultStatus: 'Draft', defaultSource: 'Auto' },
+    { code: 'es', label: 'Spanish', native: 'Español', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'de', label: 'German', native: 'Deutsch', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'zh', label: 'Chinese', native: '中文', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'ja', label: 'Japanese', native: '日本語', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'ru', label: 'Russian', native: 'Русский', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'pt', label: 'Portuguese', native: 'Português', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'it', label: 'Italian', native: 'Italiano', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'tr', label: 'Turkish', native: 'Türkçe', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'ko', label: 'Korean', native: '한국어', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'nl', label: 'Dutch', native: 'Nederlands', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'pl', label: 'Polish', native: 'Polski', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'sv', label: 'Swedish', native: 'Svenska', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'el', label: 'Greek', native: 'Ελληνικά', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'he', label: 'Hebrew', native: 'עברית', dir: 'rtl', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'id', label: 'Indonesian', native: 'Bahasa Indonesia', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'th', label: 'Thai', native: 'ไทย', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'vi', label: 'Vietnamese', native: 'Tiếng Việt', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'fa', label: 'Persian', native: 'فارسی', dir: 'rtl', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'bn', label: 'Bengali', native: 'বাংলা', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'mr', label: 'Marathi', native: 'मराठी', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'ta', label: 'Tamil', native: 'தமிழ்', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'te', label: 'Telugu', native: 'తెలుగు', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'gu', label: 'Gujarati', native: 'ગુજરાતી', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'kn', label: 'Kannada', native: 'ಕನ್ನಡ', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'ml', label: 'Malayalam', native: 'മലയാളം', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
+    { code: 'pa', label: 'Punjabi', native: 'ਪੰਜਾਬੀ', dir: 'ltr', defaultStatus: 'Approved', defaultSource: 'Auto' },
   ];
+
+  // Translation lookup dictionary for instant realistic country translations
+  private readonly countryTranslationsMap: Record<string, Record<string, string>> = {
+    india: {
+      ar: 'الهند',
+      hi: 'भारत',
+      ur: 'بھارت',
+      fr: 'Inde',
+      es: 'India',
+      de: 'Indien',
+      zh: '印度',
+      ja: 'インド',
+      ru: 'Индия',
+      pt: 'Índia',
+      it: 'India',
+      tr: 'Hindistan',
+      ko: '인도',
+      nl: 'India',
+      pl: 'Indie',
+      sv: 'Indien',
+      el: 'Ινδία',
+      he: 'הודו',
+      id: 'India',
+      th: 'อินเดีย',
+      vi: 'Ấn Độ',
+      fa: 'هند',
+      bn: 'ভারত',
+      mr: 'भारत',
+      ta: 'இந்தியா',
+      te: 'భారతదేశం',
+      gu: 'ભારત',
+      kn: 'ಭಾರತ',
+      ml: 'ഇന്ത്യ',
+      pa: 'ਭਾਰਤ',
+    },
+    'united arab emirates': {
+      ar: 'الإمارات العربية المتحدة',
+      hi: 'संयुक्त अरब अमीरात',
+      ur: 'متحدہ عرب امارات',
+      fr: 'Émirats arabes unis',
+      es: 'Emiratos Árabes Unidos',
+      de: 'Vereinigte Arabische Emirate',
+      zh: '阿拉伯联合酋长国',
+      ja: 'アラブ首長国連邦',
+      ru: 'Объединённые Арабские Эмираты',
+      pt: 'Emirados Árabes Unidos',
+      it: 'Emirati Arabi Uniti',
+      tr: 'Birleşik Arap Emirlikleri',
+      ko: '아랍에미리트',
+      nl: 'Verenigde Arabische Emiraten',
+      pl: 'Zjednoczone Emiraty Arabskie',
+      sv: 'Förenade Arabemiraten',
+      el: 'Ηνωμένα Αραβικά Εμιράτα',
+      he: 'איחוד האמירויות הערביות',
+      id: 'Uni Emirat Arab',
+      th: 'สหรัฐอาหรับเอมิเรตส์',
+      vi: 'Các Tiểu vương quốc Ả Rập Thống nhất',
+      fa: 'امارات متحده عربی',
+      bn: 'সংযুক্ত আরব আমিরাত',
+      mr: 'संयुक्त अरब अमिराती',
+      ta: 'ஐக்கிய அரபு அமீரகம்',
+    },
+    uae: {
+      ar: 'الإمارات العربية المتحدة',
+      hi: 'संयुक्त अरब अमीरात',
+      ur: 'متحدہ عرب امارات',
+      fr: 'Émirats arabes unis',
+      es: 'Emiratos Árabes Unidos',
+      de: 'Vereinigte Arabische Emirate',
+      zh: '阿拉伯联合酋长国',
+      ja: 'アラブ首長国連邦',
+      ru: 'Объединённые Арабские Эмираты',
+      pt: 'Emirados Árabes Unidos',
+      it: 'Emirati Arabi Uniti',
+      tr: 'Birleşik Arap Emirlikleri',
+      ko: '아랍에미리트',
+      nl: 'Verenigde Arabische Emiraten',
+      pl: 'Zjednoczone Emiraty Arabskie',
+      sv: 'Förenade Arabemiraten',
+      el: 'Ηνωμένα Αραβικά Εμιράτα',
+      he: 'איחוד האמירויות הערביות',
+      id: 'Uni Emirat Arab',
+      th: 'สหรัฐอาหรับเอมิเรตส์',
+      vi: 'Các Tiểu vương quốc Ả Rập Thống nhất',
+      fa: 'امارات متحده عربی',
+      bn: 'সংযুক্ত আরব আমিরাত',
+      mr: 'संयुक्त अरब अमिराती',
+      ta: 'ஐக்கிய அரபு அமீரகம்',
+    },
+    'united states': {
+      ar: 'الولايات المتحدة',
+      hi: 'संयुक्त राज्य अमेरिका',
+      ur: 'ریاستہائے متحدہ امریکہ',
+      fr: 'États-Unis',
+      es: 'Estados Unidos',
+      de: 'Vereinigte Staaten',
+      zh: '美国',
+      ja: 'アメリカ合衆国',
+      ru: 'Соединённые Штаты',
+      pt: 'Estados Unidos',
+      it: 'Stati Uniti',
+      tr: 'Amerika Birleşik Devletleri',
+      ko: '미국',
+      nl: 'Verenigde Staten',
+      pl: 'Stany Zjednoczone',
+      sv: 'USA',
+      el: 'Ηνωμένες Πολιτείες',
+      he: 'ארצות הברית',
+      id: 'Amerika Serikat',
+      th: 'สหรัฐอเมริกา',
+      vi: 'Hoa Kỳ',
+      fa: 'ایالات متحده آمریکا',
+      bn: 'মার্কিন যুক্তরাষ্ট্র',
+      mr: 'युनायटेड स्टेट्स',
+      ta: 'அமெரிக்கா',
+    },
+    usa: {
+      ar: 'الولايات المتحدة',
+      hi: 'संयुक्त राज्य अमेरिका',
+      ur: 'ریاستہائے متحدہ امریکہ',
+      fr: 'États-Unis',
+      es: 'Estados Unidos',
+      de: 'Vereinigte Staaten',
+      zh: '美国',
+      ja: 'アメリカ合衆国',
+      ru: 'Соединённые Штаты',
+      pt: 'Estados Unidos',
+      it: 'Stati Uniti',
+      tr: 'Amerika Birleşik Devletleri',
+      ko: '미국',
+      nl: 'Verenigde Staten',
+      pl: 'Stany Zjednoczone',
+      sv: 'USA',
+      el: 'Ηνωμένες Πολιτείες',
+      he: 'ארצות הברית',
+      id: 'Amerika Serikat',
+      th: 'สหรัฐอเมริกา',
+      vi: 'Hoa Kỳ',
+      fa: 'ایالات متحده آمریکا',
+      bn: 'মার্কিন যুক্তরাষ্ট্র',
+      mr: 'युनायटेड स्टेट्स',
+      ta: 'அமெரிக்கா',
+    },
+    'saudi arabia': {
+      ar: 'المملكة العربية السعودية',
+      hi: 'सऊदी अरब',
+      ur: 'سعودی عرب',
+      fr: 'Arabie saoudite',
+      es: 'Arabia Saudita',
+      de: 'Saudi-Arabien',
+      zh: '沙特阿拉伯',
+      ja: 'サウジアラビア',
+      ru: 'Саудовская Аравия',
+      pt: 'Arábia Saudita',
+      it: 'Arabia Saudita',
+      tr: 'Suudi Arabistan',
+      ko: '사우디아라비아',
+      nl: 'Saoedi-Arabië',
+      pl: 'Arabia Saudyjska',
+      sv: 'Saudiarabien',
+      el: 'Σαουδική Αραβία',
+      he: 'ערב הסעודית',
+      id: 'Arab Saudi',
+      th: 'ซาอุดีอาระเบีย',
+      vi: 'Ả Rập Xê Út',
+      fa: 'عربستان سعودی',
+      bn: 'সৌদি আরব',
+      mr: 'सौदी अरेबिया',
+      ta: 'சவுதி அரேபியா',
+    },
+    'united kingdom': {
+      ar: 'المملكة المتحدة',
+      hi: 'यूनाइटेड किंगडम',
+      ur: 'برطانیہ',
+      fr: 'Royaume-Uni',
+      es: 'Reino Unido',
+      de: 'Vereinigtes Königreich',
+      zh: '英国',
+      ja: 'イギリス',
+      ru: 'Великобритания',
+      pt: 'Reino Unido',
+      it: 'Regno Unito',
+      tr: 'Birleşik Krallık',
+      ko: '영국',
+      nl: 'Verenigd Koninkrijk',
+      pl: 'Wielka Brytania',
+      sv: 'Storbritannien',
+      el: 'Ηνωμένο Βασίλειο',
+      he: 'הממלכה המאוחדת',
+      id: 'Inggris',
+      th: 'สหราชอาณาจักร',
+      vi: 'Vương quốc Anh',
+      fa: 'پادشاهی متحده',
+      bn: 'যুক্তরাজ্য',
+      mr: 'युनायटेड किंगडम',
+      ta: 'ஐக்கிய இராச்சியம்',
+    },
+    qatar: {
+      ar: 'قطر',
+      hi: 'क़तर',
+      ur: 'قطر',
+      fr: 'Qatar',
+      es: 'Catar',
+      de: 'Katar',
+      zh: '卡塔尔',
+      ja: 'カタール',
+      ru: 'Катар',
+      pt: 'Catar',
+      it: 'Qatar',
+      tr: 'Katar',
+      ko: '카타르',
+      nl: 'Qatar',
+      pl: 'Katar',
+      sv: 'Qatar',
+      el: 'Κατάρ',
+      he: 'קטאר',
+      id: 'Qatar',
+      th: 'กาตาร์',
+      vi: 'Qatar',
+      fa: 'قطر',
+      bn: 'কাতার',
+      mr: 'कतार',
+      ta: 'கத்தார்',
+    },
+    oman: {
+      ar: 'عمان',
+      hi: 'ओमान',
+      ur: 'عمان',
+      fr: 'Oman',
+      es: 'Omán',
+      de: 'Oman',
+      zh: '阿曼',
+      ja: 'オマーン',
+      ru: 'Оман',
+      pt: 'Omã',
+      it: 'Oman',
+      tr: 'Umman',
+      ko: '오만',
+      nl: 'Oman',
+      pl: 'Oman',
+      sv: 'Oman',
+      el: 'Ομάν',
+      he: 'עומאן',
+      id: 'Oman',
+      th: 'โอมาน',
+      vi: 'Oman',
+      fa: 'عمان',
+      bn: 'ওমান',
+      mr: 'ओमान',
+      ta: 'ஓமன்',
+    },
+    germany: {
+      ar: 'ألمانيا',
+      hi: 'जर्मनी',
+      ur: 'جرمنی',
+      fr: 'Allemagne',
+      es: 'Alemania',
+      de: 'Deutschland',
+      zh: '德国',
+      ja: 'ドイツ',
+      ru: 'Германия',
+      pt: 'Alemanha',
+      it: 'Germania',
+      tr: 'Almanya',
+      ko: '독일',
+      nl: 'Duitsland',
+      pl: 'Niemcy',
+      sv: 'Tyskland',
+      el: 'Γερμανία',
+      he: 'גרמניה',
+      id: 'Jerman',
+      th: 'เยอรมนี',
+      vi: 'Đức',
+      fa: 'آلمان',
+      bn: 'জার্মানি',
+      mr: 'जर्मनी',
+      ta: 'ஜெர்மனி',
+    },
+  };
+
+  getCountryTranslation(countryName: string, langCode: string): string {
+    const key = (countryName || '').trim().toLowerCase();
+    if (this.countryTranslationsMap[key] && this.countryTranslationsMap[key][langCode]) {
+      return this.countryTranslationsMap[key][langCode];
+    }
+    for (const [cKey, map] of Object.entries(this.countryTranslationsMap)) {
+      if (key.includes(cKey) || cKey.includes(key)) {
+        if (map[langCode]) return map[langCode];
+      }
+    }
+    return countryName || '—';
+  }
+
+  // Active Country Name for Translation Modal
+  activeTranslationCountryName = computed<string>(() => {
+    if (this.viewMode() === 'view') {
+      return this.viewCountryName()?.trim() || this.viewCountry()?.name || this.selectedCountry()?.name || 'India';
+    }
+    return this.formName()?.trim() || this.selectedCountry()?.name || 'India';
+  });
+
+  // Modal open/close & search state
+  isTranslationModalOpen = signal<boolean>(false);
   translationSearch = signal<string>('');
+  translationPage = signal<number>(1);
+  translationPageSize = signal<number>(10);
+
+  // Active cell selection for keyboard navigation in translation popup (Requirement 6)
+  translationSelectedCell = signal<{ row: number; col: number } | null>(null);
+
+  // Helper guidance audio for Country Name field
+  isSpeakingHelper = signal<boolean>(false);
+
+  speakHelperText(text: string): void {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95;
+      utterance.onstart = () => this.isSpeakingHelper.set(true);
+      utterance.onend = () => this.isSpeakingHelper.set(false);
+      utterance.onerror = () => this.isSpeakingHelper.set(false);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      this.showToast('Text-to-speech is not supported in this browser.');
+    }
+  }
+
+  selectTranslationCell(rowIndex: number, colIndex: number): void {
+    this.translationSelectedCell.set({ row: rowIndex, col: colIndex });
+  }
+
+  onTranslationTableKeyDown(event: KeyboardEvent): void {
+    const current = this.translationSelectedCell();
+    if (!current) return;
+    const maxRows = this.displayedTranslationRows().length;
+    if (maxRows === 0) return;
+    const maxCols = 5;
+
+    let { row, col } = current;
+    let handled = false;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        if (row < maxRows - 1) {
+          row++;
+          handled = true;
+        }
+        break;
+      case 'ArrowUp':
+        if (row > 0) {
+          row--;
+          handled = true;
+        }
+        break;
+      case 'ArrowRight':
+        if (col < maxCols - 1) {
+          col++;
+          handled = true;
+        } else if (row < maxRows - 1) {
+          row++;
+          col = 0;
+          handled = true;
+        }
+        break;
+      case 'ArrowLeft':
+        if (col > 0) {
+          col--;
+          handled = true;
+        } else if (row > 0) {
+          row--;
+          col = maxCols - 1;
+          handled = true;
+        }
+        break;
+      case 'Tab':
+        event.preventDefault();
+        if (event.shiftKey) {
+          if (col > 0) {
+            col--;
+          } else if (row > 0) {
+            row--;
+            col = maxCols - 1;
+          }
+        } else {
+          if (col < maxCols - 1) {
+            col++;
+          } else if (row < maxRows - 1) {
+            row++;
+            col = 0;
+          }
+        }
+        handled = true;
+        break;
+      case 'Escape':
+        this.translationSelectedCell.set(null);
+        handled = true;
+        break;
+    }
+
+    if (handled) {
+      event.preventDefault();
+      this.translationSelectedCell.set({ row, col });
+    }
+  }
+
+  // Inline editing state for translation table (preserved for future use)
+  editingTranslationLang = signal<string | null>(null);
+  editingTranslationValue = signal<string>('');
+
+  startEditTranslation(row: { code: string; translation: string }): void {
+    this.editingTranslationLang.set(row.code);
+    this.editingTranslationValue.set(row.translation === '—' ? '' : row.translation);
+  }
+
+  saveInlineTranslation(row: { code: string; language: string }): void {
+    const val = this.editingTranslationValue().trim();
+    if (!val) {
+      this.cancelInlineTranslation();
+      return;
+    }
+    this.formTranslations.update((prev) => ({
+      ...prev,
+      [row.code]: val,
+    }));
+    const curId = this.currentCountryId();
+    if (this.viewMode() === 'view' && curId) {
+      const curTranslations = this.selectedCountry()?.translations || {};
+      this.countryService.updateCountry(curId, {
+        translations: { ...curTranslations, [row.code]: val },
+      });
+    }
+    this.editingTranslationLang.set(null);
+    this.showToast(`Saved ${row.language} translation.`);
+  }
+
+  cancelInlineTranslation(): void {
+    this.editingTranslationLang.set(null);
+    this.editingTranslationValue.set('');
+  }
+
+  openTranslationPopup(): void {
+    this.translationPage.set(1);
+    this.translationSearch.set('');
+    this.editingTranslationLang.set(null);
+    this.translationSelectedCell.set(null);
+    this.isTranslationModalOpen.set(true);
+  }
+
+  closeTranslationPopup(): void {
+    this.isTranslationModalOpen.set(false);
+    this.translationSearch.set('');
+    this.editingTranslationLang.set(null);
+    this.translationSelectedCell.set(null);
+  }
+
+  // Computed all 25 rows matching client wireframe
+  allTranslationRows = computed(() => {
+    const countryName = this.activeTranslationCountryName();
+    const userMap = this.formTranslations() || {};
+
+    return this.masterTranslationLanguages.map((l, idx) => {
+      const isManual = !!userMap[l.code]?.trim();
+      const text = isManual ? userMap[l.code].trim() : this.getCountryTranslation(countryName, l.code);
+      const snStr = String(idx + 1).padStart(2, '0');
+
+      return {
+        sn: snStr,
+        code: l.code,
+        language: l.label,
+        native: l.native,
+        dir: l.dir,
+        translation: text,
+        source: isManual ? 'Manual' : l.defaultSource,
+        status: isManual ? 'Approved' : l.defaultStatus,
+      };
+    });
+  });
+
+  filteredTranslationRows = computed(() => {
+    const q = (this.translationSearch() || '').trim().toLowerCase();
+    const rows = this.allTranslationRows();
+    if (!q) return rows;
+    return rows.filter(
+      (r) =>
+        r.language.toLowerCase().includes(q) ||
+        r.native.toLowerCase().includes(q) ||
+        r.translation.toLowerCase().includes(q) ||
+        r.code.toLowerCase().includes(q) ||
+        r.source.toLowerCase().includes(q) ||
+        r.status.toLowerCase().includes(q)
+    );
+  });
+
+  translationTotalPages = computed(() => {
+    const total = this.filteredTranslationRows().length;
+    return Math.max(1, Math.ceil(total / this.translationPageSize()));
+  });
+
+  displayedTranslationRows = computed(() => {
+    const filtered = this.filteredTranslationRows();
+    if (this.translationSearch()?.trim()) {
+      return filtered;
+    }
+    const page = this.translationPage();
+    const size = this.translationPageSize();
+    const start = (page - 1) * size;
+    return filtered.slice(start, start + size);
+  });
+
+  prevTranslationPage(): void {
+    if (this.translationPage() > 1) {
+      this.translationPage.update((p) => p - 1);
+    }
+  }
+
+  nextTranslationPage(): void {
+    if (this.translationPage() < this.translationTotalPages()) {
+      this.translationPage.update((p) => p + 1);
+    }
+  }
+
+  // Legacy translation properties maintained for backwards compatibility
+  readonly translationLanguages = this.masterTranslationLanguages.slice(0, 10);
   filteredTranslationLanguages = computed(() => {
     const q = this.translationSearch().trim().toLowerCase();
     if (!q) return this.translationLanguages;
@@ -2024,12 +2573,12 @@ export class CountryComponent implements OnInit, AfterViewInit {
   isNameAutocompleteOpen = signal<boolean>(false);
   selectedMasterCountry = signal<Country | null>(null);
 
-  countryMasterSuggestions = computed<Country[]>(() => {
+  countryMasterSuggestions = computed<CountryLookupRecord[]>(() => {
     const q = this.nameAutocompleteQuery().trim().toLowerCase();
     if (!q) return [];
-    return this.countryService.countries().filter((c) =>
+    return this.lookupTableData.filter((c) =>
       c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
-    ).slice(0, 8);
+    ).slice(0, 10);
   });
 
   // Warning when manually edited name differs from the selected reference record (Master or Lookup table)
@@ -2062,18 +2611,19 @@ export class CountryComponent implements OnInit, AfterViewInit {
   onCountryNameInput(val: string): void {
     this.formName.set(val);
     this.markFieldTouched('name');
+    const clean = (val || '').trim();
+    this.nameAutocompleteQuery.set(clean);
+    this.isNameAutocompleteOpen.set(!!clean);
+    this.countryDropdownSearch.set(clean);
     clearTimeout(this.nameDebounceTimer);
     this.nameDebounceTimer = setTimeout(() => {
-      this.nameAutocompleteQuery.set(val.trim());
-      this.isNameAutocompleteOpen.set(!!val.trim());
-      this.countryDropdownSearch.set(val.trim());
       const exact = this.lookupTableData.find(
-        (c) => c.name.toLowerCase() === val.trim().toLowerCase()
+        (c) => c.name.toLowerCase() === clean.toLowerCase()
       );
-      if (exact) {
+      if (exact && exact.name.toLowerCase() === clean.toLowerCase()) {
         this.selectCountryFromDropdown(exact);
       }
-    }, 180);
+    }, 250);
   }
 
   selectMasterSuggestion(c: Country): void {
@@ -2163,7 +2713,23 @@ export class CountryComponent implements OnInit, AfterViewInit {
   });
 
   filteredCountryDropdownList = computed<CountryLookupRecord[]>(() => {
-    const query = (this.countryDropdownSearch() || '').trim().toLowerCase();
+    let query = '';
+    if (this.isNameAutocompleteOpen()) {
+      query = (this.nameAutocompleteQuery() || this.formName() || '').trim().toLowerCase();
+    } else {
+      const explicitSearch = (this.countryDropdownSearch() || this.nameAutocompleteQuery() || '').trim().toLowerCase();
+      if (explicitSearch) {
+        query = explicitSearch;
+      } else {
+        const rawFormName = (this.formName() || '').trim();
+        const isExactMatch = (this.lookupTableData || []).some(
+          (c) => c.name.toLowerCase() === rawFormName.toLowerCase()
+        );
+        if (!isExactMatch && rawFormName) {
+          query = rawFormName.toLowerCase();
+        }
+      }
+    }
     const lookupList = this.lookupTableData || [];
     const serviceCountries: CountryLookupRecord[] = (this.countryService?.countries() || []).map((sc) => ({
       code: sc.code || sc.isoCode2 || '',
@@ -2203,11 +2769,36 @@ export class CountryComponent implements OnInit, AfterViewInit {
     );
   });
 
+  onCountryNameFocus(): void {
+    const clean = (this.formName() || '').trim();
+    if (clean) {
+      const isExact = (this.lookupTableData || []).some(
+        (c) => c.name.toLowerCase() === clean.toLowerCase()
+      );
+      if (!isExact) {
+        this.nameAutocompleteQuery.set(clean);
+        this.isNameAutocompleteOpen.set(true);
+      }
+    }
+  }
+
   toggleCountryNameDropdown(event?: Event): void {
     if (event) {
       event.stopPropagation();
     }
-    this.isCountryNameDropdownOpen.update((v) => !v);
+    const nextState = !this.isCountryNameDropdownOpen();
+    this.isCountryNameDropdownOpen.set(nextState);
+    if (nextState) {
+      const clean = (this.formName() || '').trim();
+      const isExact = (this.lookupTableData || []).some(
+        (c) => c.name.toLowerCase() === clean.toLowerCase()
+      );
+      if (!isExact && clean) {
+        this.nameAutocompleteQuery.set(clean);
+      }
+    } else {
+      this.isNameAutocompleteOpen.set(false);
+    }
     this.countryDropdownSearch.set('');
   }
 
@@ -2241,6 +2832,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.markFieldTouched('isd');
     this.markFieldTouched('currency');
     this.isCountryNameDropdownOpen.set(false);
+    this.isNameAutocompleteOpen.set(false);
     this.countryDropdownSearch.set('');
     this.showToast(`Loaded details for "${c.name}". Review and save.`);
   }
@@ -2475,6 +3067,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   @HostListener('document:keydown.escape')
   closePopovers(): void {
     this.isCountryNameDropdownOpen.set(false);
+    this.isNameAutocompleteOpen.set(false);
     this.isCurrencyDropdownOpen.set(false);
     this.isViewCountryDropdownOpen.set(false);
     this.isTranslationOpen.set(false);
@@ -5007,7 +5600,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isImportModalOpen.set(true);
   }
 
-  onFlagError(event: Event, country?: Country): void {
+  onFlagError(event: Event, country?: Country | CountryLookupRecord): void {
     const target = event.target as HTMLImageElement;
     if (target) {
       target.style.display = '';

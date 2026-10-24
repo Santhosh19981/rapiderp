@@ -183,11 +183,31 @@
             <span>Add</span>
           </button>
           } @else {
-          <!-- In Add/Edit/View mode -->
-          <button type="button" (click)="returnFromFormView()"
-            class="h-9 px-5 rounded-full border-2 border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] text-xs sm:text-sm font-bold flex items-center justify-center transition cursor-pointer shadow-2xs">
-            <span>List</span>
-          </button>
+          <!-- In Add/Edit/View mode: Grid icon and List icon toggle (Requirement: display icons with color, no outside border) -->
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" (click)="switchView('grid')"
+              class="h-9 w-9 rounded-xl flex items-center justify-center transition-all duration-150 cursor-pointer text-[#00a6f4] hover:text-[#0070ba] hover:bg-sky-50 dark:hover:bg-slate-800 active:scale-95"
+              title="Grid Cards View" data-tooltip="Grid View" data-tooltip-pos="bottom">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+              </svg>
+            </button>
+            <button type="button" (click)="switchView('list')"
+              class="h-9 w-9 rounded-xl flex items-center justify-center transition-all duration-150 cursor-pointer text-[#00a6f4] hover:text-[#0070ba] hover:bg-sky-50 dark:hover:bg-slate-800 active:scale-95"
+              title="List View" data-tooltip="List View" data-tooltip-pos="bottom">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <line x1="8" y1="6" x2="21" y2="6" stroke-linecap="round" />
+                <line x1="8" y1="12" x2="21" y2="12" stroke-linecap="round" />
+                <line x1="8" y1="18" x2="21" y2="18" stroke-linecap="round" />
+                <circle cx="4" cy="6" r="1.5" fill="currentColor" />
+                <circle cx="4" cy="12" r="1.5" fill="currentColor" />
+                <circle cx="4" cy="18" r="1.5" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
           }
         </div>
       </div>
@@ -1198,7 +1218,8 @@
               @if (viewMode() === 'grid') {
               <!-- Grid view: Display count (Hide History & Recycle Bin buttons) -->
               <span class="text-xs sm:text-[13px] font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                Showing {{ gridCountries().length }} of {{ filteredCountries().length }} countries
+                Showing <strong class="font-bold text-black dark:text-white">{{ gridCountries().length }}</strong> of
+                <strong class="font-bold text-black dark:text-white">{{ filteredCountries().length }}</strong> countries
               </span>
               } @else {
               <!-- List / Table view: Display Import, Visibility, History, Recycle Bin -->
@@ -1569,7 +1590,9 @@
               <div class="flex justify-center py-4">
                 <button type="button" (click)="loadMoreGrid()"
                   class="text-xs font-semibold text-[#00a6f4] hover:underline cursor-pointer">
-                  Showing {{ gridCountries().length }} of {{ filteredCountries().length }} · Load more
+                  Showing <strong class="font-bold text-black dark:text-white">{{ gridCountries().length }}</strong> of
+                  <strong class="font-bold text-black dark:text-white">{{ filteredCountries().length }}</strong> · Load
+                  more
                 </button>
               </div>
               } @else if (filteredCountries().length > gridPageSize) {
@@ -2797,10 +2820,12 @@
                       [class.border-slate-300]="!isNameFocused() && !isCountryNameDropdownOpen()"
                       [class.dark:border-slate-600]="!isNameFocused() && !isCountryNameDropdownOpen()">
                       <input id="country-name" type="text" [ngModel]="formName()" placeholder=""
-                        (ngModelChange)="onCountryNameInput($event)" (focus)="isNameFocused.set(true)"
+                        (ngModelChange)="onCountryNameInput($event)"
+                        (focus)="isNameFocused.set(true); onCountryNameFocus()"
                         (blur)="isNameFocused.set(false); markFieldTouched('name'); closeNameAutocomplete()"
-                        (keydown.enter)="focusNextField('name', 'country-iso2', $event)" name="app_country_name"
-                        required autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+                        (keydown.enter)="focusNextField('name', 'country-iso2', $event)"
+                        (keydown.arrowdown)="toggleCountryNameDropdown($event)" name="app_country_name" required
+                        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
                         data-form-type="other" data-lpignore="true" aria-autocomplete="none"
                         class="w-full h-full bg-transparent text-slate-800 dark:text-white text-sm font-semibold focus:outline-none select-text caret-[#00a6f4] placeholder:text-slate-400 placeholder:font-normal" />
 
@@ -2826,6 +2851,20 @@
                           </svg>
                         </span>
                         }
+
+                        <!-- Translation Trigger Button (Added per client requirement) -->
+                        <button type="button" (click)="openTranslationPopup(); $event.stopPropagation()"
+                          class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
+                          title="Translations" data-tooltip="Translations" data-tooltip-pos="top">
+                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m5 8 6 6" />
+                            <path d="m4 14 6-6 2-3" />
+                            <path d="M2 5h12" />
+                            <path d="M7 2h1" />
+                            <path d="m22 22-5-10-5 10" />
+                            <path d="M14 18h6" />
+                          </svg>
+                        </button>
 
                         <!-- 1. Lookup Trigger Button (Requirement 3: In Country Name input in Add and Edit) -->
                         <button type="button" (click)="openLookupModal('form'); $event.stopPropagation()"
@@ -2887,63 +2926,48 @@
                       </label>
                     </div>
 
-                    <!-- Helper text below text box (Point 2) -->
-                    @if (isNameFocused() && !isFieldInvalid('name')) {
-                    <p
-                      class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 px-3 flex items-center gap-1.5 animate-in fade-in">
-                      Official country name in English or approved Unicode script
-                    </p>
+                    <!-- Helper Guidance Row: Displayed ONLY when helper text is active (on focus or audio) -->
+                    @if ((isNameFocused() || isSpeakingHelper()) && !isFieldInvalid('name')) {
+                    <div
+                      class="flex items-center justify-between mt-1 px-3 min-h-[22px] animate-in fade-in duration-150">
+                      <p class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                        Official country name in English or approved Unicode script
+                      </p>
+                      <button type="button" (mousedown)="$event.preventDefault()"
+                        (click)="speakHelperText('Official country name in English or approved Unicode script'); $event.stopPropagation()"
+                        class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer shrink-0 ml-auto"
+                        [class.text-[#00a6f4]]="isSpeakingHelper()" [class.animate-pulse]="isSpeakingHelper()"
+                        title="Listen to guidance" data-tooltip="Audio Guidance" data-tooltip-pos="left">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round">
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                        </svg>
+                      </button>
+                    </div>
                     }
 
-                    <!-- Dropdown with Search & Select Country List (Reference Default Currency Dropdown) -->
-                    @if (isCountryNameDropdownOpen()) {
+                    <!-- Unified Clean Country List Dropdown (for typing autocomplete AND chevron click - no inner search box per client screenshot) -->
+                    @if (isCountryNameDropdownOpen() || (isNameAutocompleteOpen() &&
+                    filteredCountryDropdownList().length > 0)) {
                     <div (click)="$event.stopPropagation()"
-                      class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-                      <!-- Search Bar with Voice Input -->
-                      <div
-                        class="relative flex items-center w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                        <svg class="w-4 h-4 text-slate-400 shrink-0 mr-2" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <circle cx="11" cy="11" r="8" />
-                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                        <input type="text" [ngModel]="countryDropdownSearch()"
-                          (ngModelChange)="countryDropdownSearch.set($event)" name="countryDropdownSearch"
-                          [ngModelOptions]="{ standalone: true }" placeholder="Search" autocomplete="off"
-                          class="w-full bg-transparent text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
-                        @if (countryDropdownSearch()) {
-                        <button type="button" (click)="countryDropdownSearch.set('')"
-                          class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 cursor-pointer mr-1">
-                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M18 6L6 18M6 6l12 12" />
-                          </svg>
-                        </button>
-                        }
-                        <button type="button" (click)="toggleVoiceInput('countryDropdownSearch')"
-                          class="text-slate-400 hover:text-[#00a6f4] p-1 rounded-full cursor-pointer focus:outline-none transition-colors shrink-0"
-                          [class.text-red-500]="activeListeningField() === 'countryDropdownSearch'"
-                          [class.animate-pulse]="activeListeningField() === 'countryDropdownSearch'"
-                          [title]="activeListeningField() === 'countryDropdownSearch' ? 'Listening...' : 'Voice Search'">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                          </svg>
-                        </button>
-                      </div>
-
-                      <!-- Scrollable Countries List with Image 1 styling -->
-                      <div class="mt-2.5 max-h-60 overflow-y-auto custom-scrollbar flex flex-col space-y-1 pr-1">
+                      class="absolute left-0 right-0 top-full mt-1.5 z-50 p-2 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in slide-in-from-top-1 duration-150">
+                      <div class="max-h-60 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
                         @for (c of filteredCountryDropdownList(); track c.code) {
-                        <button type="button" (click)="selectCountryFromDropdown(c)"
-                          class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item"
+                        <button type="button" (mousedown)="selectCountryFromDropdown(c); $event.preventDefault()"
+                          class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item"
                           [class.bg-[#dff3fd]]="c.name === formName()"
                           [class.dark:bg-sky-950/70]="c.name === formName()">
-                          <div class="flex items-center gap-2.5 truncate">
+                          <div class="flex items-center gap-3 truncate">
                             @if (c.flag) {
-                            <img [src]="c.flag" [alt]="c.name"
-                              class="w-6 h-4 object-cover rounded shadow-2xs shrink-0" />
+                            <img [src]="c.flag" [alt]="c.name" class="w-6 h-4 object-cover rounded shadow-2xs shrink-0"
+                              (error)="onFlagError($event, c)" />
+                            } @else {
+                            <span
+                              class="w-6 h-4 rounded bg-slate-100 dark:bg-slate-700 text-[9px] font-bold flex items-center justify-center shrink-0 uppercase text-slate-600 dark:text-slate-300">
+                              {{ c.code }}
+                            </span>
                             }
                             <span
                               class="text-sm font-semibold text-[#0070ba] dark:text-[#38bdf8] truncate group-hover/item:text-[#005a96]">
@@ -2956,40 +2980,9 @@
                         </button>
                         } @empty {
                         <div
-                          class="py-8 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-1.5">
-                          <svg class="w-6 h-6 text-slate-300 dark:text-slate-600" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="1.5">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                          </svg>
-                          <span>No countries found matching "{{ countryDropdownSearch() }}"</span>
+                          class="py-6 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-1.5">
+                          <span>No countries found</span>
                         </div>
-                        }
-                      </div>
-                    </div>
-                    }
-
-                    <!-- Requirement 1.B: Autocomplete Suggestions Dropdown from Permanent Country Master Table (Point 14: Flag & Name only) -->
-                    @if (isNameAutocompleteOpen() && countryMasterSuggestions().length > 0) {
-                    <div
-                      class="absolute left-0 right-0 top-full mt-1.5 z-50 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden py-1 animate-in fade-in slide-in-from-top-1">
-                      <div class="max-h-56 overflow-y-auto custom-scrollbar">
-                        @for (sug of countryMasterSuggestions(); track sug.id) {
-                        <button type="button" (mousedown)="selectMasterSuggestion(sug); $event.preventDefault()"
-                          class="w-full px-4 py-2.5 flex items-center gap-3 text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer group">
-                          @if (sug.flag) {
-                          <img [src]="sug.flag" [alt]="sug.name"
-                            class="w-6 h-4 object-cover rounded shadow-2xs shrink-0"
-                            (error)="onFlagError($event, sug)" />
-                          } @else {
-                          <span
-                            class="w-6 h-4 rounded bg-slate-100 dark:bg-slate-700 text-[9px] font-bold flex items-center justify-center shrink-0 uppercase text-slate-600 dark:text-slate-300">{{
-                            sug.code }}</span>
-                          }
-                          <span
-                            class="text-xs font-semibold text-slate-800 dark:text-white group-hover:text-[#00a6f4] transition-colors truncate">{{
-                            sug.name }}</span>
-                        </button>
                         }
                       </div>
                     </div>
@@ -3256,34 +3249,33 @@
                 <input #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
                   class="hidden" />
 
-                <!-- Sections hidden by default if country is not selected (both Add and Edit pages) -->
-                @if (isCountrySelected()) {
-                <!-- Clean Label & Value Grid matching View Mode (Image 2) -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-7 items-center pt-2 animate-in fade-in duration-200">
+                <!-- Clean Label & Value Grid matching View Mode: Always visible, displaying values or '-' (Requirement 2) -->
+                <div
+                  class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-7 items-center pt-2 animate-in fade-in duration-200">
                   @if (isFieldVisible('isoCode2')) {
                   <div>
                     <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
                       2</span>
                     <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsoCode2() ||
-                      formCode() || '—' }}</span>
+                      formCode() || '-' }}</span>
                   </div>
                   }
 
-                  @if (isFieldVisible('isoCode3') && formIsoCode3()) {
+                  @if (isFieldVisible('isoCode3')) {
                   <div>
                     <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
                       3</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsoCode3()
-                      }}</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsoCode3() ||
+                      '-' }}</span>
                   </div>
                   }
 
-                  @if (isFieldVisible('isoNumeric') && formIsoNumeric()) {
+                  @if (isFieldVisible('isoNumeric')) {
                   <div>
                     <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO
                       Numeric</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsoNumeric()
-                      }}</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsoNumeric() ||
+                      '-' }}</span>
                   </div>
                   }
 
@@ -3291,64 +3283,64 @@
                   <div>
                     <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Dial
                       Code</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsd() || '—'
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formIsd() || '-'
                       }}</span>
                   </div>
                   }
 
-                  @if (isFieldVisible('currency') && formCurrency()) {
+                  @if (isFieldVisible('currency')) {
                   <div>
                     <span
                       class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Currency</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formCurrency()
-                      }}</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formCurrency() ||
+                      '-' }}</span>
                   </div>
                   }
 
-                  @if (isFieldVisible('nationality') && formNationality()) {
+                  @if (isFieldVisible('nationality')) {
                   <div>
                     <span
                       class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
                     <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formNationality()
-                      }}</span>
+                      || '-' }}</span>
                   </div>
                   }
 
-                  @if (isFieldVisible('continent') && formContinent()) {
+                  @if (isFieldVisible('continent')) {
                   <div>
                     <span
                       class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Continent</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formContinent()
-                      }}</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formContinent() ||
+                      '-' }}</span>
                   </div>
                   }
 
-                  @if (isFieldVisible('subregion') && formSubregion()) {
+                  @if (isFieldVisible('subregion')) {
                   <div>
                     <span
                       class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Subregion</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formSubregion()
-                      }}</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formSubregion() ||
+                      '-' }}</span>
                   </div>
                   }
 
-                  @if (isFieldVisible('capital') && formCapital()) {
+                  @if (isFieldVisible('capital')) {
                   <div>
                     <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Capital
                       City</span>
-                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formCapital()
-                      }}</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ formCapital() ||
+                      '-' }}</span>
                   </div>
                   }
 
                   <!-- Custom Dynamic Fields in View Mode format -->
                   @for (cf of tenantService.customFields(); track cf.key) {
-                  @if (isFieldVisible(cf.key) && getCustomFieldValue(cf.key)) {
+                  @if (isFieldVisible(cf.key)) {
                   <div>
                     <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">{{
                       cf.label }}</span>
                     <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{
-                      getCustomFieldValue(cf.key) }}</span>
+                      getCustomFieldValue(cf.key) || '-' }}</span>
                   </div>
                   }
                   }
@@ -3361,15 +3353,14 @@
                   <div
                     class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-4 sm:p-5 flex items-center justify-center bg-transparent min-h-[96px]">
                     @if (currentFormFlagUrl()) {
-                    <img
-                      [src]="currentFormFlagUrl()"
-                      [alt]="formName()"
+                    <img [src]="currentFormFlagUrl()" [alt]="formName()"
                       class="h-16 w-26 object-cover rounded-xl shadow-md border border-slate-200/60 dark:border-slate-700"
                       (error)="onFlagError($event)" />
+                    } @else {
+                    <span class="text-sm font-semibold text-slate-400 dark:text-slate-500">-</span>
                     }
                   </div>
                 </div>
-                }
                 }
 
               </div>
@@ -3602,6 +3593,20 @@
                     </span>
 
                     <div class="flex items-center gap-2 ml-2 shrink-0">
+                      <!-- Translation Trigger Button in View Mode -->
+                      <button type="button" (click)="openTranslationPopup(); $event.stopPropagation()"
+                        class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition rounded-full"
+                        title="View Country Translations" data-tooltip="Translations" data-tooltip-pos="top">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="m5 8 6 6" />
+                          <path d="m4 14 6-6 2-3" />
+                          <path d="M2 5h12" />
+                          <path d="M7 2h1" />
+                          <path d="m22 22-5-10-5 10" />
+                          <path d="M14 18h6" />
+                        </svg>
+                      </button>
+
                       <!-- Chevron Up / Down -->
                       <span class="text-slate-400 transition-transform duration-200"
                         [class.rotate-180]="isViewCountryDropdownOpen()">
@@ -3620,52 +3625,25 @@
                     </label>
                   </div>
 
-                  <!-- Dropdown with Search & Select Country List (Reference Default Currency Dropdown, Searchbar no need circle) -->
+                  <!-- Dropdown Select Country List (Image 1 style, no search bar) -->
                   @if (isViewCountryDropdownOpen()) {
                   <div (click)="$event.stopPropagation()"
-                    class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-                    <!-- Search Bar (No circle / clean rectangular-rounded border) with Voice Input -->
-                    <div
-                      class="relative flex items-center w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                      <svg class="w-4 h-4 text-slate-400 shrink-0 mr-2" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                      </svg>
-                      <input type="text" [ngModel]="viewCountrySearch()" (ngModelChange)="viewCountrySearch.set($event)"
-                        placeholder="Search" autocomplete="off"
-                        class="w-full bg-transparent text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
-                      @if (viewCountrySearch()) {
-                      <button type="button" (click)="viewCountrySearch.set('')"
-                        class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 cursor-pointer mr-1">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M18 6L6 18M6 6l12 12" />
-                        </svg>
-                      </button>
-                      }
-                      <button type="button" (click)="toggleVoiceInput('viewCountrySearch')"
-                        class="text-slate-400 hover:text-[#00a6f4] p-1 rounded-full cursor-pointer focus:outline-none transition-colors shrink-0"
-                        [class.text-red-500]="activeListeningField() === 'viewCountrySearch'"
-                        [class.animate-pulse]="activeListeningField() === 'viewCountrySearch'"
-                        [title]="activeListeningField() === 'viewCountrySearch' ? 'Listening...' : 'Voice Search'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor" stroke-width="1.8">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                        </svg>
-                      </button>
-                    </div>
-
-                    <!-- Scrollable Countries List with Image 1 styling -->
-                    <div class="mt-2.5 max-h-60 overflow-y-auto custom-scrollbar flex flex-col space-y-1 pr-1">
+                    class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-2 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <div class="max-h-60 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
                       @for (c of filteredViewCountryList(); track c.code) {
                       <button type="button" (click)="selectViewCountryOption(c)"
-                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item"
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item"
                         [class.bg-[#dff3fd]]="c.name === sc.name || c.name === viewCountryName()"
                         [class.dark:bg-sky-950/70]="c.name === sc.name || c.name === viewCountryName()">
-                        <div class="flex items-center gap-2.5 truncate">
+                        <div class="flex items-center gap-3 truncate">
                           @if (c.flag) {
-                          <img [src]="c.flag" [alt]="c.name" class="w-6 h-4 object-cover rounded shadow-2xs shrink-0" />
+                          <img [src]="c.flag" [alt]="c.name" class="w-6 h-4 object-cover rounded shadow-2xs shrink-0"
+                            (error)="onFlagError($event, c)" />
+                          } @else {
+                          <span
+                            class="w-6 h-4 rounded bg-slate-100 dark:bg-slate-700 text-[9px] font-bold flex items-center justify-center shrink-0 uppercase text-slate-600 dark:text-slate-300">
+                            {{ c.code }}
+                          </span>
                           }
                           <span
                             class="text-sm font-semibold text-[#0070ba] dark:text-[#38bdf8] truncate group-hover/item:text-[#005a96]">
@@ -3678,13 +3656,8 @@
                       </button>
                       } @empty {
                       <div
-                        class="py-8 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-1.5">
-                        <svg class="w-6 h-6 text-slate-300 dark:text-slate-600" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" stroke-width="1.5">
-                          <circle cx="11" cy="11" r="8" />
-                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                        <span>No countries found matching "{{ viewCountrySearch() }}"</span>
+                        class="py-6 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-1.5">
+                        <span>No countries found</span>
                       </div>
                       }
                     </div>
@@ -5737,7 +5710,8 @@
       <div
         class="px-6 py-3.5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-center text-xs shrink-0">
         <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">
-          Showing {{ filteredLookupRecords().length }} matching records in World Lookup Table
+          Showing <strong class="font-bold text-black dark:text-white">{{ filteredLookupRecords().length }}</strong>
+          matching records in World Lookup Table
         </span>
       </div>
 
@@ -5979,7 +5953,8 @@
         <div class="flex items-center">
           @if (flagLookupTab() === 'gallery') {
           <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">
-            Showing {{ displayedGalleryFlags().length }} of {{ filteredGalleryFlags().length }} Flags
+            Showing <strong class="font-bold text-black dark:text-white">{{ displayedGalleryFlags().length }}</strong>
+            of <strong class="font-bold text-black dark:text-white">{{ filteredGalleryFlags().length }}</strong> Flags
           </span>
           }
         </div>
@@ -6564,6 +6539,226 @@
           class="px-6 py-2 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
           Done & Apply
         </button>
+      </div>
+
+    </div>
+  </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- EXACT REPLICA: TRANSLATION POPUP MODAL (Add / Edit / View)                -->
+  <!-- ========================================================================= -->
+  @if (isTranslationModalOpen()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-150"
+    (click)="closeTranslationPopup()">
+
+    <!-- Modal Box: Clean white background, rounded-[24px], soft shadow matching client image -->
+    <div
+      class="w-full max-w-3xl max-h-[92vh] bg-white dark:bg-slate-900 rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] border border-slate-200/90 dark:border-slate-800 p-8 flex flex-col gap-5 animate-in zoom-in-95 duration-150"
+      (click)="$event.stopPropagation()">
+
+      <!-- Top Header -->
+      <div class="flex items-start justify-between">
+        <div>
+          <h2 class="text-[22px] font-bold text-slate-900 dark:text-white tracking-tight leading-tight">Translation</h2>
+
+        </div>
+        <button type="button" (click)="closeTranslationPopup()"
+          class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200 flex items-center justify-center transition-colors cursor-pointer"
+          title="Close">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Header Divider Line to differentiate popup header (Requirement 7) -->
+      <hr class="border-t border-slate-200/90 dark:border-slate-800 -mx-8 -my-2" />
+
+      <!-- Subheader: COUNTRY NAME on left, Search box on right -->
+      <div class="flex items-center justify-between gap-4 mt-1">
+        <div>
+          <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase block">COUNTRY
+            NAME</span>
+          <h3 class="text-[26px] font-bold text-slate-900 dark:text-white mt-1 leading-none">{{
+            activeTranslationCountryName() }}</h3>
+        </div>
+
+        <div
+          class="relative flex items-center h-11 w-80 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-500/20 transition-all">
+          <svg class="w-4 h-4 text-slate-400 shrink-0 mr-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" [ngModel]="translationSearch()" (ngModelChange)="translationSearch.set($event)"
+            placeholder="Search"
+            class="w-full bg-transparent text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 font-normal outline-none" />
+          @if (translationSearch()) {
+          <button type="button" (click)="translationSearch.set('')"
+            class="p-0.5 text-slate-400 hover:text-slate-600 mr-1.5 cursor-pointer">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+          }
+          <button type="button" (click)="toggleVoiceInput('translationSearch')"
+            class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer transition-colors"
+            [class.text-red-500]="activeListeningField() === 'translationSearch'"
+            [class.animate-pulse]="activeListeningField() === 'translationSearch'" title="Voice Search">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Table Container with Grid Cell Focus Navigation and Visible Scrollbar -->
+      <div
+        class="border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 shadow-xs flex flex-col flex-1 min-h-0">
+        <div class="overflow-y-auto max-h-[420px] custom-scrollbar relative flex-1">
+          <table tabindex="0" (keydown)="onTranslationTableKeyDown($event)"
+            class="w-full border-collapse select-none focus:outline-none">
+            <thead
+              class="sticky top-0 z-10 bg-[#f8fafc] dark:bg-slate-800 shadow-[0_1px_0_0_rgba(226,232,240,1)] dark:shadow-[0_1px_0_0_rgba(51,65,85,1)]">
+              <tr
+                class="border-b border-slate-200/90 dark:border-slate-700/80 text-[11px] font-semibold text-slate-500 dark:text-slate-400 tracking-wider">
+                <th class="py-3.5 pl-6 pr-3 text-left w-16 bg-[#f8fafc] dark:bg-slate-800">SN</th>
+                <th class="py-3.5 px-4 text-left w-36 bg-[#f8fafc] dark:bg-slate-800">Language</th>
+                <th class="py-3.5 px-4 text-left bg-[#f8fafc] dark:bg-slate-800">Translation</th>
+                <th class="py-3.5 px-4 text-center w-28 bg-[#f8fafc] dark:bg-slate-800">Source</th>
+                <th class="py-3.5 pr-6 pl-4 text-center w-32 bg-[#f8fafc] dark:bg-slate-800">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm">
+              @for (row of displayedTranslationRows(); track row.code; let rIdx = $index) {
+              <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <!-- SN (Col 0) -->
+                <td (click)="selectTranslationCell(rIdx, 0)"
+                  [class.ring-2]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 0"
+                  [class.ring-[#00a6f4]]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 0"
+                  [class.ring-inset]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 0"
+                  [class.bg-sky-50/70]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 0"
+                  [class.dark:bg-sky-950/40]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 0"
+                  class="py-4 pl-6 pr-3 text-slate-500 dark:text-slate-400 font-medium text-xs cursor-pointer transition-all duration-100">
+                  {{ row.sn }}
+                </td>
+
+                <!-- Language (Col 1) -->
+                <td (click)="selectTranslationCell(rIdx, 1)"
+                  [class.ring-2]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 1"
+                  [class.ring-[#00a6f4]]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 1"
+                  [class.ring-inset]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 1"
+                  [class.bg-sky-50/70]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 1"
+                  [class.dark:bg-sky-950/40]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 1"
+                  class="py-4 px-4 text-slate-800 dark:text-slate-100 font-medium text-sm cursor-pointer transition-all duration-100">
+                  {{ row.language }}
+                </td>
+
+                <!-- Translation (Col 2) - Read-only with cell selection, edit mode commented out (Requirements 1 & 6) -->
+                <td (click)="selectTranslationCell(rIdx, 2)"
+                  [class.ring-2]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 2"
+                  [class.ring-[#00a6f4]]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 2"
+                  [class.ring-inset]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 2"
+                  [class.bg-sky-50/70]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 2"
+                  [class.dark:bg-sky-950/40]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 2"
+                  class="py-4 px-4 text-slate-900 dark:text-white cursor-pointer transition-all duration-100"
+                  [attr.dir]="row.dir">
+                  <!--
+                  Future inline edit option preserved (commented per requirement 1):
+                  @if (editingTranslationLang() === row.code) {
+                  <input type="text" [ngModel]="editingTranslationValue()" (ngModelChange)="editingTranslationValue.set($event)" ... />
+                  }
+                  -->
+                  <span class="select-none block" [class.text-right]="row.dir === 'rtl'"
+                    [class.text-left]="row.dir === 'ltr'" [class.font-bold]="row.dir === 'rtl'"
+                    [class.text-[17px]]="row.dir === 'rtl'" [class.font-medium]="row.dir === 'ltr'"
+                    [class.text-sm]="row.dir === 'ltr'" [class.pr-4]="row.dir === 'rtl'">
+                    {{ row.translation }}
+                  </span>
+                </td>
+
+                <!-- Source Badge (Col 3) -->
+                <td (click)="selectTranslationCell(rIdx, 3)"
+                  [class.ring-2]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 3"
+                  [class.ring-[#00a6f4]]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 3"
+                  [class.ring-inset]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 3"
+                  [class.bg-sky-50/70]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 3"
+                  [class.dark:bg-sky-950/40]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 3"
+                  class="py-4 px-4 text-center cursor-pointer transition-all duration-100">
+                  <span class="px-3 py-0.5 rounded-full text-xs font-medium inline-block"
+                    [class.bg-[#eff6ff]]="row.source === 'Auto'" [class.text-[#3b82f6]]="row.source === 'Auto'"
+                    [class.dark:bg-sky-950/60]="row.source === 'Auto'" [class.dark:text-sky-400]="row.source === 'Auto'"
+                    [class.bg-[#ecfdf5]]="row.source === 'Manual'" [class.text-[#059669]]="row.source === 'Manual'"
+                    [class.dark:bg-emerald-950/60]="row.source === 'Manual'"
+                    [class.dark:text-emerald-400]="row.source === 'Manual'">
+                    {{ row.source }}
+                  </span>
+                </td>
+
+                <!-- Status Badge (Col 4) -->
+                <td (click)="selectTranslationCell(rIdx, 4)"
+                  [class.ring-2]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 4"
+                  [class.ring-[#00a6f4]]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 4"
+                  [class.ring-inset]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 4"
+                  [class.bg-sky-50/70]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 4"
+                  [class.dark:bg-sky-950/40]="translationSelectedCell()?.row === rIdx && translationSelectedCell()?.col === 4"
+                  class="py-4 pr-6 pl-4 text-center cursor-pointer transition-all duration-100">
+                  <span class="px-3.5 py-0.5 rounded-full text-xs font-medium inline-block min-w-[70px]"
+                    [class.bg-[#ecfdf5]]="row.status === 'Approved'" [class.text-[#16a34a]]="row.status === 'Approved'"
+                    [class.dark:bg-emerald-950/60]="row.status === 'Approved'"
+                    [class.dark:text-emerald-400]="row.status === 'Approved'"
+                    [class.bg-[#f1f5f9]]="row.status === 'Draft'" [class.text-[#475569]]="row.status === 'Draft'"
+                    [class.dark:bg-slate-800]="row.status === 'Draft'"
+                    [class.dark:text-slate-300]="row.status === 'Draft'" [class.bg-[#fef3c7]]="row.status === 'Pending'"
+                    [class.text-[#d97706]]="row.status === 'Pending'"
+                    [class.dark:bg-amber-950/60]="row.status === 'Pending'"
+                    [class.dark:text-amber-400]="row.status === 'Pending'">
+                    {{ row.status }}
+                  </span>
+                </td>
+              </tr>
+              } @empty {
+              <tr>
+                <td colspan="5" class="py-12 text-center text-xs text-slate-400">
+                  No languages or translations found matching "{{ translationSearch() }}"
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer: Showing content displayed in Middle (Centered) -->
+      <div class="flex items-center justify-center text-xs text-slate-500 dark:text-slate-400 pt-1 px-0.5 shrink-0">
+        <div class="flex items-center gap-2 justify-center">
+          <span>Showing <strong class="font-bold text-black dark:text-white">{{ displayedTranslationRows().length
+              }}</strong> of <strong class="font-bold text-black dark:text-white">{{ allTranslationRows().length
+              }}</strong></span>
+          @if (translationTotalPages() > 1 && !translationSearch()) {
+          <div class="flex items-center gap-0.5 ml-1 text-slate-400">
+            <button type="button" (click)="prevTranslationPage()" [disabled]="translationPage() === 1"
+              class="p-0.5 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 disabled:hover:text-slate-400 cursor-pointer"
+              title="Previous">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+            <button type="button" (click)="nextTranslationPage()"
+              [disabled]="translationPage() === translationTotalPages()"
+              class="p-0.5 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 disabled:hover:text-slate-400 cursor-pointer"
+              title="Next">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+          }
+        </div>
       </div>
 
     </div>
