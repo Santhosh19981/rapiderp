@@ -2648,12 +2648,37 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isNameAutocompleteOpen.set(!!clean);
     this.countryDropdownSearch.set(clean);
     clearTimeout(this.nameDebounceTimer);
+    if (!clean) {
+      // Without country name, reset all dependent fields
+      this.formCode.set('');
+      this.formIsoCode2.set('');
+      this.formIsoCode3.set('');
+      this.formIsoNumeric.set('');
+      this.formNationality.set('');
+      this.formIsd.set('');
+      this.formCurrency.set('');
+      this.formCurrencyCode.set('');
+      this.formContinent.set('');
+      this.formSubregion.set('');
+      this.formCapital.set('');
+      this.formFlag.set(null);
+      this.selectedMasterCountry.set(null);
+      this.selectedReferenceRecordName.set(null);
+      return;
+    }
     this.nameDebounceTimer = setTimeout(() => {
       const exact = this.lookupTableData.find(
         (c) => c.name.toLowerCase() === clean.toLowerCase()
       );
-      if (exact && exact.name.toLowerCase() === clean.toLowerCase()) {
+      if (exact) {
         this.selectCountryFromDropdown(exact);
+        return;
+      }
+      const matchMaster = this.countryService.countries().find(
+        (c) => c.name.toLowerCase() === clean.toLowerCase()
+      );
+      if (matchMaster) {
+        this.selectMasterSuggestion(matchMaster);
       }
     }, 250);
   }
@@ -2674,6 +2699,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     if (c.currency) this.formCurrency.set(c.currency);
     if (c.nationality) this.formNationality.set(c.nationality);
     if (c.continent) this.formContinent.set(c.continent);
+    if ((c as any).subregion) this.formSubregion.set((c as any).subregion);
     if (c.capital) this.formCapital.set(c.capital);
     if (c.flag) {
       this.formFlag.set(c.flag);
@@ -2736,6 +2762,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
   countryDropdownSearch = signal<string>('');
 
   currentFormFlagUrl = computed<string | null>(() => {
+    // If no country name is selected/entered, do not return any flag
+    if (!this.formName()?.trim()) return null;
     if (this.formFlag()) return this.formFlag();
     const code = (this.formIsoCode2() || this.formCode() || '').trim().toLowerCase();
     if (code && code.length >= 2) {
@@ -2849,6 +2877,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.formCurrency.set(currVal);
     this.formCurrencyCode.set(currVal);
     this.formContinent.set(c.continent || '');
+    this.formSubregion.set(c.subregion || '');
     this.formCapital.set(c.capital || '');
     if (c.flag) {
       this.formFlag.set(c.flag);
@@ -3150,13 +3179,30 @@ export class CountryComponent implements OnInit, AfterViewInit {
       const id = qp.get('id');
 
       if (id && id !== this.currentCountryId()) {
-        this.currentCountryId.set(id);
         const c = this.countryService.countries().find((item) => item.id === id);
         if (c) {
+          this.currentCountryId.set(id);
           this.loadCountryIntoForm(c);
           this.viewCountryName.set(c.name);
           this.originalViewCountryName.set(c.name);
           this.selectedMasterCountry.set(c);
+        } else {
+          if (mode === 'add') {
+            this.currentCountryId.set(null);
+            this.clearForm();
+          } else {
+            const first = this.sortedCountries()[0] || this.countryService.countries()[0];
+            if (first) {
+              this.currentCountryId.set(first.id);
+              this.loadCountryIntoForm(first);
+              this.viewCountryName.set(first.name);
+              this.originalViewCountryName.set(first.name);
+              this.selectedMasterCountry.set(first);
+            } else {
+              this.currentCountryId.set(null);
+              this.clearForm();
+            }
+          }
         }
       }
 
@@ -3165,10 +3211,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
           this.currentCountryId.set(null);
           this.selectedMasterCountry.set(null);
           this.clearForm();
-        } else if ((mode === 'edit' || mode === 'view') && !this.formCode()) {
+        } else if ((mode === 'edit' || mode === 'view') && !this.formName()?.trim()) {
           const c =
             this.selectedCountry() ||
-            (mode === 'view' ? (this.sortedCountries()[0] || this.countryService.countries()[0]) : null);
+            (this.sortedCountries()[0] || this.countryService.countries()[0]);
           if (c) {
             this.currentCountryId.set(c.id);
             this.loadCountryIntoForm(c);
@@ -4377,19 +4423,24 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   loadCountryIntoForm(country: Country): void {
-    const code = country.code || country.isoCode2 || 'US';
+    if (!country || !country.name?.trim()) {
+      this.clearForm();
+      return;
+    }
+    const code = country.code || country.isoCode2 || '';
     this.formCode.set(code);
     this.formIsoCode2.set(country.isoCode2 || code);
-    this.formIsoCode3.set(country.isoCode3 || (code === 'AE' ? 'ARE' : code === 'US' ? 'USA' : `${code}A`));
-    this.formIsoNumeric.set(country.isoNumeric || (code === 'AE' ? '784' : code === 'US' ? '840' : '100'));
-    this.formNationality.set(country.nationality || (code === 'AE' ? 'Emirati' : code === 'US' ? 'American' : `${country.name} citizen`));
-    this.formIsd.set(country.isd);
-    this.formName.set(country.name);
-    this.formCurrency.set(country.currency);
+    this.formIsoCode3.set(country.isoCode3 || (code === 'AE' ? 'ARE' : code === 'US' ? 'USA' : code ? `${code}A` : ''));
+    this.formIsoNumeric.set(country.isoNumeric || (code === 'AE' ? '784' : code === 'US' ? '840' : code ? '100' : ''));
+    this.formNationality.set(country.nationality || (code === 'AE' ? 'Emirati' : code === 'US' ? 'American' : country.name ? `${country.name} citizen` : ''));
+    this.formIsd.set(country.isd || '');
+    this.formName.set(country.name || '');
+    this.formCurrency.set(country.currency || '');
     this.formDefault.set(country.isDefault ? 'Yes' : 'No');
     this.formStatus.set(country.status === 'Deleted' ? 'Delete' : country.status);
-    this.formFlag.set(country.flag || null);
+    this.formFlag.set(country.flag || (code ? `https://flagcdn.com/${code.toLowerCase()}.svg` : null));
     this.formContinent.set(country.continent || '');
+    this.formSubregion.set((country as any).subregion || '');
     this.formCapital.set(country.capital || '');
     this.formCustomFields.set({ ...(country.customFields || {}) });
     this.formTranslations.set({ ...(country.translations || {}) });
@@ -4411,6 +4462,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.formStatus.set('Active');
     this.formFlag.set(null);
     this.formContinent.set('');
+    this.formSubregion.set('');
     this.formCapital.set('');
     this.formCustomFields.set({});
     this.formTranslations.set({});
