@@ -1356,6 +1356,9 @@ export class CountryComponent implements OnInit, AfterViewInit {
   continentError = computed<string | null>(() => null);
   capitalError = computed<string | null>(() => null);
 
+  // Whether a country is currently selected/entered in Add or Edit mode
+  isCountrySelected = computed<boolean>(() => !!this.formName()?.trim());
+
   // Input validity states for green checkmark icon
   isNameValid = computed(() => !!this.formName()?.trim() && !this.nameError());
   isIsoCode2Valid = computed(() => !!this.formIsoCode2()?.trim() && !this.isoCode2Error());
@@ -2274,6 +2277,22 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.viewCountryName.set(c.name);
     this.isViewCountryDropdownOpen.set(false);
     this.viewCountrySearch.set('');
+
+    // If the chosen country exists in ERP, directly switch and view it
+    const existing =
+      this.sortedCountries().find(
+        (item) => item.code?.toLowerCase() === c.code?.toLowerCase() || item.name?.toLowerCase() === c.name?.toLowerCase()
+      ) ||
+      this.countryService.countries().find(
+        (item) => item.code?.toLowerCase() === c.code?.toLowerCase() || item.name?.toLowerCase() === c.name?.toLowerCase()
+      );
+
+    if (existing) {
+      this.openView(existing);
+      this.showToast(`Loaded details for "${existing.name}".`);
+      return;
+    }
+
     const curId = this.currentCountryId();
     if (curId) {
       this.countryService.updateCountry(curId, {
@@ -2287,6 +2306,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
         continent: c.continent,
         flag: c.flag,
       });
+      const updated = this.countryService.getCountryById(curId);
+      if (updated) {
+        this.loadCountryIntoForm(updated);
+      }
       this.originalViewCountryName.set(c.name);
       this.showToast(`Updated to "${c.name}" from Master Countries.`);
     }
@@ -2382,7 +2405,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
   openViewForActiveCountry(): void {
     const activeId = this.currentCountryId();
     const active = activeId ? this.countryService.getCountryById(activeId) : null;
-    const target = active || this.selectedMasterCountry() || this.viewCountry() || this.countryService.countries()[0];
+    const firstCountry = this.sortedCountries()[0] || this.countryService.countries()[0];
+    const target =
+      (active && active.name?.trim())
+        ? active
+        : (this.selectedMasterCountry() && this.selectedMasterCountry()?.name?.trim())
+          ? this.selectedMasterCountry()
+          : firstCountry;
+
     if (target) {
       this.openView(target);
     } else {
@@ -2509,8 +2539,11 @@ export class CountryComponent implements OnInit, AfterViewInit {
           this.selectedMasterCountry.set(null);
           this.clearForm();
         } else if ((mode === 'edit' || mode === 'view') && !this.formCode()) {
-          const c = this.selectedCountry();
+          const c =
+            this.selectedCountry() ||
+            (mode === 'view' ? (this.sortedCountries()[0] || this.countryService.countries()[0]) : null);
           if (c) {
+            this.currentCountryId.set(c.id);
             this.loadCountryIntoForm(c);
             this.viewCountryName.set(c.name);
             this.originalViewCountryName.set(c.name);
@@ -3566,8 +3599,15 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.clearForm();
     } else if (mode === 'edit' || mode === 'view') {
       // Tabs switch between edit/view of the same record: reload saved values
-      const c = this.selectedCountry();
-      if (c) this.loadCountryIntoForm(c);
+      const c =
+        this.selectedCountry() ||
+        (mode === 'view' ? (this.sortedCountries()[0] || this.countryService.countries()[0]) : null);
+      if (c) {
+        this.currentCountryId.set(c.id);
+        this.loadCountryIntoForm(c);
+        this.viewCountryName.set(c.name);
+        this.originalViewCountryName.set(c.name);
+      }
     }
     this.selectedCell.set(null);
     this.editingCell.set(null);

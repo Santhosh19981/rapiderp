@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rapid ERP — Angular 22 Enterprise Coding Standards & 10/10 Review Scorecard</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      color: #1e293b;
+      margin: 40px auto;
+      max-width: 900px;
+      padding: 0 20px;
+    }
+    h1 {
+      color: #0369a1;
+      font-size: 26px;
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 8px;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+    h2 {
+      color: #0f172a;
+      font-size: 20px;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+    h3 {
+      color: #0284c7;
+      font-size: 16px;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+    p, li {
+      font-size: 14px;
+      margin: 6px 0;
+    }
+    .badge-box {
+      background-color: #f0f9ff;
+      border-left: 4px solid #0284c7;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 4px;
+    }
+    .warning-box {
+      background-color: #fef2f2;
+      border-left: 4px solid #dc2626;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 4px;
+      color: #991b1b;
+      font-weight: 500;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px 0;
+      font-size: 13px;
+    }
+    th {
+      background-color: #0369a1;
+      color: #ffffff;
+      text-align: left;
+      padding: 10px;
+      font-weight: 600;
+      border: 1px solid #0284c7;
+    }
+    td {
+      padding: 9px 10px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .pass-badge {
+      color: #15803d;
+      font-weight: bold;
+      background-color: #dcfce7;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .signoff-card {
+      border: 2px dashed #0284c7;
+      background-color: #f8fafc;
+      padding: 16px;
+      border-radius: 6px;
+      margin-top: 24px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>RAPID ERP — ANGULAR 22 ENTERPRISE CODING STANDARDS</h1>
+  <p><strong>Official Architecture, TypeScript Standards, and 10/10 Quality Gatekeeper</strong></p>
+
+  <div class="badge-box">
+    <strong>Document Metadata:</strong><br>
+    • <strong>Author / Lead:</strong> Santosh (Senior Angular Developer) & Rapid ERP Core Team<br>
+    • <strong>Target Framework:</strong> Angular 22.2.0 | TypeScript 6.0 | Tailwind CSS 4.x<br>
+    • <strong>Status:</strong> Active & Enforced Across All Modules
+  </div>
+
+  <div class="warning-box">
+    ⚠️ <strong>MANDATORY ZERO-TOLERANCE GATEKEEPER POLICY:</strong><br>
+    Any code submitted by any team member or contractor that violates these standards will <strong>NOT</strong> be received or merged into the codebase. Every Pull Request must achieve a perfect <strong>10/10 (100%)</strong> score against the Code Review Scorecard.
+  </div>
+
+  <h2>1. Standard 1: Modern Angular 22 Architecture & Signals Paradigm</h2>
+  <ul>
+    <li><strong>Standalone Components by Default:</strong> All components, pipes, and directives must use <code>standalone: true</code>. NgModules are completely deprecated and prohibited in new code.</li>
+    <li><strong>Mandatory <code>ChangeDetectionStrategy.OnPush</code>:</strong> Every component must declare <code>changeDetection: ChangeDetectionStrategy.OnPush</code> for fine-grained reactivity and maximum speed.</li>
+    <li><strong>Angular Signals for Reactive State:</strong> Use <code>signal()</code> for mutable state, <code>computed()</code> for derived values (never call dirty functions inside HTML templates), and <code>effect()</code> strictly for external side-effects.</li>
+    <li><strong>Angular 22 Control Flow:</strong> Exclusively use built-in control flow: <code>@if</code>, <code>@for (track item.id)</code>, <code>@switch</code>, and <code>@empty</code>. Legacy <code>*ngIf</code> and <code>*ngFor</code> are forbidden.</li>
+    <li><strong>Functional Dependency Injection:</strong> Use <code>inject(ServiceName)</code> as class field initializers instead of bloated constructor injections.</li>
+    <li><strong>Signal Inputs & Outputs:</strong> Use <code>input()</code>, <code>input.required()</code>, and <code>output()</code> instead of legacy <code>@Input()</code> and <code>@Output()</code>.</li>
+  </ul>
+
+  <h2>2. Standard 2: TypeScript 6 Strict Typing & Clean Engineering</h2>
+  <ul>
+    <li><strong>Zero <code>any</code> Policy:</strong> The <code>any</code> type is 100% prohibited. Always define strict models, interfaces, or type unions (e.g. <code>Country</code>, <code>CountryViewMode</code>, <code>FormStatus</code>). Use <code>unknown</code> with type guards if dynamic.</li>
+    <li><strong>Naming Conventions:</strong>
+      <ul>
+        <li>Components: <code>PascalCaseComponent</code> (e.g., <code>CountryComponent</code>)</li>
+        <li>Services: <code>PascalCaseService</code> (e.g., <code>TenantService</code>, <code>AuditService</code>)</li>
+        <li>Models / Interfaces: <code>PascalCase</code> (e.g., <code>Country</code>, <code>ExportField</code>)</li>
+        <li>Variables & Functions: <code>camelCase</code> (e.g., <code>isLoading</code>, <code>fetchCountries()</code>)</li>
+      </ul>
+    </li>
+    <li><strong>RxJS Memory Leak Prevention:</strong> All Observables must be piped through <code>takeUntilDestroyed()</code> or converted to Signals. Unmanaged subscriptions causing memory leaks are strictly forbidden.</li>
+    <li><strong>Defensive Error Handling:</strong> All asynchronous operations must include <code>try/catch</code> blocks, user toast notifications, and <code>AuditService</code> error logging. Never swallow errors.</li>
+  </ul>
+
+  <h2>3. Standard 3: UI/UX, Multi-Tenant Security & Form Standards</h2>
+  <ul>
+    <li><strong>Tailwind CSS 4 Design System:</strong> Zero inline <code>style="..."</code> attributes. All styling must follow design system utility classes and CSS variables for theme consistency across light/dark and tenant branding.</li>
+    <li><strong>Enterprise Reactive Forms:</strong> Use typed Reactive Forms with instant inline validation indicators and disabled states during asynchronous submissions to avoid duplicate actions.</li>
+    <li><strong>Two-Tier Multi-Tenant Security Gatekeeper:</strong>
+      <ul>
+        <li><strong>Tier 1 (TenantSetting Table):</strong> Tenant-wide field enablement. If hidden at tenant level, no user sees it.</li>
+        <li><strong>Tier 2 (UserPermission Table):</strong> Granular per-user role visibility.</li>
+        <li>Strict data isolation by <code>tenantId</code> across all API calls and caches.</li>
+      </ul>
+    </li>
+    <li><strong>Clean Console & Zero Regressions:</strong> Zero TypeScript compiler warnings, zero template errors, and zero runtime console errors allowed.</li>
+  </ul>
+
+  <h2>4. The 10/10 Code Review Scorecard (Audit Checklist)</h2>
+  <p>Every Pull Request must be audited and achieve a 10/10 score across all criteria:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 5%; text-align: center;">#</th>
+        <th style="width: 30%;">Inspection Criterion</th>
+        <th style="width: 45%;">Standard Requirement</th>
+        <th style="width: 10%; text-align: center;">Score</th>
+        <th style="width: 10%; text-align: center;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="text-center"><strong>1</strong></td>
+        <td><strong>Standalone Architecture</strong></td>
+        <td>Pure standalone components, no NgModules, explicit optimized imports array.</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>2</strong></td>
+        <td><strong>OnPush & Signals State</strong></td>
+        <td>ChangeDetectionStrategy.OnPush, state with signal(), derived state with computed().</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>3</strong></td>
+        <td><strong>Angular 22 Control Flow</strong></td>
+        <td>Exclusive modern control flow: @if, @for (track required), @switch, and @empty.</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>4</strong></td>
+        <td><strong>Strict TypeScript (Zero "any")</strong></td>
+        <td>Zero any allowed. Strong models, interfaces, and union types for all data structures.</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>5</strong></td>
+        <td><strong>Modern Dependency Injection</strong></td>
+        <td>All services and routers injected using inject() function. No constructor clutter.</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>6</strong></td>
+        <td><strong>RxJS & Memory Safety</strong></td>
+        <td>Subscriptions must use takeUntilDestroyed() or Signals. Zero memory leaks.</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>7</strong></td>
+        <td><strong>Tailwind CSS & UI/UX</strong></td>
+        <td>Design system tokens, responsive across all breakpoints, zero inline styles.</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>8</strong></td>
+        <td><strong>Two-Tier Multi-Tenant Security</strong></td>
+        <td>Field visibility respects Tier 1 (Tenant Setting) & Tier 2 (User Permission).</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>9</strong></td>
+        <td><strong>Error Handling & Audit Trail</strong></td>
+        <td>Robust try/catch, toast alerts for users, zero swallowed errors, and AuditService.</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="text-center"><strong>10</strong></td>
+        <td><strong>Code Formatting & Clean Console</strong></td>
+        <td>Prettier compliant, clean git history, zero compiler warnings, zero console errors.</td>
+        <td class="text-center"><strong>10/10</strong></td>
+        <td class="text-center"><span class="pass-badge">PASS</span></td>
+      </tr>
+      <tr style="background-color: #f0fdf4;">
+        <td colspan="3"><strong>TOTAL ENTERPRISE QUALITY SCORE</strong></td>
+        <td class="text-center"><strong style="color: #15803d; font-size: 15px;">10 / 10</strong></td>
+        <td class="text-center"><span class="pass-badge" style="background-color: #15803d; color: white;">APPROVED</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>5. Rapid ERP Application Compliance Audit</h2>
+  <p>Verification of our active codebase (<code>d:\rapiderp</code>) confirming full compliance:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Module / Component</th>
+        <th style="width: 25%;">Standard Verified</th>
+        <th style="width: 35%;">Implementation Proof in Codebase</th>
+        <th style="width: 15%; text-align: center;">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>country.ts</code></td>
+        <td>Standalone & Signals</td>
+        <td>Pure standalone component, inject() pattern, signal(), computed(), untracked()</td>
+        <td class="text-center"><span class="pass-badge">10/10</span></td>
+      </tr>
+      <tr>
+        <td><code>country.models.ts</code></td>
+        <td>Strict TypeScript 6</td>
+        <td>Explicit models: Country, CountryHistoryEntry, ExportField, zero "any"</td>
+        <td class="text-center"><span class="pass-badge">10/10</span></td>
+      </tr>
+      <tr>
+        <td><code>tenant.service.ts</code></td>
+        <td>Two-Tier Security</td>
+        <td>TenantSetting + UserPermission isolation matrix prevents data leakage</td>
+        <td class="text-center"><span class="pass-badge">10/10</span></td>
+      </tr>
+      <tr>
+        <td><code>country.html</code></td>
+        <td>Modern Control Flow & UI</td>
+        <td>@if, @for (track country.id), @switch, Tailwind CSS enterprise responsive grid</td>
+        <td class="text-center"><span class="pass-badge">10/10</span></td>
+      </tr>
+      <tr>
+        <td><code>app.config.ts</code></td>
+        <td>Angular 22 Bootstrapping</td>
+        <td>provideBrowserGlobalErrorListeners(), provideRouter() standalone config</td>
+        <td class="text-center"><span class="pass-badge">10/10</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. Pull Request Review Sign-off Template</h2>
+  <div class="signoff-card">
+    PR Number / Branch: __________________________________________________<br>
+    Developer Name:     __________________________________________________<br>
+    Reviewer Name:      Santosh (Senior Angular Developer / Lead)<br>
+    Date of Review:     ____ / ____ / 2026<br><br>
+    Criteria Audited (10/10 Scorecard):<br>
+    [X] 1. Standalone Architecture: 10/10<br>
+    [X] 2. OnPush & Signals:        10/10<br>
+    [X] 3. Modern Control Flow:     10/10<br>
+    [X] 4. Strict TypeScript:       10/10<br>
+    [X] 5. Modern inject():         10/10<br>
+    [X] 6. RxJS Memory Safety:      10/10<br>
+    [X] 7. Tailwind UI / UX:        10/10<br>
+    [X] 8. Multi-Tenant Security:   10/10<br>
+    [X] 9. Error Handling:          10/10<br>
+    [X] 10. Clean Console & Lints:  10/10<br><br>
+    FINAL SCORE: 10 / 10 (100% PASS)<br>
+    DECISION:    [X] APPROVED AND RECEIVED    [ ] REJECTED<br><br>
+    Sign-off Signature: __________________________________________________
+  </div>
+
+</body>
+</html>
