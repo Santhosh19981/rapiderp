@@ -116,7 +116,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       case 'edit':
         return 'Edit Country';
       case 'view':
-        return 'Country Details';
+        return 'View Country';
       default:
         return 'Country Grid View';
     }
@@ -1781,6 +1781,30 @@ export class CountryComponent implements OnInit, AfterViewInit {
     return this.formName()?.trim() || this.selectedCountry()?.name || 'India';
   });
 
+  // Active Country Flag URL for Translation Modal Subheader (Requirement 12)
+  activeTranslationFlagUrl = computed<string>(() => {
+    const name = this.activeTranslationCountryName().trim().toLowerCase();
+    const sc = this.selectedCountry();
+    if (sc && sc.name.toLowerCase() === name && sc.flag) {
+      return sc.flag;
+    }
+    const sm = this.selectedMasterCountry();
+    if (sm && sm.name.toLowerCase() === name && sm.flag) {
+      return sm.flag;
+    }
+    const gf = this.galleryFlags.find((f) => f.name.toLowerCase() === name);
+    if (gf) return gf.flagUrl;
+    const match = this.countryService.countries().find((c) => c.name.toLowerCase() === name);
+    if (match) {
+      if (match.flag) return match.flag;
+      const code = match.isoCode2 || match.code;
+      if (code) return `https://flagcdn.com/${code.toLowerCase()}.svg`;
+    }
+    if (this.formFlag()) return this.formFlag()!;
+    if (this.formIsoCode2()) return `https://flagcdn.com/${this.formIsoCode2().toLowerCase()}.svg`;
+    return 'https://flagcdn.com/in.svg';
+  });
+
   // Modal open/close & search state
   isTranslationModalOpen = signal<boolean>(false);
   translationSearch = signal<string>('');
@@ -1926,6 +1950,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.editingTranslationLang.set(null);
     this.translationSelectedCell.set(null);
     this.isTranslationModalOpen.set(true);
+    // Auto-focus search input (Requirement 11)
+    setTimeout(() => {
+      const el = document.getElementById('translation-search-input') as HTMLInputElement | null;
+      if (el) {
+        el.focus();
+        el.select?.();
+      }
+    }, 60);
   }
 
   closeTranslationPopup(): void {
@@ -3012,8 +3044,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Toast feedback message
+  // Toast feedback message & visual type ('success' = theme primary blue, 'error' = red)
   toastMessage = signal<string | null>(null);
+  toastType = signal<'success' | 'error'>('success');
+  private toastTimer: any = null;
 
   // Import wizard state
   importStep = signal<1 | 2 | 3>(1);
@@ -5587,12 +5621,26 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isImportDragging.set(false);
   }
 
-  // Toast notifier
-  showToast(msg: string): void {
+  // Toast notifier with animated top-right presentation (Requirement 20)
+  showToast(msg: string, type?: 'success' | 'error'): void {
+    if (this.toastTimer) {
+      clearTimeout(this.toastTimer);
+    }
+    const isNegative =
+      type === 'error' ||
+      /failed|error|invalid|cannot|duplicate|deleted|removed|cancelled|not supported|required|empty/i.test(msg);
+    this.toastType.set(isNegative ? 'error' : 'success');
     this.toastMessage.set(msg);
-    setTimeout(() => {
+    this.toastTimer = setTimeout(() => {
       this.toastMessage.set(null);
-    }, 3200);
+    }, 3500);
+  }
+
+  dismissToast(): void {
+    if (this.toastTimer) {
+      clearTimeout(this.toastTimer);
+    }
+    this.toastMessage.set(null);
   }
 
   openImportModal(): void {

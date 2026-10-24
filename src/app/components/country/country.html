@@ -2831,16 +2831,8 @@
 
                       <!-- Right Actions: Translation icon, Lookup button, Voice Icon on hover sliding in from right to left (Change 1) -->
                       <div class="flex items-center gap-1.5 ml-auto shrink-0">
-                        <!-- Red × error icon on invalid field ONLY when field has content -->
-                        @if (isFieldInvalid('name') && formName().trim()) {
-                        <span class="text-[#f87171] flex items-center justify-center animate-in zoom-in-75 shrink-0"
-                          title="Invalid Country Name">
-                          <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                            stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </span>
-                        } @else if (isNameValid() && touchedFields()['name'] && formName().trim()) {
+                        <!-- Green checkmark when valid & has content (Requirement 16: removed red X icon) -->
+                        @if (isNameValid() && touchedFields()['name'] && formName().trim()) {
                         <!-- Green checkmark when valid & has content -->
                         <span
                           class="text-emerald-500 flex items-center justify-center animate-in zoom-in-75 duration-200 shrink-0"
@@ -2867,7 +2859,7 @@
                         </button>
 
                         <!-- 1. Lookup Trigger Button (Requirement 3: In Country Name input in Add and Edit) -->
-                        <button type="button" (click)="openLookupModal('form'); $event.stopPropagation()"
+                        <button hidden type="button" (click)="openLookupModal('form'); $event.stopPropagation()"
                           class="p-1 text-slate-400 hover:text-[#00a6f4] cursor-pointer shrink-0 transition"
                           title="Browse World Country Lookup" data-tooltip="Lookup Country" data-tooltip-pos="top">
                           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -2933,12 +2925,28 @@
                       <p class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                         Official country name in English or approved Unicode script
                       </p>
+                      <!-- Speaker Audio Trigger with Active Playing Effect (Requirement 14) -->
                       <button type="button" (mousedown)="$event.preventDefault()"
                         (click)="speakHelperText('Official country name in English or approved Unicode script'); $event.stopPropagation()"
-                        class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer shrink-0 ml-auto"
-                        [class.text-[#00a6f4]]="isSpeakingHelper()" [class.animate-pulse]="isSpeakingHelper()"
+                        class="flex items-center gap-1.5 px-2 py-1 rounded-full transition-all duration-200 cursor-pointer shrink-0 ml-auto"
+                        [class.bg-[#00a6f4]]="isSpeakingHelper()"
+                        [class.text-white]="isSpeakingHelper()"
+                        [class.shadow-md]="isSpeakingHelper()"
+                        [class.shadow-sky-500/30]="isSpeakingHelper()"
+                        [class.text-slate-400]="!isSpeakingHelper()"
+                        [class.hover:text-[#00a6f4]]="!isSpeakingHelper()"
+                        [class.hover:bg-sky-50]="!isSpeakingHelper()"
+                        [class.dark:hover:bg-slate-700/50]="!isSpeakingHelper()"
                         title="Listen to guidance" data-tooltip="Audio Guidance" data-tooltip-pos="left">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        @if (isSpeakingHelper()) {
+                        <!-- Animated Equalizer Wave Playing Effect -->
+                        <span class="flex items-end gap-[2px] h-3.5 pr-0.5" aria-hidden="true">
+                          <span class="w-[2.5px] bg-white rounded-full animate-bounce h-2" style="animation-duration: 0.5s;"></span>
+                          <span class="w-[2.5px] bg-white rounded-full animate-bounce h-3.5" style="animation-duration: 0.35s; animation-delay: 0.15s;"></span>
+                          <span class="w-[2.5px] bg-white rounded-full animate-bounce h-2.5" style="animation-duration: 0.45s; animation-delay: 0.25s;"></span>
+                        </span>
+                        }
+                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                           stroke-linecap="round" stroke-linejoin="round">
                           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                           <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
@@ -3573,10 +3581,10 @@
             <!-- Left Side: Clean data in previous UI style matching Image 1 & 2 -->
             <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-6 sm:p-10 space-y-8">
 
-              <!-- Clean Label & Value Grid — Auto-adjusts to visible fields -->
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-7 items-center">
+              <!-- Clean Label & Value Grid (Requirement 17: 12-column grid with Country col-6, Default col-3, Status col-3, remaining col-3) -->
+              <div class="grid grid-cols-12 gap-x-8 gap-y-7 items-center">
                 @if (isFieldVisible('name')) {
-                <div class="relative w-full group" data-popover>
+                <div class="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-6 relative w-full group" data-popover>
                   <!-- Trigger Pill Button (Reference Default Currency Dropdown style) -->
                   <div role="button" tabindex="0" id="view-country-name-trigger"
                     (click)="toggleViewCountryDropdown($event)" (keydown.enter)="toggleViewCountryDropdown($event)"
@@ -3667,7 +3675,7 @@
                 }
 
                 @if (isFieldVisible('isDefault')) {
-                <div>
+                <div class="col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3">
                   <span
                     class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Default</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isDefault ? 'Yes'
@@ -3676,7 +3684,7 @@
                 }
 
                 @if (isFieldVisible('status')) {
-                <div>
+                <div class="col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3">
                   <span
                     class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Status</span>
                   <span class="text-base font-bold block mt-1.5" [class.text-emerald-600]="sc.status === 'Active'"
@@ -3687,7 +3695,7 @@
                 }
 
                 @if (isFieldVisible('isoCode2')) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
                     2</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoCode2 ||
@@ -3696,7 +3704,7 @@
                 }
 
                 @if (isFieldVisible('isoCode3') && sc.isoCode3) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO Code
                     3</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoCode3 }}</span>
@@ -3704,7 +3712,7 @@
                 }
 
                 @if (isFieldVisible('isoNumeric') && sc.isoNumeric) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">ISO
                     Numeric</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isoNumeric
@@ -3713,7 +3721,7 @@
                 }
 
                 @if (isFieldVisible('isd')) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Dial
                     Code</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.isd || '—'
@@ -3722,7 +3730,7 @@
                 }
 
                 @if (isFieldVisible('currency') && sc.currency) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span
                     class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Currency</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.currency }}</span>
@@ -3730,7 +3738,7 @@
                 }
 
                 @if (isFieldVisible('nationality') && sc.nationality) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span
                     class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Nationality</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.nationality
@@ -3739,7 +3747,7 @@
                 }
 
                 @if (isFieldVisible('continent') && sc.continent) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span
                     class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Continent</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.continent
@@ -3748,20 +3756,17 @@
                 }
 
                 @if (isFieldVisible('capital') && sc.capital) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">Capital
                     City</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{ sc.capital }}</span>
                 </div>
                 }
 
-
-
-
                 <!-- Custom Fields in View Mode -->
                 @for (cf of tenantService.customFields(); track cf.key) {
                 @if (isFieldVisible(cf.key) && sc.customFields && sc.customFields[cf.key]) {
-                <div>
+                <div class="col-span-6 sm:col-span-4 md:col-span-3 lg:col-span-3">
                   <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block tracking-wide">{{ cf.label
                     }}</span>
                   <span class="text-base font-bold text-slate-900 dark:text-white block mt-1.5">{{
@@ -6562,28 +6567,44 @@
       <div class="flex items-start justify-between">
         <div>
           <h2 class="text-[22px] font-bold text-slate-900 dark:text-white tracking-tight leading-tight">Translation</h2>
-
         </div>
-        <button type="button" (click)="closeTranslationPopup()"
-          class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200 flex items-center justify-center transition-colors cursor-pointer"
-          title="Close">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
-        </button>
+        <!-- Close button: hover tooltip no background red color text (Requirement 13) -->
+        <div class="relative flex items-center">
+          <button type="button" (click)="closeTranslationPopup()"
+            class="group relative w-8 h-8 rounded-full bg-transparent hover:bg-transparent text-slate-400 hover:text-red-500 flex items-center justify-center transition-colors cursor-pointer focus:outline-none"
+            aria-label="Close translation popup">
+            <!-- Tooltip with NO background and red color text on hover (Requirement 13) -->
+            <span
+              class="pointer-events-none absolute right-full mr-2 text-xs font-semibold text-red-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap select-none bg-transparent">
+              Close
+            </span>
+            <svg class="w-4.5 h-4.5 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- Header Divider Line to differentiate popup header (Requirement 7) -->
       <hr class="border-t border-slate-200/90 dark:border-slate-800 -mx-8 -my-2" />
 
-      <!-- Subheader: COUNTRY NAME on left, Search box on right -->
+      <!-- Subheader: Small Flag before COUNTRY NAME on left (Requirement 12), Search box on right -->
       <div class="flex items-center justify-between gap-4 mt-1">
         <div>
           <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase block">COUNTRY
             NAME</span>
-          <h3 class="text-[26px] font-bold text-slate-900 dark:text-white mt-1 leading-none">{{
-            activeTranslationCountryName() }}</h3>
+          <div class="flex items-center gap-2.5 mt-1">
+            <!-- Small Country Flag before country name (Requirement 12) -->
+            <img
+              [src]="activeTranslationFlagUrl()"
+              [alt]="activeTranslationCountryName()"
+              class="w-6 h-4.5 rounded-[3px] object-cover shadow-xs border border-slate-200/80 dark:border-slate-700 shrink-0"
+              (error)="$any($event.target).src = 'https://flagcdn.com/in.svg'" />
+            <h3 class="text-[26px] font-bold text-slate-900 dark:text-white leading-none">
+              {{ activeTranslationCountryName() }}
+            </h3>
+          </div>
         </div>
 
         <div
@@ -6593,7 +6614,14 @@
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
-          <input type="text" [ngModel]="translationSearch()" (ngModelChange)="translationSearch.set($event)"
+          <!-- Auto-focused search input (Requirement 11) -->
+          <input
+            id="translation-search-input"
+            #translationSearchInput
+            type="text"
+            autofocus
+            [ngModel]="translationSearch()"
+            (ngModelChange)="translationSearch.set($event)"
             placeholder="Search"
             class="w-full bg-transparent text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 font-normal outline-none" />
           @if (translationSearch()) {
@@ -6740,17 +6768,19 @@
               }}</strong> of <strong class="font-bold text-black dark:text-white">{{ allTranslationRows().length
               }}</strong></span>
           @if (translationTotalPages() > 1 && !translationSearch()) {
-          <div class="flex items-center gap-0.5 ml-1 text-slate-400">
+          <div class="flex items-center gap-1.5 ml-2">
+            <!-- Prev Icon Button: Primary Background with increased disabled opacity (Requirements 15 & 19) -->
             <button type="button" (click)="prevTranslationPage()" [disabled]="translationPage() === 1"
-              class="p-0.5 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 disabled:hover:text-slate-400 cursor-pointer"
+              class="w-6 h-6 rounded-full flex items-center justify-center bg-[#00a6f4] text-white hover:bg-[#0095dc] shadow-xs disabled:opacity-60 disabled:cursor-not-allowed transition-all cursor-pointer"
               title="Previous">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="m15 18-6-6 6-6" />
               </svg>
             </button>
+            <!-- Next Icon Button: Secondary Background (Requirement 19) -->
             <button type="button" (click)="nextTranslationPage()"
               [disabled]="translationPage() === translationTotalPages()"
-              class="p-0.5 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 disabled:hover:text-slate-400 cursor-pointer"
+              class="w-6 h-6 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
               title="Next">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="m9 18 6-6-6-6" />
@@ -6766,14 +6796,50 @@
   }
 
   <!-- ========================================================================= -->
-  <!-- 8. TOAST NOTIFICATION POPUP                                               -->
+  <!-- 8. TOAST NOTIFICATION POPUP (Requirement 20: Top-Right Animated Toast)      -->
   <!-- ========================================================================= -->
 
   @if (toastMessage()) {
   <div
-    class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom-3 duration-200">
-    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-    <span>{{ toastMessage() }}</span>
+    class="fixed top-6 right-6 z-[100] max-w-md bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-slate-200/90 dark:border-slate-800 flex items-center gap-3 text-xs font-semibold animate-in slide-in-from-top-4 fade-in duration-300 ease-out select-none"
+    [class.border-l-4]="true"
+    [class.border-l-[#00a6f4]]="toastType() === 'success'"
+    [class.border-l-red-500]="toastType() === 'error'"
+    role="alert"
+    aria-live="polite">
+
+    <!-- Icon Badge: Theme Blue for success, Red for negative error -->
+    @if (toastType() === 'success') {
+    <div class="w-7 h-7 rounded-full bg-[#00a6f4]/15 text-[#00a6f4] flex items-center justify-center shrink-0">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </div>
+    } @else {
+    <div class="w-7 h-7 rounded-full bg-red-500/15 text-red-500 flex items-center justify-center shrink-0">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+    </div>
+    }
+
+    <!-- Toast Message Content -->
+    <div class="flex-1 pr-1">
+      <span class="block text-slate-800 dark:text-slate-100 font-medium leading-snug">{{ toastMessage() }}</span>
+    </div>
+
+    <!-- Dismiss Button -->
+    <button type="button" (click)="dismissToast()"
+      class="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer transition-colors"
+      aria-label="Dismiss notification">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
   </div>
   }
 
