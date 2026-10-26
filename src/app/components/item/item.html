@@ -72,15 +72,15 @@
       <form (ngSubmit)="onSubmitForm()" autocomplete="off" spellcheck="false"
         class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative">
 
-        <!-- Left Scrollable Area (Compact height, 8 rows fit without scrollbar) -->
+        <!-- Left Scrollable Area (Comfortable spacing, 8 rows fit without scrollbar) -->
         <div
-          class="flex-1 flex flex-col min-h-0 overflow-y-auto custom-scrollbar-hide px-4 py-2 sm:px-6 sm:py-2.5 space-y-2">
+          class="flex-1 flex flex-col min-h-0 overflow-y-auto custom-scrollbar-hide px-4 py-3 sm:px-6 sm:py-3.5 space-y-3">
 
           <!-- ===================================================================== -->
           <!-- 1–4. ESSENTIAL FIELDS (4 ROWS × 3 COLUMNS = 12 ESSENTIAL FIELDS)      -->
           <!-- Always visible, fits directly on screen without scrollbar             -->
           <!-- ===================================================================== -->
-          <div class="grid grid-cols-12 gap-x-4 gap-y-2.5 items-center">
+          <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
 
             <!-- ROW 1 (Essential Row 1 — 3 columns) -->
             <!-- 1. Item Type * (col 4) -->
@@ -280,7 +280,7 @@
           <!-- ===================================================================== -->
           <!-- 5. FIFTH ROW: HORIZONTAL TABS BAR (Full width row, Screenshot 3 design) -->
           <!-- ===================================================================== -->
-          <div class="border-b border-slate-200 dark:border-slate-700/80 select-none py-0.5">
+          <div class="border-b border-slate-200 dark:border-slate-700/80 select-none py-1.5 my-1">
             <div class="relative flex items-center">
 
               <!-- Left Scroll Button -->
@@ -359,10 +359,10 @@
               <!-- Body -->
               @if (isSectionExpanded('identity')) {
               <div
-                class="px-5 py-3 sm:px-6 sm:py-3.5 border-t border-slate-100 dark:border-slate-700/80 space-y-3 animate-in fade-in duration-150">
+                class="px-5 py-3.5 sm:px-6 sm:py-4 border-t border-slate-100 dark:border-slate-700/80 space-y-4 animate-in fade-in duration-150">
 
                 <!-- ROWS 6, 7, 8 (3 Rows of Inputs, 3 Columns Each) -->
-                <div class="grid grid-cols-12 gap-x-4 gap-y-2.5 items-center">
+                <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
                   <!-- ROW 6 (Tab Row 1) -->
                   <!-- 1. Short Name (col 4) -->
                   <div class="col-span-12 sm:col-span-4 relative group">
@@ -612,8 +612,8 @@
 
               @if (isSectionExpanded('attributes')) {
               <div
-                class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
-                <div class="grid grid-cols-12 gap-x-4 gap-y-2.5 items-center">
+                class="px-6 py-4 sm:px-7 sm:py-5 border-t border-slate-100 dark:border-slate-700/80 space-y-4 animate-in fade-in duration-150">
+                <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
                   <!-- ROW 6 (Tab Row 1) -->
                   <!-- 1. Department -->
                   <div class="col-span-12 sm:col-span-4 relative group">
