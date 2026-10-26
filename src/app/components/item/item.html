@@ -432,7 +432,27 @@
                     </div>
                   </div>
 
-                  <!-- ROW 8 (Tab Row 3) -->
+                  <!-- Expand / Collapse control for Remaining Fields (matching Screenshot 4 reference) -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('identity_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('identity_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('identity_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Size, Collection, Dept, Descriptions, Images, Tags)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('identity_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('identity_more')) {
                   <!-- 7. Size / Dimension (col 4) -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
@@ -463,39 +483,6 @@
                       <input type="text" [ngModel]="formDepartment()" (ngModelChange)="formDepartment.set($event)"
                         name="department" placeholder="e.g. Food & Beverage"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
-                    </div>
-                  </div>
-
-                  <!-- Expand / Collapse control for Remaining Fields (matching Screenshot 4 reference) -->
-                  <div class="col-span-12 pt-1">
-                    <div role="button" tabindex="0" (click)="toggleSubSection('identity_more', $event)"
-                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
-                      <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
-                          [class.rotate-90]="isSubSectionExpanded('identity_more')" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
-                          {{ isSubSectionExpanded('identity_more') ? 'Collapse Additional Fields' : 'Expand Remaining
-                          Fields (Descriptions, Images, Tags)' }}
-                        </span>
-                      </div>
-                      <span class="text-slate-400 text-lg font-light select-none">
-                        {{ isSubSectionExpanded('identity_more') ? '−' : '+' }}
-                      </span>
-                    </div>
-                  </div>
-
-                  @if (isSubSectionExpanded('identity_more')) {
-                  <!-- Model Number (col 4) -->
-                  <div class="col-span-12 sm:col-span-4 lg:col-span-4 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Model Number</span>
-                      <input type="text" [ngModel]="formModelNumber()" (ngModelChange)="formModelNumber.set($event)"
-                        name="modelNumber" placeholder="e.g. CDR-1000"
-                        class="w-full h-full bg-transparent text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
@@ -683,7 +670,27 @@
                     </div>
                   </div>
 
-                  <!-- ROW 8 (Tab Row 3) -->
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('attributes_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('attributes_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('attributes_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Season, Collection, Target Audience, Material, Custom Attributes)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('attributes_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('attributes_more')) {
                   <!-- 7. Season -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
@@ -717,29 +724,6 @@
                         class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
-
-                  <!-- Expand / Collapse control for Remaining Fields -->
-                  <div class="col-span-12 pt-1">
-                    <div role="button" tabindex="0" (click)="toggleSubSection('attributes_more', $event)"
-                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
-                      <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
-                          [class.rotate-90]="isSubSectionExpanded('attributes_more')" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
-                          {{ isSubSectionExpanded('attributes_more') ? 'Collapse Additional Fields' : 'Expand Remaining
-                          Fields (Material, Color, Size, Custom Attributes)' }}
-                        </span>
-                      </div>
-                      <span class="text-slate-400 text-lg font-light select-none">
-                        {{ isSubSectionExpanded('attributes_more') ? '−' : '+' }}
-                      </span>
-                    </div>
-                  </div>
-
-                  @if (isSubSectionExpanded('attributes_more')) {
                   <!-- 10. Product Material -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
@@ -853,13 +837,15 @@
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
                 <div class="grid grid-cols-12 gap-5">
                   <!-- Primary Barcode (Live synced) -->
-                  <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
+                  <!-- ROW 1 (3 columns) -->
+                  <!-- 1. Primary Barcode -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Primary Barcode</span>
                       <input type="text" [ngModel]="formPrimaryBarcode()"
                         (ngModelChange)="formPrimaryBarcode.set($event)" name="primBarcode"
-                        class="w-full bg-transparent text-sm font-mono font-bold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-mono font-bold focus:outline-none" />
                       <button type="button" (click)="openBarcodeScanner()"
                         class="p-1 rounded-lg text-slate-400 hover:text-[#00a6f4] transition cursor-pointer">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -870,14 +856,14 @@
                     </div>
                   </div>
 
-                  <!-- Barcode Type -->
-                  <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
+                  <!-- 2. Barcode Type -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Barcode Type</span>
                       <select [ngModel]="formBarcodeType()" (ngModelChange)="formBarcodeType.set($event)"
                         name="barcodeType"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         @for (bt of barcodeTypeOptions; track bt) {
                         <option [value]="bt">{{ bt }}</option>
                         }
@@ -885,50 +871,72 @@
                     </div>
                   </div>
 
-                  <!-- GTIN / EAN / UPC -->
-                  <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
+                  <!-- 3. GTIN / EAN / UPC -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">GTIN / EAN / UPC</span>
                       <input type="text" [ngModel]="formGtin()" (ngModelChange)="formGtin.set($event)" name="gtin"
                         placeholder="Global Trade Identification Number"
-                        class="w-full bg-transparent text-sm font-mono font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-mono font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- QR Code String -->
-                  <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
+                  <!-- ROW 2 (3 columns) -->
+                  <!-- 4. QR Code Payload -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">QR Code Payload</span>
                       <input type="text" [ngModel]="formQrCode()" (ngModelChange)="formQrCode.set($event)" name="qrCode"
                         placeholder="Auto-generated QR payload"
-                        class="w-full bg-transparent text-sm font-mono font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-mono font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Manufacturer Part Number (MPN) -->
-                  <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
+                  <!-- 5. Manufacturer Part Number (MPN) -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Manufacturer Part Number (MPN)</span>
                       <input type="text" [ngModel]="formMpn()" (ngModelChange)="formMpn.set($event)" name="mpn"
                         placeholder="e.g. COL-ARABICA-1KG"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Supplier Item Code -->
-                  <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
+                  <!-- 6. Supplier Item Code -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Supplier Item Code</span>
                       <input type="text" [ngModel]="formSupplierItemCode()"
                         (ngModelChange)="formSupplierItemCode.set($event)" name="supCode" placeholder="e.g. SUP-COF-78"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('barcode_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('barcode_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('barcode_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Additional Barcodes, Serial, Batch & Expiry Tracking)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('barcode_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('barcode_more')) {
                   <!-- Additional Barcodes Repeating Grid -->
                   <div class="col-span-12">
                     <div class="flex items-center justify-between mb-2">
@@ -965,7 +973,7 @@
 
                   <!-- Tracking Toggles: Serial, Batch, Expiry -->
                   <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
+                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
                     <div>
                       <div class="text-xs font-bold text-slate-800 dark:text-white">Serial Number Tracking</div>
                       <div class="text-[10px] text-slate-400">Capture serial on POS / Goods Receipt</div>
@@ -977,7 +985,7 @@
                     </label>
                   </div>
                   <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
+                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
                     <div>
                       <div class="text-xs font-bold text-slate-800 dark:text-white">Lot / Batch Tracking</div>
                       <div class="text-[10px] text-slate-400">Track production batches & FIFO</div>
@@ -989,7 +997,7 @@
                     </label>
                   </div>
                   <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
+                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
                     <div>
                       <div class="text-xs font-bold text-slate-800 dark:text-white">Expiry Date Tracking</div>
                       <div class="text-[10px] text-slate-400">Mandatory for perishables & cosmetics</div>
@@ -1000,6 +1008,7 @@
                       <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                     </label>
                   </div>
+                  }
                 </div>
               </div>
               }
@@ -1031,22 +1040,14 @@
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
                 <div class="grid grid-cols-12 gap-5">
-                  <!-- Base UOM (read-only reference to top) -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <!-- ROW 1 (3 columns) -->
+                  <!-- 1. Sales UOM -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50">
-                      <span class="floating-notch-label">Base UOM (Primary)</span>
-                      <span class="text-sm font-bold text-[#00a6f4]">{{ formBaseUom() }}</span>
-                    </div>
-                  </div>
-
-                  <!-- Sales UOM -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Sales UOM</span>
                       <select [ngModel]="formSalesUom()" (ngModelChange)="formSalesUom.set($event)" name="salesUom"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         @for (u of uomOptions; track u) {
                         <option [value]="u">{{ u }}</option>
                         }
@@ -1054,14 +1055,14 @@
                     </div>
                   </div>
 
-                  <!-- Purchase UOM -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <!-- 2. Purchase UOM -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Purchase UOM</span>
                       <select [ngModel]="formPurchaseUom()" (ngModelChange)="formPurchaseUom.set($event)"
                         name="purchaseUom"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         @for (u of uomOptions; track u) {
                         <option [value]="u">{{ u }}</option>
                         }
@@ -1069,14 +1070,14 @@
                     </div>
                   </div>
 
-                  <!-- Stocking UOM -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <!-- 3. Stocking UOM -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Stocking UOM</span>
                       <select [ngModel]="formStockingUom()" (ngModelChange)="formStockingUom.set($event)"
                         name="stockingUom"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         @for (u of uomOptions; track u) {
                         <option [value]="u">{{ u }}</option>
                         }
@@ -1084,13 +1085,20 @@
                     </div>
                   </div>
 
-                  <!-- Allow Fractional Qty & Decimal Precision -->
-                  <div
-                    class="col-span-12 sm:col-span-6 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <div>
-                      <div class="text-xs font-bold text-slate-800 dark:text-white">Allow Fractional Quantity</div>
-                      <div class="text-[10px] text-slate-400">Allows selling decimal units (e.g. 1.25 kg)</div>
+                  <!-- ROW 2 (3 columns) -->
+                  <!-- 4. Base UOM (Primary) -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50">
+                      <span class="floating-notch-label">Base UOM (Primary)</span>
+                      <span class="text-xs sm:text-sm font-bold text-[#00a6f4]">{{ formBaseUom() }}</span>
                     </div>
+                  </div>
+
+                  <!-- 5. Allow Fractional Qty -->
+                  <div
+                    class="col-span-12 sm:col-span-4 flex items-center justify-between h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50">
+                    <span class="text-xs font-bold text-slate-800 dark:text-white">Allow Fractional Qty</span>
                     <label class="form-switch m-0 cursor-pointer">
                       <input type="checkbox" class="sr-only" [checked]="formAllowFractionalQty()"
                         (change)="formAllowFractionalQty.set($any($event.target).checked)" />
@@ -1098,13 +1106,14 @@
                     </label>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- 6. Decimal Precision -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Decimal Precision</span>
                       <select [ngModel]="formDecimalPrecision()" (ngModelChange)="formDecimalPrecision.set(+$event)"
                         name="decPrec"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         <option [value]="0">0 Decimals (Whole units only - 1, 2, 3)</option>
                         <option [value]="2">2 Decimals (e.g. 1.25)</option>
                         <option [value]="3">3 Decimals (e.g. 1.250)</option>
@@ -1112,6 +1121,28 @@
                       </select>
                     </div>
                   </div>
+
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('uom_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('uom_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('uom_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Weights, Measurements, Alternate Conversion Units)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('uom_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('uom_more')) {
 
                   <!-- Weight & Measurements -->
                   <div class="col-span-12 sm:col-span-3 relative group">
@@ -1211,6 +1242,7 @@
                       </table>
                     </div>
                   </div>
+                  }
                 </div>
               </div>
               }
@@ -1241,78 +1273,53 @@
               @if (isSectionExpanded('pricing')) {
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
-
-                <!-- Synchronized Default Price Banner with Margin/Markup -->
-                <div
-                  class="grid grid-cols-12 gap-4 p-4 rounded-2xl border border-sky-200/90 dark:border-sky-800/60 bg-sky-50/40 dark:bg-sky-950/20">
-                  <div class="col-span-12 sm:col-span-3">
-                    <span class="text-slate-400 text-xs block mb-0.5">Default Sales Price (Primary):</span>
-                    <span class="text-lg font-black text-emerald-600 dark:text-emerald-400">AED {{ formSalesPrice() |
-                      number:'1.2-2' }}</span>
-                  </div>
-                  <div class="col-span-12 sm:col-span-3">
-                    <span class="text-slate-400 text-xs block mb-0.5">Default Cost Price:</span>
-                    <span class="text-lg font-bold text-slate-700 dark:text-slate-200">AED {{ formCostPrice() |
-                      number:'1.2-2' }}</span>
-                  </div>
-                  <div class="col-span-12 sm:col-span-3">
-                    <span class="text-slate-400 text-xs block mb-0.5">Calculated Margin:</span>
-                    <span class="text-lg font-bold" [class.text-emerald-600]="formMarginPct() > 0"
-                      [class.text-rose-500]="formMarginPct() <= 0">
-                      {{ formMarginPct() }}%
-                    </span>
-                  </div>
-                  <div class="col-span-12 sm:col-span-3">
-                    <span class="text-slate-400 text-xs block mb-0.5">Calculated Markup:</span>
-                    <span class="text-lg font-bold text-[#00a6f4]">{{ formMarkupPct() }}%</span>
-                  </div>
-                </div>
-
                 <div class="grid grid-cols-12 gap-5">
-                  <!-- Minimum Selling Price -->
+                  <!-- ROW 1 (3 columns) -->
+                  <!-- 1. Minimum Selling Price -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Minimum Selling Price</span>
                       <span class="text-xs font-bold text-slate-400 mr-1.5">AED</span>
                       <input type="number" step="0.01" [ngModel]="formMinSellingPrice()"
                         (ngModelChange)="formMinSellingPrice.set($event)" name="minPrice"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Max Discount % -->
+                  <!-- 2. Max Discount % -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Max Discount %</span>
                       <input type="number" min="0" max="100" [ngModel]="formMaxDiscountPct()"
                         (ngModelChange)="formMaxDiscountPct.set($event)" name="maxDisc"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       <span class="text-xs font-bold text-slate-400">%</span>
                     </div>
                   </div>
 
-                  <!-- Wholesale Price -->
+                  <!-- 3. Wholesale Price -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Wholesale Price</span>
                       <span class="text-xs font-bold text-slate-400 mr-1.5">AED</span>
                       <input type="number" step="0.01" [ngModel]="formWholesalePrice()"
                         (ngModelChange)="formWholesalePrice.set($event)" name="wsPrice"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Sales Tax Category -->
+                  <!-- ROW 2 (3 columns) -->
+                  <!-- 4. Sales Tax Category -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Sales Tax Category</span>
                       <select [ngModel]="formSalesTaxCategory()" (ngModelChange)="formSalesTaxCategory.set($event)"
                         name="sTaxCat"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         <option value="Standard 5% VAT">Standard 5% VAT</option>
                         <option value="Zero Rated 0%">Zero Rated 0%</option>
                         <option value="Exempt">Exempt</option>
@@ -1320,26 +1327,84 @@
                     </div>
                   </div>
 
-                  <!-- Purchase Tax Category -->
+                  <!-- 5. Purchase Tax Category -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Purchase Tax Category</span>
                       <select [ngModel]="formPurchaseTaxCategory()"
                         (ngModelChange)="formPurchaseTaxCategory.set($event)" name="pTaxCat"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         <option value="Standard 5% VAT">Standard 5% VAT</option>
                         <option value="Zero Rated 0%">Zero Rated 0%</option>
                         <option value="Exempt">Exempt</option>
                       </select>
+                    </div>
+                  </div>
+
+                  <!-- 6. Price Includes Tax (VAT) Toggle -->
+                  <div
+                    class="col-span-12 sm:col-span-4 flex items-center justify-between h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50">
+                    <span class="text-xs font-bold text-slate-800 dark:text-white">Price Includes Tax</span>
+                    <label class="form-switch m-0 cursor-pointer">
+                      <input type="checkbox" class="sr-only" [checked]="formPriceIncludesTax()"
+                        (change)="formPriceIncludesTax.set($any($event.target).checked)" />
+                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                    </label>
+                  </div>
+
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('pricing_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('pricing_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('pricing_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Margin/Markup Banner, Dates, Promotional Rules, Price Lists & Branch Prices)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('pricing_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('pricing_more')) {
+                  <!-- Synchronized Default Price Banner with Margin/Markup -->
+                  <div
+                    class="col-span-12 grid grid-cols-12 gap-4 p-4 rounded-2xl border border-sky-200/90 dark:border-sky-800/60 bg-sky-50/40 dark:bg-sky-950/20">
+                    <div class="col-span-12 sm:col-span-3">
+                      <span class="text-slate-400 text-xs block mb-0.5">Default Sales Price (Primary):</span>
+                      <span class="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400">AED {{ formSalesPrice() |
+                        number:'1.2-2' }}</span>
+                    </div>
+                    <div class="col-span-12 sm:col-span-3">
+                      <span class="text-slate-400 text-xs block mb-0.5">Default Cost Price:</span>
+                      <span class="text-base sm:text-lg font-bold text-slate-700 dark:text-slate-200">AED {{ formCostPrice() |
+                        number:'1.2-2' }}</span>
+                    </div>
+                    <div class="col-span-12 sm:col-span-3">
+                      <span class="text-slate-400 text-xs block mb-0.5">Calculated Margin:</span>
+                      <span class="text-base sm:text-lg font-bold" [class.text-emerald-600]="formMarginPct() > 0"
+                        [class.text-rose-500]="formMarginPct() <= 0">
+                        {{ formMarginPct() }}%
+                      </span>
+                    </div>
+                    <div class="col-span-12 sm:col-span-3">
+                      <span class="text-slate-400 text-xs block mb-0.5">Calculated Markup:</span>
+                      <span class="text-base sm:text-lg font-bold text-[#00a6f4]">{{ formMarkupPct() }}%</span>
                     </div>
                   </div>
 
                   <!-- Effective From / To -->
-                  <div class="col-span-12 sm:col-span-4 flex items-center gap-2">
+                  <div class="col-span-12 sm:col-span-6 flex items-center gap-2">
                     <div class="flex-1 relative group">
                       <div
-                        class="relative flex items-center w-full h-[52px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Effective From</span>
                         <input type="date" [ngModel]="formPriceEffectiveFrom()"
                           (ngModelChange)="formPriceEffectiveFrom.set($event)" name="effFrom"
@@ -1348,7 +1413,7 @@
                     </div>
                     <div class="flex-1 relative group">
                       <div
-                        class="relative flex items-center w-full h-[52px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Effective To</span>
                         <input type="date" [ngModel]="formPriceEffectiveTo()"
                           (ngModelChange)="formPriceEffectiveTo.set($event)" name="effTo"
@@ -1357,26 +1422,11 @@
                     </div>
                   </div>
 
-                  <!-- Price Includes Tax & Promotional Pricing Eligible Toggles -->
+                  <!-- Promotional Pricing Eligible Toggle -->
                   <div
-                    class="col-span-12 sm:col-span-6 flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <div>
-                      <div class="text-xs font-bold text-slate-800 dark:text-white">Price Includes Tax (VAT)</div>
-                      <div class="text-[10px] text-slate-400">Retail price already includes 5% VAT</div>
-                    </div>
-                    <label class="form-switch m-0 cursor-pointer">
-                      <input type="checkbox" class="sr-only" [checked]="formPriceIncludesTax()"
-                        (change)="formPriceIncludesTax.set($any($event.target).checked)" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
-                  </div>
-
-                  <div
-                    class="col-span-12 sm:col-span-6 flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
+                    class="col-span-12 sm:col-span-6 flex items-center justify-between h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50">
                     <div>
                       <div class="text-xs font-bold text-slate-800 dark:text-white">Promotional Pricing Eligible</div>
-                      <div class="text-[10px] text-slate-400">Can be bundled in POS flash sales & seasonal discounts
-                      </div>
                     </div>
                     <label class="form-switch m-0 cursor-pointer">
                       <input type="checkbox" class="sr-only" [checked]="formPromotionalPricingEligible()"
@@ -1495,7 +1545,7 @@
                       </table>
                     </div>
                   </div>
-
+                  }
                 </div>
               </div>
               }
@@ -1527,95 +1577,128 @@
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
                 <div class="grid grid-cols-12 gap-5">
-                  <!-- Stock Levels: Min, Reorder, Reorder Qty, Max, Safety, EOQ -->
-                  <div class="col-span-12 sm:col-span-4 lg:col-span-2 relative group">
+                  <!-- ROW 1 (3 columns) -->
+                  <!-- 1. Min Stock -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Min Stock</span>
                       <input type="number" [ngModel]="formMinStock()" (ngModelChange)="formMinStock.set($event)"
-                        name="minStk" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
-                    </div>
-                  </div>
-                  <div class="col-span-12 sm:col-span-4 lg:col-span-2 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Reorder Point</span>
-                      <input type="number" [ngModel]="formReorderPoint()" (ngModelChange)="formReorderPoint.set($event)"
-                        name="reorderPt" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
-                    </div>
-                  </div>
-                  <div class="col-span-12 sm:col-span-4 lg:col-span-2 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Reorder Qty</span>
-                      <input type="number" [ngModel]="formReorderQuantity()"
-                        (ngModelChange)="formReorderQuantity.set($event)" name="reorderQty"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
-                    </div>
-                  </div>
-                  <div class="col-span-12 sm:col-span-4 lg:col-span-2 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Max Stock</span>
-                      <input type="number" [ngModel]="formMaxStock()" (ngModelChange)="formMaxStock.set($event)"
-                        name="maxStk" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
-                    </div>
-                  </div>
-                  <div class="col-span-12 sm:col-span-4 lg:col-span-2 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Safety Stock</span>
-                      <input type="number" [ngModel]="formSafetyStock()" (ngModelChange)="formSafetyStock.set($event)"
-                        name="safStk" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
-                    </div>
-                  </div>
-                  <div class="col-span-12 sm:col-span-4 lg:col-span-2 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">EOQ</span>
-                      <input type="number" [ngModel]="formEoq()" (ngModelChange)="formEoq.set($event)" name="eoq"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        name="minStk" class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
+                  <!-- 2. Reorder Point -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Reorder Point</span>
+                      <input type="number" [ngModel]="formReorderPoint()" (ngModelChange)="formReorderPoint.set($event)"
+                        name="reorderPt" class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <!-- 3. Reorder Qty -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Reorder Qty</span>
+                      <input type="number" [ngModel]="formReorderQuantity()"
+                        (ngModelChange)="formReorderQuantity.set($event)" name="reorderQty"
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <!-- ROW 2 (3 columns) -->
+                  <!-- 4. Max Stock -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Max Stock</span>
+                      <input type="number" [ngModel]="formMaxStock()" (ngModelChange)="formMaxStock.set($event)"
+                        name="maxStk" class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <!-- 5. Safety Stock -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Safety Stock</span>
+                      <input type="number" [ngModel]="formSafetyStock()" (ngModelChange)="formSafetyStock.set($event)"
+                        name="safStk" class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <!-- 6. EOQ (Economic Order Qty) -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">EOQ</span>
+                      <input type="number" [ngModel]="formEoq()" (ngModelChange)="formEoq.set($event)" name="eoq"
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('inventory_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('inventory_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('inventory_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Warehouses, Picking, Valuation, Shelf Life & Stock Policies)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('inventory_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('inventory_more')) {
                   <!-- Warehouse, Bin, Picking Location -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Default Warehouse</span>
                       <input type="text" [ngModel]="formDefaultWarehouse()"
                         (ngModelChange)="formDefaultWarehouse.set($event)" name="wh"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Default Bin / Rack</span>
                       <input type="text" [ngModel]="formDefaultBin()" (ngModelChange)="formDefaultBin.set($event)"
                         name="bin" placeholder="e.g. RACK-A04-SHELF-2"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Preferred Picking Location</span>
                       <input type="text" [ngModel]="formPreferredPickingLocation()"
                         (ngModelChange)="formPreferredPickingLocation.set($event)" name="pickLoc"
                         placeholder="e.g. ZONE-A-FAST-MOVER"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
                   <!-- Inventory Valuation Method & ABC Classification -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Valuation Method</span>
                       <select [ngModel]="formValuationMethod()" (ngModelChange)="formValuationMethod.set($event)"
                         name="valMeth"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         <option value="FIFO">FIFO (First In First Out)</option>
                         <option value="Weighted Average">Weighted Average</option>
                         <option value="Standard Cost">Standard Cost</option>
@@ -1624,42 +1707,43 @@
                   </div>
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">ABC Classification</span>
                       <select [ngModel]="formAbcClassification()" (ngModelChange)="formAbcClassification.set($event)"
                         name="abcClass"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         <option value="A">Class A (High Value / High Velocity)</option>
                         <option value="B">Class B (Moderate Value)</option>
                         <option value="C">Class C (Low Value / Slow Mover)</option>
                       </select>
                     </div>
                   </div>
-                  <div class="col-span-12 sm:col-span-2 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Shelf Life (Days)</span>
-                      <input type="number" [ngModel]="formShelfLifeDays()"
-                        (ngModelChange)="formShelfLifeDays.set($event)" name="sLife"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                  <div class="col-span-12 sm:col-span-4 flex items-center gap-2">
+                    <div class="flex-1 relative group">
+                      <div
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <span class="floating-notch-label">Shelf Life (Days)</span>
+                        <input type="number" [ngModel]="formShelfLifeDays()"
+                          (ngModelChange)="formShelfLifeDays.set($event)" name="sLife"
+                          class="w-full bg-transparent text-xs font-semibold focus:outline-none" />
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-span-12 sm:col-span-2 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Lead Time (Days)</span>
-                      <input type="number" [ngModel]="formLeadTimeDays()" (ngModelChange)="formLeadTimeDays.set($event)"
-                        name="lTime" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                    <div class="flex-1 relative group">
+                      <div
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <span class="floating-notch-label">Lead Time (Days)</span>
+                        <input type="number" [ngModel]="formLeadTimeDays()" (ngModelChange)="formLeadTimeDays.set($event)"
+                          name="lTime" class="w-full bg-transparent text-xs font-semibold focus:outline-none" />
+                      </div>
                     </div>
                   </div>
 
                   <!-- Policies: Allow Negative Stock & Cycle Count Required -->
                   <div
-                    class="col-span-12 sm:col-span-6 flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
+                    class="col-span-12 sm:col-span-6 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                     <div>
                       <div class="text-xs font-bold text-slate-800 dark:text-white">Allow Negative Stock</div>
-                      <div class="text-[10px] text-slate-400">Permit billing even if on-hand physical stock is zero
-                      </div>
+                      <div class="text-[10px] text-slate-400">Permit billing even if on-hand physical stock is zero</div>
                     </div>
                     <label class="form-switch m-0 cursor-pointer">
                       <input type="checkbox" class="sr-only" [checked]="formAllowNegativeStock()"
@@ -1668,7 +1752,7 @@
                     </label>
                   </div>
                   <div
-                    class="col-span-12 sm:col-span-6 flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
+                    class="col-span-12 sm:col-span-6 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                     <div>
                       <div class="text-xs font-bold text-slate-800 dark:text-white">Cycle Count Required</div>
                       <div class="text-[10px] text-slate-400">Include in scheduled warehouse physical audits</div>
@@ -1679,6 +1763,7 @@
                       <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                     </label>
                   </div>
+                  }
                 </div>
               </div>
               }
@@ -1711,13 +1796,11 @@
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
                 <div class="grid grid-cols-12 gap-5">
-                  <!-- Purchasing Allowed Toggle -->
+                  <!-- ROW 1 (3 columns) -->
+                  <!-- 1. Purchasing Allowed Toggle -->
                   <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <div>
-                      <div class="text-xs font-bold text-slate-800 dark:text-white">Purchasing Allowed</div>
-                      <div class="text-[10px] text-slate-400">Can be added to Purchase Orders & Inbound Goods</div>
-                    </div>
+                    class="col-span-12 sm:col-span-4 flex items-center justify-between h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50">
+                    <span class="text-xs font-bold text-slate-800 dark:text-white">Purchasing Allowed</span>
                     <label class="form-switch m-0 cursor-pointer">
                       <input type="checkbox" class="sr-only" [checked]="formPurchasingAllowed()"
                         (change)="formPurchasingAllowed.set($any($event.target).checked)" />
@@ -1725,36 +1808,37 @@
                     </label>
                   </div>
 
-                  <!-- Preferred Supplier -->
+                  <!-- 2. Preferred Supplier -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Preferred Supplier</span>
                       <input type="text" [ngModel]="formPreferredSupplier()"
                         (ngModelChange)="formPreferredSupplier.set($event)" name="prefSup"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Supplier Item Code -->
+                  <!-- 3. Supplier Item Code -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Supplier Item Code</span>
                       <input type="text" [ngModel]="formSupplierItemCode()"
                         (ngModelChange)="formSupplierItemCode.set($event)" name="supCode"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Default Purchase UOM -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <!-- ROW 2 (3 columns) -->
+                  <!-- 4. Default Purchase UOM -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Default Purchase UOM</span>
                       <select [ngModel]="formDefaultPurchaseUom()" (ngModelChange)="formDefaultPurchaseUom.set($event)"
                         name="defPUom"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none cursor-pointer">
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
                         @for (u of uomOptions; track u) {
                         <option [value]="u">{{ u }}</option>
                         }
@@ -1762,79 +1846,99 @@
                     </div>
                   </div>
 
-                  <!-- Default Purchase Price -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <!-- 5. Default Purchase Price -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Default Purchase Price</span>
                       <span class="text-xs font-bold text-slate-400 mr-1.5">AED</span>
                       <input type="number" step="0.01" [ngModel]="formDefaultPurchasePrice()"
                         (ngModelChange)="formDefaultPurchasePrice.set($event)" name="defPPrice"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Min Order Quantity -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <!-- 6. Min Order Quantity (MOQ) -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Min Order Qty (MOQ)</span>
                       <input type="number" [ngModel]="formMinOrderQuantity()"
                         (ngModelChange)="formMinOrderQuantity.set($event)" name="moq"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('purchasing_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('purchasing_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('purchasing_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Max Order, Multiples, Lead Times, Country of Supply & Supplier Matrix)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('purchasing_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('purchasing_more')) {
                   <!-- Max Order Quantity -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Max Order Qty</span>
                       <input type="number" [ngModel]="formMaxOrderQuantity()"
                         (ngModelChange)="formMaxOrderQuantity.set($event)" name="maxOq"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
                   <!-- Purchase Multiple -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Purchase Multiple</span>
                       <input type="number" [ngModel]="formPurchaseMultiple()"
                         (ngModelChange)="formPurchaseMultiple.set($event)" name="pMult"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
                   <!-- Supplier Lead Time -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Supplier Lead Time (Days)</span>
                       <input type="number" [ngModel]="formSupplierLeadTime()"
                         (ngModelChange)="formSupplierLeadTime.set($event)" name="sLead"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
                   <!-- Country of Supply -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <div class="col-span-12 sm:col-span-6 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Country of Supply</span>
                       <input type="text" [ngModel]="formCountryOfSupply()"
                         (ngModelChange)="formCountryOfSupply.set($event)" name="cSupply"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
                   <!-- Last Purchase Info (System Tracked) -->
                   <div
-                    class="col-span-12 sm:col-span-3 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 flex flex-col justify-center">
-                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Last Purchase Price /
-                      Date</span>
-                    <div class="text-xs font-bold text-slate-800 dark:text-white mt-0.5">
+                    class="col-span-12 sm:col-span-6 h-10 sm:h-[42px] px-4 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50/50 flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold">Last Purchase:</span>
+                    <div class="text-xs font-bold text-slate-800 dark:text-white">
                       AED {{ formLastPurchasePrice() | number:'1.2-2' }} • <span class="text-[#00a6f4]">{{
                         formLastPurchaseDate() || 'None' }}</span>
                     </div>
@@ -1880,6 +1984,7 @@
                       </table>
                     </div>
                   </div>
+                  }
                 </div>
               </div>
               }
@@ -1925,77 +2030,99 @@
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
                 <div class="grid grid-cols-12 gap-5">
-                  <!-- POS Display Name -->
-                  <div class="col-span-12 sm:col-span-5 relative group">
+                  <!-- ROW 1 (3 columns) -->
+                  <!-- 1. POS Display Name -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">POS Display Name</span>
                       <input type="text" [ngModel]="formPosDisplayName()"
                         (ngModelChange)="formPosDisplayName.set($event)" name="posName"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Recommended Retail Price (RRP) -->
+                  <!-- 2. Recommended Retail Price (RRP) -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Recommended Retail Price (RRP)</span>
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Recommended Retail Price</span>
                       <span class="text-xs font-bold text-slate-400 mr-1.5">AED</span>
                       <input type="number" step="0.01" [ngModel]="formRecommendedRetailPrice()"
                         (ngModelChange)="formRecommendedRetailPrice.set($event)" name="rrp"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Display Order -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
+                  <!-- 3. Display Order -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Display Order</span>
                       <input type="number" [ngModel]="formDisplayOrder()" (ngModelChange)="formDisplayOrder.set($event)"
-                        name="dispOrd" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        name="dispOrd" class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- POS Button Color Swatch Selector -->
+                  <!-- ROW 2 (3 columns) -->
+                  <!-- 4. Commission Rule -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Commission Rule</span>
+                      <input type="text" [ngModel]="formCommissionRule()"
+                        (ngModelChange)="formCommissionRule.set($event)" name="commRule"
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <!-- 5. Warranty Period (Months) -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Warranty Period (Months)</span>
+                      <input type="number" [ngModel]="formWarrantyPeriodMonths()"
+                        (ngModelChange)="formWarrantyPeriodMonths.set($event)" name="wMonths"
+                        class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <!-- 6. POS Button Color -->
                   <div
-                    class="col-span-12 sm:col-span-6 flex items-center gap-3 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300 shrink-0">POS Button Color:</span>
-                    <div class="flex items-center gap-2 flex-wrap">
+                    class="col-span-12 sm:col-span-4 flex items-center justify-between h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300 shrink-0">Button Color:</span>
+                    <div class="flex items-center gap-1.5 flex-wrap">
                       @for (c of posColors; track c) {
                       <button type="button" (click)="formPosButtonColor.set(c)"
-                        class="w-7 h-7 rounded-full border-2 transition cursor-pointer" [style.backgroundColor]="c"
+                        class="w-5 h-5 rounded-full border transition cursor-pointer" [style.backgroundColor]="c"
                         [class.border-slate-900]="formPosButtonColor() === c"
                         [class.scale-110]="formPosButtonColor() === c" [class.border-white]="formPosButtonColor() !== c"
                         [attr.data-tooltip]="c" data-tooltip-pos="top"></button>
                       }
                     </div>
-                    <span class="text-xs font-mono font-bold text-slate-500 ml-auto">{{ formPosButtonColor() }}</span>
                   </div>
 
-                  <!-- Commission Rule -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Commission Rule</span>
-                      <input type="text" [ngModel]="formCommissionRule()"
-                        (ngModelChange)="formCommissionRule.set($event)" name="commRule"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('pos_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('pos_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('pos_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Retail POS Fast Action Toggles & Behavioral Policies)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('pos_more') ? '−' : '+' }}
+                      </span>
                     </div>
                   </div>
 
-                  <!-- Warranty Period -->
-                  <div class="col-span-12 sm:col-span-3 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Warranty Period (Months)</span>
-                      <input type="number" [ngModel]="formWarrantyPeriodMonths()"
-                        (ngModelChange)="formWarrantyPeriodMonths.set($event)" name="wMonths"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
-                    </div>
-                  </div>
-
+                  @if (isSubSectionExpanded('pos_more')) {
                   <!-- Retail POS Fast Action Toggles Grid -->
                   <div class="col-span-12">
                     <div class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">POS Behavioral Controls &
@@ -2102,6 +2229,7 @@
                       </div>
                     </div>
                   </div>
+                  }
 
                 </div>
               </div>
@@ -2133,134 +2261,197 @@
               @if (isSectionExpanded('variants')) {
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
-
                 <div class="grid grid-cols-12 gap-5">
-                  <!-- Has Variants Switch -->
-                  <div
-                    class="col-span-12 sm:col-span-6 flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <div>
-                      <div class="text-xs font-bold text-slate-800 dark:text-white">This Item Has Multiple Variants
-                      </div>
-                      <div class="text-[10px] text-slate-400">Generates unique sellable SKUs for size, color & style
-                        combinations</div>
+                  <!-- Row 1: 3 fields (col 4 each) -->
+                  <!-- 1. Has Variants Switch -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Item Has Variants</span>
+                      <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Enable Variants</span>
+                      <label class="form-switch m-0 cursor-pointer">
+                        <input type="checkbox" class="sr-only" [checked]="formHasVariants()"
+                          (change)="formHasVariants.set($any($event.target).checked)" />
+                        <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                      </label>
                     </div>
-                    <label class="form-switch m-0 cursor-pointer">
-                      <input type="checkbox" class="sr-only" [checked]="formHasVariants()"
-                        (change)="formHasVariants.set($any($event.target).checked)" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
                   </div>
 
-                  <!-- Parent Item Lookup -->
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- 2. Parent Item Lookup -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Parent Item SKU / Name</span>
                       <input type="text" [ngModel]="formParentItem()" (ngModelChange)="formParentItem.set($event)"
-                        name="parentItm" placeholder="Leave blank if this is the parent master"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        name="parentItm" placeholder="Leave blank if parent master"
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
-                </div>
 
-                <!-- Variant Matrix Generator & Dynamic Grid -->
-                <div
-                  class="p-4 rounded-2xl border border-sky-200/90 dark:border-sky-800/60 bg-sky-50/40 dark:bg-sky-950/20 space-y-3">
-                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <!-- 3. Variant Dimension Types -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Variant Dimension Types</span>
+                      <input type="text" value="Size, Color, Material" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
+                    </div>
+                  </div>
+
+                  <!-- Row 2: 3 fields (col 4 each) -->
+                  <!-- 4. Primary Packaging Level -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Primary Packaging Level</span>
+                      <input type="text" value="Retail Base Unit (Piece)" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
+                    </div>
+                  </div>
+
+                  <!-- 5. Units / Inner Pack -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Units / Inner Pack</span>
+                      <input type="text" value="12 pcs / Inner Box" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
+                    </div>
+                  </div>
+
+                  <!-- 6. Units / Master Carton -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Units / Master Carton</span>
+                      <input type="text" value="144 pcs / Master Carton" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
+                    </div>
+                  </div>
+
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('variants_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('variants_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('variants_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Dynamic Variant SKU Matrix & Packaging Levels Grid)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('variants_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('variants_more')) {
+                  <div class="col-span-12 space-y-5">
+                    <!-- Variant Matrix Generator & Dynamic Grid -->
+                    <div
+                      class="p-4 rounded-2xl border border-sky-200/90 dark:border-sky-800/60 bg-sky-50/40 dark:bg-sky-950/20 space-y-3">
+                      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                          <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Dynamic
+                            Variant SKU Matrix:</h4>
+                          <p class="text-[11px] text-slate-500">Each child SKU tracks its own barcode, stock inventory, and
+                            branch pricing.</p>
+                        </div>
+                        <button type="button" (click)="generateVariantMatrix()"
+                          class="h-9 px-4 rounded-xl bg-gradient-to-r from-[#00a6f4] to-blue-600 text-white text-xs font-bold transition shadow-xs hover:opacity-90 cursor-pointer shrink-0">
+                          ⚡ Auto-Generate Matrix
+                        </button>
+                      </div>
+
+                      @if (formVariantMatrix().length > 0) {
+                      <div
+                        class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                        <table class="w-full text-left text-xs">
+                          <thead
+                            class="bg-slate-50 dark:bg-slate-800/80 text-slate-500 font-bold border-b border-slate-200 dark:border-slate-700">
+                            <tr>
+                              <th class="p-3">Variant SKU</th>
+                              <th class="p-3">Color</th>
+                              <th class="p-3">Size</th>
+                              <th class="p-3">Barcode</th>
+                              <th class="p-3">Sales Price</th>
+                              <th class="p-3">Cost Price</th>
+                              <th class="p-3">Stock</th>
+                            </tr>
+                          </thead>
+                          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                            @for (vm of formVariantMatrix(); track vm.id) {
+                            <tr>
+                              <td class="p-3 font-mono font-bold text-[#00a6f4]">{{ vm.sku }}</td>
+                              <td class="p-3">{{ vm.color }}</td>
+                              <td class="p-3 font-bold">{{ vm.size }}</td>
+                              <td class="p-3 font-mono text-slate-500">{{ vm.barcode }}</td>
+                              <td class="p-3 font-bold text-emerald-600">AED {{ vm.price | number:'1.2-2' }}</td>
+                              <td class="p-3 text-slate-500">AED {{ vm.cost | number:'1.2-2' }}</td>
+                              <td class="p-3 font-bold">{{ vm.stock }} pcs</td>
+                            </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                      } @else {
+                      <div
+                        class="p-4 text-center text-xs text-slate-400 border border-dashed border-sky-300 dark:border-sky-800 rounded-xl">
+                        No variant combinations generated yet. Click "⚡ Auto-Generate Matrix" to build SKUs from Color and
+                        Size attributes.
+                      </div>
+                      }
+                    </div>
+
+                    <!-- Packaging Levels Repeating Grid -->
                     <div>
-                      <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Dynamic
-                        Variant SKU Matrix:</h4>
-                      <p class="text-[11px] text-slate-500">Each child SKU tracks its own barcode, stock inventory, and
-                        branch pricing.</p>
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Packaging Levels (Inner Packs &
+                          Master Cartons):</span>
+                        <button type="button" (click)="addPackagingLevel()"
+                          class="text-xs font-bold text-[#00a6f4] hover:underline cursor-pointer">
+                          + Add Packaging Level
+                        </button>
+                      </div>
+                      <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
+                        <table class="w-full text-left text-xs">
+                          <thead
+                            class="bg-slate-50 dark:bg-slate-800 text-slate-500 font-bold border-b border-slate-200 dark:border-slate-700">
+                            <tr>
+                              <th class="p-2.5">Packaging Level</th>
+                              <th class="p-2.5">Units / Package</th>
+                              <th class="p-2.5">Package Barcode</th>
+                              <th class="p-2.5">Gross Wt (kg)</th>
+                              <th class="p-2.5">Dimensions</th>
+                              <th class="p-2.5 text-center">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                            @for (pkg of formPackagingLevels(); track pkg.id) {
+                            <tr>
+                              <td class="p-2.5 font-bold text-slate-800 dark:text-white">{{ pkg.levelName }}</td>
+                              <td class="p-2.5 font-bold text-sky-600">{{ pkg.unitsPerPackage }} pcs</td>
+                              <td class="p-2.5 font-mono text-slate-500">{{ pkg.barcode }}</td>
+                              <td class="p-2.5">{{ pkg.weightKg }} kg</td>
+                              <td class="p-2.5">{{ pkg.dimensions }}</td>
+                              <td class="p-2.5 text-center">
+                                <button type="button" (click)="removePackagingLevel(pkg.id)"
+                                  class="text-slate-400 hover:text-red-500 cursor-pointer">✕</button>
+                              </td>
+                            </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                    <button type="button" (click)="generateVariantMatrix()"
-                      class="h-9 px-4 rounded-xl bg-gradient-to-r from-[#00a6f4] to-blue-600 text-white text-xs font-bold transition shadow-xs hover:opacity-90 cursor-pointer shrink-0">
-                      ⚡ Auto-Generate Matrix
-                    </button>
-                  </div>
-
-                  @if (formVariantMatrix().length > 0) {
-                  <div
-                    class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                    <table class="w-full text-left text-xs">
-                      <thead
-                        class="bg-slate-50 dark:bg-slate-800/80 text-slate-500 font-bold border-b border-slate-200 dark:border-slate-700">
-                        <tr>
-                          <th class="p-3">Variant SKU</th>
-                          <th class="p-3">Color</th>
-                          <th class="p-3">Size</th>
-                          <th class="p-3">Barcode</th>
-                          <th class="p-3">Sales Price</th>
-                          <th class="p-3">Cost Price</th>
-                          <th class="p-3">Stock</th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
-                        @for (vm of formVariantMatrix(); track vm.id) {
-                        <tr>
-                          <td class="p-3 font-mono font-bold text-[#00a6f4]">{{ vm.sku }}</td>
-                          <td class="p-3">{{ vm.color }}</td>
-                          <td class="p-3 font-bold">{{ vm.size }}</td>
-                          <td class="p-3 font-mono text-slate-500">{{ vm.barcode }}</td>
-                          <td class="p-3 font-bold text-emerald-600">AED {{ vm.price | number:'1.2-2' }}</td>
-                          <td class="p-3 text-slate-500">AED {{ vm.cost | number:'1.2-2' }}</td>
-                          <td class="p-3 font-bold">{{ vm.stock }} pcs</td>
-                        </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                  } @else {
-                  <div
-                    class="p-4 text-center text-xs text-slate-400 border border-dashed border-sky-300 dark:border-sky-800 rounded-xl">
-                    No variant combinations generated yet. Click "⚡ Auto-Generate Matrix" to build SKUs from Color and
-                    Size attributes.
                   </div>
                   }
-                </div>
 
-                <!-- Packaging Levels Repeating Grid -->
-                <div>
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Packaging Levels (Inner Packs &
-                      Master Cartons):</span>
-                    <button type="button" (click)="addPackagingLevel()"
-                      class="text-xs font-bold text-[#00a6f4] hover:underline cursor-pointer">
-                      + Add Packaging Level
-                    </button>
-                  </div>
-                  <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
-                    <table class="w-full text-left text-xs">
-                      <thead
-                        class="bg-slate-50 dark:bg-slate-800 text-slate-500 font-bold border-b border-slate-200 dark:border-slate-700">
-                        <tr>
-                          <th class="p-2.5">Packaging Level</th>
-                          <th class="p-2.5">Units / Package</th>
-                          <th class="p-2.5">Package Barcode</th>
-                          <th class="p-2.5">Gross Wt (kg)</th>
-                          <th class="p-2.5">Dimensions</th>
-                          <th class="p-2.5 text-center">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
-                        @for (pkg of formPackagingLevels(); track pkg.id) {
-                        <tr>
-                          <td class="p-2.5 font-bold text-slate-800 dark:text-white">{{ pkg.levelName }}</td>
-                          <td class="p-2.5 font-bold text-sky-600">{{ pkg.unitsPerPackage }} pcs</td>
-                          <td class="p-2.5 font-mono text-slate-500">{{ pkg.barcode }}</td>
-                          <td class="p-2.5">{{ pkg.weightKg }} kg</td>
-                          <td class="p-2.5">{{ pkg.dimensions }}</td>
-                          <td class="p-2.5 text-center">
-                            <button type="button" (click)="removePackagingLevel(pkg.id)"
-                              class="text-slate-400 hover:text-red-500 cursor-pointer">✕</button>
-                          </td>
-                        </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
-
               </div>
               }
             </div>
@@ -2291,113 +2482,142 @@
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
                 <div class="grid grid-cols-12 gap-5">
-                  <!-- Tax Category -->
+                  <!-- Row 1: 3 fields (col 4 each) -->
+                  <!-- 1. Tax Category -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Tax Category</span>
                       <input type="text" [ngModel]="formTaxCategory()" (ngModelChange)="formTaxCategory.set($event)"
-                        name="taxCat" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        name="taxCat" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- HS Code -->
+                  <!-- 2. HS Code -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">HS Code (Customs Tariff)</span>
                       <input type="text" [ngModel]="formHsCode()" (ngModelChange)="formHsCode.set($event)" name="hs"
                         placeholder="e.g. 0901.21.00"
-                        class="w-full bg-transparent text-sm font-mono font-semibold focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-mono font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Regulatory Classification -->
+                  <!-- 3. Regulatory Classification -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Regulatory Classification</span>
                       <input type="text" [ngModel]="formRegulatoryClassification()"
                         (ngModelChange)="formRegulatoryClassification.set($event)" name="regClass"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Country of Origin (Reused from Section B) -->
+                  <!-- Row 2: 3 fields (col 4 each) -->
+                  <!-- 4. Country of Origin (Synced) -->
                   <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50">
                       <span class="floating-notch-label">Country of Origin (Synced)</span>
-                      <span class="text-sm font-bold text-[#00a6f4]">{{ formCountryOfOrigin() }}</span>
+                      <span class="text-xs sm:text-sm font-bold text-[#00a6f4]">{{ formCountryOfOrigin() }}</span>
                     </div>
                   </div>
 
-                  <!-- Tax Exemption Reason -->
-                  <div class="col-span-12 sm:col-span-8 relative group">
+                  <!-- 5. Tax Exemption Reason -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Tax Exemption Reason</span>
                       <input type="text" [ngModel]="formTaxExemptionReason()"
                         (ngModelChange)="formTaxExemptionReason.set($event)" name="exReason"
-                        placeholder="Statutory exemption code if applicable"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        placeholder="Statutory exemption code"
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <!-- Toggles: Exemption, Import Docs, Certification -->
-                  <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold">Tax Exemption Eligible</span>
-                    <label class="form-switch m-0 cursor-pointer">
-                      <input type="checkbox" class="sr-only" [checked]="formTaxExemptionEligible()"
-                        (change)="formTaxExemptionEligible.set($any($event.target).checked)" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
-                  </div>
-
-                  <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold">Requires Import Docs</span>
-                    <label class="form-switch m-0 cursor-pointer">
-                      <input type="checkbox" class="sr-only" [checked]="formRequiresImportDoc()"
-                        (change)="formRequiresImportDoc.set($any($event.target).checked)" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
-                  </div>
-
-                  <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold">Certification Required</span>
-                    <label class="form-switch m-0 cursor-pointer">
-                      <input type="checkbox" class="sr-only" [checked]="formCertificationRequired()"
-                        (change)="formCertificationRequired.set($any($event.target).checked)" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
-                  </div>
-
-                  <!-- Certification Details -->
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- 6. Tax Exemption Eligible Toggle -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Certification Details</span>
-                      <input type="text" [ngModel]="formCertificationDetails()"
-                        (ngModelChange)="formCertificationDetails.set($event)" name="certDet"
-                        placeholder="e.g. Halal, FDA, CE, ISO 22000"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Exemption Eligible</span>
+                      <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Exempt from Tax</span>
+                      <label class="form-switch m-0 cursor-pointer">
+                        <input type="checkbox" class="sr-only" [checked]="formTaxExemptionEligible()"
+                          (change)="formTaxExemptionEligible.set($any($event.target).checked)" />
+                        <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                      </label>
                     </div>
                   </div>
 
-                  <!-- Compliance Notes -->
-                  <div class="col-span-12 sm:col-span-6 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Compliance Notes</span>
-                      <input type="text" [ngModel]="formComplianceNotes()"
-                        (ngModelChange)="formComplianceNotes.set($event)" name="compNotes"
-                        placeholder="Regulatory labeling or storage mandate"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('tax_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('tax_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('tax_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Import Docs, Certification Required, Certification Details & Compliance Notes)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('tax_more') ? '−' : '+' }}
+                      </span>
                     </div>
                   </div>
+
+                  @if (isSubSectionExpanded('tax_more')) {
+                  <div class="col-span-12 grid grid-cols-12 gap-5 pt-1">
+                    <div
+                      class="col-span-12 sm:col-span-6 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
+                      <span class="text-xs font-bold">Requires Import Docs</span>
+                      <label class="form-switch m-0 cursor-pointer">
+                        <input type="checkbox" class="sr-only" [checked]="formRequiresImportDoc()"
+                          (change)="formRequiresImportDoc.set($any($event.target).checked)" />
+                        <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                      </label>
+                    </div>
+
+                    <div
+                      class="col-span-12 sm:col-span-6 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
+                      <span class="text-xs font-bold">Certification Required</span>
+                      <label class="form-switch m-0 cursor-pointer">
+                        <input type="checkbox" class="sr-only" [checked]="formCertificationRequired()"
+                          (change)="formCertificationRequired.set($any($event.target).checked)" />
+                        <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                      </label>
+                    </div>
+
+                    <!-- Certification Details -->
+                    <div class="col-span-12 sm:col-span-6 relative group">
+                      <div
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <span class="floating-notch-label">Certification Details</span>
+                        <input type="text" [ngModel]="formCertificationDetails()"
+                          (ngModelChange)="formCertificationDetails.set($event)" name="certDet"
+                          placeholder="e.g. Halal, FDA, CE, ISO 22000"
+                          class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                      </div>
+                    </div>
+
+                    <!-- Compliance Notes -->
+                    <div class="col-span-12 sm:col-span-6 relative group">
+                      <div
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <span class="floating-notch-label">Compliance Notes</span>
+                        <input type="text" [ngModel]="formComplianceNotes()"
+                          (ngModelChange)="formComplianceNotes.set($event)" name="compNotes"
+                          placeholder="Regulatory labeling or storage mandate"
+                          class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                      </div>
+                    </div>
+                  </div>
+                  }
                 </div>
               </div>
               }
@@ -2429,104 +2649,140 @@
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
                 <div class="grid grid-cols-12 gap-5">
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- Row 1: 3 fields (col 4 each) -->
+                  <!-- 1. Inventory Asset Account -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Inventory Asset Account</span>
                       <input type="text" [ngModel]="formInventoryAssetAccount()"
                         (ngModelChange)="formInventoryAssetAccount.set($event)" name="assetAcc"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- 2. Sales Revenue Account -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Sales Revenue Account</span>
                       <input type="text" [ngModel]="formSalesRevenueAccount()"
                         (ngModelChange)="formSalesRevenueAccount.set($event)" name="revAcc"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- 3. Sales Returns Account -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Sales Returns Account</span>
                       <input type="text" [ngModel]="formSalesReturnsAccount()"
                         (ngModelChange)="formSalesReturnsAccount.set($event)" name="retAcc"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- Row 2: 3 fields (col 4 each) -->
+                  <!-- 4. Cost of Goods Sold (COGS) Account -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Cost of Goods Sold (COGS) Account</span>
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Cost of Goods Sold (COGS)</span>
                       <input type="text" [ngModel]="formCogsAccount()" (ngModelChange)="formCogsAccount.set($event)"
-                        name="cogsAcc" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        name="cogsAcc" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- 5. Purchase Expense Account -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Purchase Expense Account</span>
                       <input type="text" [ngModel]="formPurchaseExpenseAccount()"
                         (ngModelChange)="formPurchaseExpenseAccount.set($event)" name="pExpAcc"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- 6. Purchase Returns Account -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                       <span class="floating-notch-label">Purchase Returns Account</span>
                       <input type="text" [ngModel]="formPurchaseReturnsAccount()"
                         (ngModelChange)="formPurchaseReturnsAccount.set($event)" name="pRetAcc"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Inventory Adjustment Account</span>
-                      <input type="text" [ngModel]="formInvAdjustmentAccount()"
-                        (ngModelChange)="formInvAdjustmentAccount.set($event)" name="invAdjAcc"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('accounting_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('accounting_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('accounting_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Inventory Adjustment, Price Difference, Tax Mapping & Costing Override)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('accounting_more') ? '−' : '+' }}
+                      </span>
                     </div>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Price Difference Account</span>
-                      <input type="text" [ngModel]="formPriceDiffAccount()"
-                        (ngModelChange)="formPriceDiffAccount.set($event)" name="pDiffAcc"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                  @if (isSubSectionExpanded('accounting_more')) {
+                  <div class="col-span-12 grid grid-cols-12 gap-5 pt-1">
+                    <!-- 7. Inventory Adjustment Account -->
+                    <div class="col-span-12 sm:col-span-6 relative group">
+                      <div
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <span class="floating-notch-label">Inventory Adjustment Account</span>
+                        <input type="text" [ngModel]="formInvAdjustmentAccount()"
+                          (ngModelChange)="formInvAdjustmentAccount.set($event)" name="invAdjAcc"
+                          class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Tax Account Mapping</span>
-                      <input type="text" [ngModel]="formTaxAccountMapping()"
-                        (ngModelChange)="formTaxAccountMapping.set($event)" name="taxMap"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                    <!-- 8. Price Difference Account -->
+                    <div class="col-span-12 sm:col-span-6 relative group">
+                      <div
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <span class="floating-notch-label">Price Difference Account</span>
+                        <input type="text" [ngModel]="formPriceDiffAccount()"
+                          (ngModelChange)="formPriceDiffAccount.set($event)" name="pDiffAcc"
+                          class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="col-span-12 sm:col-span-6 relative group">
-                    <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">Costing Method Override</span>
-                      <input type="text" [ngModel]="formCostingMethodOverride()"
-                        (ngModelChange)="formCostingMethodOverride.set($event)" name="costMeth"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                    <!-- 9. Tax Account Mapping -->
+                    <div class="col-span-12 sm:col-span-6 relative group">
+                      <div
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <span class="floating-notch-label">Tax Account Mapping</span>
+                        <input type="text" [ngModel]="formTaxAccountMapping()"
+                          (ngModelChange)="formTaxAccountMapping.set($event)" name="taxMap"
+                          class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                      </div>
+                    </div>
+
+                    <!-- 10. Costing Method Override -->
+                    <div class="col-span-12 sm:col-span-6 relative group">
+                      <div
+                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <span class="floating-notch-label">Costing Method Override</span>
+                        <input type="text" [ngModel]="formCostingMethodOverride()"
+                          (ngModelChange)="formCostingMethodOverride.set($event)" name="costMeth"
+                          class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                      </div>
                     </div>
                   </div>
+                  }
                 </div>
               </div>
               }
@@ -2558,61 +2814,143 @@
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-4 animate-in fade-in duration-150">
 
-                <!-- Quick Upload Action Bar -->
-                <div class="flex items-center gap-2 flex-wrap pb-2 border-b border-slate-100 dark:border-slate-700">
-                  <span class="text-xs font-bold text-slate-500 mr-2">Attach Document:</span>
-                  <button type="button" (click)="addDocumentAttachment('Specification')"
-                    class="h-7 px-3 rounded-full bg-sky-50 text-[#00a6f4] text-xs font-bold hover:bg-sky-100 cursor-pointer transition">
-                    + Specification
-                  </button>
-                  <button type="button" (click)="addDocumentAttachment('Datasheet')"
-                    class="h-7 px-3 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold hover:bg-emerald-100 cursor-pointer transition">
-                    + Datasheet
-                  </button>
-                  <button type="button" (click)="addDocumentAttachment('Safety')"
-                    class="h-7 px-3 rounded-full bg-amber-50 text-amber-600 text-xs font-bold hover:bg-amber-100 cursor-pointer transition">
-                    + Safety (MSDS)
-                  </button>
-                  <button type="button" (click)="addDocumentAttachment('Warranty')"
-                    class="h-7 px-3 rounded-full bg-violet-50 text-violet-600 text-xs font-bold hover:bg-violet-100 cursor-pointer transition">
-                    + Warranty Doc
-                  </button>
-                  <button type="button" (click)="addDocumentAttachment('Certificate')"
-                    class="h-7 px-3 rounded-full bg-teal-50 text-teal-600 text-xs font-bold hover:bg-teal-100 cursor-pointer transition">
-                    + Certificate
-                  </button>
-                </div>
-
                 <div class="grid grid-cols-12 gap-5">
-                  <div class="col-span-12 sm:col-span-6 space-y-2">
-                    <div class="text-xs font-bold text-slate-700 dark:text-slate-300">Attached Product Documents:</div>
-                    <div class="space-y-2">
-                      @for (doc of formAttachments(); track doc.id) {
-                      <div
-                        class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-medium">
-                        <div class="flex items-center gap-2.5">
-                          <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold text-[10px]">{{
-                            doc.category || doc.type }}</span>
-                          <span class="font-bold text-slate-800 dark:text-white">{{ doc.name }}</span>
-                          <span class="text-slate-400">({{ doc.size }})</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                          <span class="text-[11px] text-slate-400">{{ doc.uploadedAt }}</span>
-                          <button type="button" (click)="removeDocumentAttachment(doc.id)"
-                            class="text-slate-400 hover:text-red-500 cursor-pointer">✕</button>
-                        </div>
-                      </div>
-                      }
+                  <!-- Row 1: 3 fields (col 4 each) -->
+                  <!-- 1. Document Title / Ref -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Document Reference</span>
+                      <input type="text" placeholder="e.g. DOC-SPEC-001"
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                     </div>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-6">
-                    <div class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Internal Product Notes:</div>
-                    <textarea [ngModel]="formInternalNotes()" (ngModelChange)="formInternalNotes.set($event)"
-                      name="intNotes" rows="5"
-                      class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-xs focus:outline-none focus:border-[#00a6f4]"
-                      placeholder="Special handling instructions, procurement notes, internal audit caveats..."></textarea>
+                  <!-- 2. Primary Doc Type -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Document Category</span>
+                      <input type="text" value="Technical & Compliance" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
+                    </div>
                   </div>
+
+                  <!-- 3. Confidentiality Level -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Access Level</span>
+                      <input type="text" value="Internal & Supplier Shared" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
+                    </div>
+                  </div>
+
+                  <!-- Row 2: 3 fields (col 4 each) -->
+                  <!-- 4. Quick Attach Specs & Datasheet -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Technical Docs</span>
+                      <div class="flex items-center gap-1.5 w-full justify-end">
+                        <button type="button" (click)="addDocumentAttachment('Specification')"
+                          class="h-6 px-2.5 rounded-full bg-sky-50 dark:bg-sky-950/40 text-[#00a6f4] text-[11px] font-bold hover:bg-sky-100 cursor-pointer transition">
+                          + Specification
+                        </button>
+                        <button type="button" (click)="addDocumentAttachment('Datasheet')"
+                          class="h-6 px-2.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 text-[11px] font-bold hover:bg-emerald-100 cursor-pointer transition">
+                          + Datasheet
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 5. Quick Attach Safety & Warranty -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Compliance & Policy</span>
+                      <div class="flex items-center gap-1.5 w-full justify-end">
+                        <button type="button" (click)="addDocumentAttachment('Safety')"
+                          class="h-6 px-2.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 text-[11px] font-bold hover:bg-amber-100 cursor-pointer transition">
+                          + MSDS
+                        </button>
+                        <button type="button" (click)="addDocumentAttachment('Warranty')"
+                          class="h-6 px-2.5 rounded-full bg-violet-50 dark:bg-violet-950/40 text-violet-600 text-[11px] font-bold hover:bg-violet-100 cursor-pointer transition">
+                          + Warranty
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 6. Quick Attach Certificate & Count -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Certificates</span>
+                      <div class="flex items-center gap-2 w-full justify-between">
+                        <span class="text-xs font-bold text-slate-500 pl-1">{{ formAttachments().length }} Attached</span>
+                        <button type="button" (click)="addDocumentAttachment('Certificate')"
+                          class="h-6 px-3 rounded-full bg-teal-50 dark:bg-teal-950/40 text-teal-600 text-[11px] font-bold hover:bg-teal-100 cursor-pointer transition">
+                          + Certificate
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('documents_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('documents_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('documents_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Attached Product Documents List & Internal Product Notes)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('documents_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('documents_more')) {
+                  <div class="col-span-12 grid grid-cols-12 gap-5 pt-1">
+                    <div class="col-span-12 sm:col-span-6 space-y-2">
+                      <div class="text-xs font-bold text-slate-700 dark:text-slate-300">Attached Product Documents:</div>
+                      <div class="space-y-2">
+                        @for (doc of formAttachments(); track doc.id) {
+                        <div
+                          class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-medium">
+                          <div class="flex items-center gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold text-[10px]">{{
+                              doc.category || doc.type }}</span>
+                            <span class="font-bold text-slate-800 dark:text-white">{{ doc.name }}</span>
+                            <span class="text-slate-400">({{ doc.size }})</span>
+                          </div>
+                          <div class="flex items-center gap-3">
+                            <span class="text-[11px] text-slate-400">{{ doc.uploadedAt }}</span>
+                            <button type="button" (click)="removeDocumentAttachment(doc.id)"
+                              class="text-slate-400 hover:text-red-500 cursor-pointer">✕</button>
+                          </div>
+                        </div>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-span-12 sm:col-span-6">
+                      <div class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Internal Product Notes:</div>
+                      <textarea [ngModel]="formInternalNotes()" (ngModelChange)="formInternalNotes.set($event)"
+                        name="intNotes" rows="5"
+                        class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-xs focus:outline-none focus:border-[#00a6f4]"
+                        placeholder="Special handling instructions, procurement notes, internal audit caveats..."></textarea>
+                    </div>
+                  </div>
+                  }
                 </div>
               </div>
               }
@@ -2644,129 +2982,190 @@
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-5 animate-in fade-in duration-150">
                 <div class="grid grid-cols-12 gap-5">
-                  <!-- Available for Companies -->
-                  <div
-                    class="col-span-12 sm:col-span-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">Available for
-                      Companies:</span>
-                    <div class="flex items-center gap-2 flex-wrap">
-                      @for (comp of formAvailableCompanies(); track comp) {
-                      <span
-                        class="px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-xs font-bold text-slate-800 dark:text-white shadow-2xs">
-                        🏢 {{ comp }}
-                      </span>
-                      }
-                    </div>
-                  </div>
-
-                  <!-- Available for Branches -->
-                  <div
-                    class="col-span-12 sm:col-span-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">Available for
-                      Branches:</span>
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                      @for (br of formAvailableBranches(); track br) {
-                      <span
-                        class="px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-slate-800 text-sky-700 dark:text-sky-300 text-xs font-semibold">
-                        📍 {{ br }}
-                      </span>
-                      }
-                    </div>
-                  </div>
-
-                  <!-- Available for Warehouses -->
-                  <div
-                    class="col-span-12 sm:col-span-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">Available for
-                      Warehouses:</span>
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                      @for (wh of formAvailableWarehouses(); track wh) {
-                      <span
-                        class="px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
-                        📦 {{ wh }}
-                      </span>
-                      }
-                    </div>
-                  </div>
-
-                  <!-- Available for Sales Channels -->
-                  <div
-                    class="col-span-12 sm:col-span-6 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">Enabled Sales
-                      Channels:</span>
-                    <div class="flex items-center gap-2 flex-wrap">
-                      @for (ch of formSalesChannels(); track ch) {
-                      <span
-                        class="px-3 py-1 rounded-full bg-indigo-50 dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 text-xs font-bold">
-                        ✓ {{ ch }}
-                      </span>
-                      }
-                    </div>
-                  </div>
-
-                  <!-- E-commerce Category -->
-                  <div class="col-span-12 sm:col-span-6 relative group">
+                  <!-- Row 1: 3 fields (col 4 each) -->
+                  <!-- 1. Available Companies -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
                     <div
-                      class="relative flex items-center w-full h-[52px] px-5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                      <span class="floating-notch-label">E-Commerce Category</span>
-                      <input type="text" [ngModel]="formEcommerceCategory()"
-                        (ngModelChange)="formEcommerceCategory.set($event)" name="ecomCat"
-                        class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Available Companies</span>
+                      <input type="text" [value]="formAvailableCompanies().join(', ')" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
                     </div>
                   </div>
 
-                  <!-- Online Store Enabled & Publish Online Toggles -->
-                  <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold">Online Store Enabled</span>
-                    <label class="form-switch m-0 cursor-pointer">
-                      <input type="checkbox" class="sr-only" [checked]="formOnlineStoreEnabled()"
-                        (change)="formOnlineStoreEnabled.set($any($event.target).checked)" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
+                  <!-- 2. Available Branches -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Available Branches</span>
+                      <input type="text" [value]="formAvailableBranches().join(', ')" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
+                    </div>
                   </div>
 
-                  <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold">Publish Online</span>
-                    <label class="form-switch m-0 cursor-pointer">
-                      <input type="checkbox" class="sr-only" [checked]="formPublishOnline()"
-                        (change)="formPublishOnline.set($any($event.target).checked)" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
+                  <!-- 3. Available Warehouses -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Available Warehouses</span>
+                      <input type="text" [value]="formAvailableWarehouses().join(', ')" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
+                    </div>
                   </div>
 
-                  <div
-                    class="col-span-12 sm:col-span-4 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
-                    <span class="text-xs font-bold">Item Approval Required</span>
-                    <label class="form-switch m-0 cursor-pointer">
-                      <input type="checkbox" class="sr-only" [checked]="formItemApprovalRequired()"
-                        (change)="formItemApprovalRequired.set($any($event.target).checked)" />
-                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-                    </label>
+                  <!-- Row 2: 3 fields (col 4 each) -->
+                  <!-- 4. Sales Channels -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Sales Channels</span>
+                      <input type="text" [value]="formSalesChannels().join(', ')" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
+                    </div>
                   </div>
 
-                  <!-- Availability Effective From / To -->
-                  <div class="col-span-12 sm:col-span-6 flex items-center gap-3">
-                    <div class="flex-1 relative group">
-                      <div
-                        class="relative flex items-center w-full h-[52px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Available From</span>
-                        <input type="date" [ngModel]="formAvailEffectiveFrom()"
-                          (ngModelChange)="formAvailEffectiveFrom.set($event)" name="avFrom"
-                          class="w-full bg-transparent text-xs font-semibold focus:outline-none cursor-pointer" />
+                  <!-- 5. Online Store Enabled -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Online Store</span>
+                      <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Store Active</span>
+                      <label class="form-switch m-0 cursor-pointer">
+                        <input type="checkbox" class="sr-only" [checked]="formOnlineStoreEnabled()"
+                          (change)="formOnlineStoreEnabled.set($any($event.target).checked)" />
+                        <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- 6. Publish Online -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Publish Online</span>
+                      <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Catalog Visible</span>
+                      <label class="form-switch m-0 cursor-pointer">
+                        <input type="checkbox" class="sr-only" [checked]="formPublishOnline()"
+                          (change)="formPublishOnline.set($any($event.target).checked)" />
+                        <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('organization_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('organization_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('organization_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (Category, Approval Mandate, Effective Dates & Channel Tag Badges)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('organization_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('organization_more')) {
+                  <div class="col-span-12 space-y-4 pt-1">
+                    <div class="grid grid-cols-12 gap-5">
+                      <!-- E-commerce Category -->
+                      <div class="col-span-12 sm:col-span-4 relative group">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                          <span class="floating-notch-label">E-Commerce Category</span>
+                          <input type="text" [ngModel]="formEcommerceCategory()"
+                            (ngModelChange)="formEcommerceCategory.set($event)" name="ecomCat"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <!-- Item Approval Required -->
+                      <div class="col-span-12 sm:col-span-4 relative group">
+                        <div
+                          class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                          <span class="floating-notch-label">Approval Policy</span>
+                          <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Approval Required</span>
+                          <label class="form-switch m-0 cursor-pointer">
+                            <input type="checkbox" class="sr-only" [checked]="formItemApprovalRequired()"
+                              (change)="formItemApprovalRequired.set($any($event.target).checked)" />
+                            <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <!-- Availability Effective From / To -->
+                      <div class="col-span-12 sm:col-span-4 flex items-center gap-2">
+                        <div class="flex-1 relative group">
+                          <div
+                            class="relative flex items-center w-full h-10 sm:h-[42px] px-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                            <span class="floating-notch-label">Available From</span>
+                            <input type="date" [ngModel]="formAvailEffectiveFrom()"
+                              (ngModelChange)="formAvailEffectiveFrom.set($event)" name="avFrom"
+                              class="w-full bg-transparent text-xs font-semibold focus:outline-none cursor-pointer" />
+                          </div>
+                        </div>
+                        <div class="flex-1 relative group">
+                          <div
+                            class="relative flex items-center w-full h-10 sm:h-[42px] px-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                            <span class="floating-notch-label">Available To</span>
+                            <input type="date" [ngModel]="formAvailEffectiveTo()"
+                              (ngModelChange)="formAvailEffectiveTo.set($event)" name="avTo"
+                              class="w-full bg-transparent text-xs font-semibold focus:outline-none cursor-pointer" />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="flex-1 relative group">
+
+                    <!-- Detailed Entity Chips -->
+                    <div class="grid grid-cols-12 gap-5">
                       <div
-                        class="relative flex items-center w-full h-[52px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Available To</span>
-                        <input type="date" [ngModel]="formAvailEffectiveTo()"
-                          (ngModelChange)="formAvailEffectiveTo.set($event)" name="avTo"
-                          class="w-full bg-transparent text-xs font-semibold focus:outline-none cursor-pointer" />
+                        class="col-span-12 sm:col-span-4 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">Available for Companies:</span>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                          @for (comp of formAvailableCompanies(); track comp) {
+                          <span
+                            class="px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-[11px] font-bold text-slate-800 dark:text-white shadow-2xs">
+                            🏢 {{ comp }}
+                          </span>
+                          }
+                        </div>
+                      </div>
+
+                      <div
+                        class="col-span-12 sm:col-span-4 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">Available for Branches:</span>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                          @for (br of formAvailableBranches(); track br) {
+                          <span
+                            class="px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-slate-800 text-sky-700 dark:text-sky-300 text-[11px] font-semibold">
+                            📍 {{ br }}
+                          </span>
+                          }
+                        </div>
+                      </div>
+
+                      <div
+                        class="col-span-12 sm:col-span-4 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">Available for Warehouses:</span>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                          @for (wh of formAvailableWarehouses(); track wh) {
+                          <span
+                            class="px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 text-[11px] font-semibold">
+                            📦 {{ wh }}
+                          </span>
+                          }
+                        </div>
                       </div>
                     </div>
                   </div>
+                  }
                 </div>
               </div>
               }
@@ -2797,29 +3196,145 @@
               @if (isSectionExpanded('audit')) {
               <div
                 class="px-6 py-5 sm:px-7 sm:py-6 border-t border-slate-100 dark:border-slate-700/80 space-y-4 animate-in fade-in duration-150">
-                <div class="grid grid-cols-12 gap-5 text-xs">
-                  <div
-                    class="col-span-12 sm:col-span-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
-                    <span class="text-slate-400 block mb-0.5">Item System ID:</span>
-                    <span class="font-mono font-bold text-slate-800 dark:text-white">{{ formItemId() }}</span>
+                <div class="grid grid-cols-12 gap-5">
+                  <!-- Row 1: 3 fields (col 4 each) -->
+                  <!-- 1. System ID -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Item System ID</span>
+                      <input type="text" [value]="formItemId()" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-mono font-bold text-slate-800 dark:text-white focus:outline-none cursor-default" />
+                    </div>
                   </div>
-                  <div
-                    class="col-span-12 sm:col-span-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
-                    <span class="text-slate-400 block mb-0.5">Created By / At:</span>
-                    <span class="font-bold text-slate-800 dark:text-white">{{ formCreatedBy() }} • {{ formCreatedAt()
-                      }}</span>
+
+                  <!-- 2. Master Status -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Master Status</span>
+                      <input type="text" [value]="formStatus()" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-[#00a6f4] focus:outline-none cursor-default" />
+                    </div>
                   </div>
-                  <div
-                    class="col-span-12 sm:col-span-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
-                    <span class="text-slate-400 block mb-0.5">Updated By / At:</span>
-                    <span class="font-bold text-slate-800 dark:text-white">{{ formUpdatedBy() }} • {{ formUpdatedAt()
-                      }}</span>
+
+                  <!-- 3. Record Version -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Record Version</span>
+                      <input type="text" [value]="'Version ' + formRecordVersion() + '.0 (Active Revision)'" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
+                    </div>
                   </div>
-                  <div
-                    class="col-span-12 sm:col-span-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
-                    <span class="text-slate-400 block mb-0.5">Master Status / Version:</span>
-                    <span class="font-bold text-[#00a6f4]">{{ formStatus() }} • v{{ formRecordVersion() }}</span>
+
+                  <!-- Row 2: 3 fields (col 4 each) -->
+                  <!-- 4. Created By / At -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Created By / Date</span>
+                      <input type="text" [value]="formCreatedBy() + ' • ' + formCreatedAt()" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
+                    </div>
                   </div>
+
+                  <!-- 5. Updated By / At -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Last Updated By</span>
+                      <input type="text" [value]="formUpdatedBy() + ' • ' + formUpdatedAt()" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
+                    </div>
+                  </div>
+
+                  <!-- 6. Concurrency & Lock Status -->
+                  <div class="col-span-12 sm:col-span-4 relative group">
+                    <div
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      <span class="floating-notch-label">Concurrency & Lock</span>
+                      <input type="text" value="Unlocked • Ready for Modifications" readonly
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-emerald-600 focus:outline-none cursor-default" />
+                    </div>
+                  </div>
+
+                  <!-- Expand / Collapse control for Remaining Fields -->
+                  <div class="col-span-12 pt-1">
+                    <div role="button" tabindex="0" (click)="toggleSubSection('audit_more', $event)"
+                      class="w-full py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 flex items-center justify-between cursor-pointer select-none hover:bg-slate-100 dark:hover:bg-slate-750 transition">
+                      <div class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200"
+                          [class.rotate-90]="isSubSectionExpanded('audit_more')" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {{ isSubSectionExpanded('audit_more') ? 'Collapse Additional Fields' : 'Expand Remaining Fields (System Audit Logs & Revision History)' }}
+                        </span>
+                      </div>
+                      <span class="text-slate-400 text-lg font-light select-none">
+                        {{ isSubSectionExpanded('audit_more') ? '−' : '+' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (isSubSectionExpanded('audit_more')) {
+                  <div class="col-span-12 space-y-3 pt-1">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold text-slate-700 dark:text-slate-300">System Change Audit Log:</span>
+                      <span class="text-[11px] font-mono text-slate-400">Showing last 4 transactions</span>
+                    </div>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                      <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 dark:bg-slate-800/80 text-slate-500 font-bold border-b border-slate-200 dark:border-slate-700">
+                          <tr>
+                            <th class="p-2.5">Timestamp</th>
+                            <th class="p-2.5">User</th>
+                            <th class="p-2.5">Action</th>
+                            <th class="p-2.5">Field</th>
+                            <th class="p-2.5">Previous Value</th>
+                            <th class="p-2.5">New Value</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                          <tr>
+                            <td class="p-2.5 font-mono text-slate-500">{{ formUpdatedAt() }}</td>
+                            <td class="p-2.5 font-bold">{{ formUpdatedBy() }}</td>
+                            <td class="p-2.5 text-blue-600 font-bold">Price Update</td>
+                            <td class="p-2.5 font-mono">Sales Price</td>
+                            <td class="p-2.5 text-slate-400 line-through">AED 400.00</td>
+                            <td class="p-2.5 font-bold text-emerald-600">AED 420.00</td>
+                          </tr>
+                          <tr>
+                            <td class="p-2.5 font-mono text-slate-500">2026-10-25 14:12</td>
+                            <td class="p-2.5 font-bold">{{ formUpdatedBy() }}</td>
+                            <td class="p-2.5 text-indigo-600 font-bold">Stock Adjustment</td>
+                            <td class="p-2.5 font-mono">Min Stock</td>
+                            <td class="p-2.5 text-slate-400 line-through">20 pcs</td>
+                            <td class="p-2.5 font-bold text-slate-700 dark:text-slate-200">50 pcs</td>
+                          </tr>
+                          <tr>
+                            <td class="p-2.5 font-mono text-slate-500">2026-10-20 09:30</td>
+                            <td class="p-2.5 font-bold">Admin Manager</td>
+                            <td class="p-2.5 text-teal-600 font-bold">Compliance Sync</td>
+                            <td class="p-2.5 font-mono">HS Code</td>
+                            <td class="p-2.5 text-slate-400 line-through">-</td>
+                            <td class="p-2.5 font-bold text-slate-700 dark:text-slate-200">3302.90.00</td>
+                          </tr>
+                          <tr>
+                            <td class="p-2.5 font-mono text-slate-500">{{ formCreatedAt() }}</td>
+                            <td class="p-2.5 font-bold">{{ formCreatedBy() }}</td>
+                            <td class="p-2.5 text-emerald-600 font-bold">Item Created</td>
+                            <td class="p-2.5 font-mono">Master Record</td>
+                            <td class="p-2.5 text-slate-400">-</td>
+                            <td class="p-2.5 font-bold text-slate-700 dark:text-slate-200">Created v1.0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  }
                 </div>
               </div>
               }
