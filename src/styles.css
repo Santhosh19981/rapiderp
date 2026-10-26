@@ -485,9 +485,9 @@ button.accordion-trigger-btn:not(:disabled):hover div,
   position: fixed;
   z-index: 9999999;
   pointer-events: none;
-  background: #00a6f4;
-  color: #ffffff;
-  border: none;
+  background: #00a6f4 !important;
+  color: #ffffff !important;
+  border: none !important;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -501,6 +501,13 @@ button.accordion-trigger-btn:not(:disabled):hover div,
   opacity: 0;
   visibility: hidden;
   transform: scale(0.94);
+}
+
+:host-context(.dark) #rapiderp-global-tooltip,
+.dark #rapiderp-global-tooltip {
+  background: #00a6f4 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 18px rgba(0, 166, 244, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
 }
 
 #rapiderp-global-tooltip.active {

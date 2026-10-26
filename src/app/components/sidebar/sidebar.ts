@@ -63,6 +63,11 @@ export class Sidebar {
       icon: 'countries',
     },
     {
+      id: 'items',
+      label: 'Items',
+      icon: 'items',
+    },
+    {
       id: 'sales',
       label: 'Sales',
       icon: 'sales',
@@ -673,6 +678,9 @@ export class Sidebar {
     if (item.id === 'countries') {
       this.navService.navigateTo(item.id, '', item.label, '', false);
       this.router.navigate(['/landing', 'countries'], { queryParams: {} });
+    } else if (item.id === 'items' || item.id === 'item') {
+      this.navService.navigateTo(item.id, '', item.label, '', false);
+      this.router.navigate(['/landing', 'items'], { queryParams: {} });
     } else if (item.subItems && item.subItems.length > 0) {
       // Navigate to first subitem or keep module active
       const firstSub = item.subItems[0];

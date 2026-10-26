@@ -1,0 +1,163 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ========================================================================= */
+/* 1. FLOATING NOTCH LABEL (Matches Country & Login UI Specification)        */
+/* ========================================================================= */
+.floating-notch-label {
+  position: absolute;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  z-index: 10;
+  top: 0;
+  transform: translateY(-50%);
+  left: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0 8px;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  color: #64748b;
+}
+
+:host-context(.dark) .floating-notch-label,
+.dark .floating-notch-label {
+  background-color: #1e293b;
+  color: #94a3b8;
+}
+
+.group:focus-within .floating-notch-label {
+  color: #00a6f4;
+}
+
+:host-context(.dark) .group:focus-within .floating-notch-label,
+.dark .group:focus-within .floating-notch-label {
+  color: #38bdf8;
+}
+
+/* ========================================================================= */
+/* 2. FORM SWITCH TOGGLE                                                     */
+/* ========================================================================= */
+.form-switch {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+
+.form-switch-track {
+  width: 44px;
+  height: 24px;
+  background-color: #cbd5e1;
+  border-radius: 9999px;
+  position: relative;
+  transition: background-color 0.2s ease;
+  display: inline-block;
+}
+
+:host-context(.dark) .form-switch-track,
+.dark .form-switch-track {
+  background-color: #475569;
+}
+
+.form-switch-thumb {
+  width: 18px;
+  height: 18px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .form-switch-track {
+  background-color: #00a6f4;
+}
+
+input:checked + .form-switch-track .form-switch-thumb {
+  transform: translateX(20px);
+}
+
+/* ========================================================================= */
+/* 3. CUSTOM SCROLLBAR                                                       */
+/* ========================================================================= */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+:host-context(.dark) .custom-scrollbar,
+.dark .custom-scrollbar {
+  scrollbar-color: #475569 #0f172a;
+}
+
+:host-context(.dark) .custom-scrollbar::-webkit-scrollbar-track,
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+:host-context(.dark) .custom-scrollbar::-webkit-scrollbar-thumb,
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+/* ========================================================================= */
+/* 4. BUTTONS & UTILITIES                                                    */
+/* ========================================================================= */
+.btn-primary-pill {
+  background: linear-gradient(135deg, #00a6f4 0%, #0091ea 100%);
+  box-shadow: 0 6px 16px -2px rgba(0, 166, 244, 0.38);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-pill:hover {
+  background: linear-gradient(135deg, #02b1ff 0%, #0084d6 100%);
+  box-shadow: 0 8px 20px -2px rgba(0, 166, 244, 0.5);
+  transform: translateY(-1px);
+}
+
+
+
+/* ========================================================================= */
+/* 5. HORIZONTAL SCROLLBAR HIDE / CUSTOM STYLING                             */
+/* ========================================================================= */
+.custom-scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.custom-scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-nav-arrow {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.tab-nav-arrow:hover {
+  transform: scale(1.05);
+}
+
+

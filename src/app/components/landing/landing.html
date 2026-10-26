@@ -625,7 +625,7 @@
         [class.p-4]="navService.currentModuleId() === 'dashboard'"
         [class.sm:p-6]="navService.currentModuleId() === 'dashboard'"
         [class.lg:p-8]="navService.currentModuleId() === 'dashboard'"
-        [class.p-0]="navService.currentModuleId() !== 'dashboard'" [class.overflow-hidden]="isCountryModule()">
+        [class.p-0]="navService.currentModuleId() !== 'dashboard'" [class.overflow-hidden]="isCountryModule() || isItemModule()">
 
         @if (navService.currentModuleId() === 'dashboard') {
         <!-- EXECUTIVE OVERVIEW DASHBOARD (Screenshot 1 Reference) -->
@@ -1564,6 +1564,8 @@
         </div>
         } @else if (isCountryModule()) {
         <app-country class="w-full h-full block overflow-hidden"></app-country>
+        } @else if (isItemModule()) {
+        <app-item class="w-full h-full block overflow-hidden"></app-item>
         } @else if (isAuditHistoryModule()) {
         <app-audit-history class="w-full block"></app-audit-history>
         } @else {

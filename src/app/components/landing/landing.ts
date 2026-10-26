@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Sidebar } from '../sidebar/sidebar';
 import { CountryComponent } from '../country/country';
+import { ItemComponent } from '../item/item';
 import { AuditHistoryComponent } from '../audit-history/audit-history';
 import { NavigationService, SearchEntry } from '../../services/navigation.service';
 import { AuthService } from '../../services/auth.service';
@@ -12,7 +13,7 @@ import { TenantService } from '../../services/tenant.service';
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, FormsModule, Sidebar, CountryComponent, AuditHistoryComponent],
+  imports: [CommonModule, FormsModule, Sidebar, CountryComponent, ItemComponent, AuditHistoryComponent],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
 })
@@ -129,6 +130,12 @@ export class Landing implements OnInit {
   isCountryModule = computed<boolean>(() => {
     const mod = (this.navService.currentModuleId() || '').toLowerCase();
     return mod === 'countries' || mod === 'country';
+  });
+
+  isItemModule = computed<boolean>(() => {
+    const mod = (this.navService.currentModuleId() || '').toLowerCase();
+    const sub = (this.navService.currentSubModuleId() || '').toLowerCase();
+    return mod === 'items' || mod === 'item' || sub === 'inv-items' || sub === 'items' || sub === 'item' || (mod === 'inventory' && (sub === 'inv-items' || sub === 'items'));
   });
 
   isAuditHistoryModule = computed<boolean>(() => {

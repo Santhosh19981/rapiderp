@@ -139,6 +139,16 @@ export class App implements OnInit {
       }
     };
 
+    // Proactively suppress native browser black tooltips by converting title to data-tooltip immediately
+    document.addEventListener('mouseenter', (e: MouseEvent) => {
+      const el = (e.target as HTMLElement)?.closest?.('[title]') as HTMLElement | null;
+      if (el && el.hasAttribute('title')) {
+        const val = el.getAttribute('title')?.trim();
+        if (val) el.setAttribute('data-tooltip', val);
+        el.removeAttribute('title');
+      }
+    }, { capture: true, passive: true });
+
     document.addEventListener('mouseover', (e: MouseEvent) => {
       const target = (e.target as HTMLElement)?.closest('[data-tooltip],[title]') as HTMLElement | null;
       if (target) {
