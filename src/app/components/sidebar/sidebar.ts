@@ -33,8 +33,8 @@ export class Sidebar {
   isCollapsed = signal<boolean>(false);
   isHoverExpanded = signal<boolean>(false);
 
-  // Effective expanded state: true if permanently pinned open OR currently hover-expanded
-  effectiveExpanded = computed(() => !this.isCollapsed() || this.isHoverExpanded());
+  // Effective expanded state: cleanly driven by isCollapsed
+  effectiveExpanded = computed(() => !this.isCollapsed());
 
   activeItemId = this.navService.currentModuleId;
   activeSubItemId = this.navService.currentSubModuleId;
@@ -522,21 +522,15 @@ export class Sidebar {
       clearTimeout(this.sidebarLeaveTimer);
       this.sidebarLeaveTimer = null;
     }
-    if (this.isCollapsed()) {
-      this.isHoverExpanded.set(true);
-    }
   }
 
   onSidebarMouseLeave(): void {
     if (this.sidebarLeaveTimer) {
       clearTimeout(this.sidebarLeaveTimer);
     }
-    // 180ms grace buffer for fluid cursor transit without abrupt snapping
     this.sidebarLeaveTimer = setTimeout(() => {
-      if (this.isCollapsed()) {
-        this.isHoverExpanded.set(false);
-        this.showCompanyDropdown.set(false);
-      }
+      this.hoveredItemId.set(null);
+      this.showCompanyDropdown.set(false);
     }, 180);
   }
 
@@ -550,22 +544,20 @@ export class Sidebar {
       this.closeTimer = null;
     }
 
-    if (this.isCollapsed() && !this.isHoverExpanded()) {
-      this.isHoverExpanded.set(true);
-    }
+    const target = event.currentTarget as HTMLElement;
+    if (target) {
+      const parent = target.closest('.sidebar-wrapper') as HTMLElement;
+      const parentRect = parent ? parent.getBoundingClientRect() : { top: 0 };
+      const targetRect = target.getBoundingClientRect();
+      const rawTop = targetRect.top - parentRect.top;
 
-    if (item.subItems && item.subItems.length > 0) {
-      const target = event.currentTarget as HTMLElement;
-      if (target) {
-        const parent = target.closest('.sidebar-wrapper') as HTMLElement;
-        const parentRect = parent ? parent.getBoundingClientRect() : { top: 0 };
-        const targetRect = target.getBoundingClientRect();
-        const rawTop = targetRect.top - parentRect.top;
-
+      if (item.subItems && item.subItems.length > 0) {
         // Ensure popover does not overflow bottom of viewport
         const flyoutEstimatedHeight = Math.min(380, item.subItems.length * 40 + 60);
         const maxTop = window.innerHeight - flyoutEstimatedHeight - 16;
         this.flyoutTop.set(Math.max(8, Math.min(rawTop, maxTop)));
+      } else {
+        this.flyoutTop.set(rawTop);
       }
     }
 

@@ -1,7 +1,7 @@
 <div
   class="sidebar-outer-container relative h-full shrink-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
-  [class.w-64]="!isCollapsed()"
-  [class.w-[76px]]="isCollapsed()"
+  [class.w-64]="effectiveExpanded()"
+  [class.w-[76px]]="!effectiveExpanded()"
   [dir]="navService.isRtl() ? 'rtl' : 'ltr'"
 >
   <aside
@@ -10,7 +10,6 @@
     [class.border-l]="navService.isRtl()"
     [class.w-64]="effectiveExpanded()"
     [class.w-[76px]]="!effectiveExpanded()"
-    [class.hover-expanded-overlay]="isCollapsed() && isHoverExpanded()"
     (mouseenter)="onSidebarMouseEnter()"
     (mouseleave)="onSidebarMouseLeave()"
   >
@@ -79,7 +78,7 @@
 
 
     <!-- 3. Module List with Modern Icons & Reverse Sliding RTL Support -->
-    <nav class="sidebar-nav flex-1 space-y-1 overflow-y-auto custom-scrollbar py-2"
+    <nav class="sidebar-nav flex-1 space-y-1 overflow-y-auto sidebar-scrollbar py-2"
          [class.px-1.5]="effectiveExpanded()"
          [class.px-1]="!effectiveExpanded()">
       @for (item of menuItems; track item.id) {
@@ -151,8 +150,17 @@
               </span>
             }
 
-
           </button>
+
+          <!-- Sleek tooltip for single items when sidebar is collapsed -->
+          @if (!effectiveExpanded() && !item.subItems && hoveredItemId() === item.id) {
+            <div class="fixed z-[100] px-3 py-1.5 rounded-xl bg-[#052b6d] text-white text-xs font-semibold shadow-xl border border-sky-400/30 whitespace-nowrap pointer-events-none animate-in fade-in zoom-in-95 duration-100"
+              [style.left]="navService.isRtl() ? 'auto' : '82px'"
+              [style.right]="navService.isRtl() ? '82px' : 'auto'"
+              [style.top.px]="flyoutTop() + 16">
+              {{ navService.translation.translateModule(item.id, item.label) }}
+            </div>
+          }
         </div>
       }
     </nav>

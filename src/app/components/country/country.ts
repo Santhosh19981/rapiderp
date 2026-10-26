@@ -1224,6 +1224,68 @@ export class CountryComponent implements OnInit, AfterViewInit {
     return 'Approval notes or rejection reason';
   }
 
+  getCountryWithholdingTax(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return '0% (Standard)';
+    if (clean === 'united states') return '30% (Standard WHT)';
+    if (clean === 'india') return '10% (TDS Scheme)';
+    if (clean === 'germany') return '15% (KapESt)';
+    if (clean === 'united kingdom') return '20% (Standard)';
+    return 'Standard statutory rate';
+  }
+
+  getCountryCustomsRegime(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'GCC Unified Customs Tariff (5%)';
+    if (clean === 'united states') return 'HTSUS Tariff Schedule';
+    if (clean === 'india') return 'Indian Customs Tariff Schedule';
+    if (clean === 'germany' || clean === 'france' || clean === 'austria') return 'EU Common Customs Tariff';
+    return 'Harmonized Tariff (WCO)';
+  }
+
+  getCountryTradeTreaty(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'GCC Economic Treaty & CEPA';
+    if (clean === 'united states') return 'USMCA & WTO MFN';
+    if (clean === 'india') return 'SAFTA & Bilateral CEPAs';
+    if (clean === 'germany' || clean === 'france' || clean === 'austria') return 'EU Single Market & EEA';
+    return 'WTO Most-Favoured-Nation';
+  }
+
+  getCountryCurrencyFormatting(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united arab emirates' || clean === 'uae' || clean === 'ae') return 'AED #,##0.00 (Right)';
+    if (clean === 'united states') return '$#,##0.00 (Left)';
+    if (clean === 'india') return '₹ ##,##,##0.00 (Lakhs/Crores)';
+    if (clean === 'germany' || clean === 'france') return '#.##0,00 € (Right)';
+    return 'ISO Currency Code + #,##0.00';
+  }
+
+  getCountryFiscalYear(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    if (clean === 'united states') return 'Oct 01 — Sep 30';
+    if (clean === 'india' || clean === 'japan' || clean === 'united kingdom') return 'Apr 01 — Mar 31';
+    if (clean === 'australia') return 'Jul 01 — Jun 30';
+    return 'Jan 01 — Dec 31 (Calendar)';
+  }
+
+  getCountryRecordOrigin(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    return 'System Master (ISO-3166-1)';
+  }
+
+  getCountryLastAudit(nameOrCode?: string): string {
+    const clean = (nameOrCode || this.formName() || '').trim().toLowerCase();
+    if (!clean) return '-';
+    return 'Automated System Verification Active';
+  }
+
   formShortName = computed(() => this.getCountryShortName(this.formName()));
   formGeographicRegion = computed(() => this.getCountryGeographicRegion(this.formName()));
   formAdminDivision = computed(() => this.getCountryAdminDivision(this.formName()));
@@ -1241,6 +1303,13 @@ export class CountryComponent implements OnInit, AfterViewInit {
   formComplianceNotes = computed(() => this.getCountryComplianceNotes(this.formName()));
   formApprovalStatus = computed(() => this.getCountryApprovalStatus(this.formName()));
   formApprovalRemarks = computed(() => this.getCountryApprovalRemarks(this.formName()));
+  formWithholdingTax = computed(() => this.getCountryWithholdingTax(this.formName()));
+  formCustomsRegime = computed(() => this.getCountryCustomsRegime(this.formName()));
+  formTradeTreaty = computed(() => this.getCountryTradeTreaty(this.formName()));
+  formCurrencyFormatting = computed(() => this.getCountryCurrencyFormatting(this.formName()));
+  formFiscalYear = computed(() => this.getCountryFiscalYear(this.formName()));
+  formRecordOrigin = computed(() => this.getCountryRecordOrigin(this.formName()));
+  formLastAudit = computed(() => this.getCountryLastAudit(this.formName()));
 
   // Active Persona switcher dropdown (Tenant 1: User 1A, User 1B, Tenant 2: User 2A, User 2B, Admin)
   isPersonaDropdownOpen = signal<boolean>(false);
@@ -2401,6 +2470,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   aiInputText = signal<string>('');
   aiIsProcessing = signal<boolean>(false);
   aiErrorMessage = signal<string | null>(null);
+  aiInputMode = signal<'text' | 'layout' | 'voice'>('voice');
   aiExtractedData = signal<{
     name?: string;
     isoCode2?: string;
@@ -2411,17 +2481,28 @@ export class CountryComponent implements OnInit, AfterViewInit {
     nationality?: string;
     continent?: string;
     capital?: string;
+    isDefault?: boolean;
+    status?: 'Active' | 'Inactive';
+    autoSave?: boolean;
   } | null>(null);
   aiShowConflictPrompt = signal<boolean>(false);
 
-  openAiModal(): void {
+  setAiInputMode(mode: 'text' | 'layout' | 'voice'): void {
+    this.aiInputMode.set(mode);
+    if (mode === 'voice') {
+      this.toggleVoiceInput('aiInput');
+    }
+  }
+
+  openAiModal(initialMode: 'text' | 'layout' | 'voice' = 'voice'): void {
     this.aiErrorMessage.set(null);
     this.aiExtractedData.set(null);
     this.aiShowConflictPrompt.set(false);
+    this.aiInputMode.set(initialMode);
     this.isAiModalOpen.set(true);
     setTimeout(() => {
       const el = document.getElementById('ai-textarea');
-      if (el) {
+      if (el && initialMode === 'text') {
         el.focus();
       }
     }, 100);
@@ -2430,6 +2511,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   closeAiModal(): void {
     this.isAiModalOpen.set(false);
     this.aiShowConflictPrompt.set(false);
+    this.stopVoiceInput();
   }
 
   clearAiInput(): void {
@@ -2451,14 +2533,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
         this.aiErrorMessage.set('Could not extract sufficient country data. Please review your input.');
       }
     } else {
-      this.aiErrorMessage.set('Please enter or paste country details in the editor.');
+      this.aiErrorMessage.set('Please enter or speak country details in the assistant.');
     }
   }
 
   startAiExtraction(): void {
     const text = this.aiInputText().trim();
     if (!text) {
-      this.aiErrorMessage.set('Please enter or paste country details in the editor.');
+      this.aiErrorMessage.set('Please enter or speak country details in the assistant.');
       return;
     }
     this.aiIsProcessing.set(true);
@@ -2469,7 +2551,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         const extracted = this.parseAiCountryText(text);
         if (!extracted.name && !extracted.isoCode2) {
           this.aiErrorMessage.set(
-            'Could not extract sufficient country data. Please ensure the country name and codes are included.'
+            'Could not extract sufficient country data. Please ensure the country name or codes are included.'
           );
           this.aiIsProcessing.set(false);
           return;
@@ -2481,7 +2563,26 @@ export class CountryComponent implements OnInit, AfterViewInit {
         this.aiErrorMessage.set('Failed to process text. Preserving your input for review.');
         this.aiIsProcessing.set(false);
       }
-    }, 450);
+    }, 350);
+  }
+
+  executeAiSpokenCommand(spokenText: string): void {
+    this.aiInputText.set(spokenText);
+    const extracted = this.parseAiCountryText(spokenText);
+    if (extracted && (extracted.name || extracted.isoCode2)) {
+      this.aiExtractedData.set(extracted);
+      this.applyAiData('replace');
+      if (extracted.autoSave) {
+        setTimeout(() => {
+          this.onSubmitForm();
+          this.showToast(`AI Assistant: Successfully submitted and saved ${extracted.name}!`);
+        }, 350);
+      } else {
+        this.showToast(`AI Assistant: Successfully loaded ${extracted.name}.`);
+      }
+    } else {
+      this.aiErrorMessage.set(`Could not parse spoken command: "${spokenText}".`);
+    }
   }
 
   private parseAiCountryText(raw: string): any {
@@ -2494,6 +2595,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
     let currency = '';
     let nationality = '';
     let continent = '';
+    let capital = '';
+    let isDefault: boolean | undefined = undefined;
+    let status: 'Active' | 'Inactive' | undefined = undefined;
+    let autoSave = false;
 
     // Check if JSON format
     if (text.startsWith('{') && text.endsWith('}')) {
@@ -2507,7 +2612,33 @@ export class CountryComponent implements OnInit, AfterViewInit {
         currency = obj.currency || obj.currencyCode || '';
         nationality = obj.nationality || '';
         continent = obj.continent || obj.region || '';
+        capital = obj.capital || '';
+        if (obj.isDefault !== undefined) isDefault = !!obj.isDefault;
+        if (obj.status) status = obj.status;
       } catch { }
+    }
+
+    // Default currency / country detector:
+    // e.g. "default currency, no", "default currency no", "default currency yes", "default no", "default yes"
+    const defaultMatch = text.match(/(?:default\s*(?:currency|country)?\s*(?:is|:)?\s*(no|yes|false|true|off|on|not\s*default))/i);
+    if (defaultMatch) {
+      const v = defaultMatch[1].toLowerCase();
+      isDefault = (v === 'yes' || v === 'true' || v === 'on');
+    }
+
+    // Status detector: "strategy is active", "status is active", "status active", "status is inactive", etc.
+    const statusMatch = text.match(/(?:status|strategy|statue)\s*(?:is|:)?\s*(active|inactive)/i);
+    if (statusMatch) {
+      status = statusMatch[1].toLowerCase() === 'inactive' ? 'Inactive' : 'Active';
+    } else if (/\b(?:status|strategy)\s+active\b/i.test(text) || /\bactive\s+status\b/i.test(text)) {
+      status = 'Active';
+    } else if (/\b(?:status|strategy)\s+inactive\b/i.test(text) || /\binactive\s+status\b/i.test(text)) {
+      status = 'Inactive';
+    }
+
+    // Auto save / submit action command parsing (e.g. "safe", "save", "submit", "confirm")
+    if (/\b(?:safe|save|submit|confirm|store)\b/i.test(text)) {
+      autoSave = true;
     }
 
     // Keyword extractors
@@ -2544,7 +2675,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const contMatch = text.match(/(?:Continent|Region)[:\s]+([A-Za-z\s]+)/i);
     if (contMatch) continent = contMatch[1].trim().split(/[\n,;]/)[0];
 
-    // Fallback: match preset if country name mentioned
+    // Fallback: match preset if country name mentioned anywhere in spoken text
     if (!name) {
       for (const p of this.countryPresets) {
         if (text.toLowerCase().includes(p.name.toLowerCase())) {
@@ -2556,6 +2687,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
           if (!currency) currency = p.currency;
           if (!nationality) nationality = p.nationality;
           if (!continent) continent = p.continent;
+          if (p.capital) capital = p.capital;
           break;
         }
       }
@@ -2576,6 +2708,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (!currency) currency = matchedPreset.currency;
       if (!nationality) nationality = matchedPreset.nationality;
       if (!continent) continent = matchedPreset.continent;
+      if (!capital && matchedPreset.capital) capital = matchedPreset.capital;
     }
 
     return {
@@ -2587,6 +2720,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
       currency: currency || undefined,
       nationality: nationality || undefined,
       continent: continent || undefined,
+      capital: capital || undefined,
+      isDefault,
+      status,
+      autoSave,
     };
   }
 
@@ -2624,6 +2761,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (data.nationality) this.formNationality.set(data.nationality);
       if (data.continent) this.formContinent.set(data.continent);
       if (data.capital) this.formCapital.set(data.capital);
+      if (data.isDefault !== undefined) this.formDefault.set(data.isDefault ? 'Yes' : 'No');
+      if (data.status) this.formStatus.set(data.status);
     } else {
       // Merge: only set if currently empty
       if (data.name && !this.formName().trim()) this.formName.set(data.name);
@@ -2639,6 +2778,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
       if (data.nationality && !this.formNationality().trim()) this.formNationality.set(data.nationality);
       if (data.continent && !this.formContinent().trim()) this.formContinent.set(data.continent);
       if (data.capital && !this.formCapital().trim()) this.formCapital.set(data.capital);
+      if (data.isDefault !== undefined) this.formDefault.set(data.isDefault ? 'Yes' : 'No');
+      if (data.status) this.formStatus.set(data.status);
     }
 
     // Mark touched so validation states update
@@ -2650,11 +2791,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.markFieldTouched('currency');
 
     this.closeAiModal();
-    this.showToast('AI suggestions transferred. Please review and click Save.');
+    this.showToast(`AI Voice Assistant: Transferred "${data.name || 'Country'}" details to form.`);
     setTimeout(() => this.focusField('country-name'), 80);
   }
 
-  // Preset Country Examples for AI Prompt
   loadAiSample(presetName: string): void {
     const p = this.countryPresets.find((x) => x.name.toLowerCase() === presetName.toLowerCase());
     if (p) {
@@ -5083,26 +5223,60 @@ export class CountryComponent implements OnInit, AfterViewInit {
     }
   }
 
+  voiceSearchCountry(query: string): void {
+    const clean = query.replace(/^[.\s,;]+|[.\s,;]+$/g, '').trim();
+    if (!clean) return;
+
+    let match = this.lookupTableData.find(
+      (p) => clean.toLowerCase().includes(p.name.toLowerCase()) || p.name.toLowerCase().includes(clean.toLowerCase())
+    );
+    if (!match) {
+      match = this.countryPresets.find(
+        (p) => clean.toLowerCase().includes(p.name.toLowerCase()) || p.name.toLowerCase().includes(clean.toLowerCase())
+      );
+    }
+    if (!match) {
+      const matchMaster = this.countryService.countries().find(
+        (c) => clean.toLowerCase().includes(c.name.toLowerCase()) || c.name.toLowerCase().includes(clean.toLowerCase())
+      );
+      if (matchMaster) {
+        this.selectMasterSuggestion(matchMaster);
+        this.showToast(`Voice search: Selected "${matchMaster.name}"`);
+        return;
+      }
+    }
+
+    if (match) {
+      this.selectCountryFromDropdown(match);
+      this.showToast(`Voice search: Selected "${match.name}"`);
+    } else {
+      this.formName.set(clean);
+      this.onCountryNameInput(clean);
+      this.showToast(`Voice search: "${clean}"`);
+    }
+  }
+
   private simulateVoiceForField(fieldName: string): void {
     this.activeListeningField.set(fieldName);
     setTimeout(() => {
-      let sample = 'United Arab Emirates';
-      if (fieldName === 'code' || fieldName === 'isoCode2') sample = 'AE';
-      if (fieldName === 'isoCode3') sample = 'ARE';
-      if (fieldName === 'isoNumeric') sample = '784';
-      if (fieldName === 'isd') sample = '+971';
-      if (fieldName === 'currency') sample = 'AED — UAE Dirham';
-      if (fieldName === 'nationality') sample = 'Emirati';
-      if (fieldName === 'flagSearch') sample = 'United';
-      if (fieldName === 'search') sample = 'Germany';
-      if (fieldName === 'lookupSearch') sample = 'Germany';
-      if (fieldName === 'translationSearch') sample = 'Arabic';
-      if (fieldName.startsWith('translation-')) sample = 'Emirates';
-      if (fieldName === 'viewName') sample = 'United Arab Emirates';
-      if (fieldName === 'aiInput') sample = 'Country: Germany, ISO Code: DE, Currency: EUR, Dial Code: +49';
+      let sample = 'India';
+      if (fieldName === 'name') sample = 'India';
+      if (fieldName === 'code' || fieldName === 'isoCode2') sample = 'IN';
+      if (fieldName === 'isoCode3') sample = 'IND';
+      if (fieldName === 'isoNumeric') sample = '356';
+      if (fieldName === 'isd') sample = '+91';
+      if (fieldName === 'currency') sample = 'INR — Indian Rupee';
+      if (fieldName === 'nationality') sample = 'Indian';
+      if (fieldName === 'flagSearch') sample = 'India';
+      if (fieldName === 'search') sample = 'India';
+      if (fieldName === 'lookupSearch') sample = 'India';
+      if (fieldName === 'translationSearch') sample = 'Hindi';
+      if (fieldName.startsWith('translation-')) sample = 'India';
+      if (fieldName === 'viewName') sample = 'India';
+      if (fieldName === 'aiInput') sample = 'Bangladesh, default currency no, strategy is active, safe';
       if (fieldName === 'currencySearch') sample = 'USD';
-      if (fieldName === 'countryDropdownSearch') sample = 'United States';
-      if (fieldName === 'viewCountrySearch') sample = 'Canada';
+      if (fieldName === 'countryDropdownSearch') sample = 'India';
+      if (fieldName === 'viewCountrySearch') sample = 'India';
 
       this.applySpokenText(fieldName, sample);
       this.activeListeningField.set(null);
@@ -5113,6 +5287,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const clean = text.trim();
     if (fieldName === 'search') {
       this.searchQuery.set(clean);
+      this.showToast(`Voice search: Filtered by "${clean}"`);
     } else if (fieldName === 'countryDropdownSearch') {
       this.countryDropdownSearch.set(clean);
     } else if (fieldName === 'currencySearch') {
@@ -5120,8 +5295,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
     } else if (fieldName === 'viewCountrySearch') {
       this.viewCountrySearch.set(clean);
     } else if (fieldName === 'aiInput') {
-      const current = this.aiInputText();
-      this.aiInputText.set(current ? `${current} ${clean}` : clean);
+      this.aiInputText.set(clean);
+      this.executeAiSpokenCommand(clean);
     } else if (fieldName === 'flagSearch') {
       this.gallerySearch.set(clean);
     } else if (fieldName === 'lookupSearch') {
@@ -5132,7 +5307,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       const langCode = fieldName.replace('translation-', '');
       this.setTranslationDraft(langCode, clean);
     } else if (fieldName === 'name') {
-      this.onCountryNameChange(clean);
+      this.voiceSearchCountry(clean);
       this.markFieldTouched('name');
     } else if (fieldName === 'viewName') {
       this.onViewCountryNameInput(clean);
