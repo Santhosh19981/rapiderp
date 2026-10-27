@@ -44,6 +44,36 @@ export interface SectionTabItem {
   sectionKey: string;
 }
 
+export interface SearchableFormField {
+  id: string;
+  label: string;
+  category: 'General' | 'Tab' | 'Field';
+  tabId?: ItemSectionTab;
+  sectionKey?: string;
+  subKey?: string;
+  location: string;
+  keywords?: string;
+}
+
+export interface VideoTutorialStep {
+  step: number;
+  title: string;
+  description: string;
+  actionHint: string;
+  badge: string;
+}
+
+export interface GuideTopic {
+  id: string;
+  title: string;
+  category: 'create' | 'edit' | 'tabs' | 'navigation' | 'shortcuts';
+  summary: string;
+  steps: string[];
+  tips?: string;
+  jumpTab?: ItemSectionTab;
+  jumpFieldId?: string;
+}
+
 @Component({
   selector: 'app-item',
   standalone: true,
@@ -58,31 +88,32 @@ export class ItemComponent implements OnInit {
   @ViewChild('nameEnInput') nameEnInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('barcodeInput') barcodeInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('tabsContainer') tabsContainerRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('fieldSearchInput') fieldSearchInputRef?: ElementRef<HTMLInputElement>;
 
-  // All 14 Enterprise Retail Section Tabs + All Sections
+  // All 14 Enterprise Retail Section Tabs + All Sections (Single Word Tab Names)
   readonly sectionTabs: SectionTabItem[] = [
-    { id: 'A', letter: 'A', name: 'Product Identity', shortName: 'Product Identity', fieldCount: '15 fields', icon: 'tag', sectionKey: 'identity' },
-    { id: 'B', letter: 'B', name: 'Classification & Attributes', shortName: 'Classification & Attributes', fieldCount: '14 fields', icon: 'layers', sectionKey: 'attributes' },
-    { id: 'C', letter: 'C', name: 'Barcode & Identification', shortName: 'Barcode & Identification', fieldCount: '10 fields', icon: 'barcode', sectionKey: 'barcode' },
-    { id: 'D', letter: 'D', name: 'Units of Measure', shortName: 'Units of Measure', fieldCount: '16 fields', icon: 'scale', sectionKey: 'uom' },
+    { id: 'A', letter: 'A', name: 'Identity', shortName: 'Identity', fieldCount: '15 fields', icon: 'tag', sectionKey: 'identity' },
+    { id: 'B', letter: 'B', name: 'Attributes', shortName: 'Attributes', fieldCount: '14 fields', icon: 'layers', sectionKey: 'attributes' },
+    { id: 'C', letter: 'C', name: 'Barcodes', shortName: 'Barcodes', fieldCount: '10 fields', icon: 'barcode', sectionKey: 'barcode' },
+    { id: 'D', letter: 'D', name: 'Units', shortName: 'Units', fieldCount: '16 fields', icon: 'scale', sectionKey: 'uom' },
     { id: 'E', letter: 'E', name: 'Pricing', shortName: 'Pricing', fieldCount: '15 fields', icon: 'currency', sectionKey: 'pricing' },
-    { id: 'F', letter: 'F', name: 'Inventory & Stock Control', shortName: 'Inventory & Stock Control', fieldCount: '18 fields', icon: 'boxes', sectionKey: 'inventory' },
-    { id: 'G', letter: 'G', name: 'Purchasing & Suppliers', shortName: 'Purchasing & Suppliers', fieldCount: '13 fields', icon: 'truck', sectionKey: 'purchasing' },
-    { id: 'H', letter: 'H', name: 'Sales & Retail POS', shortName: 'Sales & Retail POS', fieldCount: '16 fields', icon: 'receipt', sectionKey: 'pos' },
-    { id: 'I', letter: 'I', name: 'Product Variants & Packaging', shortName: 'Product Variants & Packaging', fieldCount: '12 fields', icon: 'grid', sectionKey: 'variants' },
-    { id: 'J', letter: 'J', name: 'Tax, Compliance & Regulatory', shortName: 'Tax, Compliance & Regulatory', fieldCount: '12 fields', icon: 'shield', sectionKey: 'tax' },
-    { id: 'K', letter: 'K', name: 'Accounting Integration', shortName: 'Accounting Integration', fieldCount: '10 fields', icon: 'ledger', sectionKey: 'accounting' },
-    { id: 'L', letter: 'L', name: 'Documents & Attachments', shortName: 'Documents & Attachments', fieldCount: '7 fields', icon: 'paperclip', sectionKey: 'documents' },
-    { id: 'M', letter: 'M', name: 'Organization & Availability', shortName: 'Organization & Availability', fieldCount: '9 fields', icon: 'building', sectionKey: 'organization' },
-    { id: 'N', letter: 'N', name: 'Audit & System Information', shortName: 'Audit & System Information', fieldCount: '6 fields', icon: 'clock', sectionKey: 'audit' },
+    { id: 'F', letter: 'F', name: 'Inventory', shortName: 'Inventory', fieldCount: '18 fields', icon: 'boxes', sectionKey: 'inventory' },
+    { id: 'G', letter: 'G', name: 'Purchasing', shortName: 'Purchasing', fieldCount: '13 fields', icon: 'truck', sectionKey: 'purchasing' },
+    { id: 'H', letter: 'H', name: 'Sales', shortName: 'Sales', fieldCount: '16 fields', icon: 'receipt', sectionKey: 'pos' },
+    { id: 'I', letter: 'I', name: 'Variants', shortName: 'Variants', fieldCount: '12 fields', icon: 'grid', sectionKey: 'variants' },
+    { id: 'J', letter: 'J', name: 'Tax', shortName: 'Tax', fieldCount: '12 fields', icon: 'shield', sectionKey: 'tax' },
+    { id: 'K', letter: 'K', name: 'Accounting', shortName: 'Accounting', fieldCount: '10 fields', icon: 'ledger', sectionKey: 'accounting' },
+    { id: 'L', letter: 'L', name: 'Documents', shortName: 'Documents', fieldCount: '7 fields', icon: 'paperclip', sectionKey: 'documents' },
+    { id: 'M', letter: 'M', name: 'Organization', shortName: 'Organization', fieldCount: '9 fields', icon: 'building', sectionKey: 'organization' },
+    { id: 'N', letter: 'N', name: 'Audit', shortName: 'Audit', fieldCount: '6 fields', icon: 'clock', sectionKey: 'audit' },
   ];
 
   // Tab navigation under essential fields (defaults to Section A)
   activeTab = signal<ItemSectionTab>('A');
 
-  // Track expanded accordion sections (by section key)
+  // Track expanded accordion sections (by section key) - ALL COLLAPSED BY DEFAULT
   expandedSections = signal<Record<string, boolean>>({
-    'identity': true, // Section A
+    'identity': false, // Section A
     'attributes': false, // Section B
     'barcode': false, // Section C
     'uom': false, // Section D
@@ -97,6 +128,9 @@ export class ItemComponent implements OnInit {
     'organization': false, // Section M
     'audit': false // Section N
   });
+
+  // Page Mode: 'add' (Create New Item), 'edit' (Edit Existing Item), or 'view' (Read-Only Inspection)
+  pageMode = signal<'add' | 'edit' | 'view'>('edit');
 
   // Stay on page toggle
   stayOnPage = signal<boolean>(true);
@@ -388,9 +422,38 @@ export class ItemComponent implements OnInit {
   // Modals for Clear & Reset Confirmation
   isClearModalOpen = signal<boolean>(false);
 
-  // Action Dock More Panel State
+  // Action Dock Panel State
   isMoreActionsOpen = signal<boolean>(false);
-  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'view'>('form');
+  activeActionView = signal<'form' | 'overview' | 'grid' | 'table'>('form');
+  itemListSearchQuery = signal<string>('');
+  itemListCategoryFilter = signal<string>('All');
+
+  filteredItemList = computed(() => {
+    const q = this.itemListSearchQuery().toLowerCase().trim();
+    const cat = this.itemListCategoryFilter();
+    return this.itemService.items().filter((item) => {
+      const matchCat = cat === 'All' || item.category === cat;
+      const matchQ =
+        !q ||
+        item.nameEn.toLowerCase().includes(q) ||
+        (item.nameAr && item.nameAr.includes(q)) ||
+        item.sku.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q) ||
+        (item.barcode && item.barcode.includes(q));
+      return matchCat && matchQ;
+    });
+  });
+
+  overviewKpi = computed(() => {
+    const items = this.itemService.items();
+    const totalItems = items.length;
+    const totalValuation = items.reduce((sum, it) => sum + ((it.salesPrice || 0) * 125), 0);
+    const activeCount = items.filter((it) => it.status === 'Active').length;
+    const avgMargin = items.length > 0
+      ? Math.round(items.reduce((sum, it) => sum + (it.marginPct || 38), 0) / items.length)
+      : 38;
+    return { totalItems, totalValuation, activeCount, avgMargin };
+  });
 
   // Accordion Sections Limit Toggle (First 7 sections vs All 14 matching Screenshot 4 reference)
   showAllSections = signal<boolean>(false);
@@ -432,6 +495,820 @@ export class ItemComponent implements OnInit {
   // Record Index Display (< 5 >)
   currentDisplayNumber = computed(() => this.itemService.currentIndex() + 1);
   totalRecordsCount = computed(() => this.itemService.totalCount());
+
+  // =========================================================================
+  // FIELD & TAB SEARCH BAR (Voice input + Direct Jump & Focus)
+  // =========================================================================
+  fieldSearchQuery = signal<string>('');
+  isFieldSearchOpen = signal<boolean>(false);
+  isFieldVoiceListening = signal<boolean>(false);
+  fieldSpeechRecognitionObj: any = null;
+  voiceStatusText = signal<string | null>(null);
+  isItemNameVoiceListening = signal<boolean>(false);
+  itemNameSpeechObj: any = null;
+
+  // Master Catalog of Searchable Form Fields & Tabs
+  readonly searchableFields: SearchableFormField[] = [
+    // General Information (Top Essential Row Fields)
+    { id: 'field-itemType', label: 'Item Type', category: 'General', location: 'General Information', keywords: 'type stock service nonstock asset bundle item type' },
+    { id: 'field-nameEn', label: 'Item Name (EN)', category: 'General', location: 'General Information', keywords: 'name english title product item label' },
+    { id: 'field-nameAr', label: 'Item Name (AR)', category: 'General', location: 'General Information', keywords: 'arabic name title اسم الصنف' },
+    { id: 'field-sku', label: 'SKU / Item Code', category: 'General', location: 'General Information', keywords: 'sku code barcode identifier stock keeping unit' },
+    { id: 'field-category', label: 'Category', category: 'General', location: 'General Information', keywords: 'category group family line beverages electronics' },
+    { id: 'field-subcategory', label: 'Subcategory', category: 'General', location: 'General Information', keywords: 'subcategory sub-category coffee beans' },
+    { id: 'field-brand', label: 'Brand', category: 'General', location: 'General Information', keywords: 'brand maker label manufacturer vendor' },
+    { id: 'field-baseUom', label: 'Base UOM', category: 'General', location: 'General Information', keywords: 'base uom unit measure piece box pack kg' },
+    { id: 'field-salesPrice', label: 'Sales Price', category: 'General', location: 'General Information', keywords: 'sales price selling retail aed rate amount' },
+    { id: 'field-costPrice', label: 'Cost Price', category: 'General', location: 'General Information', keywords: 'cost price purchase buying expense base' },
+    { id: 'field-marginMarkup', label: 'Margin / Markup %', category: 'General', location: 'General Information', keywords: 'margin markup profit percentage gross' },
+    { id: 'field-barcode', label: 'Barcode / GTIN', category: 'General', location: 'General Information', keywords: 'barcode gtin ean upc scan qr code' },
+
+    // Tabs
+    { id: 'tab-btn-A', label: 'Identity (Tab)', category: 'Tab', tabId: 'A', sectionKey: 'identity', location: 'Tab Navigation', keywords: 'tab identity product details short name manufacturer origin' },
+    { id: 'tab-btn-B', label: 'Attributes (Tab)', category: 'Tab', tabId: 'B', sectionKey: 'attributes', location: 'Tab Navigation', keywords: 'tab attributes classification department group season collection' },
+    { id: 'tab-btn-C', label: 'Barcodes (Tab)', category: 'Tab', tabId: 'C', sectionKey: 'barcode', location: 'Tab Navigation', keywords: 'tab barcodes tracking batch serial expiry gtin qr' },
+    { id: 'tab-btn-D', label: 'Units (Tab)', category: 'Tab', tabId: 'D', sectionKey: 'uom', location: 'Tab Navigation', keywords: 'tab units uom conversion weight dimensions volume' },
+    { id: 'tab-btn-E', label: 'Pricing (Tab)', category: 'Tab', tabId: 'E', sectionKey: 'pricing', location: 'Tab Navigation', keywords: 'tab pricing wholesale discount price lists branch tiers' },
+    { id: 'tab-btn-F', label: 'Inventory (Tab)', category: 'Tab', tabId: 'F', sectionKey: 'inventory', location: 'Tab Navigation', keywords: 'tab inventory stock levels warehouse min max reorder safety' },
+    { id: 'tab-btn-G', label: 'Purchasing (Tab)', category: 'Tab', tabId: 'G', sectionKey: 'purchasing', location: 'Tab Navigation', keywords: 'tab purchasing suppliers vendor lead time moq' },
+    { id: 'tab-btn-H', label: 'Sales (Tab)', category: 'Tab', tabId: 'H', sectionKey: 'pos', location: 'Tab Navigation', keywords: 'tab sales pos retail buttons weighable warranty commission' },
+    { id: 'tab-btn-I', label: 'Variants (Tab)', category: 'Tab', tabId: 'I', sectionKey: 'variants', location: 'Tab Navigation', keywords: 'tab variants packaging matrix inner box carton' },
+    { id: 'tab-btn-J', label: 'Tax (Tab)', category: 'Tab', tabId: 'J', sectionKey: 'tax', location: 'Tab Navigation', keywords: 'tab tax compliance hs code vat tariff exemption' },
+    { id: 'tab-btn-K', label: 'Accounting (Tab)', category: 'Tab', tabId: 'K', sectionKey: 'accounting', location: 'Tab Navigation', keywords: 'tab accounting gl ledger asset revenue cogs expense' },
+    { id: 'tab-btn-L', label: 'Documents (Tab)', category: 'Tab', tabId: 'L', sectionKey: 'documents', location: 'Tab Navigation', keywords: 'tab documents attachments pdf files certs notes' },
+    { id: 'tab-btn-M', label: 'Organization (Tab)', category: 'Tab', tabId: 'M', sectionKey: 'organization', location: 'Tab Navigation', keywords: 'tab organization availability branches warehouses ecommerce channels' },
+    { id: 'tab-btn-N', label: 'Audit (Tab)', category: 'Tab', tabId: 'N', sectionKey: 'audit', location: 'Tab Navigation', keywords: 'tab audit system history log created updated version' },
+
+    // Section A (Identity) Fields
+    { id: 'field-shortName', label: 'Short Name', category: 'Field', tabId: 'A', sectionKey: 'identity', location: 'Tab: Identity', keywords: 'short name receipt display print pos' },
+    { id: 'field-manufacturer', label: 'Manufacturer', category: 'Field', tabId: 'A', sectionKey: 'identity', location: 'Tab: Identity', keywords: 'manufacturer factory company producer maker' },
+    { id: 'field-countryOfOrigin', label: 'Country of Origin', category: 'Field', tabId: 'A', sectionKey: 'identity', location: 'Tab: Identity', keywords: 'country of origin made in provenance source' },
+    { id: 'field-modelNumber', label: 'Model Number', category: 'Field', tabId: 'A', sectionKey: 'identity', location: 'Tab: Identity', keywords: 'model number part partno cdr' },
+    { id: 'field-material', label: 'Material / Fabric', category: 'Field', tabId: 'A', sectionKey: 'identity', location: 'Tab: Identity', keywords: 'material fabric organic composition' },
+    { id: 'field-color', label: 'Color / Roast', category: 'Field', tabId: 'A', sectionKey: 'identity', location: 'Tab: Identity', keywords: 'color roast shade finish dark medium' },
+    { id: 'field-descEn', label: 'Description (EN)', category: 'Field', tabId: 'A', sectionKey: 'identity', subKey: 'identity_more', location: 'Tab: Identity (Expanded)', keywords: 'description english long details info' },
+    { id: 'field-descAr', label: 'Description (AR)', category: 'Field', tabId: 'A', sectionKey: 'identity', subKey: 'identity_more', location: 'Tab: Identity (Expanded)', keywords: 'arabic description وصف عربي تفاصيل' },
+    { id: 'field-tags', label: 'Product Tags', category: 'Field', tabId: 'A', sectionKey: 'identity', subKey: 'identity_more', location: 'Tab: Identity (Expanded)', keywords: 'tags keywords labels badges filter search' },
+
+    // Section B (Attributes) Fields
+    { id: 'field-department', label: 'Department', category: 'Field', tabId: 'B', sectionKey: 'attributes', location: 'Tab: Attributes', keywords: 'department dept food beverage grocery' },
+    { id: 'field-productGroup', label: 'Product Group', category: 'Field', tabId: 'B', sectionKey: 'attributes', location: 'Tab: Attributes', keywords: 'product group dry groceries segment' },
+    { id: 'field-productClass', label: 'Product Class', category: 'Field', tabId: 'B', sectionKey: 'attributes', location: 'Tab: Attributes', keywords: 'class specialty beverages classification' },
+    { id: 'field-season', label: 'Season', category: 'Field', tabId: 'B', sectionKey: 'attributes', location: 'Tab: Attributes', keywords: 'season summer winter all season spring' },
+    { id: 'field-collection', label: 'Collection', category: 'Field', tabId: 'B', sectionKey: 'attributes', location: 'Tab: Attributes', keywords: 'collection line reserve series vintage' },
+    { id: 'field-size', label: 'Product Size', category: 'Field', tabId: 'B', sectionKey: 'attributes', subKey: 'attributes_more', location: 'Tab: Attributes (Expanded)', keywords: 'size volume 1000g net weight pack' },
+    { id: 'field-style', label: 'Style / Packaging Type', category: 'Field', tabId: 'B', sectionKey: 'attributes', subKey: 'attributes_more', location: 'Tab: Attributes (Expanded)', keywords: 'style packaging pouch sealed bottle' },
+    { id: 'field-customAttributes', label: 'Custom Attributes', category: 'Field', tabId: 'B', sectionKey: 'attributes', subKey: 'attributes_more', location: 'Tab: Attributes (Expanded)', keywords: 'custom attributes properties key value roast level caffeine' },
+
+    // Section C (Barcodes) Fields
+    { id: 'field-primaryBarcode', label: 'Primary Barcode', category: 'Field', tabId: 'C', sectionKey: 'barcode', location: 'Tab: Barcodes', keywords: 'primary barcode ean-13 upc code scan' },
+    { id: 'field-barcodeType', label: 'Barcode Type', category: 'Field', tabId: 'C', sectionKey: 'barcode', location: 'Tab: Barcodes', keywords: 'barcode type code 128 qr itf ean upc' },
+    { id: 'field-gtin', label: 'GTIN Number', category: 'Field', tabId: 'C', sectionKey: 'barcode', location: 'Tab: Barcodes', keywords: 'gtin global trade item number 14' },
+    { id: 'field-qrCode', label: 'QR Code Data', category: 'Field', tabId: 'C', sectionKey: 'barcode', location: 'Tab: Barcodes', keywords: 'qr code 2d matrix scanner' },
+    { id: 'field-serialTracking', label: 'Serial Tracking', category: 'Field', tabId: 'C', sectionKey: 'barcode', location: 'Tab: Barcodes', keywords: 'serial tracking sn unique machine device' },
+    { id: 'field-batchTracking', label: 'Batch Tracking', category: 'Field', tabId: 'C', sectionKey: 'barcode', location: 'Tab: Barcodes', keywords: 'batch tracking lot number production' },
+    { id: 'field-expiryTracking', label: 'Expiry Date Tracking', category: 'Field', tabId: 'C', sectionKey: 'barcode', location: 'Tab: Barcodes', keywords: 'expiry date tracking expiration shelf life' },
+
+    // Section D (Units) Fields
+    { id: 'field-salesUom', label: 'Sales UOM', category: 'Field', tabId: 'D', sectionKey: 'uom', location: 'Tab: Units', keywords: 'sales uom unit of measure piece box' },
+    { id: 'field-purchaseUom', label: 'Purchase UOM', category: 'Field', tabId: 'D', sectionKey: 'uom', location: 'Tab: Units', keywords: 'purchase uom carton crate container unit' },
+    { id: 'field-stockingUom', label: 'Stocking UOM', category: 'Field', tabId: 'D', sectionKey: 'uom', location: 'Tab: Units', keywords: 'stocking uom inventory base unit' },
+    { id: 'field-netWeight', label: 'Net Weight', category: 'Field', tabId: 'D', sectionKey: 'uom', subKey: 'uom_more', location: 'Tab: Units (Expanded)', keywords: 'net weight kg gram mass' },
+    { id: 'field-grossWeight', label: 'Gross Weight', category: 'Field', tabId: 'D', sectionKey: 'uom', subKey: 'uom_more', location: 'Tab: Units (Expanded)', keywords: 'gross weight total weight packaging' },
+    { id: 'field-dimensions', label: 'Dimensions (L x W x H)', category: 'Field', tabId: 'D', sectionKey: 'uom', subKey: 'uom_more', location: 'Tab: Units (Expanded)', keywords: 'dimensions length width height cm volume' },
+
+    // Section E (Pricing) Fields
+    { id: 'field-minSellingPrice', label: 'Min Selling Price', category: 'Field', tabId: 'E', sectionKey: 'pricing', location: 'Tab: Pricing', keywords: 'min selling price floor minimum bottom' },
+    { id: 'field-maxDiscountPct', label: 'Max Discount %', category: 'Field', tabId: 'E', sectionKey: 'pricing', location: 'Tab: Pricing', keywords: 'max discount percentage limit cap' },
+    { id: 'field-wholesalePrice', label: 'Wholesale Price', category: 'Field', tabId: 'E', sectionKey: 'pricing', location: 'Tab: Pricing', keywords: 'wholesale price b2b bulk trade' },
+    { id: 'field-priceLists', label: 'Price Lists', category: 'Field', tabId: 'E', sectionKey: 'pricing', location: 'Tab: Pricing', keywords: 'price lists walk-in wholesale tier account' },
+    { id: 'field-branchPrices', label: 'Branch Prices', category: 'Field', tabId: 'E', sectionKey: 'pricing', location: 'Tab: Pricing', keywords: 'branch prices dubai abu dhabi mall' },
+
+    // Section F (Inventory) Fields
+    { id: 'field-minStock', label: 'Minimum Stock', category: 'Field', tabId: 'F', sectionKey: 'inventory', location: 'Tab: Inventory', keywords: 'min stock minimum alert threshold' },
+    { id: 'field-maxStock', label: 'Maximum Stock', category: 'Field', tabId: 'F', sectionKey: 'inventory', location: 'Tab: Inventory', keywords: 'max stock ceiling warehouse limit' },
+    { id: 'field-reorderPoint', label: 'Reorder Point (ROP)', category: 'Field', tabId: 'F', sectionKey: 'inventory', location: 'Tab: Inventory', keywords: 'reorder point rop replenishment trigger' },
+    { id: 'field-reorderQuantity', label: 'Reorder Quantity', category: 'Field', tabId: 'F', sectionKey: 'inventory', location: 'Tab: Inventory', keywords: 'reorder quantity roq order batch' },
+    { id: 'field-defaultWarehouse', label: 'Default Warehouse', category: 'Field', tabId: 'F', sectionKey: 'inventory', location: 'Tab: Inventory', keywords: 'default warehouse main dc central location' },
+    { id: 'field-defaultBin', label: 'Default Bin / Shelf', category: 'Field', tabId: 'F', sectionKey: 'inventory', location: 'Tab: Inventory', keywords: 'default bin rack shelf location zone' },
+
+    // Section G (Purchasing) Fields
+    { id: 'field-preferredSupplier', label: 'Preferred Supplier', category: 'Field', tabId: 'G', sectionKey: 'purchasing', location: 'Tab: Purchasing', keywords: 'preferred supplier vendor primary source' },
+    { id: 'field-defaultPurchasePrice', label: 'Default Purchase Price', category: 'Field', tabId: 'G', sectionKey: 'purchasing', location: 'Tab: Purchasing', keywords: 'default purchase price buying cost rate' },
+    { id: 'field-minOrderQuantity', label: 'Min Order Qty (MOQ)', category: 'Field', tabId: 'G', sectionKey: 'purchasing', location: 'Tab: Purchasing', keywords: 'min order quantity moq minimum purchase' },
+
+    // Section H (Sales) Fields
+    { id: 'field-posDisplayName', label: 'POS Display Name', category: 'Field', tabId: 'H', sectionKey: 'pos', location: 'Tab: Sales', keywords: 'pos display name retail button label title' },
+    { id: 'field-posButtonColor', label: 'POS Button Color', category: 'Field', tabId: 'H', sectionKey: 'pos', location: 'Tab: Sales', keywords: 'pos button color tile theme brown blue' },
+    { id: 'field-weighableItem', label: 'Weighable Item Flag', category: 'Field', tabId: 'H', sectionKey: 'pos', location: 'Tab: Sales', keywords: 'weighable scale barcode kg price per kg' },
+
+    // Section J (Tax) Fields
+    { id: 'field-taxCategory', label: 'Tax Category / VAT', category: 'Field', tabId: 'J', sectionKey: 'tax', location: 'Tab: Tax', keywords: 'tax category vat rate 5% exempt standard' },
+    { id: 'field-hsCode', label: 'HS Code / Tariff', category: 'Field', tabId: 'J', sectionKey: 'tax', location: 'Tab: Tax', keywords: 'hs code customs tariff harmonized code import' },
+
+    // Section K (Accounting) Fields
+    { id: 'field-inventoryAssetAccount', label: 'Inventory Asset Account', category: 'Field', tabId: 'K', sectionKey: 'accounting', location: 'Tab: Accounting', keywords: 'inventory asset gl account balance sheet 1310' },
+    { id: 'field-salesRevenueAccount', label: 'Sales Revenue Account', category: 'Field', tabId: 'K', sectionKey: 'accounting', location: 'Tab: Accounting', keywords: 'sales revenue account pnl income 4110' },
+    { id: 'field-cogsAccount', label: 'COGS Account', category: 'Field', tabId: 'K', sectionKey: 'accounting', location: 'Tab: Accounting', keywords: 'cogs cost of goods sold expense 5110' },
+
+    // Section L (Documents) Fields
+    { id: 'field-attachments', label: 'Document Attachments', category: 'Field', tabId: 'L', sectionKey: 'documents', location: 'Tab: Documents', keywords: 'documents attachments pdf files lab certs' },
+    { id: 'field-internalNotes', label: 'Internal Notes', category: 'Field', tabId: 'L', sectionKey: 'documents', location: 'Tab: Documents', keywords: 'internal notes comments memo operational' },
+
+    // Section M (Organization) Fields
+    { id: 'field-availableBranches', label: 'Branch Availability', category: 'Field', tabId: 'M', sectionKey: 'organization', location: 'Tab: Organization', keywords: 'branches stores retail outlets availability' },
+    { id: 'field-onlineStoreEnabled', label: 'Online Store (E-Commerce)', category: 'Field', tabId: 'M', sectionKey: 'organization', location: 'Tab: Organization', keywords: 'online store ecommerce web shop publish website' },
+
+    // Section N (Audit) Fields
+    { id: 'field-auditLog', label: 'Audit Trail Records', category: 'Field', tabId: 'N', sectionKey: 'audit', location: 'Tab: Audit', keywords: 'audit trail history delta user timestamp record' },
+  ];
+
+  filteredFormFields = computed<SearchableFormField[]>(() => {
+    const q = this.fieldSearchQuery().trim().toLowerCase();
+    if (!q) {
+      return this.searchableFields.slice(0, 10);
+    }
+    return this.searchableFields.filter((f) => {
+      return (
+        f.label.toLowerCase().includes(q) ||
+        f.location.toLowerCase().includes(q) ||
+        (f.keywords && f.keywords.toLowerCase().includes(q))
+      );
+    }).slice(0, 12);
+  });
+
+  selectSearchField(field: SearchableFormField): void {
+    this.fieldSearchQuery.set(field.label);
+    this.isFieldSearchOpen.set(false);
+
+    if (field.category === 'Tab' && field.tabId) {
+      this.selectTab(field.tabId);
+      this.showToast(`Switched to tab: ${field.label}`);
+      return;
+    }
+
+    if (field.tabId) {
+      this.selectTab(field.tabId);
+      if (field.sectionKey) {
+        this.expandedSections.update((sec) => ({ ...sec, [field.sectionKey!]: true }));
+      }
+      if (field.subKey) {
+        this.expandedSubSections.update((sub) => ({ ...sub, [field.subKey!]: true }));
+      }
+    }
+
+    setTimeout(() => {
+      const el = document.getElementById(field.id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) {
+          el.focus();
+        }
+        el.classList.add('field-highlight-pulse');
+        setTimeout(() => el.classList.remove('field-highlight-pulse'), 2500);
+      }
+      this.showToast(`Focused: ${field.label} (${field.location})`);
+    }, 120);
+  }
+
+  toggleFieldVoiceSearch(event?: Event): void {
+    if (event) event.stopPropagation();
+
+    if (this.isFieldVoiceListening()) {
+      this.stopFieldVoiceSearch();
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      try {
+        this.fieldSpeechRecognitionObj = new SpeechRecognition();
+        this.fieldSpeechRecognitionObj.continuous = false;
+        this.fieldSpeechRecognitionObj.interimResults = true;
+        this.fieldSpeechRecognitionObj.lang = 'en-US';
+
+        this.fieldSpeechRecognitionObj.onstart = () => {
+          this.isFieldVoiceListening.set(true);
+          this.isFieldSearchOpen.set(true);
+        };
+
+        this.fieldSpeechRecognitionObj.onresult = (e: any) => {
+          const transcript = Array.from(e.results)
+            .map((res: any) => res[0])
+            .map((res: any) => res.transcript)
+            .join('');
+          this.fieldSearchQuery.set(transcript);
+        };
+
+        this.fieldSpeechRecognitionObj.onerror = () => {
+          this.isFieldVoiceListening.set(false);
+        };
+
+        this.fieldSpeechRecognitionObj.onend = () => {
+          this.isFieldVoiceListening.set(false);
+          this.processVoiceSearchTranscript();
+        };
+
+        this.fieldSpeechRecognitionObj.start();
+      } catch (err) {
+        this.simulateFieldVoiceSearch();
+      }
+    } else {
+      this.simulateFieldVoiceSearch();
+    }
+  }
+
+  private processVoiceSearchTranscript(): void {
+    const q = this.fieldSearchQuery().toLowerCase().trim();
+    if (!q) return;
+
+    if (q.includes('overview') || q.includes('chart') || q.includes('kpi') || q.includes('dashboard')) {
+      this.handleOverviewClick();
+      this.voiceStatusText.set('Voice Command: Opening Item Overview');
+      setTimeout(() => this.voiceStatusText.set(null), 3000);
+      return;
+    }
+    if (q.includes('grid')) {
+      this.handleGridClick();
+      this.voiceStatusText.set('Voice Command: Opening Grid Item List');
+      setTimeout(() => this.voiceStatusText.set(null), 3000);
+      return;
+    }
+    if (q.includes('table')) {
+      this.handleTableClick();
+      this.voiceStatusText.set('Voice Command: Opening Table Item List');
+      setTimeout(() => this.voiceStatusText.set(null), 3000);
+      return;
+    }
+    if (q.includes('add') || q.includes('new')) {
+      this.switchToAddMode();
+      this.voiceStatusText.set('Voice Command: Switched to Add Mode');
+      setTimeout(() => this.voiceStatusText.set(null), 3000);
+      return;
+    }
+    if (q.includes('edit')) {
+      this.switchToEditMode();
+      this.voiceStatusText.set('Voice Command: Switched to Edit Mode');
+      setTimeout(() => this.voiceStatusText.set(null), 3000);
+      return;
+    }
+    if (q.includes('view') || q.includes('inspect')) {
+      this.switchToViewMode();
+      this.voiceStatusText.set('Voice Command: Switched to View Mode');
+      setTimeout(() => this.voiceStatusText.set(null), 3000);
+      return;
+    }
+    if (q.includes('video') || q.includes('tutorial')) {
+      this.openVideoTutorial();
+      this.voiceStatusText.set('Voice Command: Playing Tutorial Video');
+      setTimeout(() => this.voiceStatusText.set(null), 3000);
+      return;
+    }
+    if (q.includes('guide') || q.includes('help')) {
+      this.openGuideModal();
+      this.voiceStatusText.set('Voice Command: Opening Guide Assistance');
+      setTimeout(() => this.voiceStatusText.set(null), 3000);
+      return;
+    }
+
+    const topMatch = this.filteredFormFields()[0];
+    if (topMatch) {
+      this.selectSearchField(topMatch);
+      this.voiceStatusText.set(`Focused: ${topMatch.label}`);
+      setTimeout(() => this.voiceStatusText.set(null), 2500);
+    }
+  }
+
+  private simulateFieldVoiceSearch(): void {
+    this.isFieldVoiceListening.set(true);
+    this.isFieldSearchOpen.set(true);
+    const sampleTerms = ['Sales Price', 'Barcode', 'Cost Price', 'Identity', 'Pricing', 'Inventory', 'Item Overview'];
+    const pick = sampleTerms[Math.floor(Math.random() * sampleTerms.length)];
+
+    setTimeout(() => {
+      this.fieldSearchQuery.set(pick);
+      this.isFieldVoiceListening.set(false);
+      this.processVoiceSearchTranscript();
+    }, 1200);
+  }
+
+  stopFieldVoiceSearch(): void {
+    if (this.fieldSpeechRecognitionObj) {
+      try {
+        this.fieldSpeechRecognitionObj.stop();
+      } catch (_) {}
+      this.fieldSpeechRecognitionObj = null;
+    }
+    this.isFieldVoiceListening.set(false);
+  }
+
+  toggleItemNameVoice(): void {
+    if (this.isItemNameVoiceListening()) {
+      try {
+        this.itemNameSpeechObj?.stop();
+      } catch (_) {}
+      this.isItemNameVoiceListening.set(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      try {
+        this.itemNameSpeechObj = new SpeechRecognition();
+        this.itemNameSpeechObj.continuous = false;
+        this.itemNameSpeechObj.interimResults = true;
+        this.itemNameSpeechObj.lang = 'en-US';
+
+        this.itemNameSpeechObj.onstart = () => {
+          this.isItemNameVoiceListening.set(true);
+        };
+
+        this.itemNameSpeechObj.onresult = (e: any) => {
+          const transcript = Array.from(e.results)
+            .map((res: any) => res[0])
+            .map((res: any) => res.transcript)
+            .join('');
+          this.formNameEn.set(transcript);
+        };
+
+        this.itemNameSpeechObj.onerror = () => {
+          this.isItemNameVoiceListening.set(false);
+        };
+
+        this.itemNameSpeechObj.onend = () => {
+          this.isItemNameVoiceListening.set(false);
+          this.showToast(`Voice transcribed: ${this.formNameEn()}`);
+        };
+
+        this.itemNameSpeechObj.start();
+      } catch (err) {
+        this.simulateItemNameVoice();
+      }
+    } else {
+      this.simulateItemNameVoice();
+    }
+  }
+
+  private simulateItemNameVoice(): void {
+    this.isItemNameVoiceListening.set(true);
+    setTimeout(() => {
+      this.formNameEn.set('Organic Dark Roast Espresso Beans 1kg');
+      this.isItemNameVoiceListening.set(false);
+      this.showToast('Voice transcribed: "Organic Dark Roast Espresso Beans 1kg"');
+    }, 1200);
+  }
+
+  focusItemNameField(): void {
+    const el = document.getElementById('field-nameEn') || document.querySelector('input[name="nameEn"]') as HTMLElement;
+    if (el) {
+      el.focus();
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('ring-4', 'ring-[#00a6f4]', 'ring-offset-2');
+      setTimeout(() => el.classList.remove('ring-4', 'ring-[#00a6f4]', 'ring-offset-2'), 2500);
+    }
+  }
+
+  // =========================================================================
+  // VIDEO TUTORIAL PLAYER (Short interactive video tutorial for Add / Edit)
+  // =========================================================================
+  isVideoModalOpen = signal<boolean>(false);
+  videoCurrentStep = signal<number>(1);
+  videoIsPlaying = signal<boolean>(true);
+  videoPlaybackSpeed = signal<number>(1);
+  videoProgressPct = signal<number>(20);
+  private videoInterval: any = null;
+
+  readonly addPageVideoSteps: VideoTutorialStep[] = [
+    { step: 1, title: 'Item Type & Name Entry', description: 'Select whether this is a Stock or Service item, then enter both English and Arabic product names in General Information.', actionHint: 'Fill Item Type, Name (EN), and Name (AR)', badge: 'Step 1 of 5' },
+    { step: 2, title: 'Auto-Generate SKU & Barcodes', description: 'Click the "Auto" pill next to SKU and the barcode icon to generate unique enterprise identifiers automatically.', actionHint: 'Click Auto SKU & Generate Barcode', badge: 'Step 2 of 5' },
+    { step: 3, title: 'Set Pricing & Real-Time Margins', description: 'Enter Cost Price and Sales Price. Rapid ERP automatically calculates live Margin % and Markup %.', actionHint: 'Specify AED Cost & Sales Price', badge: 'Step 3 of 5' },
+    { step: 4, title: 'Assign Units & Stock Thresholds', description: 'Configure Base UOM, Minimum/Maximum stock limits, and default warehouse locations.', actionHint: 'Configure Inventory & Reorder Rules', badge: 'Step 4 of 5' },
+    { step: 5, title: 'Save & Commit Item Master', description: 'Click "Save Item" at bottom right (or press Alt+S). The item is committed into inventory with automatic audit log.', actionHint: 'Click Save Item (Alt+S)', badge: 'Step 5 of 5' }
+  ];
+
+  readonly editPageVideoSteps: VideoTutorialStep[] = [
+    { step: 1, title: 'Navigate Between Existing Items', description: 'Use the top-right header pagination pager (< 1 >) or press Alt+Left / Alt+Right to browse items.', actionHint: 'Browse records using header pager', badge: 'Step 1 of 5' },
+    { step: 2, title: 'Instant Field Jump (Alt+F)', description: 'Type or speak in the General Information search bar to instantly jump and focus any field or tab.', actionHint: 'Use Field Search to auto-focus', badge: 'Step 2 of 5' },
+    { step: 3, title: 'Modify Pricing & Attributes', description: 'Update wholesale tiers, branch pricing, POS display button color, or supplier item codes.', actionHint: 'Edit product details and prices', badge: 'Step 3 of 5' },
+    { step: 4, title: 'Expand Collapsed Accordions', description: 'Click any section header (+) to expand only the specific tab details you need to modify.', actionHint: 'Expand relevant accordions on-demand', badge: 'Step 4 of 5' },
+    { step: 5, title: 'Update & Commit Changes', description: 'Click "Update Item" at bottom right (or press Alt+S) to save revisions with version history.', actionHint: 'Click Update Item (Alt+S)', badge: 'Step 5 of 5' }
+  ];
+
+  readonly viewPageVideoSteps: VideoTutorialStep[] = [
+    { step: 1, title: 'Inspect Specifications & Pricing', description: 'Review SKU, GTIN barcode, real-time Margin % and selling prices in clear read-only layout.', actionHint: 'Inspect Primary Specs & Pricing', badge: 'Step 1 of 5' },
+    { step: 2, title: 'Check Product Identity & Media', description: 'View brand, manufacturer, country of origin, and associated product gallery assets.', actionHint: 'Review Identity & Documents', badge: 'Step 2 of 5' },
+    { step: 3, title: 'Review Warehouse Stock & UOM', description: 'Inspect stock quantities across central warehouse bins and alternate conversion units.', actionHint: 'Examine Stock & Bin Locations', badge: 'Step 3 of 5' },
+    { step: 4, title: 'Audit Trail & Change History', description: 'Inspect timestamped audit events to see who created or updated the item record.', actionHint: 'Review Lifecycle & Audit History', badge: 'Step 4 of 5' },
+    { step: 5, title: 'One-Click Switch to Edit Mode', description: 'Click "Edit This Item" button or press Alt+E anytime you need to modify record data.', actionHint: 'Click Edit Mode (Alt+E)', badge: 'Step 5 of 5' }
+  ];
+
+  currentVideoSteps = computed(() => {
+    if (this.pageMode() === 'add') return this.addPageVideoSteps;
+    if (this.pageMode() === 'view') return this.viewPageVideoSteps;
+    return this.editPageVideoSteps;
+  });
+
+  currentVideoStepInfo = computed(() => {
+    const steps = this.currentVideoSteps();
+    const curr = this.videoCurrentStep();
+    return steps.find((s) => s.step === curr) || steps[0];
+  });
+
+  openVideoTutorial(): void {
+    this.videoCurrentStep.set(1);
+    this.videoProgressPct.set(20);
+    this.videoIsPlaying.set(true);
+    this.isVideoModalOpen.set(true);
+    this.startVideoProgressTimer();
+  }
+
+  closeVideoTutorial(): void {
+    this.stopVideoProgressTimer();
+    this.isVideoModalOpen.set(false);
+  }
+
+  toggleVideoPlayPause(): void {
+    if (this.videoIsPlaying()) {
+      this.videoIsPlaying.set(false);
+      this.stopVideoProgressTimer();
+    } else {
+      this.videoIsPlaying.set(true);
+      this.startVideoProgressTimer();
+    }
+  }
+
+  setVideoStep(step: number): void {
+    this.videoCurrentStep.set(step);
+    this.videoProgressPct.set(step * 20);
+  }
+
+  nextVideoStep(): void {
+    const curr = this.videoCurrentStep();
+    if (curr < 5) {
+      this.setVideoStep(curr + 1);
+    } else {
+      this.setVideoStep(1);
+    }
+  }
+
+  prevVideoStep(): void {
+    const curr = this.videoCurrentStep();
+    if (curr > 1) {
+      this.setVideoStep(curr - 1);
+    }
+  }
+
+  restartVideoTutorial(): void {
+    this.setVideoStep(1);
+    this.videoIsPlaying.set(true);
+    this.startVideoProgressTimer();
+  }
+
+  private startVideoProgressTimer(): void {
+    this.stopVideoProgressTimer();
+    this.videoInterval = setInterval(() => {
+      if (this.videoIsPlaying()) {
+        const nextPct = this.videoProgressPct() + 2;
+        if (nextPct >= 100) {
+          this.nextVideoStep();
+        } else {
+          this.videoProgressPct.set(nextPct);
+        }
+      }
+    }, 450);
+  }
+
+  private stopVideoProgressTimer(): void {
+    if (this.videoInterval) {
+      clearInterval(this.videoInterval);
+      this.videoInterval = null;
+    }
+  }
+
+  // =========================================================================
+  // GUIDE ASSISTANCE MODAL (Comprehensive help, search, navigation guidance)
+  // =========================================================================
+  isGuideModalOpen = signal<boolean>(false);
+  guideSearchQuery = signal<string>('');
+  guideActiveCategory = signal<'all' | 'create' | 'edit' | 'tabs' | 'navigation' | 'shortcuts'>('all');
+
+  readonly guideTopics: GuideTopic[] = [
+    {
+      id: 'g-create',
+      title: 'How to Create a New Item Master',
+      category: 'create',
+      summary: 'Complete walkthrough on creating a product from scratch with required fields.',
+      steps: [
+        'Click the "+ New Item" button in the header or press Alt+N to enter Add Mode.',
+        'Choose Item Type (e.g. Stock Item, Service Item, Fixed Asset).',
+        'Enter Item Name in English (required) and Arabic.',
+        'Click the "Auto" pill next to SKU to generate an intelligent catalog SKU code.',
+        'Click the barcode scanner button or type a barcode / GTIN.',
+        'Set Sales Price and Cost Price; verify real-time Margin % and Markup % pills.',
+        'Explore any required tabs (e.g. Identity, Units, Pricing, Inventory).',
+        'Click "Save Item" (Alt+S) at the bottom right. A success toast will confirm creation.'
+      ],
+      tips: 'You can leave optional accordions collapsed; Rapid ERP saves all default values cleanly.'
+    },
+    {
+      id: 'g-edit',
+      title: 'How to Edit and Update Existing Items',
+      category: 'edit',
+      summary: 'Navigating records, making modifications, and updating item parameters.',
+      steps: [
+        'Use the top-right Record Pager (< 1 >) or press Alt+Left / Alt+Right to navigate records.',
+        'Switch directly to Edit Mode (Alt+E) if currently in Add Mode.',
+        'Modify any field directly in General Information or within any specific tab.',
+        'Click the header of any collapsed accordion (+) to reveal its fields.',
+        'Click "Update Item" (Alt+S) to commit changes. The item version number will increment in the Audit trail.'
+      ],
+      tips: 'You can also jump directly to any field using the Field Search bar (Alt+F).'
+    },
+    {
+      id: 'g-search',
+      title: 'Using Field Search & Voice Jump (Alt+F)',
+      category: 'navigation',
+      summary: 'Find and focus any form field or tab directly without manual scrolling.',
+      steps: [
+        'Click the search bar on the right side of "General Information" or press Alt+F.',
+        'Type any field name (e.g. "sales price", "reorder", "hs code", "supplier", "weight").',
+        'Alternatively, click the microphone button (🎙️) and speak the field name.',
+        'Select the field from the dropdown: Rapid ERP automatically switches to the tab, expands the accordion, scrolls smoothly, and highlights the input with a pulsing glow!'
+      ],
+      tips: 'Selecting a Tab name directly jumps straight to that tab.'
+    },
+    {
+      id: 'g-tabs',
+      title: 'Master Guide to the 14 Tabs',
+      category: 'tabs',
+      summary: 'Overview of what data each single-word tab contains and when to use it.',
+      steps: [
+        '1. Identity: Short name for receipts, manufacturer, country of origin, model number, images, tags.',
+        '2. Attributes: Department, product group, class, season, collection, size, custom specs.',
+        '3. Barcodes: Primary EAN/UPC, GTIN-14, QR code, batch tracking, serial & expiry tracking.',
+        '4. Units: Sales/Purchase UOMs, multi-tier conversion factors, net/gross weight, dimensions.',
+        '5. Pricing: Minimum selling price, max discount %, wholesale tiers, branch pricing.',
+        '6. Inventory: Min/Max thresholds, reorder points (ROP/ROQ), default warehouse, bin location.',
+        '7. Purchasing: Preferred supplier, supplier item code, lead time, MOQ, purchase history.',
+        '8. Sales: POS display names, POS button colors, open price rules, return & warranty periods.',
+        '9. Variants: Color/size variant matrix generation, multi-level inner & master carton packaging.',
+        '10. Tax: VAT rate categories, HS tariff codes, municipality regulatory classifications.',
+        '11. Accounting: GL integration accounts (Inventory Asset, Sales Revenue, COGS, Variance).',
+        '12. Documents: Specification sheets, Halal/Organic certificates, internal operational notes.',
+        '13. Organization: Branch store availability, subsidiary company scoping, online e-commerce flags.',
+        '14. Audit: Immutable audit trail, record versions, creator/updater timestamps and deltas.'
+      ]
+    },
+    {
+      id: 'g-shortcuts',
+      title: 'Keyboard Shortcuts for Power Users',
+      category: 'shortcuts',
+      summary: 'Boost data entry speed using keyboard shortcuts across the application.',
+      steps: [
+        'Alt + S / Ctrl + S: Save or Update current item',
+        'Alt + N: Create new item (Add Mode)',
+        'Alt + E: Edit item mode',
+        'Alt + F: Focus Field & Tab search bar',
+        'Alt + Left / Alt + Right: Previous / Next item record',
+        'Alt + 1 to Alt + 8: Jump directly to Tabs 1 to 8',
+        'Alt + P: Watch interactive video tutorial',
+        'Alt + H or ?: Open this Guide Assistance drawer',
+        'Alt + B: Open Barcode Scanner simulator',
+        'Alt + C: Open Clear form confirmation modal',
+        'Escape: Close all modals and overlays'
+      ]
+    }
+  ];
+
+  filteredGuideTopics = computed(() => {
+    const q = this.guideSearchQuery().trim().toLowerCase();
+    const cat = this.guideActiveCategory();
+
+    return this.guideTopics.filter((t) => {
+      const matchesCat = cat === 'all' || t.category === cat;
+      const matchesQuery = !q ||
+        t.title.toLowerCase().includes(q) ||
+        t.summary.toLowerCase().includes(q) ||
+        t.steps.some((s) => s.toLowerCase().includes(q));
+      return matchesCat && matchesQuery;
+    });
+  });
+
+  // =========================================================================
+  // GUIDANCE ASSISTANCE (3 Technical/UX Presentation Possibilities)
+  // Option 1: Animated Pop-up Modal (Spotlight Pop-up Tour)
+  // Option 2: Slide-in Floating Assistant Drawer (Docked Side Pop-up Guide)
+  // Option 3: In-Context Coachmarks (Floating Step Beacons & Spotlight Pointers)
+  // =========================================================================
+  isGuidanceTourOpen = signal<boolean>(false);
+  guidanceViewMode = signal<'modal' | 'drawer' | 'coachmarks'>('modal');
+  guidanceTourStep = signal<number>(1); // 1: Section 1 General Info, 2: Section 2 Tab Accordions, 3: Section 3 Action Panel, 4: Footer Save
+
+  openGuidanceTour(mode?: 'modal' | 'drawer' | 'coachmarks'): void {
+    if (mode) this.guidanceViewMode.set(mode);
+    this.guidanceTourStep.set(1);
+    this.isGuidanceTourOpen.set(true);
+  }
+
+  closeGuidanceTour(): void {
+    this.isGuidanceTourOpen.set(false);
+  }
+
+  setGuidanceTourStep(step: number): void {
+    this.guidanceTourStep.set(step);
+  }
+
+  nextGuidanceTourStep(): void {
+    if (this.guidanceTourStep() < 4) {
+      this.guidanceTourStep.update(s => s + 1);
+    } else {
+      this.closeGuidanceTour();
+      this.showToast('Guidance tour completed! Press ? or Alt+H anytime for help.');
+    }
+  }
+
+  prevGuidanceTourStep(): void {
+    if (this.guidanceTourStep() > 1) {
+      this.guidanceTourStep.update(s => s - 1);
+    }
+  }
+
+  setGuidanceViewMode(mode: 'modal' | 'drawer' | 'coachmarks'): void {
+    this.guidanceViewMode.set(mode);
+  }
+
+  openGuideModal(): void {
+    this.openGuidanceTour('modal');
+  }
+
+  closeGuideModal(): void {
+    this.closeGuidanceTour();
+  }
+
+  // =========================================================================
+  // KEYBOARD SHORTCUTS MODAL & GLOBAL HOTKEY LISTENER
+  // =========================================================================
+  isShortcutsModalOpen = signal<boolean>(false);
+
+  openShortcutsModal(): void {
+    this.isShortcutsModalOpen.set(true);
+  }
+
+  closeShortcutsModal(): void {
+    this.isShortcutsModalOpen.set(false);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleGlobalKeyboard(event: KeyboardEvent): void {
+    // Escape closes modals
+    if (event.key === 'Escape') {
+      if (this.isGuidanceTourOpen()) this.closeGuidanceTour();
+      if (this.isVideoModalOpen()) this.closeVideoTutorial();
+      if (this.isGuideModalOpen()) this.closeGuideModal();
+      if (this.isShortcutsModalOpen()) this.closeShortcutsModal();
+      if (this.isBarcodeModalOpen()) this.closeBarcodeScanner();
+      if (this.isAiModalOpen()) this.closeAiModal();
+      if (this.isClearModalOpen()) this.closeClearModal();
+      if (this.isFieldSearchOpen()) this.isFieldSearchOpen.set(false);
+      return;
+    }
+
+    // Ctrl+S or Alt+S: Save / Update Form
+    if ((event.ctrlKey || event.altKey) && (event.key === 's' || event.key === 'S')) {
+      event.preventDefault();
+      this.onSubmitForm();
+      return;
+    }
+
+    // Alt+N: New Item
+    if (event.altKey && (event.key === 'n' || event.key === 'N')) {
+      event.preventDefault();
+      this.switchToAddMode();
+      return;
+    }
+
+    // Alt+E: Edit Mode
+    if (event.altKey && (event.key === 'e' || event.key === 'E')) {
+      event.preventDefault();
+      this.switchToEditMode();
+      return;
+    }
+
+    // Alt+F or Ctrl+F: Field Search
+    if ((event.altKey || (event.ctrlKey && !event.shiftKey)) && (event.key === 'f' || event.key === 'F')) {
+      event.preventDefault();
+      this.fieldSearchInputRef?.nativeElement.focus();
+      this.isFieldSearchOpen.set(true);
+      return;
+    }
+
+    // Alt+P: Play Video Tutorial
+    if (event.altKey && (event.key === 'p' || event.key === 'P')) {
+      event.preventDefault();
+      this.openVideoTutorial();
+      return;
+    }
+
+    // Alt+H or ?: Guide
+    if ((event.altKey && (event.key === 'h' || event.key === 'H')) || event.key === '?') {
+      event.preventDefault();
+      this.openGuideModal();
+      return;
+    }
+
+    // Alt+B: Barcode Scanner
+    if (event.altKey && (event.key === 'b' || event.key === 'B')) {
+      event.preventDefault();
+      this.openBarcodeScanner();
+      return;
+    }
+
+    // Alt+Left / Alt+Right: Record Pager
+    if (event.altKey && event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.goToPreviousRecord();
+      return;
+    }
+    if (event.altKey && event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.goToNextRecord();
+      return;
+    }
+
+    // Alt+1 to Alt+8: Tab Jump
+    if (event.altKey && event.key >= '1' && event.key <= '8') {
+      const idx = parseInt(event.key, 10) - 1;
+      if (idx < this.sectionTabs.length) {
+        event.preventDefault();
+        this.selectTab(this.sectionTabs[idx].id);
+      }
+    }
+  }
+
+  // =========================================================================
+  // ADD & EDIT MODE SWITCHING
+  // =========================================================================
+  switchToAddMode(): void {
+    this.pageMode.set('add');
+    this.activeActionView.set('form');
+    this.prepareNewItem();
+    this.showToast('Switched to Add Mode: Ready to create new item');
+  }
+
+  switchToEditMode(index?: number): void {
+    this.pageMode.set('edit');
+    this.activeActionView.set('form');
+    if (typeof index === 'number') {
+      this.itemService.goToIndex(index);
+    }
+    this.loadItemToForm(this.itemService.currentItem());
+    this.showToast(`Switched to Edit Mode for Item: ${this.formNameEn()}`);
+  }
+
+  switchToViewMode(index?: number): void {
+    this.pageMode.set('view');
+    this.activeActionView.set('form');
+    if (typeof index === 'number') {
+      this.itemService.goToIndex(index);
+    }
+    this.loadItemToForm(this.itemService.currentItem());
+    this.showToast(`Switched to View Mode: ${this.formNameEn()}`);
+  }
+
+  selectItemFromList(item: ItemMaster, mode: 'edit' | 'view' = 'edit'): void {
+    const idx = this.itemService.items().findIndex((it) => it.itemId === item.itemId);
+    if (idx >= 0) {
+      this.itemService.goToIndex(idx);
+    }
+    this.loadItemToForm(item);
+    if (mode === 'view') {
+      this.switchToViewMode();
+    } else {
+      this.switchToEditMode();
+    }
+  }
+
+  prepareNewItem(): void {
+    this.formItemId.set('ITM-NEW');
+    this.formItemType.set('Stock Item');
+    this.formNameEn.set('');
+    this.formNameAr.set('');
+    this.autoGenerateSku();
+    this.autoGenerateBarcode();
+    this.formCategory.set('Beverages & Hot Drinks');
+    this.formBrand.set('Café Del Sol');
+    this.formBaseUom.set('Piece');
+    this.formSalesPrice.set(0);
+    this.formCostPrice.set(0);
+    this.formStatus.set('Draft');
+    this.formShortName.set('');
+    this.formDescEn.set('');
+    this.formDescAr.set('');
+    this.formCustomAttributes.set([]);
+    this.formTags.set([]);
+    this.formVariantMatrix.set([]);
+    this.formHasVariants.set(false);
+  }
 
   ngOnInit(): void {
     // Sync active item from service to form
@@ -663,16 +1540,8 @@ export class ItemComponent implements OnInit {
 
   selectTab(tabId: ItemSectionTab): void {
     this.activeTab.set(tabId);
-    const tabInfo = this.sectionTabs.find((t) => t.id === tabId);
-    if (tabInfo) {
-      // Automatically expand the selected section for immediate access
-      this.expandedSections.update((s) => ({
-        ...s,
-        [tabInfo.sectionKey]: true
-      }));
-    } else if (tabId === 'all') {
-      this.expandAllSections();
-    }
+    // Keep accordions collapsed by default as requested in requirement 3
+    // Accordions expand only when user clicks header or jumps via field search
 
     // Scroll active tab button smoothly into visible view
     setTimeout(() => {
@@ -1062,6 +1931,7 @@ export class ItemComponent implements OnInit {
   // Record Navigation (< 5 >)
   goToPreviousRecord(): void {
     if (this.itemService.currentIndex() > 0) {
+      this.pageMode.set('edit');
       this.itemService.goToPrev();
       this.loadItemToForm(this.itemService.currentItem());
       this.showToast(`Loaded item ${this.currentDisplayNumber()} of ${this.totalRecordsCount()}`);
@@ -1070,6 +1940,7 @@ export class ItemComponent implements OnInit {
 
   goToNextRecord(): void {
     if (this.itemService.currentIndex() < this.totalRecordsCount() - 1) {
+      this.pageMode.set('edit');
       this.itemService.goToNext();
       this.loadItemToForm(this.itemService.currentItem());
       this.showToast(`Loaded item ${this.currentDisplayNumber()} of ${this.totalRecordsCount()}`);
@@ -1079,6 +1950,7 @@ export class ItemComponent implements OnInit {
   onRecordInput(val: string): void {
     const num = parseInt(val, 10);
     if (!isNaN(num) && num >= 1 && num <= this.totalRecordsCount()) {
+      this.pageMode.set('edit');
       this.itemService.goToIndex(num - 1);
       this.loadItemToForm(this.itemService.currentItem());
     }
@@ -1275,14 +2147,19 @@ export class ItemComponent implements OnInit {
       ]
     };
 
-    // Update existing or add new
-    const idx = this.itemService.currentIndex();
-    if (idx >= 0 && idx < this.itemService.totalCount()) {
-      this.itemService.updateItem(idx, newItem);
-      this.showToast(`Item "${newItem.nameEn}" updated successfully!`);
-    } else {
+    // Update existing or add new based on pageMode
+    if (this.pageMode() === 'add') {
       this.itemService.addItem(newItem);
       this.showToast(`Item "${newItem.nameEn}" created successfully!`);
+      this.switchToEditMode(0);
+    } else {
+      const idx = this.itemService.currentIndex();
+      if (idx >= 0 && idx < this.itemService.totalCount()) {
+        this.itemService.updateItem(idx, newItem);
+      } else {
+        this.itemService.addItem(newItem);
+      }
+      this.showToast(`Item "${newItem.nameEn}" updated successfully!`);
     }
 
     if (!this.stayOnPage()) {
@@ -1337,27 +2214,29 @@ export class ItemComponent implements OnInit {
 
   handleOverviewClick(): void {
     this.activeActionView.set('overview');
-    this.showToast('Overview Mode active');
+    this.showToast('Item Overview Dashboard active');
   }
 
   handleGridClick(): void {
     this.activeActionView.set('grid');
-    this.showToast('Grid View active');
+    this.showToast('Grid Item List active');
   }
 
   handleTableClick(): void {
     this.activeActionView.set('table');
-    this.showToast('Table View active');
+    this.showToast('Table Item List active');
+  }
+
+  handleAddClick(): void {
+    this.switchToAddMode();
   }
 
   handleEditClick(): void {
-    this.activeActionView.set('form');
-    this.showToast('Edit Mode active');
+    this.switchToEditMode();
   }
 
   handleViewClick(): void {
-    this.activeActionView.set('view');
-    this.showToast('View Details active');
+    this.switchToViewMode();
   }
 
   handleRecycleClick(): void {
