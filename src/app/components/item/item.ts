@@ -402,6 +402,44 @@ export class ItemComponent implements OnInit {
   barcodeTypeOptions: string[] = ['EAN-13', 'UPC-A', 'Code 128', 'QR Code', 'ITF-14', 'Data Matrix'];
   valuationMethodOptions: ('FIFO' | 'Weighted Average' | 'Standard Cost')[] = ['FIFO', 'Weighted Average', 'Standard Cost'];
   posColors: string[] = ['#964B00', '#0284C7', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#475569', '#DC2626'];
+  taxCategoryOptions: string[] = ['Standard 5% VAT', 'Zero Rated 0%', 'Exempt', 'Reverse Charge'];
+  decimalPrecisionOptions: number[] = [0, 1, 2, 3, 4];
+  abcClassificationOptions: ('A' | 'B' | 'C')[] = ['A', 'B', 'C'];
+
+  // Custom Modern Dropdown State & Methods
+  activeDropdown = signal<string | null>(null);
+
+  toggleDropdown(id: string, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.activeDropdown.set(this.activeDropdown() === id ? null : id);
+  }
+
+  closeDropdown(): void {
+    this.activeDropdown.set(null);
+  }
+
+  selectDropdownValue(field: string, val: any): void {
+    switch (field) {
+      case 'itemType': this.formItemType.set(val); break;
+      case 'category': this.formCategory.set(val); break;
+      case 'brand': this.formBrand.set(val); break;
+      case 'baseUom': this.formBaseUom.set(val); break;
+      case 'barcodeType': this.formBarcodeType.set(val); break;
+      case 'salesUom': this.formSalesUom.set(val); break;
+      case 'purchaseUom': this.formPurchaseUom.set(val); break;
+      case 'stockingUom': this.formStockingUom.set(val); break;
+      case 'decimalPrecision': this.formDecimalPrecision.set(Number(val)); break;
+      case 'salesTaxCategory': this.formSalesTaxCategory.set(val); break;
+      case 'purchaseTaxCategory': this.formPurchaseTaxCategory.set(val); break;
+      case 'valuationMethod': this.formValuationMethod.set(val); break;
+      case 'abcClassification': this.formAbcClassification.set(val); break;
+      case 'defaultPurchaseUom': this.formDefaultPurchaseUom.set(val); break;
+      case 'itemListCategoryFilter': this.itemListCategoryFilter.set(val); break;
+    }
+    this.activeDropdown.set(null);
+  }
 
   // Voice Search / Dictation State
   isVoiceListening = signal<boolean>(false);
@@ -1167,18 +1205,27 @@ export class ItemComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
     if (this.isFieldSearchOpen()) {
-      const target = event.target as HTMLElement;
       if (this.fieldSearchContainerRef && !this.fieldSearchContainerRef.nativeElement.contains(target)) {
         this.isFieldSearchOpen.set(false);
+      }
+    }
+    if (this.activeDropdown()) {
+      if (!target.closest('[data-dropdown]')) {
+        this.activeDropdown.set(null);
       }
     }
   }
 
   @HostListener('window:keydown', ['$event'])
   handleGlobalKeyboard(event: KeyboardEvent): void {
-    // Escape closes modals
+    // Escape closes modals and dropdowns
     if (event.key === 'Escape') {
+      if (this.activeDropdown()) {
+        this.activeDropdown.set(null);
+        return;
+      }
       if (this.isGuidanceTourOpen()) this.closeGuidanceTour();
       if (this.isVideoModalOpen()) this.closeVideoTutorial();
       if (this.isGuideModalOpen()) this.closeGuideModal();

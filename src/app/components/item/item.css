@@ -152,11 +152,17 @@ input:checked + .form-switch-track .form-switch-thumb {
 }
 
 .tab-nav-arrow {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  background-color: var(--secondary-color, #00a2e8);
+  border-color: var(--secondary-color, #00a2e8);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 162, 232, 0.25);
   transition: all 0.2s ease;
 }
 
 .tab-nav-arrow:hover {
+  background-color: #008ecb;
+  border-color: #008ecb;
+  color: #ffffff;
   transform: scale(1.05);
 }
 
@@ -251,13 +257,9 @@ input:checked + .form-switch-track .form-switch-thumb {
 /* 9. THREE INTERNAL SECTION SCROLLBARS (Requirement: No Page Scrollbar)     */
 /* ========================================================================= */
 
-/* Section 1 Scroll: General Information / Essential Fields */
+/* Section 1 Scroll: General Information / Essential Fields (overflow visible for modern custom dropdowns) */
 .general-info-fields-scroll {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  overflow: visible !important;
 }
 
 .general-info-fields-scroll::-webkit-scrollbar {
@@ -305,9 +307,11 @@ textarea {
   color: rgba(241, 245, 249, 0.82) !important;
 }
 
-/* Section 2 Scroll: Tabs with Collapsible / Expandable Accordions (Displays 2 rows by default) */
+/* Section 2 Scroll: Tabs with Collapsible / Expandable Accordions (Responsive flex height) */
 .tabs-accordions-scroll {
-  max-height: 126px;
+  flex: 1 1 0%;
+  min-height: 0;
+  height: 100%;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   scroll-behavior: smooth;
@@ -588,4 +592,30 @@ button.tab-pill-unselected:hover * {
 .dark .tab-pill-unselected *,
 .dark .tab-pill-unselected:hover * {
   color: #38bdf8 !important;
+}
+
+/* ========================================================================= */
+/* 11. MOBILE RESPONSIVE ADAPTATIONS                                          */
+/* ========================================================================= */
+@media (max-width: 767px) {
+  /* On mobile screens, allow Section 1 & Section 2 to flow naturally so unified scroll works cleanly */
+  .general-info-fields-scroll {
+    overflow-y: visible !important;
+    max-height: none !important;
+  }
+
+  .tabs-accordions-scroll {
+    min-height: 280px;
+    height: auto !important;
+    overflow-y: visible !important;
+    max-height: none !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .floating-notch-label {
+    left: 14px;
+    font-size: 0.7rem;
+    padding: 0 5px;
+  }
 }

@@ -2,9 +2,9 @@
   class="item-module-container flex flex-col h-full w-full bg-[#f8fafc] dark:bg-slate-900 text-slate-800 dark:text-slate-100 overflow-hidden relative select-none">
 
   <!-- Module Shell: Header + Scrollable Content in one clean enterprise layout -->
-  <div class="flex-1 min-h-0 flex flex-col p-2 sm:p-2.5">
+  <div class="flex-1 min-h-0 flex flex-col p-1 sm:p-2 sm:p-2.5">
     <div
-      class="item-shell flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 overflow-hidden shadow-xs">
+      class="item-shell flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-[#E2E4EB] dark:border-slate-700 overflow-hidden shadow-xs">
 
       <!-- ========================================================================= -->
       <!-- 1. TOP HEADER: Title, Breadcrumb & Record Navigation Pager                -->
@@ -13,30 +13,133 @@
       <!-- 1. TOP HEADER: Title, Mode, Tutorial Video, Shortcuts & Right Pager       -->
       <!-- ========================================================================= -->
       <div
-        class="item-header relative flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 px-4 sm:px-6 py-1.5 sm:py-0 min-h-12 h-12 border-b border-slate-200 dark:border-slate-700 shrink-0 bg-[#f8fafc] dark:bg-slate-850/90">
+        class="item-header relative z-30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6 py-2 sm:py-0 min-h-12 sm:h-12 border-b border-slate-200 dark:border-slate-700 shrink-0 bg-[#f8fafc] dark:bg-slate-850/90">
 
-        <!-- Left: Play Tutorial Button + Title + Mode Switcher -->
-        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
-          <!-- Play Button replacing Item Master icon -->
-          <button type="button" (click)="openVideoTutorial()" data-tooltip="Tutorial" data-tooltip-pos="bottom"
-            class="group relative w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-[#00a6f4]/30 hover:scale-105 hover:shadow-lg hover:shadow-[#00a6f4]/45 transition cursor-pointer">
-            <span class="absolute inset-0 rounded-xl bg-[#00a2e8] play-pulse-ring pointer-events-none"></span>
-            <svg class="w-4 h-4 fill-current ml-0.5 relative z-10 transition-transform group-hover:scale-110"
-              viewBox="0 0 24 24">
-              <polygon points="6 3 20 12 6 21 6 3" />
-            </svg>
-          </button>
+        <!-- Top Row on Mobile / Left Section on Desktop: Title + Mobile Pager -->
+        <div class="flex items-center justify-between gap-2 w-full sm:w-auto shrink-0">
+          <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+            <!-- Play Button replacing Item Master icon -->
+            <button type="button" (click)="openVideoTutorial()" data-tooltip="Tutorial" data-tooltip-pos="bottom"
+              class="group relative w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-[#00a6f4]/30 hover:scale-105 hover:shadow-lg hover:shadow-[#00a6f4]/45 transition cursor-pointer">
+              <span class="absolute inset-0 rounded-xl bg-[#00a2e8] play-pulse-ring pointer-events-none"></span>
+              <svg class="w-4 h-4 fill-current ml-0.5 relative z-10 transition-transform group-hover:scale-110"
+                viewBox="0 0 24 24">
+                <polygon points="6 3 20 12 6 21 6 3" />
+              </svg>
+            </button>
 
-          <div class="min-w-0 flex flex-col justify-center">
-            <h1
-              class="text-[16px] sm:text-[18px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
-              {{ pageMode() === 'add' ? 'Add Item' : (pageMode() === 'view' ? 'View Item' : 'Edit Item') }}
-            </h1>
+            <div class="min-w-0 flex flex-col justify-center">
+              <h1
+                class="text-[15px] sm:text-[18px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
+                {{ pageMode() === 'add' ? 'Add Item' : (pageMode() === 'view' ? 'View Item' : 'Edit Item') }}
+              </h1>
+            </div>
+          </div>
+
+          <!-- Mobile Only (< sm): Record Pagination in top row next to title -->
+          <div class="flex sm:hidden items-center gap-1.5 select-none shrink-0">
+            <!-- Left Arrow Circle (Prev filled with secondary color) -->
+            <button type="button" (click)="goToPreviousRecord()" [disabled]="currentDisplayNumber() <= 1"
+              data-tooltip="Prev" data-tooltip-pos="bottom"
+              class="w-7 h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] flex items-center justify-center hover:bg-[#008ecb] hover:border-[#008ecb] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
+              <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <!-- Center Number Circle (SELECTED state by default) -->
+            <div [attr.data-tooltip]="currentDisplayNumber() + ' of ' + totalRecordsCount()" data-tooltip-pos="bottom"
+              class="w-7 h-7 rounded-full bg-[#00a6f4] text-white border-2 border-[#00a6f4] flex items-center justify-center text-xs font-black select-none shadow-md shadow-[#00a6f4]/25">
+              {{ currentDisplayNumber() }}
+            </div>
+
+            <!-- Right Arrow Circle (Next filled with secondary color) -->
+            <button type="button" (click)="goToNextRecord()" [disabled]="currentDisplayNumber() >= totalRecordsCount()"
+              data-tooltip="Next" data-tooltip-pos="bottom"
+              class="w-7 h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] flex items-center justify-center hover:bg-[#008ecb] hover:border-[#008ecb] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
+              <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
 
-        <!-- Right Side: Shortcuts & Pagination Moved to Right -->
-        <div class="flex items-center gap-2 sm:gap-3 select-none ml-auto shrink-0">
+        <!-- Middle: Search Bar with Voice Input (Find field) - Full width on mobile, centered max-w-md on desktop -->
+        <div #fieldSearchContainer class="relative w-full sm:max-w-xs md:max-w-md mx-0 sm:mx-auto">
+          <div
+            class="relative flex items-center w-full h-8.5 px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-2xs">
+            <!-- Search Icon -->
+            <svg class="w-4 h-4 text-slate-400 mr-2 shrink-0" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+
+            <!-- Search Input (Find field) -->
+            <input #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
+              (ngModelChange)="fieldSearchQuery.set($event); isFieldSearchOpen.set(true)"
+              (focus)="isFieldSearchOpen.set(true)" placeholder="Find field"
+              class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+
+            <!-- Clear query button -->
+            @if (fieldSearchQuery()) {
+            <button type="button" (click)="fieldSearchQuery.set(''); isFieldSearchOpen.set(false)"
+              class="p-1 rounded-full text-slate-400 hover:text-slate-600 transition cursor-pointer mr-1">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            }
+
+            <!-- Voice Input Microphone 🎙️ Button -->
+            <button type="button" (click)="toggleFieldVoiceSearch($event)"
+              [attr.data-tooltip]="isFieldVoiceListening() ? 'Listening' : 'Voice'" data-tooltip-pos="bottom"
+              class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer relative shrink-0"
+              [class.text-red-500]="isFieldVoiceListening()" [class.animate-pulse]="isFieldVoiceListening()">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+              </svg>
+              @if (isFieldVoiceListening()) {
+              <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+              }
+            </button>
+          </div>
+
+          <!-- Search Results Dropdown List (Option default grey color & reduced arrow icon size) -->
+          @if (isFieldSearchOpen() && filteredFormFields().length > 0) {
+          <div
+            class="absolute left-0 right-0 top-full mt-1.5 w-full max-h-60 sm:max-h-72 overflow-y-auto custom-scrollbar bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl z-50 p-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div class="py-0.5 space-y-0.5">
+              @for (field of filteredFormFields(); track field.id) {
+              <button type="button" (click)="selectSearchField(field)"
+                class="w-full px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-slate-700/70 transition flex items-center justify-between group cursor-pointer">
+                <div class="flex flex-col min-w-0 pr-2">
+                  <span
+                    class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 group-hover:text-[#00a6f4] transition truncate">
+                    {{ field.label }}
+                  </span>
+                  @if (field.location) {
+                  <span class="text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                    {{ field.location }}
+                  </span>
+                  }
+                </div>
+                <!-- Default grey color arrow icon with reduced size -->
+                <svg class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:text-[#00a6f4] shrink-0 transition-transform group-hover:translate-x-1" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </button>
+              }
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Desktop Only (sm+): Pagination & Shortcuts -->
+        <div class="hidden sm:flex items-center gap-2 sm:gap-3 select-none shrink-0">
           <!-- Shortcuts Button (Hidden by default) -->
           <button hidden type="button" (click)="openShortcutsModal()" data-tooltip="Shortcuts" data-tooltip-pos="bottom"
             class="h-8 w-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition cursor-pointer shadow-2xs">
@@ -47,13 +150,13 @@
             </svg>
           </button>
 
-          <!-- Record Pagination Moved to Right in Header (< [1] >) -->
+          <!-- Record Pagination: Prev and Next icons filled with secondary color (#00a2e8) -->
           <div class="flex items-center gap-1.5 sm:gap-2">
-            <!-- Left Arrow Circle -->
+            <!-- Left Arrow Circle (Prev filled with secondary color) -->
             <button type="button" (click)="goToPreviousRecord()" [disabled]="currentDisplayNumber() <= 1"
               data-tooltip="Prev" data-tooltip-pos="bottom"
-              class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:border-[#00a6f4] hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer bg-white dark:bg-slate-800 shadow-2xs">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] flex items-center justify-center hover:bg-[#008ecb] hover:border-[#008ecb] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
+              <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
@@ -64,11 +167,11 @@
               {{ currentDisplayNumber() }}
             </div>
 
-            <!-- Right Arrow Circle -->
+            <!-- Right Arrow Circle (Next filled with secondary color) -->
             <button type="button" (click)="goToNextRecord()" [disabled]="currentDisplayNumber() >= totalRecordsCount()"
               data-tooltip="Next" data-tooltip-pos="bottom"
-              class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:border-[#00a6f4] hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer bg-white dark:bg-slate-800 shadow-2xs">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] flex items-center justify-center hover:bg-[#008ecb] hover:border-[#008ecb] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
+              <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -81,10 +184,10 @@
       <!-- 2. MAIN BODY: Form Work Area on Left & Action Dock on Right               -->
       <!-- ========================================================================= -->
       <form ngNoForm (submit)="$event.preventDefault(); onSubmitForm()" autocomplete="off" spellcheck="false"
-        class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative p-1.5 sm:p-2 md:p-2 gap-2 sm:gap-2.5 bg-slate-100/70 dark:bg-slate-900/60">
+        class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative p-1 sm:p-2 md:p-2 gap-1.5 sm:gap-2 md:gap-2.5 bg-slate-100/70 dark:bg-slate-900/60">
 
         <!-- Left Work Area (Holds Frame 1: General Info Card & Frame 2: Tab-wise Card) -->
-        <div class="flex-1 flex flex-col min-h-0 overflow-hidden gap-1.5 sm:gap-2">
+        <div class="flex-1 flex flex-col min-h-0 overflow-y-auto md:overflow-hidden gap-1.5 sm:gap-2 custom-scrollbar">
 
           @if (activeActionView() === 'form') {
           <!-- ===================================================================== -->
@@ -92,113 +195,74 @@
           <!-- ===================================================================== -->
           <section id="section-general-info"
             [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceViewMode() === 'coachmarks' && guidanceTourStep() === 1"
-            class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-2.5 pb-1.5 sm:px-3 sm:pt-2.5 sm:pb-2 flex flex-col shrink-0 transition-all">
-
-            <!-- Header Bar: Left Required Fields Notice (Item 4) | Right Field Search (Item 5, 6, 7) -->
-            <div
-              class="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-700/60">
-              <!-- Left: Required Fields asterisk notice (Grey color message with info icon) -->
-              <div
-                class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs sm:text-[13px] font-medium select-none">
-                <svg class="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-500" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="16" x2="12" y2="12" />
-                  <line x1="12" y1="8" x2="12.01" y2="8" />
-                </svg>
-                <span>Required fields are marked with an asterisk (*).</span>
-              </div>
-
-              <!-- Right: Search Bar with Voice Input (Find field) -->
-              <div #fieldSearchContainer class="relative w-full sm:w-72 lg:w-80">
-                <div
-                  class="relative flex items-center w-full h-8 px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-2xs">
-                  <!-- Search Icon -->
-                  <svg class="w-4 h-4 text-slate-400 mr-2 shrink-0" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-
-                  <!-- Search Input (Item 5: Find field) -->
-                  <input #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
-                    (ngModelChange)="fieldSearchQuery.set($event); isFieldSearchOpen.set(true)"
-                    (focus)="isFieldSearchOpen.set(true)" placeholder="Find field"
-                    class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
-
-                  <!-- Clear query button -->
-                  @if (fieldSearchQuery()) {
-                  <button type="button" (click)="fieldSearchQuery.set(''); isFieldSearchOpen.set(false)"
-                    class="p-1 rounded-full text-slate-400 hover:text-slate-600 transition cursor-pointer mr-1">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                  </button>
-                  }
-
-                  <!-- Voice Input Microphone 🎙️ Button -->
-                  <button type="button" (click)="toggleFieldVoiceSearch($event)"
-                    [attr.data-tooltip]="isFieldVoiceListening() ? 'Listening' : 'Voice'" data-tooltip-pos="top"
-                    class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer relative shrink-0"
-                    [class.text-red-500]="isFieldVoiceListening()" [class.animate-pulse]="isFieldVoiceListening()">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                    </svg>
-                    @if (isFieldVoiceListening()) {
-                    <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                    }
-                  </button>
-                </div>
-
-                <!-- Search Results Dropdown List (Item 6 & 7: removed count header, field name + end chevron >) -->
-                @if (isFieldSearchOpen() && filteredFormFields().length > 0) {
-                <div
-                  class="absolute right-0 top-full mt-1.5 w-full sm:w-80 max-h-72 overflow-y-auto custom-scrollbar bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl z-50 p-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div class="py-0.5 space-y-0.5">
-                    @for (field of filteredFormFields(); track field.id) {
-                    <button type="button" (click)="selectSearchField(field)"
-                      class="w-full px-3 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/70 transition flex items-center justify-between group cursor-pointer">
-                      <span
-                        class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-[#00a6f4] transition truncate">
-                        {{ field.label }}
-                      </span>
-                      <svg class="w-4 h-4 text-[#00a6f4] shrink-0 transition-transform group-hover:translate-x-1" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
-                    </button>
-                    }
-                  </div>
-                </div>
-                }
-              </div>
-            </div>
+            class="relative z-20 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-3 pb-2 sm:px-3 sm:pt-3.5 sm:pb-2.5 flex flex-col shrink-0 transition-all overflow-visible">
 
             <!-- ===================================================================== -->
-            <!-- 1–4. ESSENTIAL FIELDS (Section 1: 4 Rows Displayed by Default)         -->
-            <!-- Displays all 4 rows with comfortable row spacing                      -->
+            <!-- 1–4. ESSENTIAL FIELDS (Section 1: 4 Rows with comfortable spacing)     -->
             <!-- ===================================================================== -->
             <div
-              class="general-info-fields-scroll shrink-0 overflow-y-auto max-h-[240px] pr-1.5 custom-scrollbar my-0.5 transition-all">
-              <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center pt-2 pb-1">
+              class="general-info-fields-scroll overflow-visible shrink-0 pr-0 my-0.5 transition-all">
+              <div class="grid grid-cols-12 gap-x-3 sm:gap-x-4 gap-y-4 sm:gap-y-5.5 items-center pt-2 pb-1.5">
 
                 <!-- ROW 1 (3 columns: Item Type, Item Name EN, Item Name AR) -->
-                <!-- 1. Item Type * (Item 8: grey asterisk) -->
-                <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
-                  <div id="field-itemType"
-                    class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                    <span class="floating-notch-label">
+                <!-- 1. Item Type * (Modern Custom Dropdown) -->
+                <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group" data-dropdown>
+                  <div id="field-itemType" role="button" tabindex="0"
+                    (click)="toggleDropdown('itemType', $event)"
+                    (keydown.enter)="toggleDropdown('itemType', $event)"
+                    (keydown.space)="$event.preventDefault(); toggleDropdown('itemType', $event)"
+                    class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                    [class.border-[#00a6f4]]="activeDropdown() === 'itemType'"
+                    [class.ring-2]="activeDropdown() === 'itemType'"
+                    [class.ring-[#00a6f4]/20]="activeDropdown() === 'itemType'"
+                    [class.border-slate-300]="activeDropdown() !== 'itemType'"
+                    [class.dark:border-slate-600]="activeDropdown() !== 'itemType'">
+                    <span class="floating-notch-label"
+                      [class.text-[#00a6f4]]="activeDropdown() === 'itemType'">
                       Item Type <span class="text-slate-400 dark:text-slate-500">*</span>
                     </span>
-                    <select [ngModel]="formItemType()" (ngModelChange)="formItemType.set($event)" name="itemType"
-                      class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white focus:outline-none cursor-pointer">
-                      @for (type of itemTypeOptions; track type) {
-                      <option [value]="type">{{ type }}</option>
-                      }
-                    </select>
+
+                    <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                      {{ formItemType() }}
+                    </span>
+
+                    <!-- Chevron Up / Down -->
+                    <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                      [class.rotate-180]="activeDropdown() === 'itemType'">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
                   </div>
+
+                  <!-- Dropdown Menu (Reference Country theme) -->
+                  @if (activeDropdown() === 'itemType') {
+                  <div (click)="$event.stopPropagation()"
+                    class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                      @for (type of itemTypeOptions; track type) {
+                      <button type="button" (click)="selectDropdownValue('itemType', type)"
+                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                        [class.bg-[#dff3fd]]="formItemType() === type"
+                        [class.dark:bg-sky-950/70]="formItemType() === type">
+                        <span
+                          class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                          [class.text-[#0070ba]]="formItemType() === type"
+                          [class.dark:text-[#38bdf8]]="formItemType() === type"
+                          [class.font-bold]="formItemType() === type">
+                          {{ type }}
+                        </span>
+                        @if (formItemType() === type) {
+                        <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        }
+                      </button>
+                      }
+                    </div>
+                  </div>
+                  }
                 </div>
 
                 <!-- 2. Item Name (EN) * (Item 8: grey asterisk) -->
@@ -259,21 +323,64 @@
                   </div>
                 </div>
 
-                <!-- 5. Category * (Item 8: grey asterisk, Item 9: 4 cols) -->
-                <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group">
-                  <div id="field-category"
-                    class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                    <span class="floating-notch-label">
+                <!-- 5. Category * (Modern Custom Dropdown) -->
+                <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group" data-dropdown>
+                  <div id="field-category" role="button" tabindex="0"
+                    (click)="toggleDropdown('category', $event)"
+                    (keydown.enter)="toggleDropdown('category', $event)"
+                    (keydown.space)="$event.preventDefault(); toggleDropdown('category', $event)"
+                    class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                    [class.border-[#00a6f4]]="activeDropdown() === 'category'"
+                    [class.ring-2]="activeDropdown() === 'category'"
+                    [class.ring-[#00a6f4]/20]="activeDropdown() === 'category'"
+                    [class.border-slate-300]="activeDropdown() !== 'category'"
+                    [class.dark:border-slate-600]="activeDropdown() !== 'category'">
+                    <span class="floating-notch-label"
+                      [class.text-[#00a6f4]]="activeDropdown() === 'category'">
                       Category <span class="text-slate-400 dark:text-slate-500">*</span>
                     </span>
-                    <select [ngModel]="formCategory()" (ngModelChange)="formCategory.set($event)" name="category"
-                      required
-                      class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white focus:outline-none cursor-pointer">
-                      @for (cat of categoryOptions; track cat) {
-                      <option [value]="cat">{{ cat }}</option>
-                      }
-                    </select>
+
+                    <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                      {{ formCategory() }}
+                    </span>
+
+                    <!-- Chevron Up / Down -->
+                    <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                      [class.rotate-180]="activeDropdown() === 'category'">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
                   </div>
+
+                  <!-- Dropdown Menu (Reference Country theme) -->
+                  @if (activeDropdown() === 'category') {
+                  <div (click)="$event.stopPropagation()"
+                    class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                      @for (cat of categoryOptions; track cat) {
+                      <button type="button" (click)="selectDropdownValue('category', cat)"
+                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                        [class.bg-[#dff3fd]]="formCategory() === cat"
+                        [class.dark:bg-sky-950/70]="formCategory() === cat">
+                        <span
+                          class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                          [class.text-[#0070ba]]="formCategory() === cat"
+                          [class.dark:text-[#38bdf8]]="formCategory() === cat"
+                          [class.font-bold]="formCategory() === cat">
+                          {{ cat }}
+                        </span>
+                        @if (formCategory() === cat) {
+                        <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        }
+                      </button>
+                      }
+                    </div>
+                  </div>
+                  }
                 </div>
 
                 <!-- 6. Subcategory (Item 9: 4 cols) -->
@@ -287,35 +394,125 @@
                   </div>
                 </div>
 
-                <!-- 7. Brand (Item 9: 4 cols) -->
-                <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group">
-                  <div id="field-brand"
-                    class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                    <span class="floating-notch-label">Brand</span>
-                    <select [ngModel]="formBrand()" (ngModelChange)="formBrand.set($event)" name="brand"
-                      class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white focus:outline-none cursor-pointer">
-                      @for (b of brandOptions; track b) {
-                      <option [value]="b">{{ b }}</option>
-                      }
-                    </select>
+                <!-- 7. Brand (Modern Custom Dropdown) -->
+                <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group" data-dropdown>
+                  <div id="field-brand" role="button" tabindex="0"
+                    (click)="toggleDropdown('brand', $event)"
+                    (keydown.enter)="toggleDropdown('brand', $event)"
+                    (keydown.space)="$event.preventDefault(); toggleDropdown('brand', $event)"
+                    class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                    [class.border-[#00a6f4]]="activeDropdown() === 'brand'"
+                    [class.ring-2]="activeDropdown() === 'brand'"
+                    [class.ring-[#00a6f4]/20]="activeDropdown() === 'brand'"
+                    [class.border-slate-300]="activeDropdown() !== 'brand'"
+                    [class.dark:border-slate-600]="activeDropdown() !== 'brand'">
+                    <span class="floating-notch-label"
+                      [class.text-[#00a6f4]]="activeDropdown() === 'brand'">
+                      Brand
+                    </span>
+
+                    <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                      {{ formBrand() }}
+                    </span>
+
+                    <!-- Chevron Up / Down -->
+                    <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                      [class.rotate-180]="activeDropdown() === 'brand'">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
                   </div>
+
+                  <!-- Dropdown Menu (Reference Country theme) -->
+                  @if (activeDropdown() === 'brand') {
+                  <div (click)="$event.stopPropagation()"
+                    class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                      @for (b of brandOptions; track b) {
+                      <button type="button" (click)="selectDropdownValue('brand', b)"
+                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                        [class.bg-[#dff3fd]]="formBrand() === b"
+                        [class.dark:bg-sky-950/70]="formBrand() === b">
+                        <span
+                          class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                          [class.text-[#0070ba]]="formBrand() === b"
+                          [class.dark:text-[#38bdf8]]="formBrand() === b"
+                          [class.font-bold]="formBrand() === b">
+                          {{ b }}
+                        </span>
+                        @if (formBrand() === b) {
+                        <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        }
+                      </button>
+                      }
+                    </div>
+                  </div>
+                  }
                 </div>
 
                 <!-- ROW 3 (4 columns: Base UOM, Sales Price, Cost Price, Margin & Markup) -->
-                <!-- 8. Base UOM * (Item 8: grey asterisk, Item 9: 4 cols) -->
-                <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group">
-                  <div id="field-baseUom"
-                    class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                    <span class="floating-notch-label">
+                <!-- 8. Base UOM * (Modern Custom Dropdown) -->
+                <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group" data-dropdown>
+                  <div id="field-baseUom" role="button" tabindex="0"
+                    (click)="toggleDropdown('baseUom', $event)"
+                    (keydown.enter)="toggleDropdown('baseUom', $event)"
+                    (keydown.space)="$event.preventDefault(); toggleDropdown('baseUom', $event)"
+                    class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                    [class.border-[#00a6f4]]="activeDropdown() === 'baseUom'"
+                    [class.ring-2]="activeDropdown() === 'baseUom'"
+                    [class.ring-[#00a6f4]/20]="activeDropdown() === 'baseUom'"
+                    [class.border-slate-300]="activeDropdown() !== 'baseUom'"
+                    [class.dark:border-slate-600]="activeDropdown() !== 'baseUom'">
+                    <span class="floating-notch-label"
+                      [class.text-[#00a6f4]]="activeDropdown() === 'baseUom'">
                       Base UOM <span class="text-slate-400 dark:text-slate-500">*</span>
                     </span>
-                    <select [ngModel]="formBaseUom()" (ngModelChange)="formBaseUom.set($event)" name="baseUom" required
-                      class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white focus:outline-none cursor-pointer">
-                      @for (u of uomOptions; track u) {
-                      <option [value]="u">{{ u }}</option>
-                      }
-                    </select>
+
+                    <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                      {{ formBaseUom() }}
+                    </span>
+
+                    <!-- Chevron Up / Down -->
+                    <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                      [class.rotate-180]="activeDropdown() === 'baseUom'">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
                   </div>
+
+                  <!-- Dropdown Menu (Reference Country theme) -->
+                  @if (activeDropdown() === 'baseUom') {
+                  <div (click)="$event.stopPropagation()"
+                    class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                      @for (u of uomOptions; track u) {
+                      <button type="button" (click)="selectDropdownValue('baseUom', u)"
+                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                        [class.bg-[#dff3fd]]="formBaseUom() === u"
+                        [class.dark:bg-sky-950/70]="formBaseUom() === u">
+                        <span
+                          class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                          [class.text-[#0070ba]]="formBaseUom() === u"
+                          [class.dark:text-[#38bdf8]]="formBaseUom() === u"
+                          [class.font-bold]="formBaseUom() === u">
+                          {{ u }}
+                        </span>
+                        @if (formBaseUom() === u) {
+                        <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        }
+                      </button>
+                      }
+                    </div>
+                  </div>
+                  }
                 </div>
 
                 <!-- 9. Sales Price (Item 9: 4 cols) -->
@@ -386,26 +583,27 @@
           <!-- ===================================================================== -->
           <section id="section-tabwise-info"
             [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceViewMode() === 'coachmarks' && guidanceTourStep() === 2"
-            class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-2 pb-2.5 sm:px-3 sm:pt-2 sm:pb-3 flex-1 min-h-0 flex flex-col overflow-hidden transition-all">
+            class="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-2 pb-2.5 sm:px-3 sm:pt-2 sm:pb-3 min-h-[380px] md:min-h-0 md:flex-1 flex flex-col overflow-hidden transition-all">
 
             <!-- 5. FIFTH ROW: HORIZONTAL TABS BAR (Pill-Style matching Reference UI) -->
             <div class="shrink-0 border-b border-slate-200 dark:border-slate-700/80 select-none pb-1.5 mb-1">
               <div class="relative flex items-center">
 
-                <!-- Left Scroll Button -->
+                <!-- Left Scroll Button (Secondary background by default) -->
                 <button type="button" (click)="scrollTabs('left')"
-                  class="tab-nav-arrow flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-[#00a6f4] hover:border-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition shrink-0 cursor-pointer mr-1.5 shadow-2xs">
-                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer mr-1 sm:mr-1.5 shadow-xs active:scale-95"
+                  title="Scroll left" aria-label="Scroll tabs left">
+                  <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
 
                 <!-- Tabs Container (Pill-style buttons matching reference image) -->
                 <div #tabsContainer
-                  class="flex-1 flex items-center gap-2 overflow-x-auto custom-scrollbar-hide scroll-smooth px-1 py-0.5 select-none">
+                  class="flex-1 flex items-center gap-1.5 sm:gap-2 overflow-x-auto custom-scrollbar-hide scroll-smooth px-0.5 sm:px-1 py-0.5 select-none touch-pan-x">
                   @for (tab of sectionTabs; track tab.id) {
                   <button type="button" (click)="selectTab(tab.id)" [id]="'tab-btn-' + tab.id"
-                    class="px-3.5 py-1.5 sm:px-4 sm:py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer flex items-center gap-1.5 border whitespace-nowrap shrink-0 active:scale-95"
+                    class="min-w-[88px] sm:min-w-[108px] h-7.5 sm:h-8 px-3 sm:px-4 rounded-full text-[11px] sm:text-xs font-semibold transition-all duration-150 cursor-pointer flex items-center justify-center text-center gap-1 sm:gap-1.5 border whitespace-nowrap shrink-0 active:scale-95"
                     [class.tab-pill-selected]="activeTab() === tab.id"
                     [class.bg-[#00a6f4]]="activeTab() === tab.id"
                     [class.text-white]="activeTab() === tab.id"
@@ -426,9 +624,9 @@
                   </button>
                   }
 
-                  <!-- All Sections Tab (Clean neutral, no hover added) -->
+                  <!-- All Sections Tab (Clean neutral, standard uniform size) -->
                   <button type="button" (click)="selectTab('all')" id="tab-btn-all"
-                    class="px-3.5 py-1.5 sm:px-4 sm:py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer flex items-center gap-1.5 border whitespace-nowrap shrink-0 active:scale-95"
+                    class="min-w-[88px] sm:min-w-[108px] h-7.5 sm:h-8 px-3 sm:px-4 rounded-full text-[11px] sm:text-xs font-semibold transition-all duration-150 cursor-pointer flex items-center justify-center text-center gap-1 sm:gap-1.5 border whitespace-nowrap shrink-0 active:scale-95"
                     [class.tab-pill-selected]="activeTab() === 'all'"
                     [class.bg-[#00a6f4]]="activeTab() === 'all'"
                     [class.text-white]="activeTab() === 'all'"
@@ -448,19 +646,20 @@
                   </button>
                 </div>
 
-                <!-- Right Scroll Button -->
+                <!-- Right Scroll Button (Secondary background by default) -->
                 <button type="button" (click)="scrollTabs('right')"
-                  class="tab-nav-arrow flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-[#00a6f4] hover:border-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition shrink-0 cursor-pointer ml-1.5 shadow-2xs">
-                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer ml-1 sm:ml-1.5 shadow-xs active:scale-95"
+                  title="Scroll right" aria-label="Scroll tabs right">
+                  <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
               </div>
             </div>
 
-            <!-- Dedicated Internal Scroll Container for Tabs Section (Displays 2 Rows by default) -->
+            <!-- Dedicated Internal Scroll Container for Tabs Section (Responsive: fills remaining height) -->
             <div
-              class="tabs-accordions-scroll flex-1 min-h-0 max-h-[126px] overflow-y-auto custom-scrollbar pt-2 pb-2 px-1 pr-1.5 space-y-2.5">
+              class="tabs-accordions-scroll flex-1 min-h-0 h-full overflow-y-auto custom-scrollbar pt-2 pb-2 px-1 pr-1.5 space-y-2.5">
               <div class="space-y-3">
 
                 <!-- SECTION A: Product Identity -->
@@ -471,7 +670,7 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Product Identity</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 6 (Tab Row 1) -->
                     <!-- 1. Short Name (col 4) -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -671,7 +870,7 @@
                     </h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 6 (Tab Row 1) -->
                     <!-- 1. Department -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -868,7 +1067,7 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Barcode & Identification</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Primary Barcode (Live synced) -->
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Primary Barcode -->
@@ -889,19 +1088,62 @@
                       </div>
                     </div>
 
-                    <!-- 2. Barcode Type -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Barcode Type</span>
-                        <select [ngModel]="formBarcodeType()" (ngModelChange)="formBarcodeType.set($event)"
-                          name="barcodeType"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          @for (bt of barcodeTypeOptions; track bt) {
-                          <option [value]="bt">{{ bt }}</option>
-                          }
-                        </select>
+                    <!-- 2. Barcode Type (Modern Custom Dropdown) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-barcodeType" role="button" tabindex="0"
+                        (click)="toggleDropdown('barcodeType', $event)"
+                        (keydown.enter)="toggleDropdown('barcodeType', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('barcodeType', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'barcodeType'"
+                        [class.ring-2]="activeDropdown() === 'barcodeType'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'barcodeType'"
+                        [class.border-slate-300]="activeDropdown() !== 'barcodeType'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'barcodeType'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'barcodeType'">
+                          Barcode Type
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formBarcodeType() }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'barcodeType'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'barcodeType') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (bt of barcodeTypeOptions; track bt) {
+                          <button type="button" (click)="selectDropdownValue('barcodeType', bt)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formBarcodeType() === bt"
+                            [class.dark:bg-sky-950/70]="formBarcodeType() === bt">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formBarcodeType() === bt"
+                              [class.dark:text-[#38bdf8]]="formBarcodeType() === bt"
+                              [class.font-bold]="formBarcodeType() === bt">
+                              {{ bt }}
+                            </span>
+                            @if (formBarcodeType() === bt) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
 
                     <!-- 3. GTIN / EAN / UPC -->
@@ -1036,50 +1278,180 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Units of Measure</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
-                    <!-- 1. Sales UOM -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Sales UOM</span>
-                        <select [ngModel]="formSalesUom()" (ngModelChange)="formSalesUom.set($event)" name="salesUom"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          @for (u of uomOptions; track u) {
-                          <option [value]="u">{{ u }}</option>
-                          }
-                        </select>
+                    <!-- 1. Sales UOM (Modern Custom Dropdown) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-salesUom" role="button" tabindex="0"
+                        (click)="toggleDropdown('salesUom', $event)"
+                        (keydown.enter)="toggleDropdown('salesUom', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('salesUom', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'salesUom'"
+                        [class.ring-2]="activeDropdown() === 'salesUom'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'salesUom'"
+                        [class.border-slate-300]="activeDropdown() !== 'salesUom'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'salesUom'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'salesUom'">
+                          Sales UOM
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formSalesUom() }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'salesUom'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'salesUom') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (u of uomOptions; track u) {
+                          <button type="button" (click)="selectDropdownValue('salesUom', u)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formSalesUom() === u"
+                            [class.dark:bg-sky-950/70]="formSalesUom() === u">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formSalesUom() === u"
+                              [class.dark:text-[#38bdf8]]="formSalesUom() === u"
+                              [class.font-bold]="formSalesUom() === u">
+                              {{ u }}
+                            </span>
+                            @if (formSalesUom() === u) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
 
-                    <!-- 2. Purchase UOM -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Purchase UOM</span>
-                        <select [ngModel]="formPurchaseUom()" (ngModelChange)="formPurchaseUom.set($event)"
-                          name="purchaseUom"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          @for (u of uomOptions; track u) {
-                          <option [value]="u">{{ u }}</option>
-                          }
-                        </select>
+                    <!-- 2. Purchase UOM (Modern Custom Dropdown) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-purchaseUom" role="button" tabindex="0"
+                        (click)="toggleDropdown('purchaseUom', $event)"
+                        (keydown.enter)="toggleDropdown('purchaseUom', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('purchaseUom', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'purchaseUom'"
+                        [class.ring-2]="activeDropdown() === 'purchaseUom'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'purchaseUom'"
+                        [class.border-slate-300]="activeDropdown() !== 'purchaseUom'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'purchaseUom'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'purchaseUom'">
+                          Purchase UOM
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formPurchaseUom() }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'purchaseUom'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'purchaseUom') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (u of uomOptions; track u) {
+                          <button type="button" (click)="selectDropdownValue('purchaseUom', u)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formPurchaseUom() === u"
+                            [class.dark:bg-sky-950/70]="formPurchaseUom() === u">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formPurchaseUom() === u"
+                              [class.dark:text-[#38bdf8]]="formPurchaseUom() === u"
+                              [class.font-bold]="formPurchaseUom() === u">
+                              {{ u }}
+                            </span>
+                            @if (formPurchaseUom() === u) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
 
-                    <!-- 3. Stocking UOM -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Stocking UOM</span>
-                        <select [ngModel]="formStockingUom()" (ngModelChange)="formStockingUom.set($event)"
-                          name="stockingUom"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          @for (u of uomOptions; track u) {
-                          <option [value]="u">{{ u }}</option>
-                          }
-                        </select>
+                    <!-- 3. Stocking UOM (Modern Custom Dropdown) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-stockingUom" role="button" tabindex="0"
+                        (click)="toggleDropdown('stockingUom', $event)"
+                        (keydown.enter)="toggleDropdown('stockingUom', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('stockingUom', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'stockingUom'"
+                        [class.ring-2]="activeDropdown() === 'stockingUom'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'stockingUom'"
+                        [class.border-slate-300]="activeDropdown() !== 'stockingUom'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'stockingUom'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'stockingUom'">
+                          Stocking UOM
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formStockingUom() }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'stockingUom'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'stockingUom') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (u of uomOptions; track u) {
+                          <button type="button" (click)="selectDropdownValue('stockingUom', u)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formStockingUom() === u"
+                            [class.dark:bg-sky-950/70]="formStockingUom() === u">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formStockingUom() === u"
+                              [class.dark:text-[#38bdf8]]="formStockingUom() === u"
+                              [class.font-bold]="formStockingUom() === u">
+                              {{ u }}
+                            </span>
+                            @if (formStockingUom() === u) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
 
                     <!-- ROW 2 (3 columns) -->
@@ -1103,20 +1475,62 @@
                       </label>
                     </div>
 
-                    <!-- 6. Decimal Precision -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Decimal Precision</span>
-                        <select [ngModel]="formDecimalPrecision()" (ngModelChange)="formDecimalPrecision.set(+$event)"
-                          name="decPrec"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          <option [value]="0">0 Decimals (Whole units only - 1, 2, 3)</option>
-                          <option [value]="2">2 Decimals (e.g. 1.25)</option>
-                          <option [value]="3">3 Decimals (e.g. 1.250)</option>
-                          <option [value]="4">4 Decimals (e.g. 1.2505)</option>
-                        </select>
+                    <!-- 6. Decimal Precision (Modern Custom Dropdown) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-decimalPrecision" role="button" tabindex="0"
+                        (click)="toggleDropdown('decimalPrecision', $event)"
+                        (keydown.enter)="toggleDropdown('decimalPrecision', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('decimalPrecision', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'decimalPrecision'"
+                        [class.ring-2]="activeDropdown() === 'decimalPrecision'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'decimalPrecision'"
+                        [class.border-slate-300]="activeDropdown() !== 'decimalPrecision'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'decimalPrecision'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'decimalPrecision'">
+                          Decimal Precision
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formDecimalPrecision() === 0 ? '0 Decimals (Whole units)' : formDecimalPrecision() + ' Decimals' }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'decimalPrecision'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'decimalPrecision') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (p of decimalPrecisionOptions; track p) {
+                          <button type="button" (click)="selectDropdownValue('decimalPrecision', p)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formDecimalPrecision() === p"
+                            [class.dark:bg-sky-950/70]="formDecimalPrecision() === p">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formDecimalPrecision() === p"
+                              [class.dark:text-[#38bdf8]]="formDecimalPrecision() === p"
+                              [class.font-bold]="formDecimalPrecision() === p">
+                              {{ p === 0 ? '0 Decimals (Whole units only - 1, 2, 3)' : p + ' Decimals' }}
+                            </span>
+                            @if (formDecimalPrecision() === p) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
 
 
@@ -1231,7 +1645,7 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Pricing & Rules</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Minimum Selling Price -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -1270,34 +1684,120 @@
                     </div>
 
                     <!-- ROW 2 (3 columns) -->
-                    <!-- 4. Sales Tax Category -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Sales Tax Category</span>
-                        <select [ngModel]="formSalesTaxCategory()" (ngModelChange)="formSalesTaxCategory.set($event)"
-                          name="sTaxCat"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          <option value="Standard 5% VAT">Standard 5% VAT</option>
-                          <option value="Zero Rated 0%">Zero Rated 0%</option>
-                          <option value="Exempt">Exempt</option>
-                        </select>
+                    <!-- 4. Sales Tax Category (Modern Custom Dropdown) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-salesTaxCategory" role="button" tabindex="0"
+                        (click)="toggleDropdown('salesTaxCategory', $event)"
+                        (keydown.enter)="toggleDropdown('salesTaxCategory', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('salesTaxCategory', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'salesTaxCategory'"
+                        [class.ring-2]="activeDropdown() === 'salesTaxCategory'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'salesTaxCategory'"
+                        [class.border-slate-300]="activeDropdown() !== 'salesTaxCategory'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'salesTaxCategory'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'salesTaxCategory'">
+                          Sales Tax Category
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formSalesTaxCategory() }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'salesTaxCategory'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'salesTaxCategory') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (tax of taxCategoryOptions; track tax) {
+                          <button type="button" (click)="selectDropdownValue('salesTaxCategory', tax)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formSalesTaxCategory() === tax"
+                            [class.dark:bg-sky-950/70]="formSalesTaxCategory() === tax">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formSalesTaxCategory() === tax"
+                              [class.dark:text-[#38bdf8]]="formSalesTaxCategory() === tax"
+                              [class.font-bold]="formSalesTaxCategory() === tax">
+                              {{ tax }}
+                            </span>
+                            @if (formSalesTaxCategory() === tax) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
 
-                    <!-- 5. Purchase Tax Category -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Purchase Tax Category</span>
-                        <select [ngModel]="formPurchaseTaxCategory()"
-                          (ngModelChange)="formPurchaseTaxCategory.set($event)" name="pTaxCat"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          <option value="Standard 5% VAT">Standard 5% VAT</option>
-                          <option value="Zero Rated 0%">Zero Rated 0%</option>
-                          <option value="Exempt">Exempt</option>
-                        </select>
+                    <!-- 5. Purchase Tax Category (Modern Custom Dropdown) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-purchaseTaxCategory" role="button" tabindex="0"
+                        (click)="toggleDropdown('purchaseTaxCategory', $event)"
+                        (keydown.enter)="toggleDropdown('purchaseTaxCategory', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('purchaseTaxCategory', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'purchaseTaxCategory'"
+                        [class.ring-2]="activeDropdown() === 'purchaseTaxCategory'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'purchaseTaxCategory'"
+                        [class.border-slate-300]="activeDropdown() !== 'purchaseTaxCategory'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'purchaseTaxCategory'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'purchaseTaxCategory'">
+                          Purchase Tax Category
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formPurchaseTaxCategory() }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'purchaseTaxCategory'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'purchaseTaxCategory') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (tax of taxCategoryOptions; track tax) {
+                          <button type="button" (click)="selectDropdownValue('purchaseTaxCategory', tax)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formPurchaseTaxCategory() === tax"
+                            [class.dark:bg-sky-950/70]="formPurchaseTaxCategory() === tax">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formPurchaseTaxCategory() === tax"
+                              [class.dark:text-[#38bdf8]]="formPurchaseTaxCategory() === tax"
+                              [class.font-bold]="formPurchaseTaxCategory() === tax">
+                              {{ tax }}
+                            </span>
+                            @if (formPurchaseTaxCategory() === tax) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
 
                     <!-- 6. Price Includes Tax (VAT) Toggle -->
@@ -1500,7 +2000,7 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Inventory & Stock Control</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Min Stock -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -1599,32 +2099,119 @@
                       </div>
                     </div>
 
-                    <!-- Inventory Valuation Method & ABC Classification -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Valuation Method</span>
-                        <select [ngModel]="formValuationMethod()" (ngModelChange)="formValuationMethod.set($event)"
-                          name="valMeth"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          <option value="FIFO">FIFO (First In First Out)</option>
-                          <option value="Weighted Average">Weighted Average</option>
-                          <option value="Standard Cost">Standard Cost</option>
-                        </select>
+                    <!-- Inventory Valuation Method & ABC Classification (Modern Custom Dropdowns) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-valuationMethod" role="button" tabindex="0"
+                        (click)="toggleDropdown('valuationMethod', $event)"
+                        (keydown.enter)="toggleDropdown('valuationMethod', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('valuationMethod', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'valuationMethod'"
+                        [class.ring-2]="activeDropdown() === 'valuationMethod'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'valuationMethod'"
+                        [class.border-slate-300]="activeDropdown() !== 'valuationMethod'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'valuationMethod'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'valuationMethod'">
+                          Valuation Method
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formValuationMethod() }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'valuationMethod'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'valuationMethod') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (vm of valuationMethodOptions; track vm) {
+                          <button type="button" (click)="selectDropdownValue('valuationMethod', vm)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formValuationMethod() === vm"
+                            [class.dark:bg-sky-950/70]="formValuationMethod() === vm">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formValuationMethod() === vm"
+                              [class.dark:text-[#38bdf8]]="formValuationMethod() === vm"
+                              [class.font-bold]="formValuationMethod() === vm">
+                              {{ vm }}
+                            </span>
+                            @if (formValuationMethod() === vm) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">ABC Classification</span>
-                        <select [ngModel]="formAbcClassification()" (ngModelChange)="formAbcClassification.set($event)"
-                          name="abcClass"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          <option value="A">Class A (High Value / High Velocity)</option>
-                          <option value="B">Class B (Moderate Value)</option>
-                          <option value="C">Class C (Low Value / Slow Mover)</option>
-                        </select>
+
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-abcClassification" role="button" tabindex="0"
+                        (click)="toggleDropdown('abcClassification', $event)"
+                        (keydown.enter)="toggleDropdown('abcClassification', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('abcClassification', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'abcClassification'"
+                        [class.ring-2]="activeDropdown() === 'abcClassification'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'abcClassification'"
+                        [class.border-slate-300]="activeDropdown() !== 'abcClassification'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'abcClassification'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'abcClassification'">
+                          ABC Classification
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formAbcClassification() === 'A' ? 'Class A (High Value / High Velocity)' : (formAbcClassification() === 'B' ? 'Class B (Moderate Value)' : 'Class C (Low Value / Slow Mover)') }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'abcClassification'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'abcClassification') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (abc of abcClassificationOptions; track abc) {
+                          <button type="button" (click)="selectDropdownValue('abcClassification', abc)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formAbcClassification() === abc"
+                            [class.dark:bg-sky-950/70]="formAbcClassification() === abc">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formAbcClassification() === abc"
+                              [class.dark:text-[#38bdf8]]="formAbcClassification() === abc"
+                              [class.font-bold]="formAbcClassification() === abc">
+                              {{ abc === 'A' ? 'Class A (High Value / High Velocity)' : (abc === 'B' ? 'Class B (Moderate Value)' : 'Class C (Low Value / Slow Mover)') }}
+                            </span>
+                            @if (formAbcClassification() === abc) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 flex items-center gap-2">
                       <div class="flex-1 relative group">
@@ -1685,7 +2272,7 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Purchasing & Suppliers</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Purchasing Allowed Toggle -->
                     <div
@@ -1721,19 +2308,62 @@
                     </div>
 
                     <!-- ROW 2 (3 columns) -->
-                    <!-- 4. Default Purchase UOM -->
-                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                      <div
-                        class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
-                        <span class="floating-notch-label">Default Purchase UOM</span>
-                        <select [ngModel]="formDefaultPurchaseUom()"
-                          (ngModelChange)="formDefaultPurchaseUom.set($event)" name="defPUom"
-                          class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer">
-                          @for (u of uomOptions; track u) {
-                          <option [value]="u">{{ u }}</option>
-                          }
-                        </select>
+                    <!-- 4. Default Purchase UOM (Modern Custom Dropdown) -->
+                    <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
+                      <div id="field-defaultPurchaseUom" role="button" tabindex="0"
+                        (click)="toggleDropdown('defaultPurchaseUom', $event)"
+                        (keydown.enter)="toggleDropdown('defaultPurchaseUom', $event)"
+                        (keydown.space)="$event.preventDefault(); toggleDropdown('defaultPurchaseUom', $event)"
+                        class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
+                        [class.border-[#00a6f4]]="activeDropdown() === 'defaultPurchaseUom'"
+                        [class.ring-2]="activeDropdown() === 'defaultPurchaseUom'"
+                        [class.ring-[#00a6f4]/20]="activeDropdown() === 'defaultPurchaseUom'"
+                        [class.border-slate-300]="activeDropdown() !== 'defaultPurchaseUom'"
+                        [class.dark:border-slate-600]="activeDropdown() !== 'defaultPurchaseUom'">
+                        <span class="floating-notch-label"
+                          [class.text-[#00a6f4]]="activeDropdown() === 'defaultPurchaseUom'">
+                          Default Purchase UOM
+                        </span>
+
+                        <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
+                          {{ formDefaultPurchaseUom() }}
+                        </span>
+
+                        <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
+                          [class.rotate-180]="activeDropdown() === 'defaultPurchaseUom'">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </span>
                       </div>
+
+                      @if (activeDropdown() === 'defaultPurchaseUom') {
+                      <div (click)="$event.stopPropagation()"
+                        class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                        <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                          @for (u of uomOptions; track u) {
+                          <button type="button" (click)="selectDropdownValue('defaultPurchaseUom', u)"
+                            class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
+                            [class.bg-[#dff3fd]]="formDefaultPurchaseUom() === u"
+                            [class.dark:bg-sky-950/70]="formDefaultPurchaseUom() === u">
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                              [class.text-[#0070ba]]="formDefaultPurchaseUom() === u"
+                              [class.dark:text-[#38bdf8]]="formDefaultPurchaseUom() === u"
+                              [class.font-bold]="formDefaultPurchaseUom() === u">
+                              {{ u }}
+                            </span>
+                            @if (formDefaultPurchaseUom() === u) {
+                            <svg class="w-4 h-4 text-[#00a6f4] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            }
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
                     </div>
 
                     <!-- 5. Default Purchase Price -->
@@ -1867,7 +2497,7 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Sales & Retail POS</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. POS Display Name -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -2062,7 +2692,7 @@
                     </h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Has Variants Switch -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -2247,7 +2877,7 @@
                     </h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Tax Category -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -2376,7 +3006,7 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Accounting Integration</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Inventory Asset Account -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -2503,7 +3133,7 @@
                     <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Documents & Attachments</h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Document Title / Ref -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -2635,7 +3265,7 @@
                     </h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Available Companies -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -2816,7 +3446,7 @@
                     </h3>
                   </div>
                   }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-4 items-center">
+                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. System ID -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -3093,18 +3723,53 @@
               </div>
 
               <!-- Search Bar & Category Filter -->
-              <div class="flex items-center gap-2 flex-wrap">
+              <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
                 <input type="text" [ngModel]="itemListSearchQuery()" (ngModelChange)="itemListSearchQuery.set($event)"
                   placeholder="Search item list..."
-                  class="h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#00a6f4] w-48 sm:w-60" />
+                  class="h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#00a6f4] w-full sm:w-60 flex-1 sm:flex-none" />
 
-                <select [ngModel]="itemListCategoryFilter()" (ngModelChange)="itemListCategoryFilter.set($event)"
-                  class="h-9 px-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-semibold focus:outline-none focus:border-[#00a6f4] cursor-pointer">
-                  <option value="All">All Categories</option>
-                  @for (cat of categoryOptions; track cat) {
-                  <option [value]="cat">{{ cat }}</option>
+                <div class="relative" data-dropdown>
+                  <button type="button" (click)="toggleDropdown('gridCategoryFilter', $event)"
+                    class="h-9 px-3 rounded-xl border bg-white dark:bg-slate-800 text-xs font-semibold flex items-center justify-between gap-2 transition cursor-pointer select-none"
+                    [class.border-[#00a6f4]]="activeDropdown() === 'gridCategoryFilter'"
+                    [class.ring-2]="activeDropdown() === 'gridCategoryFilter'"
+                    [class.ring-[#00a6f4]/20]="activeDropdown() === 'gridCategoryFilter'"
+                    [class.border-slate-300]="activeDropdown() !== 'gridCategoryFilter'"
+                    [class.dark:border-slate-600]="activeDropdown() !== 'gridCategoryFilter'">
+                    <span>{{ itemListCategoryFilter() === 'All' ? 'All Categories' : itemListCategoryFilter() }}</span>
+                    <svg class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" [class.rotate-180]="activeDropdown() === 'gridCategoryFilter'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                  </button>
+
+                  @if (activeDropdown() === 'gridCategoryFilter') {
+                  <div (click)="$event.stopPropagation()"
+                    class="absolute left-0 top-[calc(100%+6px)] z-50 min-w-[200px] p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                      <button type="button" (click)="selectDropdownValue('itemListCategoryFilter', 'All')"
+                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs"
+                        [class.bg-[#dff3fd]]="itemListCategoryFilter() === 'All'"
+                        [class.dark:bg-sky-950/70]="itemListCategoryFilter() === 'All'">
+                        <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] transition-colors" [class.text-[#0070ba]]="itemListCategoryFilter() === 'All'" [class.dark:text-[#38bdf8]]="itemListCategoryFilter() === 'All'" [class.font-bold]="itemListCategoryFilter() === 'All'">All Categories</span>
+                        @if (itemListCategoryFilter() === 'All') {
+                        <svg class="w-4 h-4 text-[#00a6f4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        }
+                      </button>
+                      @for (cat of categoryOptions; track cat) {
+                      <button type="button" (click)="selectDropdownValue('itemListCategoryFilter', cat)"
+                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs"
+                        [class.bg-[#dff3fd]]="itemListCategoryFilter() === cat"
+                        [class.dark:bg-sky-950/70]="itemListCategoryFilter() === cat">
+                        <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] transition-colors truncate" [class.text-[#0070ba]]="itemListCategoryFilter() === cat" [class.dark:text-[#38bdf8]]="itemListCategoryFilter() === cat" [class.font-bold]="itemListCategoryFilter() === cat">{{ cat }}</span>
+                        @if (itemListCategoryFilter() === cat) {
+                        <svg class="w-4 h-4 text-[#00a6f4] ml-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        }
+                      </button>
+                      }
+                    </div>
+                  </div>
                   }
-                </select>
+                </div>
 
                 <button type="button" (click)="switchToAddMode()"
                   class="h-9 px-3.5 rounded-xl bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer flex items-center gap-1 shadow-sm">
@@ -3185,18 +3850,53 @@
               </div>
 
               <!-- Search Bar & Filters -->
-              <div class="flex items-center gap-2 flex-wrap">
+              <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
                 <input type="text" [ngModel]="itemListSearchQuery()" (ngModelChange)="itemListSearchQuery.set($event)"
                   placeholder="Filter table rows..."
-                  class="h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#00a6f4] w-48 sm:w-60" />
+                  class="h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#00a6f4] w-full sm:w-60 flex-1 sm:flex-none" />
 
-                <select [ngModel]="itemListCategoryFilter()" (ngModelChange)="itemListCategoryFilter.set($event)"
-                  class="h-9 px-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-semibold focus:outline-none focus:border-[#00a6f4] cursor-pointer">
-                  <option value="All">All Categories</option>
-                  @for (cat of categoryOptions; track cat) {
-                  <option [value]="cat">{{ cat }}</option>
+                <div class="relative" data-dropdown>
+                  <button type="button" (click)="toggleDropdown('gridCategoryFilter', $event)"
+                    class="h-9 px-3 rounded-xl border bg-white dark:bg-slate-800 text-xs font-semibold flex items-center justify-between gap-2 transition cursor-pointer select-none"
+                    [class.border-[#00a6f4]]="activeDropdown() === 'gridCategoryFilter'"
+                    [class.ring-2]="activeDropdown() === 'gridCategoryFilter'"
+                    [class.ring-[#00a6f4]/20]="activeDropdown() === 'gridCategoryFilter'"
+                    [class.border-slate-300]="activeDropdown() !== 'gridCategoryFilter'"
+                    [class.dark:border-slate-600]="activeDropdown() !== 'gridCategoryFilter'">
+                    <span>{{ itemListCategoryFilter() === 'All' ? 'All Categories' : itemListCategoryFilter() }}</span>
+                    <svg class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" [class.rotate-180]="activeDropdown() === 'gridCategoryFilter'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                  </button>
+
+                  @if (activeDropdown() === 'gridCategoryFilter') {
+                  <div (click)="$event.stopPropagation()"
+                    class="absolute left-0 top-[calc(100%+6px)] z-50 min-w-[200px] p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
+                      <button type="button" (click)="selectDropdownValue('itemListCategoryFilter', 'All')"
+                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs"
+                        [class.bg-[#dff3fd]]="itemListCategoryFilter() === 'All'"
+                        [class.dark:bg-sky-950/70]="itemListCategoryFilter() === 'All'">
+                        <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] transition-colors" [class.text-[#0070ba]]="itemListCategoryFilter() === 'All'" [class.dark:text-[#38bdf8]]="itemListCategoryFilter() === 'All'" [class.font-bold]="itemListCategoryFilter() === 'All'">All Categories</span>
+                        @if (itemListCategoryFilter() === 'All') {
+                        <svg class="w-4 h-4 text-[#00a6f4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        }
+                      </button>
+                      @for (cat of categoryOptions; track cat) {
+                      <button type="button" (click)="selectDropdownValue('itemListCategoryFilter', cat)"
+                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs"
+                        [class.bg-[#dff3fd]]="itemListCategoryFilter() === cat"
+                        [class.dark:bg-sky-950/70]="itemListCategoryFilter() === cat">
+                        <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] transition-colors truncate" [class.text-[#0070ba]]="itemListCategoryFilter() === cat" [class.dark:text-[#38bdf8]]="itemListCategoryFilter() === cat" [class.font-bold]="itemListCategoryFilter() === cat">{{ cat }}</span>
+                        @if (itemListCategoryFilter() === cat) {
+                        <svg class="w-4 h-4 text-[#00a6f4] ml-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        }
+                      </button>
+                      }
+                    </div>
+                  </div>
                   }
-                </select>
+                </div>
 
                 <button type="button" (click)="switchToAddMode()"
                   class="h-9 px-3.5 rounded-xl bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer flex items-center gap-1 shadow-sm">
@@ -3275,17 +3975,17 @@
 
           <!-- Slim Vertical Floating Toolbar: evenly distributed icons with increased gap covering full space -->
           <div
-            class="w-[66px] sm:w-[70px] h-full flex flex-col items-center overflow-hidden side-toolbar-scroll pt-2 pb-2.5 sm:pb-3 px-1">
+            class="w-[70px] sm:w-[74px] h-full flex flex-col items-center overflow-hidden side-toolbar-scroll pt-2 pb-2.5 sm:pb-3 px-1">
 
             @if (actionPanelPage() === 'top') {
             <!-- PAGE 1: 6 Icons + 7th Down Arrow evenly spaced to cover the entire space -->
             <div class="w-full h-full flex flex-col items-center justify-between">
               <!-- 1. Item Overview Dashboard -->
               <button type="button" (click)="handleOverviewClick()" data-tooltip="Overview" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-indigo-600 dark:text-indigo-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-indigo-600 dark:text-indigo-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="activeActionView() === 'overview'"
                 [class.ring-[#00a6f4]]="activeActionView() === 'overview'">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="3" width="7" height="7" rx="1.5" />
                   <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -3297,10 +3997,10 @@
               <!-- 2. Add Item (hidden when in Add mode) -->
               @if (pageMode() !== 'add') {
               <button type="button" (click)="handleAddClick()" data-tooltip="Add" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-500 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-500 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="pageMode() === 'add' && activeActionView() === 'form'"
                 [class.ring-emerald-500]="pageMode() === 'add' && activeActionView() === 'form'">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="9" />
                   <line x1="12" y1="8" x2="12" y2="16" />
@@ -3312,10 +4012,10 @@
               <!-- 3. Edit Item (hidden when in Edit mode) -->
               @if (pageMode() !== 'edit') {
               <button type="button" (click)="handleEditClick()" data-tooltip="Edit" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-amber-500 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-amber-500 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="pageMode() === 'edit' && activeActionView() === 'form'"
                 [class.ring-amber-500]="pageMode() === 'edit' && activeActionView() === 'form'">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -3326,10 +4026,10 @@
               <!-- 4. View Item (hidden when in View mode) -->
               @if (pageMode() !== 'view') {
               <button type="button" (click)="handleViewClick()" data-tooltip="View" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-teal-500 text-teal-600 dark:text-teal-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-teal-500 text-teal-600 dark:text-teal-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="pageMode() === 'view' && activeActionView() === 'form'"
                 [class.ring-teal-500]="pageMode() === 'view' && activeActionView() === 'form'">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
                   <circle cx="12" cy="12" r="3" />
@@ -3339,10 +4039,10 @@
 
               <!-- 5. Grid Item List -->
               <button type="button" (click)="handleGridClick()" data-tooltip="Grid" data-tooltip-pos="left"
-                class="group w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-[#00a6f4] dark:text-[#38bdf8] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
+                class="group w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-[#00a6f4] dark:text-[#38bdf8] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="activeActionView() === 'grid'" [class.ring-[#00a6f4]]="activeActionView() === 'grid'">
                 <svg
-                  class="w-5 h-5 transition-transform duration-700 group-hover:rotate-180 group-hover:scale-110 react-orbit-icon"
+                  class="w-6 h-6 transition-transform duration-700 group-hover:rotate-180 group-hover:scale-110 react-orbit-icon"
                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <circle cx="12" cy="12" r="2.2" fill="currentColor" />
                   <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(0 12 12)" />
@@ -3353,9 +4053,9 @@
 
               <!-- 6. Table Item List -->
               <button type="button" (click)="handleTableClick()" data-tooltip="Table" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-sky-600 dark:text-sky-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-sky-600 dark:text-sky-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="activeActionView() === 'table'" [class.ring-sky-500]="activeActionView() === 'table'">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="4" width="18" height="16" rx="2" />
                   <line x1="3" y1="10" x2="21" y2="10" />
@@ -3363,29 +4063,29 @@
                 </svg>
               </button>
 
-              <!-- 7th Icon: HIGHLIGHTED Down Arrow Button with Circular Round Background -->
+              <!-- 7th Icon: Down Arrow Button in grey color -->
               <button type="button" (click)="scrollActionPanel('down')" data-tooltip="More" data-tooltip-pos="left"
-                class="relative w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-full bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-[#00a6f4]/40 ring-4 ring-sky-100 dark:ring-sky-950/70 hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in duration-150">
-                <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 border border-slate-300 dark:border-slate-600 flex items-center justify-center shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in duration-150">
+                <svg class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
             </div>
             } @else {
 
-            <!-- PAGE 2: HIGHLIGHTED Top Arrow + 6 Icons evenly spaced to cover the entire space -->
+            <!-- PAGE 2: Top Arrow + 6 Icons evenly spaced to cover the entire space -->
             <div class="w-full h-full flex flex-col items-center justify-between">
-              <!-- Top Arrow Button with Circular Round Background -->
+              <!-- Top Arrow Button in grey color -->
               <button type="button" (click)="scrollActionPanel('up')" data-tooltip="Top" data-tooltip-pos="left"
-                class="relative w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-full bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-[#00a6f4]/40 ring-4 ring-sky-100 dark:ring-sky-950/70 hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in duration-150">
-                <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 border border-slate-300 dark:border-slate-600 flex items-center justify-center shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in duration-150">
+                <svg class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
                 </svg>
               </button>
               <!-- 7. Recycle Bin / Clear Form -->
               <button type="button" (click)="handleRecycleClick()" data-tooltip="Recycle" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-rose-400 text-rose-600 dark:text-rose-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-rose-400 text-rose-600 dark:text-rose-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 6h18" />
                   <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -3397,8 +4097,8 @@
 
               <!-- 8. History / Audit -->
               <button type="button" (click)="handleHistoryClick()" data-tooltip="History" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-blue-400 text-blue-600 dark:text-blue-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-blue-400 text-blue-600 dark:text-blue-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
@@ -3407,8 +4107,8 @@
 
               <!-- 9. Export / Download -->
               <button type="button" (click)="handleExportClick()" data-tooltip="Export" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-violet-400 text-violet-600 dark:text-violet-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-violet-400 text-violet-600 dark:text-violet-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="7 10 12 15 17 10" />
@@ -3418,8 +4118,8 @@
 
               <!-- 10. Share / Specs -->
               <button type="button" (click)="handleShareClick()" data-tooltip="Share" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-400 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-400 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="18" cy="5" r="3" />
                   <circle cx="6" cy="12" r="3" />
@@ -3431,8 +4131,8 @@
 
               <!-- 11. AI Assistant -->
               <button type="button" (click)="handleAiClick()" data-tooltip="AI" data-tooltip-pos="left"
-                class="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-sky-400 text-[#00a6f4] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-sky-400 text-[#00a6f4] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path
                     d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
@@ -3441,8 +4141,8 @@
 
               <!-- 12. Guidance Assistant Icon (Placed at bottom after AI) -->
               <button type="button" (click)="openGuidanceTour()" data-tooltip="Guidance" data-tooltip-pos="left"
-                class="relative w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/80 shadow-xs hover:shadow-md hover:border-amber-400 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none ring-2 ring-amber-400/30">
-                <svg class="w-5 h-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/80 shadow-xs hover:shadow-md hover:border-amber-400 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none ring-2 ring-amber-400/30">
+                <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
@@ -3453,48 +4153,179 @@
         </aside>
       </form>
 
-      <!-- Mobile Quick Actions Strip (Requirement 7 - Mobile responsive quick access) -->
+      <!-- Mobile Quick Actions Dock (Horizontal scrollable dock with active view indicators) -->
       <div
-        class="md:hidden flex items-center justify-around py-2 px-3 bg-slate-50 dark:bg-slate-850 border-t border-slate-200/80 dark:border-slate-700 text-xs">
-        <button type="button" (click)="openVideoTutorial()" class="flex flex-col items-center gap-0.5 text-[#00a6f4]">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-            <polygon points="5 3 19 12 5 21 5 3" />
+        class="md:hidden flex items-center gap-1.5 overflow-x-auto custom-scrollbar-hide touch-pan-x py-1.5 px-2 bg-slate-50 dark:bg-slate-850 border-t border-slate-200/80 dark:border-slate-700 text-xs select-none shrink-0">
+        
+        <!-- Form View Tab -->
+        <button type="button" (click)="handleEditClick()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer"
+          [class.bg-[#00a6f4]]="activeActionView() === 'form'"
+          [class.text-white]="activeActionView() === 'form'"
+          [class.font-bold]="activeActionView() === 'form'"
+          [class.shadow-xs]="activeActionView() === 'form'"
+          [class.bg-white]="activeActionView() !== 'form'"
+          [class.dark:bg-slate-800]="activeActionView() !== 'form'"
+          [class.text-slate-700]="activeActionView() !== 'form'"
+          [class.dark:text-slate-300]="activeActionView() !== 'form'"
+          [class.border]="activeActionView() !== 'form'"
+          [class.border-slate-200]="activeActionView() !== 'form'"
+          [class.dark:border-slate-700]="activeActionView() !== 'form'">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
           </svg>
-          <span class="text-[10px] font-bold">Video</span>
+          <span class="text-[11px]">Form</span>
         </button>
-        <button type="button" (click)="openGuideModal()"
-          class="flex flex-col items-center gap-0.5 text-slate-600 dark:text-slate-300">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01" />
+
+        <!-- Overview Tab -->
+        <button type="button" (click)="handleOverviewClick()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer"
+          [class.bg-[#00a6f4]]="activeActionView() === 'overview'"
+          [class.text-white]="activeActionView() === 'overview'"
+          [class.font-bold]="activeActionView() === 'overview'"
+          [class.shadow-xs]="activeActionView() === 'overview'"
+          [class.bg-white]="activeActionView() !== 'overview'"
+          [class.dark:bg-slate-800]="activeActionView() !== 'overview'"
+          [class.text-slate-700]="activeActionView() !== 'overview'"
+          [class.dark:text-slate-300]="activeActionView() !== 'overview'"
+          [class.border]="activeActionView() !== 'overview'"
+          [class.border-slate-200]="activeActionView() !== 'overview'"
+          [class.dark:border-slate-700]="activeActionView() !== 'overview'">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
           </svg>
-          <span class="text-[10px] font-bold">Guide</span>
+          <span class="text-[11px]">Overview</span>
         </button>
-        <button type="button" (click)="openBarcodeScanner()"
-          class="flex flex-col items-center gap-0.5 text-slate-600 dark:text-slate-300">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-          </svg>
-          <span class="text-[10px] font-bold">Scan</span>
-        </button>
-        <button type="button" (click)="handleGridClick()" class="flex flex-col items-center gap-0.5 text-sky-500">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+
+        <!-- Grid View Tab -->
+        <button type="button" (click)="handleGridClick()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer"
+          [class.bg-[#00a6f4]]="activeActionView() === 'grid'"
+          [class.text-white]="activeActionView() === 'grid'"
+          [class.font-bold]="activeActionView() === 'grid'"
+          [class.shadow-xs]="activeActionView() === 'grid'"
+          [class.bg-white]="activeActionView() !== 'grid'"
+          [class.dark:bg-slate-800]="activeActionView() !== 'grid'"
+          [class.text-slate-700]="activeActionView() !== 'grid'"
+          [class.dark:text-slate-300]="activeActionView() !== 'grid'"
+          [class.border]="activeActionView() !== 'grid'"
+          [class.border-slate-200]="activeActionView() !== 'grid'"
+          [class.dark:border-slate-700]="activeActionView() !== 'grid'">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="2.2" fill="currentColor" />
             <ellipse cx="12" cy="12" rx="10" ry="4.2" />
             <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)" />
             <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(120 12 12)" />
           </svg>
-          <span class="text-[10px] font-bold">Reactive</span>
+          <span class="text-[11px]">Grid</span>
         </button>
+
+        <!-- Table View Tab -->
+        <button type="button" (click)="handleTableClick()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer"
+          [class.bg-[#00a6f4]]="activeActionView() === 'table'"
+          [class.text-white]="activeActionView() === 'table'"
+          [class.font-bold]="activeActionView() === 'table'"
+          [class.shadow-xs]="activeActionView() === 'table'"
+          [class.bg-white]="activeActionView() !== 'table'"
+          [class.dark:bg-slate-800]="activeActionView() !== 'table'"
+          [class.text-slate-700]="activeActionView() !== 'table'"
+          [class.dark:text-slate-300]="activeActionView() !== 'table'"
+          [class.border]="activeActionView() !== 'table'"
+          [class.border-slate-200]="activeActionView() !== 'table'"
+          [class.dark:border-slate-700]="activeActionView() !== 'table'">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+            <line x1="9" y1="4" x2="9" y2="20" />
+          </svg>
+          <span class="text-[11px]">Table</span>
+        </button>
+
+        <!-- Scan -->
+        <button type="button" (click)="openBarcodeScanner()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition-all shrink-0 cursor-pointer hover:border-[#00a6f4]">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+          </svg>
+          <span class="text-[11px]">Scan</span>
+        </button>
+
+        <!-- AI Assistant -->
+        <button type="button" (click)="handleAiClick()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer"
+          [class.bg-[#00a6f4]]="activeActionView() === 'ai'"
+          [class.text-white]="activeActionView() === 'ai'"
+          [class.font-bold]="activeActionView() === 'ai'"
+          [class.shadow-xs]="activeActionView() === 'ai'"
+          [class.bg-white]="activeActionView() !== 'ai'"
+          [class.dark:bg-slate-800]="activeActionView() !== 'ai'"
+          [class.text-slate-700]="activeActionView() !== 'ai'"
+          [class.dark:text-slate-300]="activeActionView() !== 'ai'"
+          [class.border]="activeActionView() !== 'ai'"
+          [class.border-slate-200]="activeActionView() !== 'ai'"
+          [class.dark:border-slate-700]="activeActionView() !== 'ai'">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+          </svg>
+          <span class="text-[11px]">AI</span>
+        </button>
+
+        <!-- History -->
+        <button type="button" (click)="handleHistoryClick()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer"
+          [class.bg-[#00a6f4]]="activeActionView() === 'history'"
+          [class.text-white]="activeActionView() === 'history'"
+          [class.font-bold]="activeActionView() === 'history'"
+          [class.shadow-xs]="activeActionView() === 'history'"
+          [class.bg-white]="activeActionView() !== 'history'"
+          [class.dark:bg-slate-800]="activeActionView() !== 'history'"
+          [class.text-slate-700]="activeActionView() !== 'history'"
+          [class.dark:text-slate-300]="activeActionView() !== 'history'"
+          [class.border]="activeActionView() !== 'history'"
+          [class.border-slate-200]="activeActionView() !== 'history'"
+          [class.dark:border-slate-700]="activeActionView() !== 'history'">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span class="text-[11px]">History</span>
+        </button>
+
+        <!-- Video Tutorial -->
+        <button type="button" (click)="openVideoTutorial()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition-all shrink-0 cursor-pointer hover:border-[#00a6f4]">
+          <svg class="w-3.5 h-3.5 fill-current text-[#00a6f4]" viewBox="0 0 24 24">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          <span class="text-[11px]">Video</span>
+        </button>
+
+        <!-- Guide -->
+        <button type="button" (click)="openGuidanceTour()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 transition-all shrink-0 cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01" />
+          </svg>
+          <span class="text-[11px]">Guide</span>
+        </button>
+
+        <!-- Keyboard Shortcuts -->
         <button type="button" (click)="openShortcutsModal()"
-          class="flex flex-col items-center gap-0.5 text-slate-600 dark:text-slate-300">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition-all shrink-0 cursor-pointer hover:border-[#00a6f4]">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8" />
           </svg>
-          <span class="text-[10px] font-bold">Keys</span>
+          <span class="text-[11px]">Keys</span>
         </button>
       </div>
 
@@ -3503,25 +4334,25 @@
       <!-- ========================================================================= -->
       <div id="section-footer-actions"
         [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceViewMode() === 'coachmarks' && guidanceTourStep() === 4"
-        class="item-panel-footer shrink-0 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 px-4 sm:px-8 py-1.5 sm:py-2 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 select-none transition-all">
+        class="item-panel-footer shrink-0 flex items-center justify-between gap-2 px-3 sm:px-8 py-1.5 sm:py-2 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 select-none transition-all">
         <!-- Left: Stay on Page Switch -->
-        <div class="flex items-center gap-2">
-          <label class="form-switch m-0 flex items-center gap-2 cursor-pointer">
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <label class="form-switch m-0 flex items-center gap-1.5 sm:gap-2 cursor-pointer">
             <input type="checkbox" class="sr-only" [checked]="stayOnPage()"
               (change)="stayOnPage.set($any($event.target).checked)" />
-            <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
-            <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Stay on Page</span>
+            <span class="form-switch-track scale-90 sm:scale-100 origin-left"><span class="form-switch-thumb"></span></span>
+            <span class="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap">Stay on Page</span>
           </label>
         </div>
 
         <!-- Right: Clear & Save Action Buttons -->
-        <div class="flex items-center gap-2 sm:gap-3 ml-auto">
+        <div class="flex items-center gap-2 sm:gap-3 ml-auto shrink-0">
           <button type="button" (click)="openClearModal()"
-            class="px-4 sm:w-28 h-8.5 sm:h-9 rounded-full border-2 border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] text-xs font-bold flex items-center justify-center transition cursor-pointer shadow-2xs hover:bg-sky-50 dark:hover:bg-slate-700">
+            class="px-3.5 sm:w-28 h-8 sm:h-9 rounded-full border-2 border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] text-xs font-bold flex items-center justify-center transition cursor-pointer shadow-2xs hover:bg-sky-50 dark:hover:bg-slate-700 active:scale-95">
             <span>Clear</span>
           </button>
           <button type="button" (click)="onSubmitForm()"
-            class="px-5 sm:w-32 h-8.5 sm:h-9 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold flex items-center justify-center transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
+            class="px-4.5 sm:w-32 h-8 sm:h-9 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold flex items-center justify-center transition cursor-pointer shadow-md shadow-[#00a6f4]/25 active:scale-95">
             <span>{{ pageMode() === 'add' ? 'Save' : (pageMode() === 'view' ? 'Edit' : 'Update')
               }}</span>
           </button>
