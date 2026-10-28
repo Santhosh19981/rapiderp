@@ -287,8 +287,27 @@ input:checked + .form-switch-track .form-switch-thumb {
   background: #475569;
 }
 
-/* Section 2 Scroll: Tabs with Collapsible / Expandable Accordions */
+/* ========================================================================= */
+/* SOFTEN INPUT VALUE BLACK COLOR (Requirement 1)                            */
+/* ========================================================================= */
+input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(.text-emerald-600):not(.text-emerald-400),
+select,
+textarea {
+  color: rgba(15, 23, 42, 0.72) !important;
+}
+
+:host-context(.dark) input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(.text-emerald-600):not(.text-emerald-400),
+:host-context(.dark) select,
+:host-context(.dark) textarea,
+.dark input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(.text-emerald-600):not(.text-emerald-400),
+.dark select,
+.dark textarea {
+  color: rgba(241, 245, 249, 0.82) !important;
+}
+
+/* Section 2 Scroll: Tabs with Collapsible / Expandable Accordions (Displays 2 rows by default) */
 .tabs-accordions-scroll {
+  max-height: 126px;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   scroll-behavior: smooth;
@@ -323,26 +342,25 @@ input:checked + .form-switch-track .form-switch-thumb {
   background: #475569;
 }
 
-/* Section 3 Scroll: Right Action Panel Toolbar */
+/* Section 3: Right Action Panel Toolbar (Requirement 5: Scrollbar removed, paged with arrows) */
 .side-toolbar-scroll {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  scroll-behavior: smooth !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
+  overflow: hidden !important;
+  scrollbar-width: none !important;
 }
 
 .side-toolbar-scroll::-webkit-scrollbar {
-  width: 2.5px !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .side-toolbar-scroll::-webkit-scrollbar-track {
   background: transparent !important;
-  margin: 6px 0 !important;
+  margin: 4px 0 !important;
 }
 
 .side-toolbar-scroll::-webkit-scrollbar-thumb {
-  background: rgba(203, 213, 225, 0.8) !important;
+  background: #cbd5e1 !important;
   border-radius: 9999px !important;
 }
 
@@ -364,7 +382,7 @@ input:checked + .form-switch-track .form-switch-thumb {
 
 :host-context(.dark) .side-toolbar-scroll::-webkit-scrollbar-thumb,
 .dark .side-toolbar-scroll::-webkit-scrollbar-thumb {
-  background: rgba(71, 85, 105, 0.8) !important;
+  background: #475569 !important;
 }
 
 :host-context(.dark) .side-toolbar-scroll::-webkit-scrollbar-thumb:hover,
@@ -372,15 +390,9 @@ input:checked + .form-switch-track .form-switch-thumb {
   background: #38bdf8 !important;
 }
 
-@supports (-moz-appearance: none) {
-  .side-toolbar-scroll {
-    scrollbar-width: thin !important;
-    scrollbar-color: rgba(203, 213, 225, 0.8) transparent !important;
-  }
-  :host-context(.dark) .side-toolbar-scroll,
-  .dark .side-toolbar-scroll {
-    scrollbar-color: rgba(71, 85, 105, 0.8) transparent !important;
-  }
+:host-context(.dark) .side-toolbar-scroll,
+.dark .side-toolbar-scroll {
+  scrollbar-color: #475569 transparent !important;
 }
 
 /* ========================================================================= */
@@ -477,10 +489,103 @@ input:checked + .form-switch-track .form-switch-thumb {
 .spotlight-active-ring {
   position: relative;
   z-index: 45 !important;
-  box-shadow: 0 0 0 4px #00a6f4, 0 12px 32px rgba(0, 166, 244, 0.3) !important;
+  box-shadow: 0 0 0 3px #00a6f4, 0 12px 32px rgba(0, 166, 244, 0.35) !important;
   border-color: #00a6f4 !important;
+  transition: all 0.25s ease-in-out !important;
 }
 
+/* Step-specific smart positions so coachmark card NEVER overlaps the spotlighted section */
+.coachmark-step-pos-1 {
+  bottom: 4rem;
+  right: 1rem;
+}
+@media (min-width: 640px) {
+  .coachmark-step-pos-1 {
+    bottom: 4.75rem;
+    right: 5.5rem;
+  }
+}
 
+.coachmark-step-pos-2 {
+  top: 4rem;
+  right: 1rem;
+}
+@media (min-width: 640px) {
+  .coachmark-step-pos-2 {
+    top: 4.5rem;
+    right: 5.5rem;
+  }
+}
 
+.coachmark-step-pos-3 {
+  top: 25%;
+  right: 1rem;
+}
+@media (min-width: 640px) {
+  .coachmark-step-pos-3 {
+    top: 25%;
+    right: 5.5rem;
+  }
+}
 
+.coachmark-step-pos-4 {
+  bottom: 4rem;
+  right: 1rem;
+}
+@media (min-width: 640px) {
+  .coachmark-step-pos-4 {
+    bottom: 4.5rem;
+    right: 5.5rem;
+  }
+}
+
+/* ========================================================================= */
+/* 10. SECTION TABS: SELECTED & HOVER STATE CONSISTENCY                      */
+/* ========================================================================= */
+.tab-pill-selected,
+.tab-pill-selected:hover,
+.tab-pill-selected:focus,
+button.tab-pill-selected:hover {
+  background-color: #00a6f4 !important;
+  border-color: #00a6f4 !important;
+  color: #ffffff !important;
+}
+
+.tab-pill-selected *,
+.tab-pill-selected:hover *,
+.tab-pill-selected:focus *,
+button.tab-pill-selected:hover * {
+  color: #ffffff !important;
+}
+
+.tab-pill-unselected,
+.tab-pill-unselected:hover,
+.tab-pill-unselected:focus,
+button.tab-pill-unselected:hover {
+  background-color: #f0f9ff !important;
+  border-color: #00a6f4 !important;
+  color: #00a6f4 !important;
+}
+
+:host-context(.dark) .tab-pill-unselected,
+:host-context(.dark) .tab-pill-unselected:hover,
+.dark .tab-pill-unselected,
+.dark .tab-pill-unselected:hover {
+  background-color: rgba(8, 47, 73, 0.4) !important;
+  border-color: rgba(56, 189, 248, 0.8) !important;
+  color: #38bdf8 !important;
+}
+
+.tab-pill-unselected *,
+.tab-pill-unselected:hover *,
+.tab-pill-unselected:focus *,
+button.tab-pill-unselected:hover * {
+  color: #00a6f4 !important;
+}
+
+:host-context(.dark) .tab-pill-unselected *,
+:host-context(.dark) .tab-pill-unselected:hover *,
+.dark .tab-pill-unselected *,
+.dark .tab-pill-unselected:hover * {
+  color: #38bdf8 !important;
+}

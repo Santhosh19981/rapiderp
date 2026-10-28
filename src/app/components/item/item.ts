@@ -89,6 +89,7 @@ export class ItemComponent implements OnInit {
   @ViewChild('barcodeInput') barcodeInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('tabsContainer') tabsContainerRef?: ElementRef<HTMLDivElement>;
   @ViewChild('fieldSearchInput') fieldSearchInputRef?: ElementRef<HTMLInputElement>;
+  @ViewChild('fieldSearchContainer') fieldSearchContainerRef?: ElementRef<HTMLDivElement>;
 
   // All 14 Enterprise Retail Section Tabs + All Sections (Single Word Tab Names)
   readonly sectionTabs: SectionTabItem[] = [
@@ -425,6 +426,12 @@ export class ItemComponent implements OnInit {
   // Action Dock Panel State
   isMoreActionsOpen = signal<boolean>(false);
   activeActionView = signal<'form' | 'overview' | 'grid' | 'table'>('form');
+  actionPanelPage = signal<'top' | 'bottom'>('top');
+
+  scrollActionPanel(direction: 'up' | 'down'): void {
+    this.actionPanelPage.set(direction === 'down' ? 'bottom' : 'top');
+  }
+
   itemListSearchQuery = signal<string>('');
   itemListCategoryFilter = signal<string>('All');
 
@@ -1156,6 +1163,16 @@ export class ItemComponent implements OnInit {
 
   closeShortcutsModal(): void {
     this.isShortcutsModalOpen.set(false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: MouseEvent): void {
+    if (this.isFieldSearchOpen()) {
+      const target = event.target as HTMLElement;
+      if (this.fieldSearchContainerRef && !this.fieldSearchContainerRef.nativeElement.contains(target)) {
+        this.isFieldSearchOpen.set(false);
+      }
+    }
   }
 
   @HostListener('window:keydown', ['$event'])
