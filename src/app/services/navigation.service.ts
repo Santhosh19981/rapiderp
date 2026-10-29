@@ -76,6 +76,19 @@ export class NavigationService {
   isLanguageOpen = signal<boolean>(false);
   isDateFilterOpen = signal<boolean>(false);
   isHelpModalOpen = signal<boolean>(false);
+  isMobileMenuOpen = signal<boolean>(false);
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update((v) => !v);
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen.set(false);
+  }
+
+  openMobileMenu(): void {
+    this.isMobileMenuOpen.set(true);
+  }
   helpActiveTab = signal<'list' | 'add' | 'edit' | 'view' | 'history'>('list');
 
   toggleHelpModal(): void {
@@ -472,6 +485,7 @@ export class NavigationService {
     this.isLanguageOpen.set(false);
     this.isDateFilterOpen.set(false);
     this.isHelpModalOpen.set(false);
+    this.isMobileMenuOpen.set(false);
   }
 
   private formatTitle(str: string): string {

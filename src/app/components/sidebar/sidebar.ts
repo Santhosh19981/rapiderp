@@ -34,7 +34,7 @@ export class Sidebar {
   isHoverExpanded = signal<boolean>(false);
 
   // Effective expanded state: cleanly driven by isCollapsed
-  effectiveExpanded = computed(() => !this.isCollapsed());
+  effectiveExpanded = computed(() => this.navService.isMobileMenuOpen() || !this.isCollapsed());
 
   activeItemId = this.navService.currentModuleId;
   activeSubItemId = this.navService.currentSubModuleId;
@@ -675,6 +675,9 @@ export class Sidebar {
   }
 
   selectItem(item: MenuItem): void {
+    if (this.navService.isMobileMenuOpen()) {
+      this.navService.closeMobileMenu();
+    }
     if (item.id === 'countries') {
       this.navService.navigateTo(item.id, '', item.label, '', false);
       this.router.navigate(['/landing', 'countries'], { queryParams: {} });
@@ -697,6 +700,9 @@ export class Sidebar {
 
   selectSubItem(item: MenuItem, sub: SubMenuItem, event: MouseEvent): void {
     event.stopPropagation();
+    if (this.navService.isMobileMenuOpen()) {
+      this.navService.closeMobileMenu();
+    }
     this.navService.navigateTo(item.id, sub.id, item.label, sub.label);
     this.hoveredItemId.set(null);
     this.hoveredSubItemId.set(null);
@@ -707,6 +713,9 @@ export class Sidebar {
 
   selectTreeItem(item: MenuItem, sub: SubMenuItem, child: SubMenuItem, event: MouseEvent): void {
     event.stopPropagation();
+    if (this.navService.isMobileMenuOpen()) {
+      this.navService.closeMobileMenu();
+    }
     this.navService.navigateTo(item.id, child.id, item.label, child.label);
     this.hoveredItemId.set(null);
     this.hoveredSubItemId.set(null);
@@ -718,6 +727,10 @@ export class Sidebar {
   toggleCollapse(event?: MouseEvent): void {
     if (event) {
       event.stopPropagation();
+    }
+    if (this.navService.isMobileMenuOpen()) {
+      this.navService.closeMobileMenu();
+      return;
     }
     this.isCollapsed.update((v) => !v);
     this.isHoverExpanded.set(false);
@@ -752,5 +765,11 @@ export class Sidebar {
     if (!id) return undefined;
     return this.menuItems.find((m) => m.id === id);
   }
+  onLogoClick(): void {
+    if (this.navService.isMobileMenuOpen()) {
+      this.navService.closeMobileMenu();
+    }
+  }
+
 }
 

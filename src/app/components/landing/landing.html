@@ -3,8 +3,24 @@
 
   <!-- Middle Work Section: Left Sidebar + Right Main Content (Takes all vertical height above the full-width footer) -->
   <div class="flex-1 flex w-full overflow-hidden relative min-h-0">
-    <!-- Left-Side Module Menu (with enlarged icons and Techoze smooth hover) -->
-    <app-sidebar class="shrink-0 h-full relative z-[60]"></app-sidebar>
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    @if (navService.isMobileMenuOpen()) {
+    <div
+      (click)="navService.closeMobileMenu()"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-[140] md:hidden animate-in fade-in duration-200"
+      aria-hidden="true">
+    </div>
+    }
+
+    <!-- Left-Side Module Menu (Desktop: in-flow; Mobile: fixed slide-in drawer from left) -->
+    <div
+      class="fixed md:static inset-y-0 left-0 rtl:left-auto rtl:right-0 z-[150] md:z-[60] h-full shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] md:transform-none shadow-2xl md:shadow-none"
+      [class.translate-x-0]="navService.isMobileMenuOpen()"
+      [class.-translate-x-full]="!navService.isMobileMenuOpen() && !navService.isRtl()"
+      [class.translate-x-full]="!navService.isMobileMenuOpen() && navService.isRtl()"
+      [class.md:translate-x-0]="true">
+      <app-sidebar class="shrink-0 h-full relative block"></app-sidebar>
+    </div>
 
     <!-- Main Content Area - White by default -->
     <div
@@ -15,6 +31,20 @@
         class="relative z-[100] h-14 sm:h-16 bg-white dark:bg-slate-800 border-b border-slate-200/90 dark:border-slate-700/80 px-2 sm:px-6 flex items-center justify-between shrink-0 shadow-xs gap-1 sm:gap-4">
         <!-- Left side: Client Logo & Company Name Side by Side (Exact & Best Size) -->
         <div class="flex items-center gap-1.5 sm:gap-2.5 select-none min-w-0 flex-1 sm:flex-initial">
+          <!-- Mobile Menu Hamburger Button (Three-line menu replacing 'R' button on mobile view) -->
+          <button
+            type="button"
+            (click)="navService.toggleMobileMenu()"
+            title="Open Menu"
+            aria-label="Toggle navigation menu"
+            class="md:hidden w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#00a6f4] to-[#0052cc] text-white shadow-md shadow-blue-500/25 active:scale-95 transition-all cursor-pointer shrink-0"
+          >
+            <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          </button>
           <div
             class="w-7 h-7 sm:w-11 sm:h-11 rounded-full overflow-hidden flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105"
             title="ABC TRADING LLC">

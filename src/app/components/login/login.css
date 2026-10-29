@@ -13,7 +13,6 @@
 
 /* Centered 2-column card with soft luminous lighting in the same color */
 .login-card {
-  min-height: 570px;
   background: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: 
@@ -21,6 +20,12 @@
     0 0 60px rgba(6, 169, 234, 0.42),
     0 0 110px rgba(29, 196, 255, 0.28),
     0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+}
+
+@media (min-width: 768px) {
+  .login-card {
+    min-height: 570px;
+  }
 }
 
 /* Left Column: Direct high-res artwork presentation */
