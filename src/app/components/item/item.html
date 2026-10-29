@@ -1,5 +1,6 @@
 <div
-  class="item-module-container flex flex-col h-full w-full bg-[#f8fafc] dark:bg-slate-900 text-slate-800 dark:text-slate-100 overflow-hidden relative select-none">
+  class="item-module-container flex flex-col h-full w-full min-h-0 bg-[#f8fafc] dark:bg-slate-900 text-slate-800 dark:text-slate-100 overflow-hidden relative select-none transition-all duration-300"
+  [class.sm:pr-[410px]]="isGuidanceTourOpen()">
 
   <!-- Module Shell: Header + Scrollable Content in one clean enterprise layout -->
   <div class="flex-1 min-h-0 flex flex-col p-1 sm:p-2 sm:p-2.5">
@@ -138,6 +139,42 @@
           }
         </div>
 
+        <!-- Mobile Segmented Controller (< sm only: Switch between General Info or Specifications) -->
+        <div class="sm:hidden w-full pt-1 pb-0.5">
+          <div class="flex items-center p-1 bg-slate-200/75 dark:bg-slate-800 rounded-2xl gap-1 shadow-2xs select-none">
+            <button type="button" (click)="mobileSection.set('general')"
+              class="flex-1 py-1.5 px-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer"
+              [class.bg-white]="mobileSection() === 'general'"
+              [class.dark:bg-slate-700]="mobileSection() === 'general'"
+              [class.text-[#00a6f4]]="mobileSection() === 'general'"
+              [class.shadow-xs]="mobileSection() === 'general'"
+              [class.text-slate-600]="mobileSection() !== 'general'"
+              [class.dark:text-slate-400]="mobileSection() !== 'general'">
+              <span>General Info</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
+                [class.bg-sky-50]="mobileSection() === 'general'"
+                [class.text-[#00a6f4]]="mobileSection() === 'general'"
+                [class.bg-slate-300/60]="mobileSection() !== 'general'"
+                [class.dark:bg-slate-600]="mobileSection() !== 'general'">12</span>
+            </button>
+            <button type="button" (click)="mobileSection.set('tabs')"
+              class="flex-1 py-1.5 px-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer"
+              [class.bg-white]="mobileSection() === 'tabs'"
+              [class.dark:bg-slate-700]="mobileSection() === 'tabs'"
+              [class.text-[#00a6f4]]="mobileSection() === 'tabs'"
+              [class.shadow-xs]="mobileSection() === 'tabs'"
+              [class.text-slate-600]="mobileSection() !== 'tabs'"
+              [class.dark:text-slate-400]="mobileSection() !== 'tabs'">
+              <span>Specifications</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
+                [class.bg-sky-50]="mobileSection() === 'tabs'"
+                [class.text-[#00a6f4]]="mobileSection() === 'tabs'"
+                [class.bg-slate-300/60]="mobileSection() !== 'tabs'"
+                [class.dark:bg-slate-600]="mobileSection() !== 'tabs'">14</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Desktop Only (sm+): Pagination & Shortcuts -->
         <div class="hidden sm:flex items-center gap-2 sm:gap-3 select-none shrink-0">
           <!-- Shortcuts Button (Hidden by default) -->
@@ -187,22 +224,23 @@
         class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative p-1 sm:p-2 md:p-2 gap-1.5 sm:gap-2 md:gap-2.5 bg-slate-100/70 dark:bg-slate-900/60">
 
         <!-- Left Work Area (Holds Frame 1: General Info Card & Frame 2: Tab-wise Card) -->
-        <div class="flex-1 flex flex-col min-h-0 overflow-y-auto md:overflow-hidden gap-1.5 sm:gap-2 custom-scrollbar">
+        <div class="flex-1 flex flex-col min-h-0 overflow-hidden gap-1.5 sm:gap-2">
 
           @if (activeActionView() === 'form') {
           <!-- ===================================================================== -->
           <!-- SECTION 1: GENERAL INFORMATION CARD FRAME (Horizontally Stacked Top)  -->
           <!-- ===================================================================== -->
           <section id="section-general-info"
-            [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceViewMode() === 'coachmarks' && guidanceTourStep() === 1"
-            class="relative z-20 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-3 pb-2 sm:px-3 sm:pt-3.5 sm:pb-2.5 flex flex-col shrink-0 transition-all overflow-visible">
+            [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceTourStep() === 1"
+            [class.mobile-section-hide]="mobileSection() === 'tabs'"
+            class="relative z-20 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-3 pb-2 sm:px-3 sm:pt-3.5 sm:pb-2.5 flex-1 sm:flex-initial min-h-0 sm:shrink-0 flex flex-col overflow-hidden sm:overflow-visible transition-all">
 
             <!-- ===================================================================== -->
             <!-- 1–4. ESSENTIAL FIELDS (Section 1: 4 Rows with comfortable spacing)     -->
             <!-- ===================================================================== -->
             <div
-              class="general-info-fields-scroll overflow-visible shrink-0 pr-0 my-0.5 transition-all">
-              <div class="grid grid-cols-12 gap-x-3 sm:gap-x-4 gap-y-4 sm:gap-y-5.5 items-center pt-2 pb-1.5">
+              class="general-info-fields-scroll flex-1 sm:flex-initial min-h-0 overflow-y-auto sm:overflow-visible custom-scrollbar overscroll-contain touch-pan-y pr-1 my-0.5 transition-all">
+              <div class="grid grid-cols-12 gap-x-3 sm:gap-x-4 gap-y-4 sm:gap-y-5.5 items-center pt-2 pb-8 sm:pb-1.5">
 
                 <!-- ROW 1 (3 columns: Item Type, Item Name EN, Item Name AR) -->
                 <!-- 1. Item Type * (Modern Custom Dropdown) -->
@@ -582,8 +620,9 @@
           <!-- SECTION 2: TAB-WISE INFORMATION CARD FRAME (Horizontally Stacked Bottom)-->
           <!-- ===================================================================== -->
           <section id="section-tabwise-info"
-            [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceViewMode() === 'coachmarks' && guidanceTourStep() === 2"
-            class="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-2 pb-2.5 sm:px-3 sm:pt-2 sm:pb-3 min-h-[380px] md:min-h-0 md:flex-1 flex flex-col overflow-hidden transition-all">
+            [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceTourStep() === 2"
+            [class.mobile-section-hide]="mobileSection() === 'general'"
+            class="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-2 pb-2.5 sm:px-3 sm:pt-2 sm:pb-3 flex-1 min-h-0 flex flex-col overflow-hidden transition-all">
 
             <!-- 5. FIFTH ROW: HORIZONTAL TABS BAR (Pill-Style matching Reference UI) -->
             <div class="shrink-0 border-b border-slate-200 dark:border-slate-700/80 select-none pb-1.5 mb-1">
@@ -659,7 +698,7 @@
 
             <!-- Dedicated Internal Scroll Container for Tabs Section (Responsive: fills remaining height) -->
             <div
-              class="tabs-accordions-scroll flex-1 min-h-0 h-full overflow-y-auto custom-scrollbar pt-2 pb-2 px-1 pr-1.5 space-y-2.5">
+              class="tabs-accordions-scroll flex-1 min-h-0 h-full overflow-y-auto custom-scrollbar overscroll-contain touch-pan-y pt-2 pb-8 sm:pb-2 px-1 pr-1.5 space-y-2.5">
               <div class="space-y-3">
 
                 <!-- SECTION A: Product Identity -->
@@ -3970,7 +4009,7 @@
         <!-- SECTION 3: RIGHT ACTION PANEL CARD FRAME (Vertically Formatted)          -->
         <!-- ======================================================================= -->
         <aside id="section-action-panel"
-          [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceViewMode() === 'coachmarks' && guidanceTourStep() === 3"
+          [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceTourStep() === 3"
           class="hidden md:flex flex-col items-center justify-start bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-1.5 shrink-0 select-none relative z-20 transition-all h-full min-h-[460px]">
 
           <!-- Slim Vertical Floating Toolbar: evenly distributed icons with increased gap covering full space -->
@@ -4333,8 +4372,8 @@
       <!-- 4. FIXED FOOTER BAR: Stay on Page | Clear & Save / Update (Req 6 & 7)     -->
       <!-- ========================================================================= -->
       <div id="section-footer-actions"
-        [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceViewMode() === 'coachmarks' && guidanceTourStep() === 4"
-        class="item-panel-footer shrink-0 flex items-center justify-between gap-2 px-3 sm:px-8 py-1.5 sm:py-2 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 select-none transition-all">
+        [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceTourStep() === 4"
+        class="item-panel-footer shrink-0 flex items-center justify-between gap-2 px-3 sm:px-8 py-1.5 sm:py-2 border-t border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xs select-none transition-all sticky bottom-0 z-30 shadow-xs">
         <!-- Left: Stay on Page Switch -->
         <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <label class="form-switch m-0 flex items-center gap-1.5 sm:gap-2 cursor-pointer">
@@ -4445,7 +4484,7 @@
   <div
     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
     <div
-      class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-lg w-full p-6 shadow-2xl space-y-4">
+      class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-xl w-full max-h-[92vh] p-6 shadow-2xl space-y-4 overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700">
         <div class="flex items-center gap-2.5">
           <div
@@ -4694,570 +4733,21 @@
   <!-- Option 2: Slide-in Floating Assistant Drawer                               -->
   <!-- Option 3: In-Context Coachmarks & Spotlight Pointers                       -->
   <!-- ========================================================================= -->
+    <!-- ========================================================================= -->
+  <!-- 9. GUIDANCE ASSISTANCE (In-Context Coachmarks & Spotlight Pointers)         -->
+  <!-- ========================================================================= -->
   @if (isGuidanceTourOpen()) {
-
-  <!-- ------------------------------------------------------------------------- -->
-  <!-- OPTION 1: ANIMATED POP-UP MODAL (Spotlight Pop-up Tour)                   -->
-  <!-- ------------------------------------------------------------------------- -->
-  @if (guidanceViewMode() === 'modal') {
-  <div
-    class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-900/65 backdrop-blur-md animate-in fade-in duration-200">
-    <div
-      class="guidance-popup-modal bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <!-- Modal Header with View Mode Switcher & Close Button -->
-      <div
-        class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700/80 bg-slate-50/70 dark:bg-slate-850/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-200 dark:border-amber-800 shadow-xs">
-            <svg class="w-5 h-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <span>Item Master Guidance Tour</span>
-              <span
-                class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300">Pop-up
-                Tour</span>
-            </h3>
-            <p class="text-xs text-slate-500">Interactive walkthrough of the 3 framed sections & workflow</p>
-          </div>
-        </div>
-
-        <!-- Right Side: Mode Switcher + Distinct Close Button -->
-        <div class="flex items-center gap-2.5 sm:gap-3 shrink-0 ml-auto self-start sm:self-center">
-          <!-- 3 Presentation Modes Switcher -->
-          <div class="flex items-center gap-1 p-1 rounded-xl bg-slate-200/70 dark:bg-slate-700/60 text-xs">
-            <button type="button" (click)="setGuidanceViewMode('modal')" data-tooltip="Modal" data-tooltip-pos="bottom"
-              class="px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer"
-              [class.bg-white]="guidanceViewMode() === 'modal'"
-              [class.dark:bg-slate-800]="guidanceViewMode() === 'modal'"
-              [class.text-[#00a6f4]]="guidanceViewMode() === 'modal'"
-              [class.shadow-2xs]="guidanceViewMode() === 'modal'"
-              [class.text-slate-600]="guidanceViewMode() !== 'modal'"
-              [class.dark:text-slate-300]="guidanceViewMode() !== 'modal'">
-              🎯 Modal
-            </button>
-            <button type="button" (click)="setGuidanceViewMode('drawer')" data-tooltip="Drawer"
-              data-tooltip-pos="bottom" class="px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer"
-              [class.bg-white]="guidanceViewMode() === 'drawer'"
-              [class.dark:bg-slate-800]="guidanceViewMode() === 'drawer'"
-              [class.text-[#00a6f4]]="guidanceViewMode() === 'drawer'"
-              [class.shadow-2xs]="guidanceViewMode() === 'drawer'"
-              [class.text-slate-600]="guidanceViewMode() !== 'drawer'"
-              [class.dark:text-slate-300]="guidanceViewMode() !== 'drawer'">
-              📑 Side Drawer
-            </button>
-            <button type="button" (click)="setGuidanceViewMode('coachmarks')" data-tooltip="Coachmarks"
-              data-tooltip-pos="bottom" class="px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer"
-              [class.bg-white]="guidanceViewMode() === 'coachmarks'"
-              [class.dark:bg-slate-800]="guidanceViewMode() === 'coachmarks'"
-              [class.text-[#00a6f4]]="guidanceViewMode() === 'coachmarks'"
-              [class.shadow-2xs]="guidanceViewMode() === 'coachmarks'"
-              [class.text-slate-600]="guidanceViewMode() !== 'coachmarks'"
-              [class.dark:text-slate-300]="guidanceViewMode() !== 'coachmarks'">
-              📍 Coachmarks
-            </button>
-          </div>
-
-          <!-- Distinct Red Hover Close Button -->
-          <button type="button" (click)="closeGuidanceTour()" data-tooltip="Close" data-tooltip-pos="bottom"
-            class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-500 text-slate-500 hover:text-white dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-rose-600 dark:hover:text-white flex items-center justify-center transition-all duration-150 cursor-pointer shadow-2xs hover:shadow-sm">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Step Navigation Tabs / Wizard Stepper -->
-      <div
-        class="px-5 py-2.5 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between gap-2 overflow-x-auto custom-scrollbar-hide select-none text-xs">
-        <button type="button" (click)="setGuidanceTourStep(1)"
-          class="flex items-center gap-2 py-1.5 px-3 rounded-xl font-bold transition cursor-pointer whitespace-nowrap shrink-0"
-          [class.bg-sky-50]="guidanceTourStep() === 1" [class.dark:bg-sky-950/60]="guidanceTourStep() === 1"
-          [class.text-[#00a6f4]]="guidanceTourStep() === 1" [class.text-slate-400]="guidanceTourStep() !== 1">
-          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black"
-            [class.bg-[#00a6f4]]="guidanceTourStep() === 1" [class.text-white]="guidanceTourStep() === 1"
-            [class.bg-slate-200]="guidanceTourStep() !== 1" [class.text-slate-600]="guidanceTourStep() !== 1">1</span>
-          <span>Section 1: General Info</span>
-        </button>
-
-        <button type="button" (click)="setGuidanceTourStep(2)"
-          class="flex items-center gap-2 py-1.5 px-3 rounded-xl font-bold transition cursor-pointer whitespace-nowrap shrink-0"
-          [class.bg-sky-50]="guidanceTourStep() === 2" [class.dark:bg-sky-950/60]="guidanceTourStep() === 2"
-          [class.text-[#00a6f4]]="guidanceTourStep() === 2" [class.text-slate-400]="guidanceTourStep() !== 2">
-          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black"
-            [class.bg-[#00a6f4]]="guidanceTourStep() === 2" [class.text-white]="guidanceTourStep() === 2"
-            [class.bg-slate-200]="guidanceTourStep() !== 2" [class.text-slate-600]="guidanceTourStep() !== 2">2</span>
-          <span>Section 2: Tab Accordions</span>
-        </button>
-
-        <button type="button" (click)="setGuidanceTourStep(3)"
-          class="flex items-center gap-2 py-1.5 px-3 rounded-xl font-bold transition cursor-pointer whitespace-nowrap shrink-0"
-          [class.bg-sky-50]="guidanceTourStep() === 3" [class.dark:bg-sky-950/60]="guidanceTourStep() === 3"
-          [class.text-[#00a6f4]]="guidanceTourStep() === 3" [class.text-slate-400]="guidanceTourStep() !== 3">
-          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black"
-            [class.bg-[#00a6f4]]="guidanceTourStep() === 3" [class.text-white]="guidanceTourStep() === 3"
-            [class.bg-slate-200]="guidanceTourStep() !== 3" [class.text-slate-600]="guidanceTourStep() !== 3">3</span>
-          <span>Section 3: Action Panel</span>
-        </button>
-
-        <button type="button" (click)="setGuidanceTourStep(4)"
-          class="flex items-center gap-2 py-1.5 px-3 rounded-xl font-bold transition cursor-pointer whitespace-nowrap shrink-0"
-          [class.bg-sky-50]="guidanceTourStep() === 4" [class.dark:bg-sky-950/60]="guidanceTourStep() === 4"
-          [class.text-[#00a6f4]]="guidanceTourStep() === 4" [class.text-slate-400]="guidanceTourStep() !== 4">
-          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black"
-            [class.bg-[#00a6f4]]="guidanceTourStep() === 4" [class.text-white]="guidanceTourStep() === 4"
-            [class.bg-slate-200]="guidanceTourStep() !== 4" [class.text-slate-600]="guidanceTourStep() !== 4">4</span>
-          <span>Footer Save &amp; Hotkeys</span>
-        </button>
-      </div>
-
-      <!-- Step Content Area (Consistent Alignments & Internal Scroll for All Pages) -->
-      <div class="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar max-h-[60vh]">
-        <!-- PAGE 1: Section 1 -->
-        @if (guidanceTourStep() === 1) {
-        <div class="space-y-4 animate-in fade-in duration-150">
-          <div
-            class="flex items-start gap-4 p-4 rounded-2xl bg-sky-50/70 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800">
-            <span class="text-3xl">📝</span>
-            <div class="space-y-1">
-              <h4 class="text-base font-bold text-slate-900 dark:text-white">Section 1: General Information &amp;
-                Primary Fields</h4>
-              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                The top framed card contains all core catalog attributes needed to establish a product.
-              </p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span class="text-amber-500 font-black text-sm">*</span>
-                <span>Mandatory Star Marking</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Notice the label: <strong>* Mandatory fields marked with star</strong>. Fields like Item Type, Item Name
-                (EN), and Item Name (AR) are required before saving.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span>🌐</span>
-                <span>Dual Language Support</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Enter both English and Arabic product titles side-by-side for bilingual receipts, invoices, and POS
-                customer displays.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span>🎙️</span>
-                <span>Field Search Bar (Alt+F)</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                On the right side of the header, the search bar lets you type or speak (🎙️) any field name to jump and
-                focus directly without manual scrolling.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span>💰</span>
-                <span>Real-Time Pricing &amp; Margins</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Enter Cost Price and Sales Price. Rapid ERP automatically calculates live Margin % and Markup % pills
-                instantly.
-              </p>
-            </div>
-          </div>
-
-          <div class="pt-2 flex items-center gap-3">
-            <button type="button" (click)="focusItemNameField(); closeGuidanceTour()"
-              class="px-4 py-2 rounded-xl bg-sky-50 dark:bg-sky-950/70 border border-sky-300 dark:border-sky-700 text-[#00a6f4] text-xs font-bold hover:bg-sky-100 transition cursor-pointer flex items-center gap-1.5">
-              <span>Focus Item Name Field Now &rarr;</span>
-            </button>
-          </div>
-        </div>
-        }
-
-        <!-- PAGE 2: Section 2 -->
-        @if (guidanceTourStep() === 2) {
-        <div class="space-y-4 animate-in fade-in duration-150">
-          <div
-            class="flex items-start gap-4 p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800">
-            <span class="text-3xl">📑</span>
-            <div class="space-y-1">
-              <h4 class="text-base font-bold text-slate-900 dark:text-white">Section 2: Tab-Wise Specifications &amp;
-                Categories</h4>
-              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                The bottom framed card houses 14 modular tabs with dynamic responsive column fields.
-              </p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span>🏷️</span>
-                <span>Single-Word Tab Navigation</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Tabs are organized with crisp single-word names: Identity, Attributes, Barcodes, Units, Pricing,
-                Inventory, and more.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span>📐</span>
-                <span>Balanced 3-Row Viewport</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Both top and bottom tables are sized to show 3 rows each with generous breathing room and zero label
-                collisions.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span>📜</span>
-                <span>Internal Smooth Scroll</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Sections with more than 3 rows scroll smoothly inside their dedicated container without altering the
-                viewport.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span>💻</span>
-                <span>Responsive Dynamic Grid</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Fields adapt automatically based on screen resolution: 4 columns on desktop monitors and 3 columns on
-                laptop screens.
-              </p>
-            </div>
-          </div>
-
-          <div class="pt-2 flex items-center gap-3">
-            <button type="button" (click)="selectTab('A'); closeGuidanceTour()"
-              class="px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/70 border border-blue-300 dark:border-blue-700 text-blue-600 dark:text-blue-400 text-xs font-bold hover:bg-blue-100 transition cursor-pointer flex items-center gap-1.5">
-              <span>Open Product Identity Tab &rarr;</span>
-            </button>
-          </div>
-        </div>
-        }
-
-        <!-- PAGE 3: Section 3 -->
-        @if (guidanceTourStep() === 3) {
-        <div class="space-y-4 animate-in fade-in duration-150">
-          <div
-            class="flex items-start gap-4 p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
-            <span class="text-3xl">⚡</span>
-            <div class="space-y-1">
-              <h4 class="text-base font-bold text-slate-900 dark:text-white">Section 3: Right Vertical Action Toolbar
-              </h4>
-              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                A dedicated framed card on the right containing essential one-click enterprise tools.
-              </p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                <span>💡</span>
-                <span>Guidance Assistant</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Click the glowing amber bulb anytime to view how-to instructions, modal tours, and drawer help.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-                <span>📊</span>
-                <span>Item Overview Dashboard</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Executive KPI metrics showing total catalog valuation, category distributions, and low stock warnings.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-[#00a6f4] flex items-center gap-1.5">
-                <span>⚛️</span>
-                <span>Reactive Atom Grid &amp; Table</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Switch smoothly between card-style visual grid and high-density tabular enterprise records.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                <span>✨</span>
-                <span>AI Assistant &amp; Export</span>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Auto-fill complete product descriptions with AI intelligence or export catalog data to Excel/PDF.
-              </p>
-            </div>
-          </div>
-
-          <div class="pt-2 flex items-center gap-3">
-            <button type="button" (click)="handleAiClick(); closeGuidanceTour()"
-              class="px-4 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/70 border border-amber-300 dark:border-amber-700 text-amber-600 dark:text-amber-400 text-xs font-bold hover:bg-amber-100 transition cursor-pointer flex items-center gap-1.5">
-              <span>Launch AI Product Assistant &rarr;</span>
-            </button>
-          </div>
-        </div>
-        }
-
-        <!-- PAGE 4: Section 4 -->
-        @if (guidanceTourStep() === 4) {
-        <div class="space-y-4 animate-in fade-in duration-150">
-          <div
-            class="flex items-start gap-4 p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
-            <span class="text-3xl">💾</span>
-            <div class="space-y-1">
-              <h4 class="text-base font-bold text-slate-900 dark:text-white">Section 4: Footer Actions &amp; Speed
-                Hotkeys</h4>
-              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Commit records with confidence and leverage speed keys to enter items 3x faster.
-              </p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span>💾</span> Save &amp; Update</span>
-                <div class="flex items-center gap-1"><span class="kbd-badge">Ctrl+S</span></div>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Validates mandatory fields and commits product changes to the inventory catalog.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span>🔢</span> Record Pagination</span>
-                <div class="flex items-center gap-1"><span class="kbd-badge">Alt+&larr;</span><span
-                    class="kbd-badge">Alt+&rarr;</span></div>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Navigate back and forth between item records using top header stepper controls.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span>🔍</span> Field Search &amp; Jump</span>
-                <div class="flex items-center gap-1"><span class="kbd-badge">Alt+F</span></div>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Immediately jump and focus any field or tab across the entire form without manual scrolling.
-              </p>
-            </div>
-
-            <div
-              class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 space-y-2 flex flex-col justify-between">
-              <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span>🎬</span> Video Tutorial Player</span>
-                <div class="flex items-center gap-1"><span class="kbd-badge">Alt+P</span></div>
-              </div>
-              <p class="text-slate-500 dark:text-slate-400">
-                Opens the animated audio-visual step-by-step masterclass tutorial directly on the page.
-              </p>
-            </div>
-          </div>
-
-          <div class="pt-2 flex items-center gap-3">
-            <button type="button" (click)="openVideoTutorial(); closeGuidanceTour()"
-              class="px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400 text-xs font-bold hover:bg-emerald-100 transition cursor-pointer flex items-center gap-1.5">
-              <span>Play Video Tutorial (Alt+P) &rarr;</span>
-            </button>
-          </div>
-        </div>
-        }
-      </div>
-
-      <!-- Modal Footer with Stepper Controls -->
-      <div
-        class="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-850 flex items-center justify-between">
-        <button type="button" (click)="prevGuidanceTourStep()" [disabled]="guidanceTourStep() <= 1"
-          class="px-4 py-2 rounded-full border border-slate-300 dark:border-slate-600 text-xs font-bold text-slate-700 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer">
-          &larr; Previous Step
-        </button>
-
-        <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full transition-all" [class.bg-[#00a6f4]]="guidanceTourStep() === 1"
-            [class.w-4]="guidanceTourStep() === 1" [class.bg-slate-300]="guidanceTourStep() !== 1"></span>
-          <span class="w-2 h-2 rounded-full transition-all" [class.bg-[#00a6f4]]="guidanceTourStep() === 2"
-            [class.w-4]="guidanceTourStep() === 2" [class.bg-slate-300]="guidanceTourStep() !== 2"></span>
-          <span class="w-2 h-2 rounded-full transition-all" [class.bg-[#00a6f4]]="guidanceTourStep() === 3"
-            [class.w-4]="guidanceTourStep() === 3" [class.bg-slate-300]="guidanceTourStep() !== 3"></span>
-          <span class="w-2 h-2 rounded-full transition-all" [class.bg-[#00a6f4]]="guidanceTourStep() === 4"
-            [class.w-4]="guidanceTourStep() === 4" [class.bg-slate-300]="guidanceTourStep() !== 4"></span>
-        </div>
-
-        @if (guidanceTourStep() < 4) { <button type="button" (click)="nextGuidanceTourStep()"
-          class="px-5 py-2 rounded-full bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer shadow-md shadow-[#00a6f4]/25">
-          Next Step &rarr;
-          </button>
-          } @else {
-          <button type="button" (click)="closeGuidanceTour()"
-            class="px-5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition cursor-pointer shadow-md shadow-emerald-600/25">
-            Done, Close Guide &check;
-          </button>
-          }
-      </div>
-    </div>
-  </div>
-  }
-
-  <!-- ------------------------------------------------------------------------- -->
-  <!-- OPTION 2: SLIDE-IN FLOATING ASSISTANT DRAWER (Side Pop-up Guide)          -->
-  <!-- ------------------------------------------------------------------------- -->
-  @if (guidanceViewMode() === 'drawer') {
-  <div class="fixed inset-0 z-50 pointer-events-none flex justify-end">
-    <!-- Click outside backdrop (transparent to allow simultaneous work) -->
-    <div class="fixed inset-0 bg-slate-900/30 backdrop-blur-2xs pointer-events-auto" (click)="closeGuidanceTour()">
-    </div>
-
-    <!-- Right Drawer -->
-    <div
-      class="guidance-drawer-slide pointer-events-auto relative z-10 w-full sm:w-[420px] h-full bg-white dark:bg-slate-800 shadow-2xl border-l border-slate-200 dark:border-slate-700 flex flex-col">
-      <!-- Drawer Header -->
-      <div
-        class="p-4 border-b border-slate-100 dark:border-slate-700/80 bg-slate-50/70 dark:bg-slate-850/70 flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div
-            class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-200 dark:border-amber-800 font-bold">
-            💡
-          </div>
-          <div>
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Side Assistant Guide</h3>
-            <p class="text-[11px] text-slate-500">Live side-by-side assistance while entering data</p>
-          </div>
-        </div>
-        <button type="button" (click)="closeGuidanceTour()" data-tooltip="Close" data-tooltip-pos="left"
-          class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-500 text-slate-500 hover:text-white dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-rose-600 dark:hover:text-white flex items-center justify-center transition-all duration-150 cursor-pointer shadow-2xs hover:shadow-sm">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Mode Switcher -->
-      <div
-        class="p-3 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between text-xs">
-        <span class="text-[11px] font-semibold text-slate-400">View Style:</span>
-        <div class="flex items-center gap-1 p-0.5 rounded-lg bg-slate-100 dark:bg-slate-700/60">
-          <button type="button" (click)="setGuidanceViewMode('modal')"
-            class="px-2 py-0.5 rounded text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]">Modal</button>
-          <button type="button" (click)="setGuidanceViewMode('drawer')"
-            class="px-2 py-0.5 rounded text-[10px] font-bold bg-white dark:bg-slate-800 text-[#00a6f4] shadow-2xs">Drawer</button>
-          <button type="button" (click)="setGuidanceViewMode('coachmarks')"
-            class="px-2 py-0.5 rounded text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]">Coachmarks</button>
-        </div>
-      </div>
-
-      <!-- Search Input -->
-      <div class="p-3 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
-        <div class="relative">
-          <input type="text" [ngModel]="guideSearchQuery()" (ngModelChange)="guideSearchQuery.set($event)"
-            placeholder="Search topic (e.g., 'mandatory', 'pricing', 'sku')..."
-            class="w-full h-9 pl-9 pr-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-medium focus:outline-none focus:border-[#00a6f4]" />
-          <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-      </div>
-
-      <!-- Topics / Help Cards -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar text-xs">
-        @for (topic of filteredGuideTopics(); track topic.id) {
-        <div
-          class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40 space-y-2">
-          <div class="flex items-center justify-between">
-            <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#00a6f4]"></span>
-              {{ topic.title }}
-            </h4>
-            <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-sky-50 dark:bg-sky-950 text-[#00a6f4]">
-              {{ topic.category }}
-            </span>
-          </div>
-          <p class="text-[11px] text-slate-500 leading-relaxed">{{ topic.summary }}</p>
-          <ol class="space-y-1 list-decimal pl-3.5 text-[11px] text-slate-700 dark:text-slate-300">
-            @for (step of topic.steps; track step) {
-            <li>{{ step }}</li>
-            }
-          </ol>
-        </div>
-        }
-      </div>
-
-      <!-- Drawer Footer -->
-      <div
-        class="p-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-850 flex items-center justify-between">
-        <button type="button" (click)="openVideoTutorial(); closeGuidanceTour()"
-          class="text-xs font-bold text-[#00a6f4] hover:underline">
-          ▶ Video Tutorial
-        </button>
-        <button type="button" (click)="closeGuidanceTour()"
-          class="px-4 py-1.5 rounded-full bg-[#00a6f4] text-white text-xs font-bold">
-          Close Drawer
-        </button>
-      </div>
-    </div>
-  </div>
-  }
-
-  <!-- ------------------------------------------------------------------------- -->
   <!-- OPTION 3: IN-CONTEXT COACHMARKS & SPOTLIGHT POINTERS                      -->
   <!-- ------------------------------------------------------------------------- -->
-  @if (guidanceViewMode() === 'coachmarks') {
+  
   <!-- 1. Dedicated Dimmed Backdrop at z-40 so spotlighted element at z-45 shines through -->
-  <div class="fixed inset-0 z-40 bg-slate-950/65 backdrop-blur-[1.5px] cursor-pointer transition-opacity duration-300"
-    (click)="closeGuidanceTour()" title="Exit">
+  <div class="fixed inset-0 z-[120] bg-slate-950/60 backdrop-blur-[1.5px] cursor-pointer transition-opacity duration-300"
+    (click)="closeGuidanceTour()" title="Exit Tour">
   </div>
 
-  <!-- 2. Coachmark Card Overlay at z-50 (pointer-events-none so clicks outside pass to backdrop) -->
-  <div class="fixed inset-0 z-50 pointer-events-none p-3 sm:p-5 overflow-hidden">
-    <!-- Floating Coachmark Card with Dynamic Smart Positioning per Step -->
-    <div (click)="$event.stopPropagation()"
-      class="coachmark-floating-card pointer-events-auto absolute max-w-md w-[calc(100%-2rem)] sm:w-[440px] bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl border-2 border-[#00a6f4] shadow-[0_20px_50px_rgba(0,166,244,0.35)] p-4 sm:p-5 space-y-3.5 transition-all duration-300 ease-out"
-      [class.coachmark-step-pos-1]="guidanceTourStep() === 1" [class.coachmark-step-pos-2]="guidanceTourStep() === 2"
-      [class.coachmark-step-pos-3]="guidanceTourStep() === 3" [class.coachmark-step-pos-4]="guidanceTourStep() === 4">
+  <!-- 2. Dedicated Spotlight Guidance Panel displayed SEPARATELY on the right side without overlapping tables/content -->
+  <aside (click)="$event.stopPropagation()"
+    class="coachmark-side-panel pointer-events-auto fixed z-[130] bg-white dark:bg-slate-800 border-2 border-[#00a6f4] shadow-2xl flex flex-col p-4 sm:p-5 space-y-3.5 overflow-y-auto custom-scrollbar transition-all duration-300 bottom-0 left-0 right-0 max-h-[65vh] rounded-t-3xl border-b-0 top-14 sm:top-16 sm:right-0 sm:bottom-0 sm:left-auto sm:max-h-none sm:w-[410px] sm:rounded-none sm:border-y-0 sm:border-r-0 sm:border-l-2 animate-in slide-in-from-right duration-300">
 
       <!-- Card Header with Step Counter & Mode Switcher -->
       <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-700/80">
@@ -5268,10 +4758,7 @@
           </span>
         </div>
         <div class="flex items-center gap-2">
-          <button type="button" (click)="setGuidanceViewMode('modal')"
-            class="px-2 py-0.5 rounded-md text-[10px] font-bold text-slate-500 dark:text-slate-400 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer">
-            Switch to Modal
-          </button>
+          
           <button type="button" (click)="closeGuidanceTour()" data-tooltip="Close" data-tooltip-pos="bottom"
             class="w-7 h-7 rounded-full bg-slate-100 hover:bg-rose-500 text-slate-500 hover:text-white dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-rose-600 dark:hover:text-white flex items-center justify-center transition-all duration-150 cursor-pointer shadow-2xs">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -5289,11 +4776,11 @@
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-[#00a6f4]"></span>
         </span>
-        <svg class="w-3.5 h-3.5 text-[#00a6f4] animate-bounce shrink-0" fill="none" viewBox="0 0 24 24"
+        <svg class="w-3.5 h-3.5 text-[#00a6f4] animate-pulse shrink-0" fill="none" viewBox="0 0 24 24"
           stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        <span class="truncate">Pointing to General Information &amp; Primary Fields (Above)</span>
+        <span class="truncate">Spotlighting: Section 1 (General Information &amp; Primary Details)</span>
       </div>
       }
 
@@ -5304,11 +4791,11 @@
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-[#00a6f4]"></span>
         </span>
-        <svg class="w-3.5 h-3.5 text-[#00a6f4] animate-bounce shrink-0" fill="none" viewBox="0 0 24 24"
+        <svg class="w-3.5 h-3.5 text-[#00a6f4] animate-pulse shrink-0" fill="none" viewBox="0 0 24 24"
           stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        <span class="truncate">Pointing to Tab-Wise Product Specifications (Below)</span>
+        <span class="truncate">Spotlighting: Section 2 (Tab-Wise Specifications &amp; Tables)</span>
       </div>
       }
 
@@ -5321,9 +4808,9 @@
         </span>
         <svg class="w-3.5 h-3.5 text-[#00a6f4] animate-pulse shrink-0" fill="none" viewBox="0 0 24 24"
           stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        <span class="truncate">Pointing to Right Action Toolbar (Right)</span>
+        <span class="truncate">Spotlighting: Section 3 (Right Action Toolbar &amp; Quick Tools)</span>
       </div>
       }
 
@@ -5334,11 +4821,11 @@
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-[#00a6f4]"></span>
         </span>
-        <svg class="w-3.5 h-3.5 text-[#00a6f4] animate-bounce shrink-0" fill="none" viewBox="0 0 24 24"
+        <svg class="w-3.5 h-3.5 text-[#00a6f4] animate-pulse shrink-0" fill="none" viewBox="0 0 24 24"
           stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 5l-14 14m0 0h10m-10 0V9" />
         </svg>
-        <span class="truncate">Pointing to Footer Actions &amp; Speed Hotkeys (Below)</span>
+        <span class="truncate">Spotlighting: Section 4 (Footer Actions: Clear &amp; Update)</span>
       </div>
       }
 
@@ -5481,135 +4968,138 @@
           </button>
           }
       </div>
-    </div>
-  </div>
+  </aside>
   }
 
-  }
-
-  <!-- ========================================================================= -->
   <!-- 10. KEYBOARD SHORTCUTS MODAL (Requirement 9)                              -->
   <!-- ========================================================================= -->
   @if (isShortcutsModalOpen()) {
   <div
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
+    class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
     <div
-      class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-lg w-full p-6 shadow-2xl space-y-4">
+      class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-xl w-full max-h-[92vh] p-6 shadow-2xl space-y-4 overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700">
         <div class="flex items-center gap-2.5">
-          <div
-            class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950 text-[#00a6f4] flex items-center justify-center font-bold">
-            ⌨️
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#00a6f4] to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-[#00a6f4]/25">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2.5" />
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10" />
+            </svg>
           </div>
-          <h3 class="text-base font-bold text-slate-900 dark:text-white">Item Master Keyboard Shortcuts</h3>
+          <div>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+              Item Master Keyboard Shortcuts
+            </h3>
+            <p class="text-[11px] text-slate-400">Quick function keys (F1 - F12) &amp; navigation controls</p>
+          </div>
         </div>
         <button type="button" (click)="closeShortcutsModal()"
-          class="text-slate-400 hover:text-slate-600 cursor-pointer">✕</button>
+          class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer" aria-label="Close shortcuts">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
-      <div class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1">
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Save / Update Item Master</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Ctrl</span> + <span class="kbd-badge">S</span>
-            <span class="text-slate-400 mx-1">or</span>
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">S</span>
+      <div class="space-y-2.5">
+        <!-- Section Header: F1 - F12 Function Keys -->
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-200 dark:border-slate-700">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#00a6f4]"></span>
+            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+              Function Keys (F1 – F12)
+            </h4>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200/80 dark:border-sky-800">
+            Fast Navigation
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Help / Guidance Tour</span>
+            <span class="kbd-badge">F1</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300 font-bold text-[#00a6f4]">Save / Update Form</span>
+            <span class="kbd-badge bg-[#00a6f4] text-white">F2</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Find Field Search</span>
+            <span class="kbd-badge">F3</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Clear / Reset Form</span>
+            <span class="kbd-badge">F4</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Reload Record Data</span>
+            <span class="kbd-badge">F5</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Barcode Scanner</span>
+            <span class="kbd-badge">F6</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Toggle "Stay on Page"</span>
+            <span class="kbd-badge">F7</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Video Tutorial</span>
+            <span class="kbd-badge">F8</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Previous Item Record</span>
+            <span class="kbd-badge">F9</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Next Item Record</span>
+            <span class="kbd-badge">F10</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Shortcuts Reference</span>
+            <span class="kbd-badge">F11</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300 font-bold text-sky-600">AI Copilot Assistant</span>
+            <span class="kbd-badge bg-sky-500 text-white">F12</span>
           </div>
         </div>
 
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Create New Item (Add Mode)</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">N</span>
+        <!-- Section Header: Standard Navigation Keys -->
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-200 dark:border-slate-700 mt-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+              Standard Form Navigation
+            </h4>
           </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
+            Keyboard Flow
+          </span>
         </div>
 
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Switch to Edit Mode</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">E</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Next Field / Input Box</span>
+            <span class="kbd-badge">Tab</span>
           </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Search Field or Tab (Focus Search Bar)</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">F</span>
-            <span class="text-slate-400 mx-1">or</span>
-            <span class="kbd-badge">Ctrl</span> + <span class="kbd-badge">F</span>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Previous Field / Input</span>
+            <span class="kbd-badge">Shift + Tab</span>
           </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Navigate Records (Previous / Next)</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">&larr;</span> / <span
-              class="kbd-badge">&rarr;</span>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Submit / OK / Confirm</span>
+            <span class="kbd-badge">Enter</span>
           </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Quick-Jump to Tabs 1 to 8</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">1</span>..<span class="kbd-badge">8</span>
-          </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Play Mode Video Tutorial</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">P</span>
-          </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Open User Guide & Assistance</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">H</span>
-            <span class="text-slate-400 mx-1">or</span>
-            <span class="kbd-badge">?</span>
-          </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Open Barcode Scanner Simulator</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">B</span>
-          </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Clear Form Confirmation</span>
-          <div class="flex items-center gap-1">
-            <span class="kbd-badge">Alt</span> + <span class="kbd-badge">C</span>
-          </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-medium">
-          <span class="text-slate-700 dark:text-slate-300">Close Open Modal / Dropdown</span>
-          <div class="flex items-center gap-1">
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs">
+            <span class="text-slate-700 dark:text-slate-300">Close Dialog / Popover</span>
             <span class="kbd-badge">Esc</span>
           </div>
         </div>
       </div>
-
-      <div class="pt-2 text-right">
-        <button type="button" (click)="closeShortcutsModal()"
-          class="px-5 py-2 rounded-full bg-[#00a6f4] text-white text-xs font-bold cursor-pointer hover:bg-[#0092d6] transition">
-          Close
-        </button>
-      </div>
+      
     </div>
   </div>
   }

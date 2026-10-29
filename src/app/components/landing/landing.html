@@ -1,4 +1,4 @@
-<div class="landing-layout flex flex-col h-screen w-full bg-white text-slate-800 overflow-hidden relative"
+<div class="landing-layout flex flex-col h-screen h-[100dvh] max-h-[100dvh] w-full bg-white text-slate-800 overflow-hidden relative"
   [class.dark]="navService.isDarkMode()" [dir]="navService.isRtl() ? 'rtl' : 'ltr'">
 
   <!-- Middle Work Section: Left Sidebar + Right Main Content (Takes all vertical height above the full-width footer) -->
@@ -8,42 +8,40 @@
 
     <!-- Main Content Area - White by default -->
     <div
-      class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-200">
+      class="flex-1 flex flex-col h-full min-w-0 min-h-0 overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-200">
 
       <!-- Top Navigation Header with Action Items from Reference Image -->
       <header
-        class="relative z-30 h-16 bg-white dark:bg-slate-800 border-b border-slate-200/90 dark:border-slate-700/80 px-6 flex items-center justify-between shrink-0 shadow-xs">
+        class="relative z-[100] h-14 sm:h-16 bg-white dark:bg-slate-800 border-b border-slate-200/90 dark:border-slate-700/80 px-2 sm:px-6 flex items-center justify-between shrink-0 shadow-xs gap-1 sm:gap-4">
         <!-- Left side: Client Logo & Company Name Side by Side (Exact & Best Size) -->
-        <div class="flex items-center gap-3 select-none">
-          <div class="flex items-center gap-2.5">
-            <div
-              class="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105"
-              title="ABC TRADING LLC">
-              <img src="assets/images/client-logo-extracted.png" alt="ABC TRADING LLC"
-                class="w-full h-full object-contain rounded-full select-none pointer-events-none" draggable="false" />
-            </div>
-            <div class="flex flex-col justify-center">
-              <span
-                class="text-sm sm:text-[15px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">
-                ABC TRADING LLC
-              </span>
-              <span
-                class="text-[10px] font-bold text-[#00a2e8] dark:text-sky-400 tracking-wider uppercase leading-none mt-0.5">
-                Duabi, UAE
-              </span>
-            </div>
+        <div class="flex items-center gap-1.5 sm:gap-2.5 select-none min-w-0 flex-1 sm:flex-initial">
+          <div
+            class="w-7 h-7 sm:w-11 sm:h-11 rounded-full overflow-hidden flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105"
+            title="ABC TRADING LLC">
+            <img src="assets/images/client-logo-extracted.png" alt="ABC TRADING LLC"
+              class="w-full h-full object-contain rounded-full select-none pointer-events-none" draggable="false" />
+          </div>
+          <div class="flex flex-col justify-center min-w-0 overflow-hidden">
+            <span
+              class="text-xs sm:text-[15px] font-black tracking-tight text-slate-800 dark:text-white leading-tight truncate max-w-[85px] xs:max-w-[125px] sm:max-w-none">
+              ABC TRADING LLC
+            </span>
+            <span
+              class="text-[9px] sm:text-[10px] font-bold text-[#00a2e8] dark:text-sky-400 tracking-wider uppercase leading-none mt-0.5 truncate">
+              Dubai, UAE
+            </span>
           </div>
         </div>
 
         <!-- Right side: Top Action Icons -->
-        <div class="flex items-center gap-1.5 sm:gap-2">
+        <div class="flex items-center gap-0.5 sm:gap-1.5 shrink-0 ml-auto">
 
           <!-- 1. Search Icon 🔍 with Anchored Dropdown Popover (Exact match to Reference Images 2 & 3) -->
           <div class="relative">
             <button type="button" (click)="toggleSearch($event)" title="Search (Click for voice & image search)"
-              class="search-trigger-btn top-action-btn p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer relative"
+              class="search-trigger-btn top-action-btn w-7.5 h-7.5 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg sm:rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer relative"
               [class.bg-blue-50]="navService.isSearchOpen()" [class.text-[#1863c0]]="navService.isSearchOpen()">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -52,7 +50,7 @@
             <!-- Search Dropdown Box Popped Up Directly Below the Search Icon (Images 2 & 3) -->
             @if (navService.isSearchOpen()) {
             <div (click)="$event.stopPropagation()"
-              class="search-popover-container absolute right-0 top-12 w-[340px] sm:w-[460px] bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-700 p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
+              class="search-popover-container fixed sm:absolute right-2 sm:right-0 top-14 sm:top-12 w-[calc(100vw-92px)] max-w-[460px] sm:w-[460px] bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-700 p-3.5 sm:p-4 z-[110] animate-in fade-in zoom-in-95 duration-150">
               <!-- Search Bar with Voice & Camera Icons -->
               <div
                 class="relative flex items-center gap-2 border border-slate-200 dark:border-slate-600 rounded-2xl px-3 py-2 bg-slate-50/60 dark:bg-slate-700/40 focus-within:border-[#06a9ea] focus-within:ring-2 focus-within:ring-[#06a9ea]/15 transition-all">
@@ -287,7 +285,7 @@
 
           <!-- 2. Fullscreen Icon ⤢ (Matching User Reference Image 2) -->
           <button type="button" (click)="toggleFullscreen()" title="Toggle Fullscreen"
-            class="top-action-btn p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer">
+            class="hidden sm:inline-flex top-action-btn w-9 h-9 items-center justify-center rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="2.2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M14 4h6m0 0v6m0-6L13 11M10 20H4m0 0v-6m0 6l7-7" />
@@ -297,22 +295,23 @@
           <!-- 3. Notification Bell Icon 🔔 -->
           <div class="relative">
             <button type="button" (click)="toggleNotifications($event)" title="Notifications"
-              class="top-action-btn p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer relative">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+              class="notifications-trigger-btn top-action-btn w-7.5 h-7.5 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg sm:rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer relative"
+              [class.bg-blue-50]="navService.isNotificationsOpen()" [class.text-[#1863c0]]="navService.isNotificationsOpen()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
               @if (navService.unreadNotificationCount() > 0) {
               <span
-                class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-slate-800 animate-pulse"></span>
+                class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-slate-800 animate-pulse"></span>
               }
             </button>
 
             <!-- Notifications Dropdown -->
             @if (navService.isNotificationsOpen()) {
-            <div
-              class="absolute right-0 top-12 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div (click)="$event.stopPropagation()"
+              class="notifications-dropdown-container fixed sm:absolute right-2 sm:right-0 top-14 sm:top-12 w-[calc(100vw-92px)] max-w-[384px] sm:w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-3 z-[110] animate-in fade-in zoom-in-95 duration-150">
               <div
                 class="px-4 pb-2.5 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -347,9 +346,10 @@
           </div>
 
           <!-- 4. History / Clock Icon 🕒 -->
-          <div class="relative">
+          <div class="relative hidden sm:block">
             <button type="button" (click)="toggleHistory($event)" title="Recent Activity History"
-              class="top-action-btn p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer">
+              class="history-trigger-btn top-action-btn w-9 h-9 flex items-center justify-center rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer"
+              [class.bg-blue-50]="navService.isHistoryOpen()" [class.text-[#1863c0]]="navService.isHistoryOpen()">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -358,8 +358,8 @@
 
             <!-- History Dropdown -->
             @if (navService.isHistoryOpen()) {
-            <div
-              class="absolute right-0 top-12 w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div (click)="$event.stopPropagation()"
+              class="history-dropdown-container absolute right-0 top-12 w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-3 z-[110] animate-in fade-in zoom-in-95 duration-150">
               <div class="px-4 pb-2 border-b border-slate-100 dark:border-slate-700">
                 <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400">Recently Visited</h4>
               </div>
@@ -383,9 +383,9 @@
           </div>
 
           <!-- 5. Favorites / Star Icon ⭐ -->
-          <div class="relative">
+          <div class="relative hidden sm:block">
             <button type="button" (click)="toggleFavorites($event)" title="Bookmarked Shortcuts"
-              class="top-action-btn p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-amber-500 hover:bg-amber-50/50 dark:hover:bg-slate-700/80 transition-all cursor-pointer"
+              class="favorites-trigger-btn top-action-btn w-9 h-9 flex items-center justify-center rounded-xl text-slate-600 dark:text-slate-300 hover:text-amber-500 hover:bg-amber-50/50 dark:hover:bg-slate-700/80 transition-all cursor-pointer"
               [class.bg-amber-50]="navService.isFavoritesOpen()" [class.text-amber-500]="navService.isFavoritesOpen()">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -397,7 +397,7 @@
             <!-- Favorites Dropdown (Matching Reference Image 4 UI Design) -->
             @if (navService.isFavoritesOpen()) {
             <div (click)="$event.stopPropagation()"
-              class="absolute right-0 top-12 w-[290px] sm:w-[330px] bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-700 p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
+              class="favorites-dropdown-container absolute right-0 top-12 w-[290px] sm:w-[330px] bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-700 p-4 z-[110] animate-in fade-in zoom-in-95 duration-150">
 
               <!-- Header: Star icon + Select Favorites + Count badge -->
               <div class="flex items-center justify-between pb-3">
@@ -453,9 +453,9 @@
           </div>
 
           <!-- 6. Language / Globe Icon 🌐 (Matching User Reference Image 3 & 4) -->
-          <div class="relative">
+          <div class="relative hidden sm:block">
             <button type="button" (click)="toggleLanguage($event)" title="Change Language"
-              class="top-action-btn p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer flex items-center gap-1.5"
+              class="language-trigger-btn top-action-btn h-9 px-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer flex items-center justify-center gap-1.5"
               [class.bg-blue-50]="navService.isLanguageOpen()" [class.text-[#1863c0]]="navService.isLanguageOpen()">
               <!-- Clean Globe Icon from Image 3 Reference -->
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -471,7 +471,7 @@
             <!-- Language Dropdown Box (Exact Replica of Reference Image 4) -->
             @if (navService.isLanguageOpen()) {
             <div (click)="$event.stopPropagation()"
-              class="absolute right-0 top-12 w-[290px] sm:w-[330px] bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-700 p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
+              class="language-dropdown-container absolute right-0 top-12 w-[290px] sm:w-[330px] bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-700 p-4 z-[110] animate-in fade-in zoom-in-95 duration-150">
 
               <!-- Header: Globe icon + Select Language + 10 languages badge -->
               <div class="flex items-center justify-between pb-3">
@@ -534,19 +534,240 @@
             }
           </div>
 
+          <!-- Mobile More Actions Menu (⋯) -->
+          <div class="relative sm:hidden">
+            <button type="button" (click)="toggleMoreMenu($event)" title="More tools"
+              class="more-menu-trigger-btn top-action-btn w-7.5 h-7.5 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer relative"
+              [class.bg-blue-50]="isMoreMenuOpen()" [class.text-[#1863c0]]="isMoreMenuOpen()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="1.5" />
+                <circle cx="19" cy="12" r="1.5" />
+                <circle cx="5" cy="12" r="1.5" />
+              </svg>
+            </button>
+
+            <!-- Mobile More Actions Popover -->
+            @if (isMoreMenuOpen()) {
+            <div (click)="$event.stopPropagation()"
+              class="more-menu-dropdown-container fixed right-2 top-14 w-[calc(100vw-92px)] max-w-[280px] bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200/90 dark:border-slate-700 p-3 z-[110] animate-in fade-in zoom-in-95 duration-150">
+
+              <!-- Subview 1: Main Menu -->
+              @if (moreMenuSubView() === 'menu') {
+              <div class="space-y-1">
+                <div class="px-2 py-1 border-b border-slate-100 dark:border-slate-700/60 mb-1 flex items-center justify-between">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Quick Tools</span>
+                  <span class="text-[10px] text-sky-500 font-semibold">{{ navService.currentLanguage() }}</span>
+                </div>
+
+                <!-- Language Selector Item -->
+                <button type="button" (click)="setMoreMenuSubView('language', $event)"
+                  class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-blue-50/70 dark:hover:bg-slate-700/50 flex items-center justify-between transition cursor-pointer">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#1863c0] dark:text-[#38bdf8] flex items-center justify-center shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3a14.5 14.5 0 0 0 0 18M12 3a14.5 14.5 0 0 1 0 18" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Language</p>
+                      <p class="text-[10px] text-slate-400">{{ navService.currentLanguage() }} &bull; Select</p>
+                    </div>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                <!-- Favorites Item -->
+                <button type="button" (click)="setMoreMenuSubView('favorites', $event)"
+                  class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-amber-50/70 dark:hover:bg-slate-700/50 flex items-center justify-between transition cursor-pointer">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-500 flex items-center justify-center shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Favorites</p>
+                      <p class="text-[10px] text-slate-400">{{ navService.favorites().length }} bookmarks</p>
+                    </div>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                <!-- History Item -->
+                <button type="button" (click)="setMoreMenuSubView('history', $event)"
+                  class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-blue-50/70 dark:hover:bg-slate-700/50 flex items-center justify-between transition cursor-pointer">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Recent History</p>
+                      <p class="text-[10px] text-slate-400">Visited modules</p>
+                    </div>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                <!-- Fullscreen Item -->
+                <button type="button" (click)="toggleFullscreen(); isMoreMenuOpen.set(false)"
+                  class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 flex items-center justify-between transition cursor-pointer">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 4h6m0 0v6m0-6L13 11M10 20H4m0 0v-6m0 6l7-7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Fullscreen</p>
+                      <p class="text-[10px] text-slate-400">Toggle display</p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              }
+
+              <!-- Subview 2: Language Picker -->
+              @if (moreMenuSubView() === 'language') {
+              <div class="space-y-2">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700/60">
+                  <button type="button" (click)="setMoreMenuSubView('menu', $event)"
+                    class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center gap-1 text-xs font-bold cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Back</span>
+                  </button>
+                  <span class="font-extrabold text-xs text-slate-800 dark:text-white">Select Language</span>
+                  <span class="text-[10px] text-slate-400">{{ languages.length }}</span>
+                </div>
+
+                <div class="relative">
+                  <input type="text" [ngModel]="languageSearch()" (ngModelChange)="languageSearch.set($event)"
+                    placeholder="Search language..."
+                    class="w-full h-8 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 text-xs text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4]" />
+                </div>
+
+                <div class="max-h-[220px] overflow-y-auto space-y-1 custom-scrollbar pr-0.5">
+                  @for (lang of filteredLanguages(); track lang.code) {
+                  <button type="button" (click)="navService.setLanguage(lang.code); closeAll()"
+                    class="w-full text-left px-2.5 py-1.5 rounded-xl flex items-center justify-between text-xs transition cursor-pointer"
+                    [class.bg-blue-50]="navService.currentLanguage() === lang.code"
+                    [class.dark:bg-slate-700/70]="navService.currentLanguage() === lang.code">
+                    <div>
+                      <p class="font-bold text-slate-800 dark:text-white leading-tight text-xs">{{ lang.nativeName || lang.name }}</p>
+                      <p class="text-[10px] text-slate-400">{{ lang.name }}</p>
+                    </div>
+                    @if (navService.currentLanguage() === lang.code) {
+                    <div class="w-4 h-4 rounded-full border-2 border-emerald-500 text-emerald-500 flex items-center justify-center shrink-0">
+                      <svg class="w-2.5 h-2.5 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    }
+                  </button>
+                  }
+                </div>
+              </div>
+              }
+
+              <!-- Subview 3: Favorites Picker -->
+              @if (moreMenuSubView() === 'favorites') {
+              <div class="space-y-2">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700/60">
+                  <button type="button" (click)="setMoreMenuSubView('menu', $event)"
+                    class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center gap-1 text-xs font-bold cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Back</span>
+                  </button>
+                  <span class="font-extrabold text-xs text-slate-800 dark:text-white">Favorites</span>
+                  <span class="text-[10px] text-amber-500 font-bold">{{ navService.favorites().length }}</span>
+                </div>
+
+                <div class="relative">
+                  <input type="text" [ngModel]="favoritesSearch()" (ngModelChange)="favoritesSearch.set($event)"
+                    placeholder="Search favorites..."
+                    class="w-full h-8 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 text-xs text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-amber-400" />
+                </div>
+
+                <div class="max-h-[220px] overflow-y-auto space-y-1 custom-scrollbar pr-0.5">
+                  @for (fav of filteredFavorites(); track fav.id) {
+                  <button type="button" (click)="navService.navigateTo(fav.moduleId, fav.subModuleId || ''); closeAll()"
+                    class="w-full text-left p-2 rounded-xl flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition cursor-pointer">
+                    <div>
+                      <p class="text-xs font-bold text-slate-800 dark:text-white leading-tight">{{ fav.title }}</p>
+                      <p class="text-[10px] text-slate-400">{{ fav.moduleId }}</p>
+                    </div>
+                    <span class="text-amber-500 text-xs">★</span>
+                  </button>
+                  }
+                  @if (filteredFavorites().length === 0) {
+                  <p class="p-3 text-center text-xs text-slate-400">No favorites saved.</p>
+                  }
+                </div>
+              </div>
+              }
+
+              <!-- Subview 4: History -->
+              @if (moreMenuSubView() === 'history') {
+              <div class="space-y-2">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700/60">
+                  <button type="button" (click)="setMoreMenuSubView('menu', $event)"
+                    class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center gap-1 text-xs font-bold cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Back</span>
+                  </button>
+                  <span class="font-extrabold text-xs text-slate-800 dark:text-white">Recent History</span>
+                  <span class="text-[10px] text-slate-400">{{ navService.history().length }}</span>
+                </div>
+
+                <div class="max-h-[220px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50 custom-scrollbar pr-0.5">
+                  @for (h of navService.history(); track h.id) {
+                  <button type="button" (click)="navService.navigateTo(h.moduleId, h.subModuleId, h.moduleLabel, h.title); closeAll()"
+                    class="w-full text-left py-2 px-1 hover:bg-blue-50/70 dark:hover:bg-slate-700/50 flex items-center justify-between transition cursor-pointer">
+                    <div>
+                      <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ h.title }}</p>
+                      <p class="text-[10px] text-slate-400">{{ h.moduleLabel }}</p>
+                    </div>
+                    <span class="text-[9px] text-slate-400 bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded-full">{{ h.timeAgo }}</span>
+                  </button>
+                  }
+                  @if (navService.history().length === 0) {
+                  <p class="p-3 text-center text-xs text-slate-400">No recent history.</p>
+                  }
+                </div>
+              </div>
+              }
+
+            </div>
+            }
+          </div>
+
           <!-- 7. Dark / Light Mode Toggle (Top Right Theme Function - Light by default, toggles to Dark) -->
           <button type="button" (click)="toggleDarkMode()" title="Toggle Light / Dark Mode"
-            class="top-action-btn p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer">
+            class="top-action-btn w-7.5 h-7.5 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg sm:rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer">
             @if (!navService.isDarkMode()) {
             <!-- Crescent Moon (Click for Dark Mode) -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
             } @else {
             <!-- Bright Sun (Click for Light Mode) -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24"
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -555,11 +776,11 @@
           </button>
 
           <!-- 8. User Profile Avatar 👤 with active user display -->
-          <div class="relative ml-1 pl-2 border-l border-slate-200 dark:border-slate-700">
+          <div class="relative ml-0.5 sm:ml-1 pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center shrink-0">
             <button type="button" (click)="toggleProfile($event)"
-              class="profile-trigger-btn flex items-center gap-2 p-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/80 transition cursor-pointer">
+              class="profile-trigger-btn flex items-center gap-1.5 sm:gap-2 p-0.5 sm:p-1 rounded-lg sm:rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/80 transition cursor-pointer shrink-0">
               <div
-                class="w-8 h-8 rounded-full bg-sky-50 dark:bg-slate-700 text-[#00a6f4] dark:text-sky-300 border border-sky-200/90 dark:border-slate-600 font-extrabold flex items-center justify-center text-xs shadow-2xs">
+                class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sky-50 dark:bg-slate-700 text-[#00a6f4] dark:text-sky-300 border border-sky-200/90 dark:border-slate-600 font-extrabold flex items-center justify-center text-xs shadow-2xs shrink-0">
                 {{ tenantService.activeUser().avatarLetter }}
               </div>
               <div class="hidden xl:flex flex-col text-left">
@@ -575,7 +796,7 @@
             <!-- User Profile Dropdown (Clean Minimalist: Username, Role, Logout) -->
             @if (navService.isProfileOpen()) {
             <div (click)="$event.stopPropagation()"
-              class="profile-dropdown-container absolute right-0 top-12 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-3.5 z-[100] animate-in fade-in zoom-in-95 duration-150">
+              class="profile-dropdown-container fixed sm:absolute right-2 sm:right-0 top-14 sm:top-12 w-[calc(100vw-92px)] max-w-[260px] sm:w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-3.5 z-[120] animate-in fade-in zoom-in-95 duration-150">
               
               <!-- User Info: Display Name, Username, and Role -->
               <div class="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-700">
@@ -621,7 +842,7 @@
       <!-- (Exact Match to Customer Reference Screenshot 1 with Best Animations)    -->
       <!-- ========================================================================= -->
       <main
-        class="flex-1 overflow-y-auto bg-slate-50/70 dark:bg-slate-900 transition-colors duration-200 custom-scrollbar relative"
+        class="flex-1 min-h-0 overflow-y-auto bg-slate-50/70 dark:bg-slate-900 transition-colors duration-200 custom-scrollbar relative"
         [class.p-4]="navService.currentModuleId() === 'dashboard'"
         [class.sm:p-6]="navService.currentModuleId() === 'dashboard'"
         [class.lg:p-8]="navService.currentModuleId() === 'dashboard'"
@@ -1563,9 +1784,9 @@
 
         </div>
         } @else if (isCountryModule()) {
-        <app-country class="w-full h-full block overflow-hidden"></app-country>
+        <app-country class="w-full h-full block overflow-hidden min-h-0"></app-country>
         } @else if (isItemModule()) {
-        <app-item class="w-full h-full block overflow-hidden"></app-item>
+        <app-item class="w-full h-full block overflow-hidden min-h-0"></app-item>
         } @else if (isAuditHistoryModule()) {
         <app-audit-history class="w-full block"></app-audit-history>
         } @else {
@@ -1686,7 +1907,7 @@
 
   <!-- Dedicated Full-Width Bottom Footer (Fixed at bottom spanning COMPLETE LEFT across under sidebar) -->
   <footer
-    class="h-10 w-full bg-white dark:bg-slate-800 border-t border-slate-200/90 dark:border-slate-700/80 px-4 sm:px-6 flex items-center justify-between shrink-0 text-xs text-slate-500 dark:text-slate-400 z-40 select-none shadow-xs relative">
+    class="h-9 sm:h-10 w-full bg-white dark:bg-slate-800 border-t border-slate-200/90 dark:border-slate-700/80 px-2.5 sm:px-6 flex items-center justify-between shrink-0 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 z-40 select-none shadow-xs relative">
     <!-- Left: Powered By Rapid -->
     <div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
       <span>{{ navService.translateText('Powered By') }}</span>
@@ -1718,7 +1939,7 @@
   <!-- ========================================================================= -->
   @if (navService.isHelpModalOpen()) {
   <div
-    class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
+    class="fixed inset-0 z-[200] bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
     (click)="navService.isHelpModalOpen.set(false)">
     <div
       class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col max-h-[88vh] animate-in zoom-in-95 duration-150"
@@ -2188,7 +2409,7 @@
   <!-- Live Chat Drawer (Opens above the footer when clicked) -->
   @if (isLiveChatOpen()) {
   <div
-    class="fixed bottom-14 right-6 z-50 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col h-96 animate-in slide-in-from-bottom-4 duration-200">
+    class="fixed bottom-14 right-6 z-[150] w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col h-96 animate-in slide-in-from-bottom-4 duration-200">
     <div class="p-3.5 bg-gradient-to-r from-[#1863c0] to-[#06a9ea] text-white flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -2231,7 +2452,7 @@
   <!-- Toast Notification Banner for Quick Actions -->
   @if (toastMessage()) {
   <div
-    class="fixed bottom-14 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-in fade-in slide-in-from-bottom-2 duration-200">
+    class="fixed bottom-14 left-1/2 -translate-x-1/2 z-[160] bg-slate-900 text-white px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-in fade-in slide-in-from-bottom-2 duration-200">
     <span class="w-2 h-2 rounded-full bg-[#00a2e8] animate-ping"></span>
     <span>{{ toastMessage() }}</span>
   </div>

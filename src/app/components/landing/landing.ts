@@ -143,6 +143,23 @@ export class Landing implements OnInit {
     return mod === 'audit-history' || mod === 'audit' || mod === 'activity-logs';
   });
 
+  // More menu state for mobile view
+  isMoreMenuOpen = signal<boolean>(false);
+  moreMenuSubView = signal<'menu' | 'language' | 'favorites' | 'history'>('menu');
+
+  toggleMoreMenu(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    const current = this.isMoreMenuOpen();
+    this.closeAll();
+    this.isMoreMenuOpen.set(!current);
+    this.moreMenuSubView.set('menu');
+  }
+
+  setMoreMenuSubView(view: 'menu' | 'language' | 'favorites' | 'history', event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.moreMenuSubView.set(view);
+  }
+
   // Hotkey listener for Ctrl+K (Search) and Escape (Close Overlays)
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent): void {
@@ -163,6 +180,16 @@ export class Landing implements OnInit {
         this.navService.isSearchOpen.set(false);
       }
     }
+    if (!target.closest('.notifications-dropdown-container') && !target.closest('.notifications-trigger-btn')) {
+      if (this.navService.isNotificationsOpen()) {
+        this.navService.isNotificationsOpen.set(false);
+      }
+    }
+    if (!target.closest('.history-dropdown-container') && !target.closest('.history-trigger-btn')) {
+      if (this.navService.isHistoryOpen()) {
+        this.navService.isHistoryOpen.set(false);
+      }
+    }
     if (!target.closest('.profile-dropdown-container') && !target.closest('.profile-trigger-btn')) {
       if (this.navService.isProfileOpen()) {
         this.navService.isProfileOpen.set(false);
@@ -176,6 +203,12 @@ export class Landing implements OnInit {
     if (!target.closest('.language-dropdown-container') && !target.closest('.language-trigger-btn')) {
       if (this.navService.isLanguageOpen()) {
         this.navService.isLanguageOpen.set(false);
+      }
+    }
+    if (!target.closest('.more-menu-dropdown-container') && !target.closest('.more-menu-trigger-btn')) {
+      if (this.isMoreMenuOpen()) {
+        this.isMoreMenuOpen.set(false);
+        this.moreMenuSubView.set('menu');
       }
     }
   }
@@ -241,6 +274,8 @@ export class Landing implements OnInit {
 
   closeAll(): void {
     this.navService.closeAllPanels();
+    this.isMoreMenuOpen.set(false);
+    this.moreMenuSubView.set('menu');
     this.isImageSearchOpen.set(false);
     this.stopVoiceSearch();
   }

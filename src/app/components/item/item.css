@@ -2,6 +2,7 @@
   display: block;
   width: 100%;
   height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -23,6 +24,13 @@
   background-color: #ffffff;
   border-radius: 9999px;
   color: #64748b;
+}
+
+/* RTL Arabic input label fix: never allow left to override right on RTL */
+.floating-notch-label-rtl,
+[dir="rtl"] .floating-notch-label {
+  left: auto !important;
+  right: 18px !important;
 }
 
 :host-context(.dark) .floating-notch-label,
@@ -257,9 +265,11 @@ input:checked + .form-switch-track .form-switch-thumb {
 /* 9. THREE INTERNAL SECTION SCROLLBARS (Requirement: No Page Scrollbar)     */
 /* ========================================================================= */
 
-/* Section 1 Scroll: General Information / Essential Fields (overflow visible for modern custom dropdowns) */
-.general-info-fields-scroll {
-  overflow: visible !important;
+/* Section 1 Scroll: General Information / Essential Fields (Desktop: overflow visible for custom dropdowns) */
+@media (min-width: 640px) {
+  .general-info-fields-scroll {
+    overflow: visible !important;
+  }
 }
 
 .general-info-fields-scroll::-webkit-scrollbar {
@@ -492,55 +502,15 @@ textarea {
 
 .spotlight-active-ring {
   position: relative;
-  z-index: 45 !important;
+  z-index: 125 !important;
   box-shadow: 0 0 0 3px #00a6f4, 0 12px 32px rgba(0, 166, 244, 0.35) !important;
   border-color: #00a6f4 !important;
   transition: all 0.25s ease-in-out !important;
 }
 
-/* Step-specific smart positions so coachmark card NEVER overlaps the spotlighted section */
-.coachmark-step-pos-1 {
-  bottom: 4rem;
-  right: 1rem;
-}
-@media (min-width: 640px) {
-  .coachmark-step-pos-1 {
-    bottom: 4.75rem;
-    right: 5.5rem;
-  }
-}
-
-.coachmark-step-pos-2 {
-  top: 4rem;
-  right: 1rem;
-}
-@media (min-width: 640px) {
-  .coachmark-step-pos-2 {
-    top: 4.5rem;
-    right: 5.5rem;
-  }
-}
-
-.coachmark-step-pos-3 {
-  top: 25%;
-  right: 1rem;
-}
-@media (min-width: 640px) {
-  .coachmark-step-pos-3 {
-    top: 25%;
-    right: 5.5rem;
-  }
-}
-
-.coachmark-step-pos-4 {
-  bottom: 4rem;
-  right: 1rem;
-}
-@media (min-width: 640px) {
-  .coachmark-step-pos-4 {
-    bottom: 4.5rem;
-    right: 5.5rem;
-  }
+/* Dedicated Spotlight Guidance Side Panel: Displayed separately from content & tables */
+.coachmark-side-panel {
+  box-shadow: -8px 0 32px rgba(0, 166, 244, 0.18), 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 /* ========================================================================= */
@@ -597,25 +567,55 @@ button.tab-pill-unselected:hover * {
 /* ========================================================================= */
 /* 11. MOBILE RESPONSIVE ADAPTATIONS                                          */
 /* ========================================================================= */
-@media (max-width: 767px) {
-  /* On mobile screens, allow Section 1 & Section 2 to flow naturally so unified scroll works cleanly */
+@media (max-width: 639px) {
+  .mobile-section-hide {
+    display: none !important;
+  }
+
+  /* Internal scrolling enabled on mobile for both General Info and Specifications */
   .general-info-fields-scroll {
-    overflow-y: visible !important;
-    max-height: none !important;
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: contain !important;
+    scrollbar-width: thin !important;
   }
 
   .tabs-accordions-scroll {
-    min-height: 280px;
-    height: auto !important;
-    overflow-y: visible !important;
-    max-height: none !important;
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: contain !important;
+    scrollbar-width: thin !important;
   }
-}
 
-@media (max-width: 639px) {
+  /* Ensure dropdown options stack properly */
+  [data-dropdown] {
+    position: relative;
+  }
+  [data-dropdown]:has([class*="border-[#00a6f4]"]) {
+    z-index: 40 !important;
+  }
+
   .floating-notch-label {
     left: 14px;
+    right: auto;
     font-size: 0.7rem;
     padding: 0 5px;
+  }
+
+  .floating-notch-label-rtl,
+  [dir="rtl"] .floating-notch-label,
+  .floating-notch-label[dir="rtl"] {
+    left: auto !important;
+    right: 14px !important;
   }
 }

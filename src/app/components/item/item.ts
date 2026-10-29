@@ -463,8 +463,11 @@ export class ItemComponent implements OnInit {
 
   // Action Dock Panel State
   isMoreActionsOpen = signal<boolean>(false);
-  activeActionView = signal<'form' | 'overview' | 'grid' | 'table'>('form');
+  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('form');
   actionPanelPage = signal<'top' | 'bottom'>('top');
+
+  // Mobile Section Navigation ('general' info, 'tabs' specifications, or 'all')
+  mobileSection = signal<'general' | 'tabs' | 'all'>('general');
 
   scrollActionPanel(direction: 'up' | 'down'): void {
     this.actionPanelPage.set(direction === 'down' ? 'bottom' : 'top');
@@ -687,12 +690,14 @@ export class ItemComponent implements OnInit {
     this.isFieldSearchOpen.set(false);
 
     if (field.category === 'Tab' && field.tabId) {
+      this.mobileSection.set('tabs');
       this.selectTab(field.tabId);
       this.showToast(`Switched to tab: ${field.label}`);
       return;
     }
 
     if (field.tabId) {
+      this.mobileSection.set('tabs');
       this.selectTab(field.tabId);
       if (field.sectionKey) {
         this.expandedSections.update((sec) => ({ ...sec, [field.sectionKey!]: true }));
@@ -700,6 +705,8 @@ export class ItemComponent implements OnInit {
       if (field.subKey) {
         this.expandedSubSections.update((sub) => ({ ...sub, [field.subKey!]: true }));
       }
+    } else {
+      this.mobileSection.set('general');
     }
 
     setTimeout(() => {
@@ -1146,11 +1153,11 @@ export class ItemComponent implements OnInit {
   // Option 3: In-Context Coachmarks (Floating Step Beacons & Spotlight Pointers)
   // =========================================================================
   isGuidanceTourOpen = signal<boolean>(false);
-  guidanceViewMode = signal<'modal' | 'drawer' | 'coachmarks'>('modal');
+  guidanceViewMode = signal<'modal' | 'drawer' | 'coachmarks'>('coachmarks');
   guidanceTourStep = signal<number>(1); // 1: Section 1 General Info, 2: Section 2 Tab Accordions, 3: Section 3 Action Panel, 4: Footer Save
 
   openGuidanceTour(mode?: 'modal' | 'drawer' | 'coachmarks'): void {
-    if (mode) this.guidanceViewMode.set(mode);
+    this.guidanceViewMode.set('coachmarks');
     this.guidanceTourStep.set(1);
     this.isGuidanceTourOpen.set(true);
   }
@@ -1183,7 +1190,7 @@ export class ItemComponent implements OnInit {
   }
 
   openGuideModal(): void {
-    this.openGuidanceTour('modal');
+    this.openGuidanceTour();
   }
 
   closeGuideModal(): void {
@@ -1234,6 +1241,103 @@ export class ItemComponent implements OnInit {
       if (this.isAiModalOpen()) this.closeAiModal();
       if (this.isClearModalOpen()) this.closeClearModal();
       if (this.isFieldSearchOpen()) this.isFieldSearchOpen.set(false);
+      return;
+    }
+
+    // Enter: Submit / OK / Confirm function
+    if (event.key === 'Enter') {
+      if (this.isClearModalOpen()) {
+        event.preventDefault();
+        this.confirmClearForm();
+        return;
+      }
+      if (this.isShortcutsModalOpen()) {
+        event.preventDefault();
+        this.closeShortcutsModal();
+        return;
+      }
+      if (this.isBarcodeModalOpen()) {
+        event.preventDefault();
+        this.applyScannedBarcode('6291041001234');
+        return;
+      }
+      const target = event.target as HTMLElement;
+      if (target && target.tagName === 'TEXTAREA') {
+        return; // Allow multiline textarea
+      }
+      if (target && target.tagName === 'BUTTON') {
+        return; // Allow native button action
+      }
+      event.preventDefault();
+      this.onSubmitForm();
+      return;
+    }
+
+    // Function Keys F1 to F12 (Item Master Shortcuts)
+    if (event.key === 'F1') {
+      event.preventDefault();
+      this.openGuidanceTour();
+      return;
+    }
+    if (event.key === 'F2') {
+      event.preventDefault();
+      this.onSubmitForm();
+      return;
+    }
+    if (event.key === 'F3') {
+      event.preventDefault();
+      this.fieldSearchInputRef?.nativeElement.focus();
+      this.isFieldSearchOpen.set(true);
+      return;
+    }
+    if (event.key === 'F4') {
+      event.preventDefault();
+      this.openClearModal();
+      return;
+    }
+    if (event.key === 'F5') {
+      event.preventDefault();
+      this.loadItemToForm(this.itemService.currentItem());
+      this.showToast('Record reloaded');
+      return;
+    }
+    if (event.key === 'F6') {
+      event.preventDefault();
+      this.openBarcodeScanner();
+      return;
+    }
+    if (event.key === 'F7') {
+      event.preventDefault();
+      this.stayOnPage.update(v => !v);
+      return;
+    }
+    if (event.key === 'F8') {
+      event.preventDefault();
+      this.openVideoTutorial();
+      return;
+    }
+    if (event.key === 'F9') {
+      event.preventDefault();
+      this.goToPreviousRecord();
+      return;
+    }
+    if (event.key === 'F10') {
+      event.preventDefault();
+      this.goToNextRecord();
+      return;
+    }
+    if (event.key === 'F11') {
+      event.preventDefault();
+      if (this.isShortcutsModalOpen()) {
+        this.closeShortcutsModal();
+      } else {
+        this.openShortcutsModal();
+      }
+      return;
+    }
+    if (event.key === 'F12') {
+      event.preventDefault();
+      this.openAiModal();
       return;
     }
 
