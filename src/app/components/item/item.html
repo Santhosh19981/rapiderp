@@ -41,7 +41,8 @@
             </div>
 
             <!-- 2. Below: Dynamic Breadcrumb (Administrator > General > Item Master > Overview) -->
-            <nav class="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400 font-medium leading-none mt-1 select-none whitespace-nowrap"
+            <nav
+              class="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400 font-medium leading-none mt-1 select-none whitespace-nowrap"
               aria-label="Breadcrumb">
               <button type="button" (click)="navService.navigateTo('dashboard')"
                 class="hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer">Administrator</button>
@@ -75,51 +76,13 @@
         <!-- Right Side: View Switchers and Action buttons -->
         <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
 
-          <!-- View Switcher Tabs (Overview | Grid | List) visible only on tablet / desktop -->
-          <div
-            class="hidden md:flex items-center bg-slate-100 dark:bg-slate-700/80 p-0.5 rounded-full border border-slate-200/80 dark:border-slate-600">
-            <button type="button" (click)="switchView('overview')"
-              class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer bg-white text-[#00a6f4] shadow-xs"
-              title="Overview">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="7" height="9" x="3" y="3" rx="1" />
-                <rect width="7" height="5" x="14" y="3" rx="1" />
-                <rect width="7" height="9" x="14" y="12" rx="1" />
-                <rect width="7" height="5" x="3" y="16" rx="1" />
-              </svg>
-              <span>Overview</span>
-            </button>
-            <button type="button" (click)="switchView('grid')"
-              class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
-              title="Grid">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7" rx="1" />
-                <rect x="14" y="3" width="7" height="7" rx="1" />
-                <rect x="3" y="14" width="7" height="7" rx="1" />
-                <rect x="14" y="14" width="7" height="7" rx="1" />
-              </svg>
-              <span>Grid</span>
-            </button>
-            <button type="button" (click)="switchView('table')"
-              class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
-              title="List">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="8" y1="6" x2="21" y2="6" stroke-linecap="round" />
-                <line x1="8" y1="12" x2="21" y2="12" stroke-linecap="round" />
-                <line x1="8" y1="18" x2="21" y2="18" stroke-linecap="round" />
-                <circle cx="4" cy="6" r="1.5" fill="currentColor" />
-                <circle cx="4" cy="12" r="1.5" fill="currentColor" />
-                <circle cx="4" cy="18" r="1.5" fill="currentColor" />
-              </svg>
-              <span>List</span>
-            </button>
-          </div>
 
           <!-- Secondary Action: View Item List -->
           <button type="button" (click)="handleGridClick()"
             class="h-8 sm:h-9 px-2.5 sm:px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-[#00a6f4] hover:text-[#00a6f4] text-xs sm:text-sm font-semibold transition cursor-pointer shadow-2xs flex items-center gap-1.5 whitespace-nowrap shrink-0 active:scale-95"
             title="View Item List">
-            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="7" height="7" rx="1" />
               <rect x="14" y="3" width="7" height="7" rx="1" />
               <rect x="3" y="14" width="7" height="7" rx="1" />
@@ -133,7 +96,8 @@
           <button type="button" (click)="openCreateFromOverview()"
             class="h-8 sm:h-9 px-3 sm:px-5 rounded-full bg-gradient-to-r from-[#00a6f4] to-[#1863c0] hover:from-[#0095dc] hover:to-[#13509d] text-white text-xs sm:text-sm font-bold shadow-md shadow-sky-500/25 flex items-center gap-1 sm:gap-1.5 transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 active:scale-95"
             title="Add Item">
-            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
             </svg>
             <span class="hidden sm:inline">Add Item</span>
@@ -6917,8 +6881,7 @@
           [class.dark:text-slate-300]="activeActionView() !== 'overview'"
           [class.border]="activeActionView() !== 'overview'"
           [class.border-slate-200]="activeActionView() !== 'overview'"
-          [class.dark:border-slate-700]="activeActionView() !== 'overview'"
-          title="Item Overview">
+          [class.dark:border-slate-700]="activeActionView() !== 'overview'" title="Item Overview">
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7" rx="1.5" />
             <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -6941,8 +6904,7 @@
           [class.dark:text-emerald-400]="pageMode() !== 'add' || activeActionView() !== 'form'"
           [class.border]="pageMode() !== 'add' || activeActionView() !== 'form'"
           [class.border-emerald-200]="pageMode() !== 'add' || activeActionView() !== 'form'"
-          [class.dark:border-emerald-800]="pageMode() !== 'add' || activeActionView() !== 'form'"
-          title="Add Item">
+          [class.dark:border-emerald-800]="pageMode() !== 'add' || activeActionView() !== 'form'" title="Add Item">
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <circle cx="12" cy="12" r="9" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -6965,8 +6927,7 @@
           [class.dark:text-amber-400]="pageMode() !== 'edit' || activeActionView() !== 'form'"
           [class.border]="pageMode() !== 'edit' || activeActionView() !== 'form'"
           [class.border-amber-200]="pageMode() !== 'edit' || activeActionView() !== 'form'"
-          [class.dark:border-amber-800]="pageMode() !== 'edit' || activeActionView() !== 'form'"
-          title="Edit Item">
+          [class.dark:border-amber-800]="pageMode() !== 'edit' || activeActionView() !== 'form'" title="Edit Item">
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -6988,8 +6949,7 @@
           [class.dark:text-teal-400]="pageMode() !== 'view' || activeActionView() !== 'form'"
           [class.border]="pageMode() !== 'view' || activeActionView() !== 'form'"
           [class.border-teal-200]="pageMode() !== 'view' || activeActionView() !== 'form'"
-          [class.dark:border-teal-800]="pageMode() !== 'view' || activeActionView() !== 'form'"
-          title="View Item">
+          [class.dark:border-teal-800]="pageMode() !== 'view' || activeActionView() !== 'form'" title="View Item">
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
             <circle cx="12" cy="12" r="3" />
@@ -7007,8 +6967,7 @@
           [class.text-slate-700]="activeActionView() !== 'grid'"
           [class.dark:text-slate-300]="activeActionView() !== 'grid'" [class.border]="activeActionView() !== 'grid'"
           [class.border-slate-200]="activeActionView() !== 'grid'"
-          [class.dark:border-slate-700]="activeActionView() !== 'grid'"
-          title="Item Grid View">
+          [class.dark:border-slate-700]="activeActionView() !== 'grid'" title="Item Grid View">
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="2.2" fill="currentColor" />
             <ellipse cx="12" cy="12" rx="10" ry="4.2" />
@@ -7027,8 +6986,7 @@
           [class.text-slate-700]="activeActionView() !== 'table'"
           [class.dark:text-slate-300]="activeActionView() !== 'table'" [class.border]="activeActionView() !== 'table'"
           [class.border-slate-200]="activeActionView() !== 'table'"
-          [class.dark:border-slate-700]="activeActionView() !== 'table'"
-          title="Item Table View">
+          [class.dark:border-slate-700]="activeActionView() !== 'table'" title="Item Table View">
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="4" width="18" height="16" rx="2" />
             <line x1="3" y1="10" x2="21" y2="10" />
@@ -7072,8 +7030,7 @@
           [class.text-blue-600]="activeActionView() !== 'history'"
           [class.dark:text-blue-400]="activeActionView() !== 'history'"
           [class.border]="activeActionView() !== 'history'" [class.border-slate-200]="activeActionView() !== 'history'"
-          [class.dark:border-slate-700]="activeActionView() !== 'history'"
-          title="History / Audit">
+          [class.dark:border-slate-700]="activeActionView() !== 'history'" title="History / Audit">
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
@@ -7115,8 +7072,7 @@
           [class.bg-white]="activeActionView() !== 'ai'" [class.dark:bg-slate-800]="activeActionView() !== 'ai'"
           [class.text-sky-600]="activeActionView() !== 'ai'" [class.dark:text-sky-400]="activeActionView() !== 'ai'"
           [class.border]="activeActionView() !== 'ai'" [class.border-slate-200]="activeActionView() !== 'ai'"
-          [class.dark:border-slate-700]="activeActionView() !== 'ai'"
-          title="AI Assistant">
+          [class.dark:border-slate-700]="activeActionView() !== 'ai'" title="AI Assistant">
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path
               d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
