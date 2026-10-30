@@ -466,7 +466,7 @@ export class ItemComponent implements OnInit {
 
   // Action Dock Panel State
   isMoreActionsOpen = signal<boolean>(false);
-  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('grid');
+  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('overview');
   actionPanelPage = signal<'top' | 'bottom'>('top');
 
   // Mobile Section Navigation ('general' info, 'tabs' specifications, or 'all')
@@ -1337,6 +1337,258 @@ export class ItemComponent implements OnInit {
       : 38;
     return { totalItems, totalValuation, activeCount, avgMargin };
   });
+
+  // Item Master Overview State & Metrics (Per Rapid ERP Master Specifications - Exact replica of Country Overview)
+  overviewPeriod = signal<string>('Last 30 days');
+  isOverviewPeriodDropdownOpen = signal<boolean>(false);
+  isOverviewRefreshing = signal<boolean>(false);
+  overviewPeriods = ['Today', 'Last 7 days', 'Last 30 days', 'This Month', 'This Quarter', 'All Time'];
+
+  toggleOverviewPeriodDropdown(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.isOverviewPeriodDropdownOpen.update((v) => !v);
+  }
+
+  setOverviewPeriod(period: string): void {
+    this.overviewPeriod.set(period);
+    this.isOverviewPeriodDropdownOpen.set(false);
+  }
+
+  refreshOverviewData(): void {
+    this.isOverviewRefreshing.set(true);
+    setTimeout(() => {
+      this.isOverviewRefreshing.set(false);
+      this.showToast('Item Master Overview figures refreshed from database');
+    }, 500);
+  }
+
+  overviewStats = computed(() => {
+    const list = this.itemService.items();
+    const total = list.length;
+    const active = list.filter((c) => c.status === 'Active').length;
+    const inactive = list.filter((c) => c.status === 'Inactive').length;
+    const draft = list.filter((c) => c.status === 'Draft').length;
+    const deleted = this.itemService.deletedItems().length;
+
+    const activePct = total > 0 ? +((active / total) * 100).toFixed(1) : 0;
+    const inactivePct = total > 0 ? +((inactive / total) * 100).toFixed(1) : 0;
+    const draftPct = total > 0 ? +((draft / total) * 100).toFixed(1) : 0;
+
+    return {
+      total,
+      active,
+      inactive,
+      draft,
+      deleted,
+      activePct,
+      inactivePct,
+      draftPct,
+    };
+  });
+
+  statusChartPresentation = signal<'wave' | 'pillars'>('wave');
+  hoveredStatusPillar = signal<string | null>(null);
+
+  setStatusChartPresentation(mode: 'wave' | 'pillars'): void {
+    this.statusChartPresentation.set(mode);
+  }
+
+  setHoveredStatusPillar(key: string | null): void {
+    this.hoveredStatusPillar.set(key);
+  }
+
+  statusDistributionBars = computed(() => {
+    const s = this.overviewStats();
+    return [
+      {
+        key: 'total',
+        label: 'Total Items',
+        shortLabel: 'Total',
+        sublabel: 'All non-deleted records',
+        count: s.total,
+        percentage: 100,
+        heightPct: 96,
+        fillClass: 'bg-gradient-to-t from-[#0284c7] via-[#00a6f4] to-[#38bdf8]',
+        glowColor: 'rgba(0, 166, 244, 0.45)',
+        badgeBg: 'bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200 dark:border-sky-800',
+        tab: 'all',
+        accentColor: '#00a6f4',
+      },
+      {
+        key: 'active',
+        label: 'Active Records',
+        shortLabel: 'Active',
+        sublabel: 'Available for selection',
+        count: s.active,
+        percentage: s.activePct,
+        heightPct: Math.max(25, Math.min(92, Math.round(s.activePct * 0.92))),
+        fillClass: 'bg-gradient-to-t from-emerald-600 via-emerald-500 to-teal-400',
+        glowColor: 'rgba(16, 185, 129, 0.45)',
+        badgeBg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 border border-emerald-200 dark:border-emerald-800',
+        tab: 'Active',
+        accentColor: '#10b981',
+      },
+      {
+        key: 'inactive',
+        label: 'Inactive Records',
+        shortLabel: 'Inactive',
+        sublabel: 'Unavailable for new selection',
+        count: s.inactive,
+        percentage: s.inactivePct,
+        heightPct: Math.max(22, Math.min(75, Math.round(s.inactivePct * 1.8))),
+        fillClass: 'bg-gradient-to-t from-slate-600 via-slate-500 to-slate-400',
+        glowColor: 'rgba(100, 116, 139, 0.4)',
+        badgeBg: 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600',
+        tab: 'Inactive',
+        accentColor: '#64748b',
+      },
+      {
+        key: 'draft',
+        label: 'Draft Records',
+        shortLabel: 'Draft',
+        sublabel: 'Not yet finalized',
+        count: s.draft,
+        percentage: s.draftPct,
+        heightPct: Math.max(16, Math.min(60, Math.round(s.draftPct * 3.5) + 12)),
+        fillClass: 'bg-gradient-to-t from-amber-600 via-amber-500 to-yellow-400',
+        glowColor: 'rgba(245, 158, 11, 0.45)',
+        badgeBg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 border border-amber-200 dark:border-amber-800',
+        tab: 'Draft',
+        accentColor: '#f59e0b',
+      },
+    ];
+  });
+
+  statusWaveChart = computed(() => {
+    const s = this.overviewStats();
+    return {
+      path: 'M 45 22 C 105 22, 115 48, 175 48 C 235 48, 255 118, 315 118 C 375 118, 395 138, 455 138',
+      areaPath: 'M 45 22 C 105 22, 115 48, 175 48 C 235 48, 255 118, 315 118 C 375 118, 395 138, 455 138 L 455 158 L 45 158 Z',
+      nodes: [
+        { x: 45, y: 22, count: s.total, pct: 100, label: 'Total', color: '#00a6f4', tab: 'all' },
+        { x: 175, y: 48, count: s.active, pct: s.activePct, label: 'Active', color: '#10b981', tab: 'Active' },
+        { x: 315, y: 118, count: s.inactive, pct: s.inactivePct, label: 'Inactive', color: '#64748b', tab: 'Inactive' },
+        { x: 455, y: 138, count: s.draft, pct: s.draftPct, label: 'Draft', color: '#f59e0b', tab: 'Draft' },
+      ],
+    };
+  });
+
+  donutMetrics = computed(() => {
+    const s = this.overviewStats();
+    const circ = 251.327;
+    const activeStroke = (s.activePct / 100) * circ;
+    const inactiveStroke = (s.inactivePct / 100) * circ;
+    const draftStroke = (s.draftPct / 100) * circ;
+
+    return {
+      circumference: circ,
+      activeOffset: circ - activeStroke,
+      inactiveOffset: circ - (activeStroke + inactiveStroke),
+      draftOffset: circ - (activeStroke + inactiveStroke + draftStroke),
+      activePct: s.activePct,
+      inactivePct: s.inactivePct,
+      draftPct: s.draftPct,
+    };
+  });
+
+  recentActivitiesList = computed(() => {
+    return [
+      {
+        label: 'Items Created',
+        events: 42,
+        percentage: 34,
+        color: '#1863c0',
+        barClass: 'bg-[#1863c0]',
+        dotClass: 'bg-[#1863c0]',
+      },
+      {
+        label: 'Items Updated',
+        events: 34,
+        percentage: 28,
+        color: '#00a2e8',
+        barClass: 'bg-[#00a2e8]',
+        dotClass: 'bg-[#00a2e8]',
+      },
+      {
+        label: 'Items Deleted',
+        events: 18,
+        percentage: 15,
+        color: '#f43f5e',
+        barClass: 'bg-rose-500',
+        dotClass: 'bg-rose-500',
+      },
+      {
+        label: 'Item Views',
+        events: 20,
+        percentage: 14,
+        color: '#8b5cf6',
+        barClass: 'bg-purple-500',
+        dotClass: 'bg-purple-500',
+      },
+      {
+        label: 'Item Exports',
+        events: 12,
+        percentage: 9,
+        color: '#10b981',
+        barClass: 'bg-emerald-500',
+        dotClass: 'bg-emerald-500',
+      },
+    ];
+  });
+
+  recentItems = computed(() => {
+    const list = this.itemService.items();
+    return [...list]
+      .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
+      .slice(0, 5);
+  });
+
+  openFilteredList(tab: string): void {
+    const normalized = (tab === 'active' ? 'Active' : tab === 'inactive' ? 'Inactive' : tab === 'draft' ? 'Draft' : tab) as 'all' | 'Active' | 'Inactive' | 'Draft' | 'updated' | 'deleted';
+    this.setGridFilter(normalized);
+    this.handleGridClick();
+  }
+
+  openCreateFromOverview(): void {
+    this.switchToAddMode();
+  }
+
+  openSearchFromOverview(): void {
+    this.handleGridClick();
+    setTimeout(() => {
+      const searchInput = document.querySelector('input[placeholder="Search"]') as HTMLInputElement;
+      if (searchInput) {
+        searchInput.focus();
+      }
+    }, 100);
+  }
+
+  openHistoryFromOverview(): void {
+    this.activeActionView.set('history');
+    this.showToast('Audit History Log opened');
+  }
+
+  openRecycleBinFromOverview(): void {
+    this.setGridFilter('deleted');
+    this.handleGridClick();
+  }
+
+  openViewFromOverview(item: ItemMaster): void {
+    const idx = this.itemService.items().findIndex((it) => it.itemId === item.itemId);
+    if (idx >= 0) {
+      this.itemService.goToIndex(idx);
+      this.loadItemToForm(this.itemService.currentItem());
+    }
+    this.switchToViewMode();
+  }
+
+  formatDate(value?: string | null): string {
+    if (!value) return '-';
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return value;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
+  }
 
   // Accordion Sections Limit Toggle (First 7 sections vs All 14 matching Screenshot 4 reference)
   showAllSections = signal<boolean>(false);
@@ -2505,12 +2757,12 @@ export class ItemComponent implements OnInit {
         this.activeActionView.set('form');
       } else if (mode === 'add') {
         this.switchToAddMode();
-      } else if (mode === 'overview') {
-        this.activeActionView.set('overview');
-      } else if (mode === 'table') {
+      } else if (mode === 'grid') {
+        this.activeActionView.set('grid');
+      } else if (mode === 'table' || mode === 'list') {
         this.activeActionView.set('table');
       } else {
-        this.activeActionView.set('grid');
+        this.activeActionView.set('overview');
       }
     });
   }
@@ -3131,7 +3383,9 @@ export class ItemComponent implements OnInit {
   // Record Navigation (< 5 >)
   goToPreviousRecord(): void {
     if (this.itemService.currentIndex() > 0) {
-      this.pageMode.set('edit');
+      if (this.pageMode() !== 'view') {
+        this.pageMode.set('edit');
+      }
       this.itemService.goToPrev();
       this.loadItemToForm(this.itemService.currentItem());
       this.showToast(`Loaded item ${this.currentDisplayNumber()} of ${this.totalRecordsCount()}`);
@@ -3140,7 +3394,9 @@ export class ItemComponent implements OnInit {
 
   goToNextRecord(): void {
     if (this.itemService.currentIndex() < this.totalRecordsCount() - 1) {
-      this.pageMode.set('edit');
+      if (this.pageMode() !== 'view') {
+        this.pageMode.set('edit');
+      }
       this.itemService.goToNext();
       this.loadItemToForm(this.itemService.currentItem());
       this.showToast(`Loaded item ${this.currentDisplayNumber()} of ${this.totalRecordsCount()}`);
@@ -3150,7 +3406,9 @@ export class ItemComponent implements OnInit {
   onRecordInput(val: string): void {
     const num = parseInt(val, 10);
     if (!isNaN(num) && num >= 1 && num <= this.totalRecordsCount()) {
-      this.pageMode.set('edit');
+      if (this.pageMode() !== 'view') {
+        this.pageMode.set('edit');
+      }
       this.itemService.goToIndex(num - 1);
       this.loadItemToForm(this.itemService.currentItem());
     }
@@ -3158,6 +3416,11 @@ export class ItemComponent implements OnInit {
 
   // Save / Submit Item
   onSubmitForm(): void {
+    if (this.pageMode() === 'view') {
+      this.switchToEditMode();
+      return;
+    }
+
     const nameEn = this.formNameEn().trim();
     if (!nameEn) {
       this.showToast('Please enter an Item Name (EN) before saving.');
@@ -3412,18 +3675,30 @@ export class ItemComponent implements OnInit {
     this.isMoreActionsOpen.set(false);
   }
 
+  switchView(mode: 'overview' | 'grid' | 'table'): void {
+    this.activeActionView.set(mode);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        mode: mode === 'overview' ? null : mode,
+        view: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
   handleOverviewClick(): void {
-    this.activeActionView.set('overview');
+    this.switchView('overview');
     this.showToast('Item Overview Dashboard active');
   }
 
   handleGridClick(): void {
-    this.activeActionView.set('grid');
+    this.switchView('grid');
     this.showToast('Grid Item List active');
   }
 
   handleTableClick(): void {
-    this.activeActionView.set('table');
+    this.switchView('table');
     this.showToast('Table Item List active');
   }
 

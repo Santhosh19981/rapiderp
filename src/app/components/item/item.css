@@ -1267,3 +1267,334 @@ button.tab-pill-unselected:hover * {
 }
 
 
+
+/* ========================================================================= */
+/* ITEM MASTER OVERVIEW DASHBOARD STYLES (MOD-8 / Enterprise Analytics)      */
+/* ========================================================================= */
+.overview-kpi-card {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
+}
+
+.overview-kpi-card:hover {
+  transform: translateY(-2px);
+}
+
+.item-overview-page,
+.country-overview-page {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Status Chart Graphical Presentation Animations --- */
+.pillar-column {
+  transform-origin: bottom;
+  animation: pillarRise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.pillar-column:hover {
+  transform: translateY(-4px) scaleY(1.02);
+  filter: brightness(1.08);
+}
+
+@keyframes pillarRise {
+  0% {
+    transform: scaleY(0.08);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.pillar-glow-halo {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.wave-spline-path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawWave 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawWave {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.wave-node-pulse {
+  animation: nodeRadar 2s infinite ease-out;
+}
+
+@keyframes nodeRadar {
+  0% {
+    r: 5;
+    opacity: 1;
+    stroke-width: 2;
+  }
+  100% {
+    r: 14;
+    opacity: 0;
+    stroke-width: 0.5;
+  }
+}
+
+/* ========================================================================= */
+/* VIEW MODE STYLES (Clean Stacked Labels & Bold Values matching Country UI)  */
+/* Keeps Item Type (dropdown) and Item Name (text boxes) intact              */
+/* ========================================================================= */
+
+/* Grid alignment in View Mode: align all fields along top */
+.item-view-mode #section-general-info .grid,
+.item-view-mode #section-tabwise-info .grid {
+  align-items: start !important;
+}
+
+/* Field Container in View Mode (Reset border, pill background, padding) */
+.item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr),
+.item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) {
+  border: none !important;
+  border-width: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 44px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  cursor: default !important;
+}
+
+/* RTL field containers (Arabic) */
+.item-view-mode [dir="rtl"] .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr),
+.item-view-mode .group[dir="rtl"] > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr),
+.item-view-mode [dir="rtl"] div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) {
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+/* Labels: Small, muted, tracking-wide, sitting directly on top */
+.item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) .floating-notch-label {
+  position: static !important;
+  transform: none !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  margin: 0 0 4px 0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  color: #64748b !important;
+  letter-spacing: 0.025em !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
+
+:host-context(.dark) .item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.dark .item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+:host-context(.dark) .item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.dark .item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) .floating-notch-label {
+  color: #94a3b8 !important;
+}
+
+/* Hide required asterisks in view mode */
+.item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) .floating-notch-label span,
+.item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) .floating-notch-label span {
+  display: none !important;
+}
+
+/* Values: Bold, high contrast, clean text */
+.item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) input,
+.item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) input,
+.item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label) {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 20px !important;
+  color: #0f172a !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  width: 100% !important;
+  pointer-events: none !important;
+  cursor: default !important;
+  user-select: text !important;
+}
+
+:host-context(.dark) .item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) input,
+.dark .item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) input,
+:host-context(.dark) .item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.dark .item-view-mode .group > div:not(#field-itemType):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+:host-context(.dark) .item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) input,
+.dark .item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) input,
+:host-context(.dark) .item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.dark .item-view-mode div:has(> .floating-notch-label):not(#field-itemType):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label) {
+  color: #ffffff !important;
+}
+
+/* Hide interactive buttons & dropdown indicators in view mode */
+.item-view-mode #field-sku button,
+.item-view-mode #field-barcode button,
+.item-view-mode [data-dropdown]:not(:has(#field-itemType)) svg,
+.item-view-mode [data-dropdown]:not(:has(#field-itemType)) .text-slate-400 {
+  display: none !important;
+}
+
+.item-view-mode [data-dropdown]:not(:has(#field-itemType)) {
+  pointer-events: none !important;
+}
+
+/* Sales Price and Cost Price formatting */
+.item-view-mode #field-salesPrice,
+.item-view-mode #field-costPrice {
+  display: grid !important;
+  grid-template-columns: auto 1fr !important;
+  grid-template-rows: auto auto !important;
+  align-items: center !important;
+}
+
+.item-view-mode #field-salesPrice .floating-notch-label,
+.item-view-mode #field-costPrice .floating-notch-label {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  margin-bottom: 4px !important;
+}
+
+.item-view-mode #field-salesPrice > span.shrink-0,
+.item-view-mode #field-costPrice > span.shrink-0 {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  display: inline-block !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  margin-right: 5px !important;
+}
+
+:host-context(.dark) .item-view-mode #field-salesPrice > span.shrink-0,
+.dark .item-view-mode #field-salesPrice > span.shrink-0,
+:host-context(.dark) .item-view-mode #field-costPrice > span.shrink-0,
+.dark .item-view-mode #field-costPrice > span.shrink-0 {
+  color: #94a3b8 !important;
+}
+
+.item-view-mode #field-salesPrice input {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #059669 !important;
+}
+
+:host-context(.dark) .item-view-mode #field-salesPrice input,
+.dark .item-view-mode #field-salesPrice input {
+  color: #34d399 !important;
+}
+
+.item-view-mode #field-costPrice input {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+
+:host-context(.dark) .item-view-mode #field-costPrice input,
+.dark .item-view-mode #field-costPrice input {
+  color: #ffffff !important;
+}
+
+/* Margin & Markup pill transformed to View Mode metrics */
+.item-view-mode #field-marginMarkup {
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 44px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 2px 12px !important;
+}
+
+.item-view-mode #field-marginMarkup::before {
+  content: "Margin & Markup";
+  display: block !important;
+  width: 100% !important;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: #64748b;
+  letter-spacing: 0.025em;
+  margin-bottom: 2px;
+}
+
+:host-context(.dark) .item-view-mode #field-marginMarkup::before,
+.dark .item-view-mode #field-marginMarkup::before {
+  color: #94a3b8;
+}
+
+.item-view-mode #field-marginMarkup > .flex {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
+.item-view-mode #field-marginMarkup > .w-px {
+  height: 14px !important;
+  background-color: #cbd5e1 !important;
+}
+
+:host-context(.dark) .item-view-mode #field-marginMarkup > .w-px,
+.dark .item-view-mode #field-marginMarkup > .w-px {
+  background-color: #475569 !important;
+}
+
+/* Clean up number input steppers */
+.item-view-mode input[type="number"]::-webkit-outer-spin-button,
+.item-view-mode input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+.item-view-mode input[type="number"] {
+  -moz-appearance: textfield !important;
+}
