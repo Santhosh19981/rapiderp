@@ -619,3 +619,651 @@ button.tab-pill-unselected:hover * {
     right: 14px !important;
   }
 }
+
+
+/* ========================================================================= */
+/* STAT SUMMARY CAPSULE CARDS & GRID CARDS (Item Grid View)                 */
+/* ========================================================================= */
+.capsule-card {
+  width: 100%;
+  height: 58px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.capsule-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.12);
+}
+
+.capsule-circle-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  filter: drop-shadow(2px 2px 6px rgba(255, 255, 255, 0.14));
+}
+
+/* 1. Blue / Total */
+.capsule-total {
+  background: linear-gradient(100deg, #70D3FC 24.22%, #D2F1FE 73.78%);
+}
+.circle-total {
+  background-color: #20B7FA;
+}
+
+/* 2. Green / Active */
+.capsule-active {
+  background: linear-gradient(98deg, #6BE4A0 25.78%, #C4FFDD 76.35%);
+}
+.circle-active {
+  background-color: #6BE4A0;
+}
+
+/* 3. Teal-Gray / Inactive */
+.capsule-inactive {
+  background: linear-gradient(276deg, #E2FBFF 15.76%, #82CAD2 82.53%);
+}
+.circle-inactive {
+  background-color: #82CAD2;
+}
+
+/* 4. Yellow / Draft */
+.capsule-draft {
+  background: linear-gradient(96deg, #F8D56B 28.65%, #FFF4D3 85.82%);
+}
+.circle-draft {
+  background-color: #FFCC2F;
+}
+
+/* 5. Purple / Updated */
+.capsule-updated {
+  background: linear-gradient(96deg, #9A78FF 18.47%, #D6C8FF 74.92%);
+}
+.circle-updated {
+  background-color: #9A78FF;
+}
+
+/* 6. Red-Coral / Deleted */
+.capsule-deleted {
+  background: linear-gradient(96deg, #FC9296 22.14%, #FFDFE0 76.81%);
+}
+.circle-deleted {
+  background-color: #FC9296;
+}
+
+/* Capsule Text */
+.capsule-title {
+  color: #4E516C;
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 120%;
+  white-space: nowrap;
+}
+
+.capsule-count {
+  color: #4E516C;
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 120%;
+  white-space: nowrap;
+}
+
+/* Capsule grid spacing */
+.capsule-grid {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* Clean padding inside the scrolling grid area with breathing room for scrollbar */
+.country-grid-scroll {
+  padding: 6px 12px 20px 6px;
+}
+
+/* Item Grid Card (Exact match to Country Grid View specification) */
+.country-card {
+  background: #ffffff;
+  border: 1px solid #E2E4EB;
+  border-radius: 14px;
+  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.08);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 168px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.country-card:hover {
+  border-color: #20B7FA;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  transform: scale(1.035) translateY(-2px);
+  z-index: 20;
+}
+
+:host-context(.dark) .country-card,
+.dark .country-card {
+  background: #1f2937;
+  border-color: #374151;
+  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.25);
+}
+
+:host-context(.dark) .country-card:hover,
+.dark .country-card:hover {
+  border-color: #20B7FA;
+  box-shadow: 0 10px 25px -5px rgba(32, 183, 250, 0.25);
+  transform: scale(1.035) translateY(-2px);
+  z-index: 20;
+}
+
+/* Floating hover actions toolbar on item card (Edit, Delete, Status Toggle) */
+.country-card .card-hover-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-2px);
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 30;
+}
+
+.country-card:hover .card-hover-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+:host-context(.dark) .country-card .card-hover-actions,
+.dark .country-card .card-hover-actions {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ========================================================================= */
+/* Mobile Responsiveness Optimizations (Phones & Small Screens <= 640px)     */
+/* ========================================================================= */
+@media (max-width: 640px) {
+  .capsule-card {
+    height: 48px;
+  }
+  .capsule-circle-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .capsule-title {
+    font-size: 0.72rem;
+  }
+  .capsule-count {
+    font-size: 0.95rem;
+  }
+  .capsule-grid {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    gap: 6px;
+  }
+  .country-card {
+    padding: 16px 18px;
+    gap: 14px;
+    min-height: 142px;
+    border-radius: 12px;
+  }
+  .country-card .card-hover-actions {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================================================= */
+/* 5. ITEM LIST TABLE (Exact 1:1 Parity with Country List View Table)        */
+/* ========================================================================= */
+.country-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.country-table thead th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 25 !important;
+  background: #f8fafc !important;
+}
+
+:host-context(.dark) .country-table thead th,
+.dark .country-table thead th {
+  background: #1e293b !important;
+}
+
+.country-table .sticky-col {
+  position: sticky !important;
+  background: #ffffff;
+}
+
+.country-table thead th.sticky-col,
+.country-table thead .sticky-col {
+  position: sticky !important;
+  top: 0 !important;
+  background: #f8fafc !important;
+  z-index: 45 !important;
+}
+
+:host-context(.dark) .country-table thead th.sticky-col,
+:host-context(.dark) .country-table thead .sticky-col,
+.dark .country-table thead th.sticky-col,
+.dark .country-table thead .sticky-col {
+  background: #1e293b !important;
+}
+
+.country-table tbody .sticky-col {
+  background: #ffffff;
+  z-index: 10;
+}
+
+:host-context(.dark) .country-table tbody .sticky-col,
+.dark .country-table tbody .sticky-col {
+  background: #1e293b;
+}
+
+.country-table tbody tr:hover,
+.country-table tbody tr:hover td,
+.country-table tbody tr:hover .sticky-col,
+.country-table tbody tr:hover td.sticky-col {
+  background-color: #f0f9ff !important;
+}
+
+:host-context(.dark) .country-table tbody tr:hover,
+:host-context(.dark) .country-table tbody tr:hover td,
+:host-context(.dark) .country-table tbody tr:hover .sticky-col,
+:host-context(.dark) .country-table tbody tr:hover td.sticky-col,
+.dark .country-table tbody tr:hover,
+.dark .country-table tbody tr:hover td,
+.dark .country-table tbody tr:hover .sticky-col,
+.dark .country-table tbody tr:hover td.sticky-col {
+  background-color: #1e293b !important;
+}
+
+.country-table tbody tr.bg-sky-50\/60 td,
+.country-table tbody tr[class*="bg-sky-50"] td,
+.country-table tbody tr.bg-sky-50\/60 .sticky-col,
+.country-table tbody tr[class*="bg-sky-50"] .sticky-col,
+.country-table tbody tr.bg-sky-50\/60 td.sticky-col,
+.country-table tbody tr[class*="bg-sky-50"] td.sticky-col {
+  background-color: #f0f9ff !important;
+}
+
+:host-context(.dark) .country-table tbody tr.bg-sky-50\/60 td,
+:host-context(.dark) .country-table tbody tr[class*="bg-sky-50"] td,
+:host-context(.dark) .country-table tbody tr.bg-sky-50\/60 .sticky-col,
+:host-context(.dark) .country-table tbody tr[class*="bg-sky-50"] .sticky-col,
+.dark .country-table tbody tr.bg-sky-50\/60 td,
+.dark .country-table tbody tr[class*="bg-sky-50"] td,
+.dark .country-table tbody tr.bg-sky-50\/60 .sticky-col,
+.dark .country-table tbody tr[class*="bg-sky-50"] .sticky-col {
+  background-color: #0c4a6e !important;
+}
+
+/* Left frozen columns: Checkbox (56px), Item Name (250px), SKU (140px) -> Total 446px */
+.country-table .sticky-left-0 {
+  left: 0;
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+}
+
+.country-table .sticky-left-name {
+  left: 56px;
+  width: 250px !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+}
+
+.country-table .sticky-left-sku {
+  left: 306px;
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+}
+
+/* Right frozen columns: Status (130px at right 140px) and Action (140px at right 0) -> Total 270px */
+.country-table .sticky-right-status {
+  right: 140px !important;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+  z-index: 20;
+}
+
+.country-table .sticky-right-action {
+  right: 0 !important;
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+  z-index: 20;
+}
+
+.country-table thead th.sticky-left-0,
+.country-table thead th.sticky-left-name,
+.country-table thead th.sticky-left-sku,
+.country-table thead th.sticky-right-status,
+.country-table thead th.sticky-right-action {
+  z-index: 46 !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+}
+
+.country-table th,
+.country-table td,
+.country-table .sticky-col,
+.country-table .sticky-left-0,
+.country-table .sticky-left-name,
+.country-table .sticky-left-sku,
+.country-table .sticky-right-status,
+.country-table .sticky-right-action {
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+:host-context(.dark) .country-table .sticky-left-sku,
+:host-context(.dark) .country-table .sticky-right-status,
+.dark .country-table .sticky-left-sku,
+.dark .country-table .sticky-right-status {
+  box-shadow: none !important;
+  border-right: none !important;
+  border-left: none !important;
+}
+
+.country-table-scroll {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* Keyboard Grid Navigation Focus Box Outline */
+.cell-focus-box {
+  border: 2px solid #00a6f4 !important;
+  box-shadow: 0 0 0 2px rgba(0, 166, 244, 0.25) !important;
+  background-color: rgba(0, 166, 244, 0.07) !important;
+  border-radius: 6px !important;
+}
+
+/* Middle Columns Horizontal Scrollbar: Grey line strictly between fixed columns */
+.middle-columns-scrollbar-track {
+  height: 6px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  overflow-y: hidden;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #ffffff;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track,
+.dark .middle-columns-scrollbar-track {
+  background: #1e293b;
+  border-color: #334155;
+  scrollbar-color: #64748b #1e293b;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 9999px;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-track,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-thumb,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-thumb {
+  background: #64748b;
+}
+
+:host-context(.dark) .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover,
+.dark .middle-columns-scrollbar-track::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ========================================================================= */
+/* 6. ENTERPRISE CUSTOM CHECKBOXES                                           */
+/* ========================================================================= */
+.custom-checkbox-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.custom-checkbox-box {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  background-color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease-in-out;
+  flex-shrink: 0;
+  color: #00a6f4;
+}
+
+:host-context(.dark) .custom-checkbox-box,
+.dark .custom-checkbox-box {
+  background-color: #1e293b;
+  border-color: #475569;
+}
+
+.custom-checkbox-wrap:hover .custom-checkbox-box {
+  border-color: #00a6f4;
+}
+
+.custom-checkbox-input:checked + .custom-checkbox-box,
+.custom-checkbox-box.is-checked {
+  border-color: #00a6f4 !important;
+  background-color: #ffffff !important;
+  color: #00a6f4 !important;
+}
+
+:host-context(.dark) .custom-checkbox-input:checked + .custom-checkbox-box,
+.dark .custom-checkbox-input:checked + .custom-checkbox-box {
+  background-color: #0f172a !important;
+  border-color: #00a6f4 !important;
+  color: #38bdf8 !important;
+}
+
+.custom-checkbox-input:checked + .custom-checkbox-box .check-icon {
+  display: block;
+}
+
+.custom-checkbox-icon {
+  width: 12px;
+  height: 12px;
+  display: none;
+}
+
+.custom-checkbox-input:indeterminate + .custom-checkbox-box .dash-icon {
+  display: block;
+}
+
+/* ========================================================================= */
+/* FORM SWITCH & SIDE PANELS                                                 */
+/* ========================================================================= */
+.form-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-switch-track {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #cbd5e1;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.form-switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.form-switch input:checked + .form-switch-track {
+  background: #00a6f4;
+}
+
+.form-switch input:checked + .form-switch-track .form-switch-thumb {
+  transform: translateX(16px);
+}
+
+.form-switch-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+:host-context(.dark) .form-switch-track,
+.dark .form-switch-track {
+  background: #475569;
+}
+
+:host-context(.dark) .form-switch-label,
+.dark .form-switch-label {
+  color: #e2e8f0;
+}
+
+.export-panel .form-switch,
+.share-panel .form-switch {
+  display: flex;
+  width: 100%;
+}
+
+@keyframes side-panel-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.side-panel-slide {
+  animation: side-panel-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .side-panel-slide {
+    animation: none;
+  }
+}
+
+.export-format-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.export-format-btn:hover {
+  transform: scale(1.06);
+  border-color: currentColor;
+  box-shadow: 0 4px 10px -2px rgba(15, 23, 42, 0.15);
+}
+
+:host-context(.dark) .export-format-btn,
+.dark .export-format-btn {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+

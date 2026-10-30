@@ -28,6 +28,7 @@ import {
 } from './item.models';
 import { NavigationService } from '../../services/navigation.service';
 import { DropdownOption } from '../select-dropdown/select-dropdown';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export type ItemSectionTab =
   | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G'
@@ -84,6 +85,8 @@ export interface GuideTopic {
 export class ItemComponent implements OnInit {
   public itemService = inject(ItemService);
   public navService = inject(NavigationService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   @ViewChild('nameEnInput') nameEnInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('barcodeInput') barcodeInputRef?: ElementRef<HTMLInputElement>;
@@ -463,7 +466,7 @@ export class ItemComponent implements OnInit {
 
   // Action Dock Panel State
   isMoreActionsOpen = signal<boolean>(false);
-  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('form');
+  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('grid');
   actionPanelPage = signal<'top' | 'bottom'>('top');
 
   // Mobile Section Navigation ('general' info, 'tabs' specifications, or 'all')
@@ -476,10 +479,536 @@ export class ItemComponent implements OnInit {
   itemListSearchQuery = signal<string>('');
   itemListCategoryFilter = signal<string>('All');
 
+  // Country-style Table & Pagination Signals
+  @ViewChild('middleScrollbarTrack') middleScrollbarTrack?: ElementRef<HTMLDivElement>;
+  scrollableScrollWidth = signal<number>(1424);
+  selectedCell = signal<{ row: number; colKey: string } | null>(null);
+  editingCell = signal<{ id: string; field: string } | null>(null);
+  editingCellValue = signal<string>('');
+
+  readonly pageSizeOptions = [10, 25, 50, 75];
+  readonly extendedPageSizes = [100, 250, 500];
+  pageSize = signal<number>(25);
+  page = signal<number>(1);
+  selectedItemIds = signal<Set<string>>(new Set());
+  tableSortKey = signal<string>('nameEn');
+  tableSortDir = signal<'asc' | 'desc'>('asc');
+  isPageSizeMenuOpen = signal<boolean>(false);
+  isCustomPageSizeOpen = signal<boolean>(false);
+  customPageSizeInput = signal<string>('');
+  pageSizeErrorMessage = signal<string>('');
+  isPageDropdownOpen = signal<boolean>(false);
+  pageInputValue = signal<string>('1');
+
+  // Toolbar & Flyout Panels
+  isVisibilityOpen = signal<boolean>(false);
+  visibilitySearch = signal<string>('');
+  isSelectColumnVisible = signal<boolean>(true);
+  hiddenColumns = signal<Set<string>>(new Set());
+
+  readonly visibilityColumns: { key: string; label: string }[] = [
+    { key: 'nameEn', label: 'Item Name' },
+    { key: 'sku', label: 'SKU / Code' },
+    { key: 'itemType', label: 'Item Type' },
+    { key: 'category', label: 'Category' },
+    { key: 'brand', label: 'Brand' },
+    { key: 'baseUom', label: 'Base UOM' },
+    { key: 'salesPrice', label: 'Sales Price' },
+    { key: 'costPrice', label: 'Cost Price' },
+    { key: 'marginPct', label: 'Margin %' },
+    { key: 'status', label: 'Status' }
+  ];
+
+  filteredVisibilityColumns = computed(() => {
+    const q = this.visibilitySearch().trim().toLowerCase();
+    return q ? this.visibilityColumns.filter((c) => c.label.toLowerCase().includes(q)) : this.visibilityColumns;
+  });
+
+  isAllColumnsVisible = computed(() => this.hiddenColumns().size === 0 && this.isSelectColumnVisible());
+
+  toggleColumn(key: string): void {
+    this.hiddenColumns.update((set) => {
+      const next = new Set(set);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  toggleAllColumnsVisible(): void {
+    if (this.isAllColumnsVisible()) {
+      const allKeys = new Set(this.visibilityColumns.map((c) => c.key));
+      this.hiddenColumns.set(allKeys);
+      this.isSelectColumnVisible.set(false);
+    } else {
+      this.hiddenColumns.set(new Set());
+      this.isSelectColumnVisible.set(true);
+    }
+  }
+
+  toggleVisibilityPanel(event?: Event): void {
+    if (event) event.stopPropagation();
+    const next = !this.isVisibilityOpen();
+    this.isVisibilityOpen.set(next);
+    if (next) {
+      this.isFilterPanelOpen.set(false);
+      this.isExportPanelOpen.set(false);
+      this.isSharePanelOpen.set(false);
+    }
+  }
+
+  // Filter Side Panel (Matches Country Module 1:1)
+  isFilterPanelOpen = signal<boolean>(false);
+  filterSearch = signal<string>('');
+  readonly filterFieldDefs: { key: string; label: string }[] = [
+    { key: 'nameEn', label: 'Item Name' },
+    { key: 'itemType', label: 'Item Type' },
+    { key: 'category', label: 'Category' },
+    { key: 'brand', label: 'Brand' },
+    { key: 'status', label: 'Status' }
+  ];
+  filterDraft = signal<Record<string, Set<string>> | null>(null);
+  appliedFilter = signal<Partial<Record<string, Set<string>>> | null>(null);
+
+  filterValueOptions = computed<Record<string, string[]>>(() => {
+    const items = this.itemService.items();
+    const map: Record<string, string[]> = {};
+    for (const def of this.filterFieldDefs) {
+      const vals = new Set<string>();
+      items.forEach((it: any) => {
+        const v = it[def.key];
+        if (v !== undefined && v !== null && String(v).trim()) vals.add(String(v).trim());
+      });
+      map[def.key] = Array.from(vals).sort();
+    }
+    return map;
+  });
+
+  visibleFilterFields = computed(() => {
+    const q = this.filterSearch().trim().toLowerCase();
+    const options = this.filterValueOptions();
+    return this.filterFieldDefs
+      .map((f) => {
+        const labelMatch = f.label.toLowerCase().includes(q);
+        const values = labelMatch
+          ? options[f.key]
+          : options[f.key].filter((v) => v.toLowerCase().includes(q));
+        return { ...f, values };
+      })
+      .filter((f) => f.values.length > 0);
+  });
+
+  isFilterActive = computed(() => !!this.appliedFilter() || Object.keys(this.appliedColumnFilters()).length > 0);
+
+  private fullFilterSelection(): Record<string, Set<string>> {
+    const options = this.filterValueOptions();
+    const draft: Record<string, Set<string>> = {};
+    for (const f of this.filterFieldDefs) draft[f.key] = new Set(options[f.key]);
+    return draft;
+  }
+
+  toggleFilterPanel(): void {
+    if (this.isFilterPanelOpen()) {
+      this.isFilterPanelOpen.set(false);
+      return;
+    }
+    const draft = this.fullFilterSelection();
+    const applied = this.appliedFilter();
+    if (applied) {
+      for (const [key, set] of Object.entries(applied)) {
+        if (set) draft[key] = new Set(set);
+      }
+    }
+    this.filterDraft.set(draft);
+    this.filterSearch.set('');
+    this.isExportPanelOpen.set(false);
+    this.isSharePanelOpen.set(false);
+    this.isVisibilityOpen.set(false);
+    this.isFilterPanelOpen.set(true);
+  }
+
+  isFilterValueChecked(key: string, value: string): boolean {
+    return !!this.filterDraft()?.[key]?.has(value);
+  }
+
+  filterFieldState(key: string): 'all' | 'some' | 'none' {
+    const set = this.filterDraft()?.[key];
+    const total = this.filterValueOptions()[key]?.length || 0;
+    if (!set || set.size === 0) return 'none';
+    return set.size >= total ? 'all' : 'some';
+  }
+
+  toggleFilterValue(key: string, value: string): void {
+    this.filterDraft.update((d) => {
+      if (!d) return d;
+      const next = new Set(d[key] || []);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return { ...d, [key]: next };
+    });
+  }
+
+  toggleFilterField(key: string): void {
+    const selectAll = this.filterFieldState(key) !== 'all';
+    this.filterDraft.update((d) => (d ? { ...d, [key]: selectAll ? new Set(this.filterValueOptions()[key]) : new Set() } : d));
+  }
+
+  getFilterValueCount(key: string, value: string): number {
+    return this.itemService.items().filter((it: any) => String(it[key]) === value).length;
+  }
+
+  applyFilterPanel(): void {
+    const draft = this.filterDraft();
+    if (!draft) return;
+    const options = this.filterValueOptions();
+    const applied: Partial<Record<string, Set<string>>> = {};
+    for (const f of this.filterFieldDefs) {
+      if (draft[f.key] && draft[f.key].size < options[f.key].length) {
+        applied[f.key] = new Set(draft[f.key]);
+      }
+    }
+    this.appliedFilter.set(Object.keys(applied).length ? applied : null);
+    this.isFilterPanelOpen.set(false);
+    this.page.set(1);
+    this.showToast(Object.keys(applied).length ? 'Filters applied successfully.' : 'Showing all items.');
+  }
+
+  resetFilterPanel(): void {
+    this.filterDraft.set(this.fullFilterSelection());
+    this.appliedFilter.set(null);
+    this.showToast('Filters reset.');
+  }
+
+  // Export & Share Panels (Matches Country Module 1:1)
+  isExportPanelOpen = signal<boolean>(false);
+  isSharePanelOpen = signal<boolean>(false);
+  exportSearch = signal<string>('');
+  exportFields = signal<Set<string>>(new Set(['nameEn', 'sku', 'itemType', 'category', 'brand', 'salesPrice', 'costPrice', 'status']));
+  readonly exportFieldDefs = [
+    { key: 'nameEn', label: 'Item Name' },
+    { key: 'sku', label: 'SKU / Code' },
+    { key: 'itemType', label: 'Item Type' },
+    { key: 'category', label: 'Category' },
+    { key: 'brand', label: 'Brand' },
+    { key: 'baseUom', label: 'Base UOM' },
+    { key: 'salesPrice', label: 'Sales Price' },
+    { key: 'costPrice', label: 'Cost Price' },
+    { key: 'marginPct', label: 'Margin %' },
+    { key: 'status', label: 'Status' }
+  ];
+
+  visibleExportFields = computed(() => {
+    const q = this.exportSearch().trim().toLowerCase();
+    return q ? this.exportFieldDefs.filter((f) => f.label.toLowerCase().includes(q)) : this.exportFieldDefs;
+  });
+
+  readonly exportButtons = [
+    { id: 'excel', label: 'Export to Excel', color: '#16a34a' },
+    { id: 'pdf', label: 'Export to PDF', color: '#dc2626' },
+    { id: 'csv', label: 'Export to CSV', color: '#2563eb' },
+    { id: 'print', label: 'Export to Print', color: '#4b5563' },
+    { id: 'docs', label: 'Export to Docs', color: '#9333ea' },
+    { id: 'whatsapp', label: 'Export to WhatsApp', color: '#22c55e' },
+    { id: 'email', label: 'Export to Email', color: '#3b82f6' }
+  ];
+
+  isAllExportFieldsSelected = computed(() => this.exportFields().size === this.exportFieldDefs.length);
+
+  setAllExportFields(checked: boolean): void {
+    if (checked) this.exportFields.set(new Set(this.exportFieldDefs.map((f) => f.key)));
+    else this.exportFields.set(new Set());
+  }
+
+  toggleExportField(key: string): void {
+    this.exportFields.update((set) => {
+      const next = new Set(set);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  toggleExportPanel(): void {
+    const next = !this.isExportPanelOpen();
+    this.isExportPanelOpen.set(next);
+    if (next) {
+      this.isSharePanelOpen.set(false);
+      this.isFilterPanelOpen.set(false);
+      this.isVisibilityOpen.set(false);
+    }
+  }
+
+  toggleSharePanel(): void {
+    const next = !this.isSharePanelOpen();
+    this.isSharePanelOpen.set(next);
+    if (next) {
+      this.isExportPanelOpen.set(false);
+      this.isFilterPanelOpen.set(false);
+      this.isVisibilityOpen.set(false);
+    }
+  }
+
+  runExport(type: string): void {
+    const items = this.filteredItemList();
+    const fields = Array.from(this.exportFields());
+    if (type === 'csv' || type === 'excel') {
+      const headers = fields.map((f) => this.exportFieldDefs.find((d) => d.key === f)?.label || f).join(',');
+      const rows = items.map((it: any) => fields.map((f) => `"${String(it[f] ?? '').replace(/"/g, '""')}"`).join(','));
+      const csv = [headers, ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `items_export_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      this.showToast(`Exported ${items.length} items to ${type.toUpperCase()}`);
+    } else if (type === 'print') {
+      window.print();
+    } else if (type === 'whatsapp') {
+      const text = encodeURIComponent(`Items List (${items.length} items): ${window.location.origin}/landing/items`);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    } else if (type === 'email') {
+      const subject = encodeURIComponent('RapidERP Items List');
+      const body = encodeURIComponent(`Items List (${items.length} items) from RapidERP: ${window.location.origin}/landing/items`);
+      window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+    } else {
+      this.showToast(`Exported items to ${type.toUpperCase()}`);
+    }
+    this.isExportPanelOpen.set(false);
+    this.isSharePanelOpen.set(false);
+  }
+
+  // Column Header Filter Menu State (Hover on Header Text, Image 2 replica)
+  activeColumnMenu = signal<string | null>(null);
+  columnMenuPos = signal<{ top: number; left: number } | null>(null);
+  columnMenuSearch = signal<string>('');
+  appliedColumnFilters = signal<Record<string, Set<string>>>({});
+
+  openColumnMenu(key: string, event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.activeColumnMenu() === key) {
+      this.closeColumnMenu();
+      return;
+    }
+    this.activeColumnMenu.set(key);
+    this.columnMenuSearch.set('');
+
+    const btn = event.currentTarget as HTMLElement;
+    const rect = btn.getBoundingClientRect();
+    const menuWidth = 240;
+    let left = rect.left;
+    if (left + menuWidth > window.innerWidth - 16) {
+      left = Math.max(16, window.innerWidth - menuWidth - 16);
+    }
+    let top = rect.bottom + 6;
+    if (top + 280 > window.innerHeight - 16) {
+      top = Math.max(16, rect.top - 280);
+    }
+    this.columnMenuPos.set({ top, left });
+  }
+
+  closeColumnMenu(): void {
+    this.activeColumnMenu.set(null);
+    this.columnMenuPos.set(null);
+    this.columnMenuSearch.set('');
+  }
+
+  sortColumnDirect(key: string, dir: 'asc' | 'desc'): void {
+    this.tableSortKey.set(key);
+    this.tableSortDir.set(dir);
+    this.closeColumnMenu();
+  }
+
+  isColumnFilterActive(key: string): boolean {
+    const f = this.appliedColumnFilters()[key];
+    return !!f && f.size > 0;
+  }
+
+  isColumnAllSelected(key: string): boolean {
+    const selected = this.appliedColumnFilters()[key];
+    if (!selected) return true;
+    const all = this.getColumnDistinctValues(key);
+    return selected.size >= all.length;
+  }
+
+  isColumnValueSelected(key: string, val: string): boolean {
+    const selected = this.appliedColumnFilters()[key];
+    if (!selected) return true;
+    return selected.has(val);
+  }
+
+  toggleColumnSelectAll(key: string): void {
+    const all = this.getColumnDistinctValues(key);
+    this.appliedColumnFilters.update((cur) => {
+      const next = { ...cur };
+      if (this.isColumnAllSelected(key)) {
+        next[key] = new Set();
+      } else {
+        next[key] = new Set(all);
+      }
+      return next;
+    });
+  }
+
+  toggleColumnValue(key: string, val: string): void {
+    const all = this.getColumnDistinctValues(key);
+    this.appliedColumnFilters.update((cur) => {
+      const next = { ...cur };
+      const set = next[key] ? new Set(next[key]) : new Set(all);
+      if (set.has(val)) set.delete(val);
+      else set.add(val);
+      next[key] = set;
+      return next;
+    });
+  }
+
+  getColumnDistinctValues(key: string): string[] {
+    const vals = new Set<string>();
+    this.itemService.items().forEach((it: any) => {
+      const v = it[key];
+      if (v !== undefined && v !== null && String(v).trim()) vals.add(String(v).trim());
+    });
+    return Array.from(vals).sort();
+  }
+
+  getFilteredDistinctValues(key: string): string[] {
+    const q = this.columnMenuSearch().trim().toLowerCase();
+    const all = this.getColumnDistinctValues(key);
+    return q ? all.filter((v) => v.toLowerCase().includes(q)) : all;
+  }
+
+  getColumnValueCount(key: string, value: string): number {
+    return this.itemService.items().filter((it: any) => {
+      const v = it[key];
+      return String(v !== undefined && v !== null ? v : '') === value;
+    }).length;
+  }
+
+  clearColumnFilter(key: string): void {
+    this.appliedColumnFilters.update((cur) => {
+      const next = { ...cur };
+      delete next[key];
+      return next;
+    });
+    this.closeColumnMenu();
+    this.showToast(`Cleared filter for ${key}`);
+  }
+
+  applyColumnFilter(key: string): void {
+    this.closeColumnMenu();
+    this.page.set(1);
+    this.showToast(`Filter applied`);
+  }
+
+  // Recycle Bin Modal (Restore Items per Image 3 & 4)
+  isRecycleBinModalOpen = signal<boolean>(false);
+  selectedBinIds = signal<Set<string>>(new Set());
+  deletedCount = computed(() => this.itemService.deletedItems().length);
+
+  openRecycleBinModal(): void {
+    this.selectedBinIds.set(new Set());
+    this.isRecycleBinModalOpen.set(true);
+  }
+
+  closeRecycleBinModal(): void {
+    this.isRecycleBinModalOpen.set(false);
+    this.selectedBinIds.set(new Set());
+  }
+
+  toggleBinSelection(itemId: string): void {
+    this.selectedBinIds.update((set) => {
+      const next = new Set(set);
+      if (next.has(itemId)) next.delete(itemId);
+      else next.add(itemId);
+      return next;
+    });
+  }
+
+  clearBinSelection(): void {
+    this.selectedBinIds.set(new Set());
+  }
+
+  restoreItemFromBin(item: ItemMaster): void {
+    this.itemService.restoreItem(item.itemId);
+    this.showToast(`Item "${item.nameEn}" restored.`);
+  }
+
+  restoreAllFromBin(): void {
+    this.itemService.restoreAllItems();
+    this.closeRecycleBinModal();
+    this.showToast('All items restored successfully.');
+  }
+
+  deleteSelectedFromBin(): void {
+    const ids = Array.from(this.selectedBinIds());
+    if (!ids.length) return;
+    ids.forEach((id) => this.itemService.deletePermanently(id));
+    this.selectedBinIds.set(new Set());
+    this.showToast(`Permanently deleted ${ids.length} items.`);
+  }
+
+  // Restore All Items (Fix for Image 4 empty state)
+  restoreAllItemsAndResetFilter(): void {
+    this.itemService.restoreAllItems();
+    this.setGridFilter('all');
+    this.gridSearchQuery.set('');
+    this.appliedFilter.set(null);
+    this.appliedColumnFilters.set({});
+    this.showToast('Restored all items successfully.');
+  }
+
+  // Import Modal
+  isImportModalOpen = signal<boolean>(false);
+
+  openImportModal(): void {
+    this.isImportModalOpen.set(true);
+  }
+
+  closeImportModal(): void {
+    this.isImportModalOpen.set(false);
+  }
+
+  downloadItemTemplate(): void {
+    const headers = 'Item Name,SKU,Item Type,Category,Brand,Base UOM,Sales Price,Cost Price,Status';
+    const sample = 'Sample Colombian Coffee 1kg,SMP-001,Stock Item,Beverages & Hot Drinks,Café Del Sol,Piece,85,52,Active';
+    const csv = `${headers}\n${sample}`;
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'items_template.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    this.showToast('Downloaded sample template.');
+  }
+
+  // History Modal
+  isHistoryModalOpen = signal<boolean>(false);
+
+  openHistoryModal(scope?: string): void {
+    this.isHistoryModalOpen.set(true);
+  }
+
+  closeHistoryModal(): void {
+    this.isHistoryModalOpen.set(false);
+  }
+
+  itemAuditLogs = computed(() => [
+    { event: 'Bulk Imported', date: 'Just now', user: 'Admin (System Admin)', detail: 'Initial 50 items loaded into Item Master catalog' },
+    { event: 'Item Updated', date: '12 mins ago', user: 'Admin (System Admin)', detail: 'Price updated on Premium Colombian Coffee Beans' },
+    { event: 'Catalog Sync', date: '45 mins ago', user: 'Admin (System Admin)', detail: 'Category and Brand hierarchies synchronized' },
+    { event: 'Item Created', date: '2 hours ago', user: 'Admin (System Admin)', detail: 'Added Wireless Noise-Canceling Headphones' },
+    { event: 'Audit Verification', date: 'Yesterday', user: 'System Auditor', detail: 'Completed comprehensive catalog audit' }
+  ]);
+
   filteredItemList = computed(() => {
     const q = this.itemListSearchQuery().toLowerCase().trim();
     const cat = this.itemListCategoryFilter();
-    return this.itemService.items().filter((item) => {
+    const applied = this.appliedFilter();
+    const colFilters = this.appliedColumnFilters();
+
+    let list = this.itemService.items().filter((item) => {
       const matchCat = cat === 'All' || item.category === cat;
       const matchQ =
         !q ||
@@ -487,10 +1016,316 @@ export class ItemComponent implements OnInit {
         (item.nameAr && item.nameAr.includes(q)) ||
         item.sku.toLowerCase().includes(q) ||
         item.category.toLowerCase().includes(q) ||
+        (item.brand && item.brand.toLowerCase().includes(q)) ||
+        (item.itemType && item.itemType.toLowerCase().includes(q)) ||
         (item.barcode && item.barcode.includes(q));
+
+      if (applied) {
+        for (const [key, set] of Object.entries(applied)) {
+          if (set && set.size > 0 && !set.has(String((item as any)[key] ?? ''))) {
+            return false;
+          }
+        }
+      }
+
+      for (const [colKey, set] of Object.entries(colFilters)) {
+        if (set && set.size > 0 && !set.has(String((item as any)[colKey] ?? ''))) {
+          return false;
+        }
+      }
+
       return matchCat && matchQ;
     });
+
+    const key = this.tableSortKey();
+    const dir = this.tableSortDir();
+    return list.sort((a: any, b: any) => {
+      let valA = a[key] ?? '';
+      let valB = b[key] ?? '';
+      if (typeof valA === 'string') valA = valA.toLowerCase();
+      if (typeof valB === 'string') valB = valB.toLowerCase();
+      if (valA < valB) return dir === 'asc' ? -1 : 1;
+      if (valA > valB) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
   });
+
+  totalPages = computed(() => Math.max(1, Math.ceil(this.filteredItemList().length / this.pageSize())));
+  currentPage = computed(() => Math.min(this.page(), this.totalPages()));
+
+  pagedItemList = computed(() => {
+    const p = this.currentPage();
+    const s = this.pageSize();
+    const start = (p - 1) * s;
+    return this.filteredItemList().slice(start, start + s);
+  });
+
+  pageRangeLabel = computed(() => {
+    const total = this.filteredItemList().length;
+    if (total === 0) return 'Showing 0-0 of 0 Items';
+    const start = (this.currentPage() - 1) * this.pageSize() + 1;
+    const end = Math.min(this.currentPage() * this.pageSize(), total);
+    return `Showing ${start}-${end} of ${total} Items`;
+  });
+
+  isPageAllSelected = computed(() => {
+    const paged = this.pagedItemList();
+    if (!paged.length) return false;
+    return paged.every((it) => this.selectedItemIds().has(it.itemId));
+  });
+
+  isPagePartlySelected = computed(() => {
+    const paged = this.pagedItemList();
+    const some = paged.some((it) => this.selectedItemIds().has(it.itemId));
+    return some && !this.isPageAllSelected();
+  });
+
+  pagesList = computed<number[]>(() => {
+    const total = Math.max(8, this.totalPages());
+    const arr: number[] = [];
+    for (let i = total; i >= 1; i--) {
+      arr.push(i);
+    }
+    return arr;
+  });
+
+  setPageSize(size: number): void {
+    this.pageSize.set(size);
+    this.page.set(1);
+    this.isPageSizeMenuOpen.set(false);
+  }
+
+  togglePageSizeMenu(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isPageSizeMenuOpen.update((v) => !v);
+  }
+
+  selectExtendedPageSize(size: number): void {
+    this.setPageSize(size);
+  }
+
+  onCustomPageSizeChange(val: string): void {
+    this.customPageSizeInput.set(val);
+    const n = Number(val);
+    if (!val) {
+      this.pageSizeErrorMessage.set('');
+    } else if (isNaN(n) || n < 10 || n > 999) {
+      this.pageSizeErrorMessage.set('Must be 10 - 999');
+    } else {
+      this.pageSizeErrorMessage.set('');
+    }
+  }
+
+  isCustomPageSizeValid(): boolean {
+    const n = Number(this.customPageSizeInput());
+    return !isNaN(n) && n >= 10 && n <= 999;
+  }
+
+  applyCustomPageSize(): void {
+    if (this.isCustomPageSizeValid()) {
+      this.setPageSize(Number(this.customPageSizeInput()));
+      this.isCustomPageSizeOpen.set(false);
+    }
+  }
+
+  togglePageDropdown(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isPageDropdownOpen.update((v) => !v);
+  }
+
+  selectPageFromDropdown(page: number): void {
+    const clamped = Math.max(1, Math.min(this.totalPages(), page));
+    this.goToPage(clamped);
+    this.pageInputValue.set(String(clamped));
+    this.isPageDropdownOpen.set(false);
+  }
+
+  onPageInputKey(raw: string): void {
+    this.pageInputValue.set(raw);
+  }
+
+  commitPageInput(): void {
+    const raw = parseInt(this.pageInputValue(), 10);
+    if (!isNaN(raw)) {
+      const clamped = Math.max(1, Math.min(this.totalPages(), raw));
+      this.goToPage(clamped);
+      this.pageInputValue.set(String(clamped));
+    } else {
+      this.pageInputValue.set(String(this.currentPage()));
+    }
+  }
+
+  goToPage(target: number | string): void {
+    const n = Math.floor(Number(target));
+    if (!Number.isFinite(n)) return;
+    const clamped = Math.min(Math.max(1, n), this.totalPages());
+    this.page.set(clamped);
+    this.pageInputValue.set(String(clamped));
+  }
+
+  toggleRowSelection(id: string): void {
+    this.selectedItemIds.update((set) => {
+      const next = new Set(set);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  togglePageSelection(): void {
+    const selectAll = !this.isPageAllSelected();
+    const rows = this.pagedItemList();
+    this.selectedItemIds.update((set) => {
+      const next = new Set(set);
+      rows.forEach((it) => (selectAll ? next.add(it.itemId) : next.delete(it.itemId)));
+      return next;
+    });
+  }
+
+  toggleTableSort(key: string): void {
+    if (this.tableSortKey() === key) {
+      this.tableSortDir.update((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      this.tableSortKey.set(key);
+      this.tableSortDir.set('asc');
+    }
+  }
+
+  bulkDeleteItems(): void {
+    const ids = [...this.selectedItemIds()];
+    if (ids.length === 0) return;
+    this.itemService.bulkDeleteItems(ids);
+    this.selectedItemIds.set(new Set());
+    this.showToast(`Bulk Deleted ${ids.length} items`);
+  }
+
+  bulkUpdateItems(): void {
+    this.showToast('Bulk update modal active for selected items');
+  }
+
+  onItemImageError(event: Event, item: ItemMaster): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.style.display = 'none';
+      const parent = target.parentElement;
+      if (parent && !parent.querySelector('.fallback-svg')) {
+        const fallback = document.createElement('div');
+        fallback.className = 'fallback-svg w-full h-full flex items-center justify-center text-[#00a6f4] font-bold text-xs bg-sky-50 dark:bg-sky-950/60';
+        fallback.innerText = item.nameEn ? item.nameEn.substring(0, 2).toUpperCase() : 'IT';
+        parent.appendChild(fallback);
+      }
+    }
+  }
+
+  getItemRelativeTime(item: ItemMaster, index: number): string {
+    const times = [
+      '2 hours ago',
+      'Yesterday',
+      '3 days ago',
+      '5 days ago',
+      '1 week ago',
+      '2 weeks ago',
+      '3 weeks ago',
+      '1 month ago'
+    ];
+    return times[index % times.length];
+  }
+
+  isCellFocused(row: number, colKey: string): boolean {
+    const sc = this.selectedCell();
+    return sc !== null && sc.row === row && sc.colKey === colKey;
+  }
+
+  isCellEditing(id: string, field: string): boolean {
+    const ec = this.editingCell();
+    return ec !== null && ec.id === id && ec.field === field;
+  }
+
+  selectCell(row: number, colKey: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.selectedCell.set({ row, colKey });
+  }
+
+  onCellClick(item: ItemMaster, row: number, colKey: string, event: Event): void {
+    if (event) event.stopPropagation();
+    this.selectCell(row, colKey);
+  }
+
+  onCellDblClick(item: ItemMaster, row: number, colKey: string, event: Event): void {
+    if (event) event.stopPropagation();
+    this.selectCell(row, colKey);
+    this.startCellEdit(item, colKey, event);
+  }
+
+  startCellEdit(item: ItemMaster, field: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.editingCell.set({ id: item.itemId, field });
+    const val = (item as any)[field];
+    this.editingCellValue.set(val !== undefined && val !== null ? String(val) : '');
+    setTimeout(() => {
+      const cellEl = document.getElementById(`cell-${this.selectedCell()?.row ?? 0}-${field}`);
+      const inputEl = cellEl?.querySelector<HTMLInputElement>('input');
+      if (inputEl) {
+        inputEl.focus();
+        inputEl.select();
+      }
+    }, 20);
+  }
+
+  saveCellEdit(item: ItemMaster, field: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    const cur = this.editingCell();
+    if (!cur || cur.id !== item.itemId || cur.field !== field) return;
+
+    const rawVal = this.editingCellValue().trim();
+    let parsedVal: any = rawVal;
+    if (field === 'salesPrice' || field === 'costPrice') {
+      parsedVal = parseFloat(rawVal) || 0;
+    }
+    if ((item as any)[field] !== parsedVal) {
+      this.itemService.updateItemById(item.itemId, { [field]: parsedVal } as any);
+      this.showToast(`Updated ${field}`);
+    }
+    this.editingCell.set(null);
+  }
+
+  cancelCellEdit(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.editingCell.set(null);
+  }
+
+  onTableScroll(event: Event): void {
+    const el = event.target as HTMLElement;
+    if (this.middleScrollbarTrack?.nativeElement) {
+      this.middleScrollbarTrack.nativeElement.scrollLeft = el.scrollLeft;
+    }
+    const leftFixed = 446;
+    const rightFixed = 270;
+    const innerWidth = el.scrollWidth - leftFixed - rightFixed;
+    if (innerWidth > 0 && Math.abs(this.scrollableScrollWidth() - innerWidth) > 5) {
+      this.scrollableScrollWidth.set(innerWidth);
+    }
+  }
+
+  onMiddleScrollbarScroll(event: Event): void {
+    const el = event.target as HTMLElement;
+    const tableContainer = document.querySelector('.country-table-scroll') as HTMLElement | null;
+    if (tableContainer && Math.abs(tableContainer.scrollLeft - el.scrollLeft) > 1) {
+      tableContainer.scrollLeft = el.scrollLeft;
+    }
+  }
+
+  onTableWheel(event: WheelEvent): void {
+    const delta = Math.abs(event.deltaX) > 0 ? event.deltaX : (event.shiftKey ? event.deltaY : 0);
+    if (delta !== 0) {
+      const tableContainer = document.querySelector('.country-table-scroll') as HTMLElement | null;
+      if (tableContainer) {
+        tableContainer.scrollLeft += delta;
+        if (this.middleScrollbarTrack?.nativeElement) {
+          this.middleScrollbarTrack.nativeElement.scrollLeft = tableContainer.scrollLeft;
+        }
+      }
+    }
+  }
 
   overviewKpi = computed(() => {
     const items = this.itemService.items();
@@ -848,7 +1683,7 @@ export class ItemComponent implements OnInit {
     if (this.fieldSpeechRecognitionObj) {
       try {
         this.fieldSpeechRecognitionObj.stop();
-      } catch (_) {}
+      } catch (_) { }
       this.fieldSpeechRecognitionObj = null;
     }
     this.isFieldVoiceListening.set(false);
@@ -858,7 +1693,7 @@ export class ItemComponent implements OnInit {
     if (this.isItemNameVoiceListening()) {
       try {
         this.itemNameSpeechObj?.stop();
-      } catch (_) {}
+      } catch (_) { }
       this.isItemNameVoiceListening.set(false);
       return;
     }
@@ -1478,9 +2313,206 @@ export class ItemComponent implements OnInit {
     this.formHasVariants.set(false);
   }
 
+
+  // =========================================================================
+  // ITEM GRID VIEW SIGNALS & METHODS (Exact Replica of Country Grid View)
+  // =========================================================================
+  readonly gridPageSize = 25;
+  gridVisibleCount = signal<number>(25);
+
+  activeGridFilter = signal<'all' | 'Active' | 'Inactive' | 'Draft' | 'updated' | 'deleted'>('all');
+  gridSearchQuery = signal<string>('');
+  isGridVoiceListening = signal<boolean>(false);
+  private gridSpeechObj: any = null;
+
+  totalItemsCount = computed(() => this.itemService.items().length);
+  activeItemsCount = computed(() => this.itemService.items().filter((i) => i.status === 'Active').length);
+  inactiveItemsCount = computed(() => this.itemService.items().filter((i) => i.status === 'Inactive').length);
+  draftItemsCount = computed(() => this.itemService.items().filter((i) => i.status === 'Draft').length);
+  lastUpdatedTime = signal<string>('30 mins');
+  lastDeletedTime = signal<string>('40 mins');
+
+  filteredGridItems = computed(() => {
+    let list = this.itemService.items();
+    const filter = this.activeGridFilter();
+    if (filter === 'Active' || filter === 'Inactive' || filter === 'Draft') {
+      list = list.filter((it) => it.status === filter);
+    } else if (filter === 'updated') {
+      list = list.filter((it) => !!it.updatedAt || it.status === 'Active');
+    } else if (filter === 'deleted') {
+      list = list.filter((it) => it.status === 'Inactive');
+    }
+    const q = this.gridSearchQuery().trim().toLowerCase();
+    if (q) {
+      list = list.filter((it) =>
+        (it.nameEn && it.nameEn.toLowerCase().includes(q)) ||
+        (it.nameAr && it.nameAr.toLowerCase().includes(q)) ||
+        (it.sku && it.sku.toLowerCase().includes(q)) ||
+        (it.category && it.category.toLowerCase().includes(q)) ||
+        (it.brand && it.brand.toLowerCase().includes(q)) ||
+        (it.barcode && it.barcode.toLowerCase().includes(q))
+      );
+    }
+    return list;
+  });
+
+  displayedGridItems = computed(() => {
+    const list = this.filteredGridItems();
+    return list.slice(0, this.gridVisibleCount());
+  });
+
+  hasMoreGridItems = computed(() => this.gridVisibleCount() < this.filteredGridItems().length);
+
+  loadMoreGridItems(): void {
+    if (this.hasMoreGridItems()) {
+      this.gridVisibleCount.update((c) => c + this.gridPageSize);
+    }
+  }
+
+  onGridScroll(event: Event): void {
+    const el = event.target as HTMLElement;
+    if (el && el.scrollHeight - el.scrollTop <= el.clientHeight + 100) {
+      this.loadMoreGridItems();
+    }
+  }
+
+  setGridFilter(filter: 'all' | 'Active' | 'Inactive' | 'Draft' | 'updated' | 'deleted'): void {
+    this.activeGridFilter.set(filter);
+    const filterLabels: Record<string, string> = {
+      all: 'Showing all items',
+      Active: 'Filtering by Active items',
+      Inactive: 'Filtering by Inactive items',
+      Draft: 'Filtering by Draft items',
+      updated: 'Showing recently updated items (30 mins)',
+      deleted: 'Showing Recycle Bin items (40 mins)'
+    };
+    this.showToast(filterLabels[filter] || 'Filter updated');
+  }
+
+  deleteItemFromGrid(item: ItemMaster, event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.itemService.deleteItemById(item.itemId);
+    this.showToast(`Item "${item.nameEn}" removed`);
+  }
+
+  toggleItemStatusInGrid(item: ItemMaster, event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.itemService.toggleItemStatus(item.itemId);
+    const updated = this.itemService.items().find((i) => i.itemId === item.itemId);
+    this.showToast(`Item "${item.nameEn}" status changed to ${updated?.status || 'Active'}`);
+  }
+
+  openEditFromGrid(item: ItemMaster, event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    const idx = this.itemService.items().findIndex((it) => it.itemId === item.itemId);
+    if (idx >= 0) {
+      this.itemService.goToIndex(idx);
+      this.loadItemToForm(item);
+    }
+    this.pageMode.set('edit');
+    this.activeActionView.set('form');
+  }
+
+  openViewFromGrid(item: ItemMaster, event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    const idx = this.itemService.items().findIndex((it) => it.itemId === item.itemId);
+    if (idx >= 0) {
+      this.itemService.goToIndex(idx);
+      this.loadItemToForm(item);
+    }
+    this.pageMode.set('view');
+    this.activeActionView.set('form');
+  }
+
+  returnToGridView(): void {
+    this.activeActionView.set('grid');
+  }
+
+  toggleGridVoiceSearch(event?: Event): void {
+    if (event) event.stopPropagation();
+    if (this.isGridVoiceListening()) {
+      if (this.gridSpeechObj) {
+        try { this.gridSpeechObj.stop(); } catch (_) { }
+        this.gridSpeechObj = null;
+      }
+      this.isGridVoiceListening.set(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      try {
+        this.gridSpeechObj = new SpeechRecognition();
+        this.gridSpeechObj.lang = 'en-US';
+        this.gridSpeechObj.continuous = false;
+        this.gridSpeechObj.interimResults = false;
+        this.gridSpeechObj.onstart = () => {
+          this.isGridVoiceListening.set(true);
+        };
+        this.gridSpeechObj.onresult = (e: any) => {
+          const transcript = e.results[0][0].transcript;
+          if (transcript) {
+            this.gridSearchQuery.set(transcript);
+            this.showToast(`Voice Search: "${transcript}"`);
+          }
+          this.isGridVoiceListening.set(false);
+        };
+        this.gridSpeechObj.onerror = () => {
+          this.isGridVoiceListening.set(false);
+        };
+        this.gridSpeechObj.onend = () => {
+          this.isGridVoiceListening.set(false);
+        };
+        this.gridSpeechObj.start();
+      } catch (_) {
+        this.simulateGridVoice();
+      }
+    } else {
+      this.simulateGridVoice();
+    }
+  }
+
+  private simulateGridVoice(): void {
+    this.isGridVoiceListening.set(true);
+    setTimeout(() => {
+      const sample = 'Coffee';
+      this.gridSearchQuery.set(sample);
+      this.isGridVoiceListening.set(false);
+      this.showToast(`Voice Search: "${sample}"`);
+    }, 1000);
+  }
+
   ngOnInit(): void {
+    if (this.itemService.items().length === 0) {
+      this.itemService.resetToInitialItems();
+    }
     // Sync active item from service to form
     this.loadItemToForm(this.itemService.currentItem());
+
+    this.route.queryParamMap.subscribe((qp) => {
+      const mode = qp.get('mode') || qp.get('view');
+      const id = qp.get('id');
+      if (id) {
+        const idx = this.itemService.items().findIndex((it) => it.itemId === id || it.sku === id);
+        if (idx >= 0) {
+          this.itemService.goToIndex(idx);
+          this.loadItemToForm(this.itemService.currentItem());
+        }
+      }
+
+      if (mode === 'form' || mode === 'edit') {
+        this.pageMode.set('edit');
+        this.activeActionView.set('form');
+      } else if (mode === 'add') {
+        this.switchToAddMode();
+      } else if (mode === 'overview') {
+        this.activeActionView.set('overview');
+      } else if (mode === 'table') {
+        this.activeActionView.set('table');
+      } else {
+        this.activeActionView.set('grid');
+      }
+    });
   }
 
   // Load an item record into form signals
@@ -1944,7 +2976,7 @@ export class ItemComponent implements OnInit {
     if (this.speechRecognitionObj) {
       try {
         this.speechRecognitionObj.stop();
-      } catch (_) {}
+      } catch (_) { }
       this.speechRecognitionObj = null;
     }
     this.isVoiceListening.set(false);

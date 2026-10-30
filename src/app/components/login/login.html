@@ -83,7 +83,7 @@
               <div class="flex items-center gap-2.5 ml-2 shrink-0">
                 <!-- Green Tick Mark when valid -->
                 @if (isUsernameValid() && !usernameError()) {
-                  <span class="text-emerald-500 animate-in zoom-in-75 duration-200 flex items-center justify-center" title="Valid input">
+                  <span class="text-emerald-500 animate-in zoom-in-75 duration-200 flex items-center justify-center" title="Valid">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
@@ -94,7 +94,7 @@
                 <button
                   type="button"
                   (click)="startSpeechRecognition()"
-                  [title]="isListening() ? 'Listening...' : 'Voice input'"
+                  [title]="isListening() ? 'Listening' : 'Voice'"
                   class="text-slate-400 hover:text-[#00a6f4] transition-colors p-1 rounded-full cursor-pointer focus:outline-none"
                   [class.text-red-500]="isListening()"
                   [class.animate-pulse]="isListening()"
@@ -160,7 +160,7 @@
               <div class="flex items-center gap-2.5 ml-2 shrink-0">
                 <!-- Green Tick Mark when valid -->
                 @if (isPasswordValid() && !passwordError()) {
-                  <span class="text-emerald-500 animate-in zoom-in-75 duration-200 flex items-center justify-center" title="Valid input">
+                  <span class="text-emerald-500 animate-in zoom-in-75 duration-200 flex items-center justify-center" title="Valid">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
@@ -171,7 +171,7 @@
                 <button
                   type="button"
                   (click)="togglePasswordVisibility()"
-                  [title]="showPassword() ? 'Hide password' : 'Show password'"
+                  [title]="showPassword() ? 'Hide' : 'Show'"
                   class="text-slate-400 hover:text-slate-600 transition p-1 rounded-full cursor-pointer focus:outline-none"
                 >
                   @if (!showPassword()) {

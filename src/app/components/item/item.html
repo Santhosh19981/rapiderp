@@ -3,9 +3,2060 @@
   [class.sm:pr-[410px]]="isGuidanceTourOpen()">
 
   <!-- Module Shell: Header + Scrollable Content in one clean enterprise layout -->
-  <div class="flex-1 min-h-0 flex flex-col p-1 sm:p-2 sm:p-2.5">
+  <div class="flex-1 min-h-0 flex flex-col p-1.5 sm:p-3">
     <div
-      class="item-shell flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-[#E2E4EB] dark:border-slate-700 overflow-hidden shadow-xs">
+      class="item-shell flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 overflow-hidden">
+      <!-- ========================================================================= -->
+      <!-- VIEW 1: ITEM GRID VIEW (Default Landing Page - No Footer, No Right Dock)   -->
+      <!-- ========================================================================= -->
+      @if (activeActionView() === 'grid' || activeActionView() === 'table') {
+
+        <!-- 1. MODULE HEADER (Shared between Grid & List View with Video Tutorial) -->
+        <div
+          class="item-grid-header relative flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-5 h-14 sm:h-16 border-b border-slate-200 dark:border-slate-700 shrink-0 bg-[#f8fafc] dark:bg-slate-850/90">
+
+          <!-- Left: Title on top, Breadcrumb below -->
+          <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+            <!-- Video / Tutorial Play Button -->
+            <button type="button" (click)="openVideoTutorial()" title="Tutorial"
+              class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-[#00a6f4]/30 hover:scale-105 hover:shadow-lg transition cursor-pointer">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-current ml-0.5" viewBox="0 0 24 24">
+                <polygon points="6 3 20 12 6 21 6 3" />
+              </svg>
+            </button>
+            <div class="min-w-0 flex flex-col justify-center">
+              <div class="flex items-center gap-2">
+                <h1 class="text-[15px] sm:text-[19px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate cursor-default">
+                  {{ activeActionView() === 'grid' ? 'Item Grid View' : 'Item List View' }}
+                </h1>
+              </div>
+              <nav class="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400 font-medium leading-none mt-1 select-none" aria-label="Breadcrumb">
+                <span class="hover:text-slate-600 dark:hover:text-slate-300 transition">Administrator</span>
+                <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                <span>General</span>
+                <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                <span class="text-slate-500 dark:text-slate-300 font-medium">Item Master</span>
+                <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                <span class="text-[#00a6f4] font-bold truncate">
+                  {{ activeActionView() === 'grid' ? 'Item Grid View' : 'Item List View' }}
+                </span>
+              </nav>
+            </div>
+          </div>
+
+          <!-- Right: + Add Button -->
+          <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            <button type="button" (click)="switchToAddMode()"
+              class="h-8.5 sm:h-10 px-3.5 sm:px-7 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-xs sm:text-[18px] font-bold transition-all cursor-pointer shrink-0 shadow-2xs flex items-center gap-1"
+              title="Add">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              <span>Add</span>
+            </button>
+          </div>
+        </div>
+
+        @if (activeActionView() === 'grid') {
+<div class="country-body flex-1 min-h-0 flex flex-col custom-scrollbar overflow-y-auto md:overflow-hidden" (scroll)="onGridScroll($event)">
+
+          <div class="flex flex-col md:flex-1 md:min-h-0 w-full">
+
+            <!-- 6 CAPSULE STAT SUMMARY CARDS (Exact match from Country Grid View) -->
+            <div class="capsule-grid shrink-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 xl:gap-2.5 w-full px-2.5 sm:px-6">
+
+            <!-- 1. Total - Blue Capsule -->
+            <div (click)="setGridFilter('all')"
+              class="capsule-card capsule-total w-full  rounded-full flex items-center cursor-pointer transition select-none"
+              [class.ring-2]="activeGridFilter() === 'all'" [class.ring-[#00a6f4]]="activeGridFilter() === 'all'">
+              <div class="capsule-circle-icon circle-total   rounded-full flex items-center justify-center shrink-0">
+                <span class="text-white font-black text-lg leading-none select-none">&#931;</span>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-1.5 mr-2.5 min-w-0">
+                <span class="capsule-title whitespace-nowrap">Total</span>
+                <span class="capsule-count shrink-0 ml-1">{{ totalItemsCount() }}</span>
+              </div>
+            </div>
+
+            <!-- 2. Active - Mint Green Capsule -->
+            <div (click)="setGridFilter('Active')"
+              class="capsule-card capsule-active w-full  rounded-full flex items-center cursor-pointer transition select-none"
+              [class.ring-2]="activeGridFilter() === 'Active'" [class.ring-emerald-500]="activeGridFilter() === 'Active'">
+              <div class="capsule-circle-icon circle-active   rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  <path d="m9 14 2 2 4-4" />
+                </svg>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-1.5 mr-2.5 min-w-0">
+                <span class="capsule-title whitespace-nowrap">Active</span>
+                <span class="capsule-count shrink-0 ml-1">{{ activeItemsCount() }}</span>
+              </div>
+            </div>
+
+            <!-- 3. Inactive - Teal Capsule -->
+            <div (click)="setGridFilter('Inactive')"
+              class="capsule-card capsule-inactive w-full  rounded-full flex items-center cursor-pointer transition select-none"
+              [class.ring-2]="activeGridFilter() === 'Inactive'" [class.ring-teal-500]="activeGridFilter() === 'Inactive'">
+              <div class="capsule-circle-icon circle-inactive   rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                </svg>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-1.5 mr-2.5 min-w-0">
+                <span class="capsule-title whitespace-nowrap">Inactive</span>
+                <span class="capsule-count shrink-0 ml-1">{{ inactiveItemsCount() }}</span>
+              </div>
+            </div>
+
+            <!-- 4. Draft - Yellow Capsule -->
+            <div (click)="setGridFilter('Draft')"
+              class="capsule-card capsule-draft w-full  rounded-full flex items-center cursor-pointer transition select-none"
+              [class.ring-2]="activeGridFilter() === 'Draft'" [class.ring-amber-500]="activeGridFilter() === 'Draft'">
+              <div class="capsule-circle-icon circle-draft   rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="9" y1="13" x2="15" y2="13" />
+                  <line x1="9" y1="17" x2="13" y2="17" />
+                </svg>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-1.5 mr-2.5 min-w-0">
+                <span class="capsule-title whitespace-nowrap">Draft</span>
+                <span class="capsule-count shrink-0 ml-1">{{ draftItemsCount() }}</span>
+              </div>
+            </div>
+
+            <!-- 5. Updated - Purple Capsule -->
+            <div (click)="setGridFilter('updated')"
+              class="capsule-card capsule-updated w-full  rounded-full flex items-center cursor-pointer transition select-none hover:shadow-md"
+              [class.ring-2]="activeGridFilter() === 'updated'" [class.ring-purple-500]="activeGridFilter() === 'updated'"
+              >
+              <div class="capsule-circle-icon circle-updated   rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-1.5 mr-2.5 min-w-0">
+                <span class="capsule-title whitespace-nowrap">Updated</span>
+                <span class="text-[11px] sm:text-xs font-black text-[#4E516C] shrink-0 whitespace-nowrap ml-1">{{ lastUpdatedTime() }}</span>
+              </div>
+            </div>
+
+            <!-- 6. Recycle Bin - Red-Coral Capsule -->
+            <div (click)="setGridFilter('deleted')"
+              class="capsule-card capsule-deleted w-full  rounded-full flex items-center cursor-pointer transition select-none hover:shadow-md"
+              [class.ring-2]="activeGridFilter() === 'deleted'" [class.ring-rose-500]="activeGridFilter() === 'deleted'"
+              >
+              <div class="capsule-circle-icon circle-deleted   rounded-full flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+              </div>
+              <div class="flex items-center justify-between flex-1 ml-1.5 mr-2.5 min-w-0">
+                <span class="capsule-title whitespace-nowrap">Recycle Bin</span>
+                <span class="text-[11px] sm:text-xs font-black text-[#4E516C] shrink-0 whitespace-nowrap ml-1">{{ lastDeletedTime() }}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- CONTROLS TOOLBAR (Responsive: 1:1 desktop, streamlined mobile) -->
+          <div class="shrink-0 flex items-center justify-between gap-1.5 sm:gap-3 px-2.5 sm:px-6 py-2 sm:py-2.5 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
+            <!-- Left: Count -->
+            <div class="flex items-center gap-1.5 shrink-0 min-w-0">
+              <span class="hidden sm:inline text-xs sm:text-[13px] font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                Showing <strong class="font-bold text-black dark:text-white">{{ displayedGridItems().length }}</strong> of
+                <strong class="font-bold text-black dark:text-white">{{ filteredGridItems().length }}</strong> items
+              </span>
+              <span class="sm:hidden text-[11px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                <strong class="text-slate-800 dark:text-white">{{ displayedGridItems().length }}</strong>/{{ filteredGridItems().length }}
+              </span>
+            </div>
+
+            <!-- Center: Search Input with Voice Mic -->
+            <div class="flex-1 max-w-xs sm:max-w-md mx-1 sm:mx-4 relative flex items-center">
+              <input type="text" [ngModel]="gridSearchQuery()" (ngModelChange)="gridSearchQuery.set($event)"
+                placeholder="Search" autofocus
+                class="w-full h-8 sm:h-9 pl-7 sm:pl-9 pr-7 sm:pr-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <button type="button" (click)="toggleGridVoiceSearch($event)"
+                [title]="isGridVoiceListening() ? 'Listening' : 'Voice'"
+                class="absolute right-1.5 sm:right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#00a6f4] p-1 rounded-full cursor-pointer focus:outline-none transition-colors"
+                [class.text-red-500]="isGridVoiceListening()"
+                [class.animate-pulse]="isGridVoiceListening()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Right: View Switchers (Overview + List) -->
+            <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+              <div class="flex items-center bg-slate-100 dark:bg-slate-700/80 p-0.5 rounded-full border border-slate-200/80 dark:border-slate-600 shrink-0">
+                <button type="button" (click)="handleOverviewClick()"
+                  class="h-6.5 sm:h-7 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-semibold flex items-center gap-1 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                  title="Overview">
+                  <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="7" height="9" x="3" y="3" rx="1" />
+                    <rect width="7" height="5" x="14" y="3" rx="1" />
+                    <rect width="7" height="9" x="14" y="12" rx="1" />
+                    <rect width="7" height="5" x="3" y="16" rx="1" />
+                  </svg>
+                  <span class="hidden sm:inline">Overview</span>
+                </button>
+                <button type="button" (click)="handleTableClick()"
+                  class="h-6.5 sm:h-7 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-semibold flex items-center gap-1 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
+                  title="List">
+                  <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6" stroke-linecap="round" />
+                    <line x1="8" y1="12" x2="21" y2="12" stroke-linecap="round" />
+                    <line x1="8" y1="18" x2="21" y2="18" stroke-linecap="round" />
+                    <circle cx="4" cy="6" r="1.5" fill="currentColor" />
+                    <circle cx="4" cy="12" r="1.5" fill="currentColor" />
+                    <circle cx="4" cy="18" r="1.5" fill="currentColor" />
+                  </svg>
+                  <span class="hidden sm:inline">List</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARDS GRID (Responsive: 1:1 Country desktop, optimized mobile) -->
+          <div class="flex flex-col md:flex-row gap-2 md:flex-1 md:min-h-0 px-1.5 sm:px-2.5 py-1.5 bg-[#f8fafc] dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-700">
+            <div class="flex-1 min-w-0 md:min-h-0 custom-scrollbar md:overflow-y-auto country-grid-scroll overflow-y-auto md:overflow-y-scroll" (scroll)="onGridScroll($event)">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2.5 sm:gap-3 p-1 sm:p-1.5 pb-4">
+              @for (item of displayedGridItems(); track item.itemId) {
+              <div (click)="openEditFromGrid(item)" class="country-card select-none group/card">
+
+                <!-- Floating Hover Actions: Edit, Delete, Status Toggle -->
+                <div class="card-hover-actions" (click)="$event.stopPropagation()">
+                  <!-- Edit Icon -->
+                  <button type="button" (click)="openEditFromGrid(item, $event)"
+                    class="w-6 h-6 rounded-full flex items-center justify-center text-slate-500 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer"
+                    title="Edit">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                    </svg>
+                  </button>
+
+                  <!-- Delete Icon -->
+                  <button type="button" (click)="deleteItemFromGrid(item, $event)"
+                    class="w-6 h-6 rounded-full flex items-center justify-center text-slate-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-700 transition cursor-pointer"
+                    title="Delete">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+
+                  <!-- Status Toggle Icon -->
+                  <button type="button" (click)="toggleItemStatusInGrid(item, $event)"
+                    class="w-6 h-6 rounded-full flex items-center justify-center transition cursor-pointer"
+                    [class.text-slate-400]="item.status === 'Active'" [class.hover:text-rose-500]="item.status === 'Active'"
+                    [class.hover:bg-rose-50]="item.status === 'Active'"
+                    [class.dark:hover:bg-slate-700]="item.status === 'Active'"
+                    [class.text-emerald-500]="item.status !== 'Active'"
+                    [class.hover:bg-emerald-50]="item.status !== 'Active'"
+                    [class.dark:hover:bg-emerald-950/40]="item.status !== 'Active'"
+                    [title]="item.status === 'Active' ? 'Inactive': 'Active'">
+                    @if (item.status === 'Active') {
+                    <svg class="w-4 h-4 text-slate-400 hover:text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                    </svg>
+                    } @else {
+                    <svg class="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="m9 12 2 2 4-4" />
+                    </svg>
+                    }
+                  </button>
+                </div>
+
+                <!-- Top Row - Item Icon + Item Name -->
+                <div class="flex items-center gap-2 w-full min-w-0 pr-1">
+                  <div class="w-8 h-8 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-750 border border-slate-200/80 dark:border-slate-700 shrink-0 flex items-center justify-center shadow-2xs">
+                    <img [src]="item.productImage" [alt]="item.nameEn"
+                      (error)="onItemImageError($event, item)"
+                      class="w-full h-full object-cover rounded-lg" />
+                  </div>
+                  <h3
+                    class="text-[13.5px] font-semibold text-slate-800 dark:text-slate-100 group-hover/card:text-[#00a6f4] dark:group-hover/card:text-[#38bdf8] transition-colors truncate max-w-full group-hover/card:max-w-[calc(100%-105px)]"
+                    [title]="item.nameEn">
+                    {{ item.nameEn }}
+                  </h3>
+                </div>
+
+                <!-- Middle Row - Sales Price and Status -->
+                <div class="grid grid-cols-2 gap-2 w-full">
+                  <!-- Sales Price - Left -->
+                  <div class="min-w-0">
+                    <div
+                      class="text-[10px] text-slate-400 dark:text-slate-500 group-hover/card:text-[#00a6f4] dark:group-hover/card:text-[#38bdf8] font-medium leading-tight mb-0.5 transition-colors">
+                      Sales Price
+                    </div>
+                    <div class="text-[12px] font-medium text-slate-800 dark:text-slate-100 truncate">
+                      AED {{ item.salesPrice }}
+                    </div>
+                  </div>
+
+                  <!-- Status - Right -->
+                  <div class="text-right min-w-0 cursor-pointer" (click)="toggleItemStatusInGrid(item, $event)"
+                    [title]="item.status">
+                    <div
+                      class="text-[10px] text-slate-400 dark:text-slate-500 group-hover/card:text-[#00a6f4] dark:group-hover/card:text-[#38bdf8] font-medium leading-tight mb-0.5 transition-colors">
+                      Status
+                    </div>
+                    <span
+                      class="inline-block text-[11px] font-bold"
+                      [class.text-emerald-500]="item.status === 'Active'"
+                      [class.text-slate-400]="item.status === 'Inactive'"
+                      [class.text-amber-500]="item.status === 'Draft'">
+                      {{ item.status }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Bottom Row - SKU and Category -->
+                <div class="grid grid-cols-2 gap-2 w-full pt-1.5 border-t border-slate-100 dark:border-slate-700/60">
+                  <!-- SKU - Left -->
+                  <div class="min-w-0">
+                    <div
+                      class="text-[10px] text-slate-400 dark:text-slate-500 group-hover/card:text-[#00a6f4] dark:group-hover/card:text-[#38bdf8] font-medium leading-tight mb-0.5 transition-colors">
+                      SKU
+                    </div>
+                    <div class="text-[11px] font-mono font-bold text-slate-700 dark:text-slate-200 truncate">
+                      {{ item.sku }}
+                    </div>
+                  </div>
+
+                  <!-- Category - Right -->
+                  <div class="text-right min-w-0">
+                    <div
+                      class="text-[10px] text-slate-400 dark:text-slate-500 group-hover/card:text-[#00a6f4] dark:group-hover/card:text-[#38bdf8] font-medium leading-tight mb-0.5 transition-colors">
+                      Category
+                    </div>
+                    <div class="text-[11px] font-medium text-slate-600 dark:text-slate-300 truncate" [title]="item.category">
+                      {{ item.category }}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              }
+            </div>
+
+            <!-- Empty State if no items -->
+            @if (filteredGridItems().length === 0) {
+            <div class="py-12 flex flex-col items-center justify-center text-center">
+              <div class="w-16 h-16 rounded-2xl bg-sky-50 dark:bg-sky-950/60 border border-sky-100 text-[#00a6f4] flex items-center justify-center mb-3">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                  <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+              </div>
+              <h4 class="text-sm font-bold text-slate-700 dark:text-slate-200">No items match the selected filter</h4>
+              <p class="text-xs text-slate-400 mt-1 max-w-xs">Try selecting a different status capsule above or clearing the search query.</p>
+              <button type="button" (click)="restoreAllItemsAndResetFilter()"
+                class="mt-3 px-4 py-1.5 rounded-full text-xs font-bold text-[#00a6f4] border border-[#00a6f4] hover:bg-[#00a6f4] hover:text-white transition cursor-pointer">
+                Show All Items
+              </button>
+            </div>
+            }
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        } @else {
+          <!-- ========================================================================= -->
+          <!-- VIEW 2: ITEM LIST VIEW (1:1 Exact Replica of Country List View)           -->
+          <!-- ========================================================================= -->
+          <div class="flex-1 min-h-0 flex flex-col md:overflow-hidden bg-[#f8fafc] dark:bg-slate-900">
+
+            <!-- CONTROLS TOOLBAR (1:1 Exact match to Country List View Toolbar) -->
+            <div class="shrink-0 flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 flex-nowrap whitespace-nowrap overflow-x-auto custom-scrollbar-hide">
+              <!-- Left Zone: Import, Visibility, History, Recycle Bin -->
+              <div class="flex items-center gap-2 shrink-0 min-w-0">
+                <button type="button" (click)="openImportModal()"
+                  class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs"
+                  title="Import">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="12" x2="12" y2="3" />
+                  </svg>
+                  <span>Import</span>
+                </button>
+
+                <button type="button" (click)="toggleVisibilityPanel($event)"
+                  class="h-[32px] px-3.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                  [class.bg-[#00a6f4]]="isVisibilityOpen()" [class.text-white]="isVisibilityOpen()"
+                  [class.border-[#00a6f4]]="isVisibilityOpen()" [class.border-slate-300]="!isVisibilityOpen()"
+                  [class.dark:border-slate-600]="!isVisibilityOpen()" [class.bg-white]="!isVisibilityOpen()"
+                  [class.bg-[#00a6f4]]="isVisibilityOpen()" [class.text-white]="isVisibilityOpen()"
+                  [class.border-[#00a6f4]]="isVisibilityOpen()" [class.border-slate-300]="!isVisibilityOpen()"
+                  [class.dark:border-slate-600]="!isVisibilityOpen()" [class.bg-white]="!isVisibilityOpen()"
+                  [class.dark:bg-slate-800]="!isVisibilityOpen()" [class.text-slate-700]="!isVisibilityOpen()"
+                  [class.dark:text-slate-200]="!isVisibilityOpen()" [class.hover:bg-slate-50]="!isVisibilityOpen()"
+                  [class.dark:hover:bg-slate-700]="!isVisibilityOpen()"
+                  title="Visibility">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>Visibility</span>
+                </button>
+
+                <button type="button" (click)="openHistoryModal('all')"
+                  class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs"
+                  title="History">
+                  <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <span>History</span>
+                </button>
+
+                <button type="button" (click)="openRecycleBinModal()"
+                  class="h-[32px] px-3.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                  [class.bg-rose-50]="isRecycleBinModalOpen()"
+                  [class.border-rose-400]="isRecycleBinModalOpen()"
+                  [class.text-rose-600]="isRecycleBinModalOpen()"
+                  [class.border-slate-300]="!isRecycleBinModalOpen()"
+                  [class.dark:border-slate-600]="!isRecycleBinModalOpen()"
+                  [class.bg-white]="!isRecycleBinModalOpen()"
+                  [class.dark:bg-slate-800]="!isRecycleBinModalOpen()"
+                  [class.text-slate-700]="!isRecycleBinModalOpen()"
+                  [class.dark:text-slate-200]="!isRecycleBinModalOpen()"
+                  [class.hover:bg-slate-50]="!isRecycleBinModalOpen()" title="Recycle">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                  </svg>
+                  <span>Recycle Bin</span>
+                  <span class="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-300">
+                    {{ deletedCount() || 4 }}
+                  </span>
+                </button>
+              </div>
+
+              <!-- Center Zone: Centered Search Input with voice mic -->
+              <div class="flex-1 max-w-xs sm:max-w-md mx-2 sm:mx-4 relative flex items-center">
+                <input type="text" [ngModel]="itemListSearchQuery()"
+                  (ngModelChange)="itemListSearchQuery.set($event)" placeholder="Search" autofocus
+                  class="w-full h-8 sm:h-9 pl-9 pr-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <button type="button" (click)="toggleGridVoiceSearch($event)"
+                  [title]="isGridVoiceListening() ? 'Listening' : 'Voice'"
+                  class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#00a6f4] p-1 rounded-full cursor-pointer focus:outline-none transition-colors"
+                  [class.text-red-500]="isGridVoiceListening()"
+                  [class.animate-pulse]="isGridVoiceListening()">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Right Zone: Overview + Grid switcher, Share, Export, Filter -->
+              <div class="flex items-center gap-2 shrink-0">
+                <div class="flex items-center bg-slate-100 dark:bg-slate-700/80 p-0.5 rounded-full border border-slate-200/80 dark:border-slate-600 shrink-0">
+                  <button type="button" (click)="handleOverviewClick()"
+                    class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                    title="Overview">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="7" height="9" x="3" y="3" rx="1" />
+                      <rect width="7" height="5" x="14" y="3" rx="1" />
+                      <rect width="7" height="9" x="14" y="12" rx="1" />
+                      <rect width="7" height="5" x="3" y="16" rx="1" />
+                    </svg>
+                    <span>Overview</span>
+                  </button>
+
+                  <button type="button" (click)="handleGridClick()"
+                    class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
+                    title="Grid">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="7" height="7" rx="1" />
+                      <rect x="14" y="3" width="7" height="7" rx="1" />
+                      <rect x="3" y="14" width="7" height="7" rx="1" />
+                      <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Grid</span>
+                  </button>
+                </div>
+
+                <span class="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-0.5"></span>
+
+                <button type="button" (click)="toggleSharePanel()"
+                  class="h-[32px] px-3.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                  [class.bg-[#00a6f4]]="isSharePanelOpen()"
+                  [class.text-white]="isSharePanelOpen()"
+                  [class.border-[#00a6f4]]="isSharePanelOpen()"
+                  [class.border-slate-300]="!isSharePanelOpen()"
+                  [class.dark:border-slate-600]="!isSharePanelOpen()"
+                  [class.bg-white]="!isSharePanelOpen()"
+                  [class.dark:bg-slate-800]="!isSharePanelOpen()"
+                  [class.text-slate-700]="!isSharePanelOpen()"
+                  [class.dark:text-slate-200]="!isSharePanelOpen()"
+                  [class.hover:bg-slate-50]="!isSharePanelOpen()"
+                  title="Share">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                  </svg>
+                  <span>Share</span>
+                </button>
+
+                <button type="button" (click)="toggleExportPanel()"
+                  class="h-[32px] px-3.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                  [class.bg-[#00a6f4]]="isExportPanelOpen()"
+                  [class.text-white]="isExportPanelOpen()"
+                  [class.border-[#00a6f4]]="isExportPanelOpen()"
+                  [class.border-slate-300]="!isExportPanelOpen()"
+                  [class.dark:border-slate-600]="!isExportPanelOpen()"
+                  [class.bg-white]="!isExportPanelOpen()"
+                  [class.dark:bg-slate-800]="!isExportPanelOpen()"
+                  [class.text-slate-700]="!isExportPanelOpen()"
+                  [class.dark:text-slate-200]="!isExportPanelOpen()"
+                  [class.hover:bg-slate-50]="!isExportPanelOpen()"
+                  title="Export">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  <span>Export</span>
+                </button>
+
+                <button type="button" (click)="toggleFilterPanel()"
+                  class="h-[32px] px-3.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                  [class.bg-[#00a6f4]]="isFilterPanelOpen() || isFilterActive()"
+                  [class.text-white]="isFilterPanelOpen() || isFilterActive()"
+                  [class.border-[#00a6f4]]="isFilterPanelOpen() || isFilterActive()"
+                  [class.border-slate-300]="!isFilterPanelOpen() && !isFilterActive()"
+                  [class.dark:border-slate-600]="!isFilterPanelOpen() && !isFilterActive()"
+                  [class.bg-white]="!isFilterPanelOpen() && !isFilterActive()"
+                  [class.dark:bg-slate-800]="!isFilterPanelOpen() && !isFilterActive()"
+                  [class.text-slate-700]="!isFilterPanelOpen() && !isFilterActive()"
+                  [class.dark:text-slate-200]="!isFilterPanelOpen() && !isFilterActive()"
+                  [class.hover:bg-slate-50]="!isFilterPanelOpen() && !isFilterActive()"
+                  title="Filter">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                  </svg>
+                  <span>Filter</span>
+                  @if (isFilterActive()) {
+                    <span class="w-2 h-2 rounded-full bg-white ml-0.5"></span>
+                  }
+                </button>
+              </div>
+            </div>
+
+            <!-- Bulk actions sub-bar -->
+            @if (selectedItemIds().size > 0) {
+            <div class="flex items-center gap-2.5 px-6 py-2 bg-transparent shrink-0">
+              <button type="button" (click)="bulkDeleteItems()"
+                class="px-4 py-1.5 rounded-full bg-[#dff3fd] hover:bg-[#cbeafe] text-[#0284c7] dark:bg-sky-950/50 dark:text-sky-300 font-semibold text-xs transition cursor-pointer">
+                Bulk Delete
+              </button>
+              <button type="button" (click)="bulkUpdateItems()"
+                class="px-4 py-1.5 rounded-full bg-[#dff3fd] hover:bg-[#cbeafe] text-[#0284c7] dark:bg-sky-950/50 dark:text-sky-300 font-semibold text-xs transition cursor-pointer">
+                Bulk Update
+              </button>
+              <span class="text-xs text-slate-400 dark:text-slate-500 font-normal ml-1">
+                Selected {{ selectedItemIds().size }} of total {{ filteredItemList().length }}
+              </span>
+            </div>
+            }
+
+            <!-- Main Table Wrapper -->
+            <div class="flex-1 min-h-0 flex flex-col md:flex-row gap-3 p-2.5 sm:p-3 overflow-hidden relative">
+              <div class="flex-1 min-w-0 md:min-h-0 flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 overflow-hidden shadow-xs">
+                <!-- Rows Scrollable Table -->
+                <div class="country-table-scroll overflow-x-hidden overflow-y-auto flex-1 min-h-0"
+                  (scroll)="onTableScroll($event)" (wheel)="onTableWheel($event)">
+                  <table class="country-table w-full text-start text-xs min-w-[1600px]">
+                    <thead>
+                      <tr class="ag-header-row border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[12px] font-semibold bg-[#f8fafc] dark:bg-slate-800/90 select-none whitespace-nowrap">
+                        @if (isSelectColumnVisible()) {
+                        <th class="col-select sticky-col sticky-left-0 py-3 px-3 text-center bg-[#f8fafc] dark:bg-slate-800 whitespace-nowrap">
+                          <label class="custom-checkbox-wrap">
+                            <input type="checkbox" class="sr-only custom-checkbox-input"
+                              [checked]="isPageAllSelected()" [indeterminate]="isPagePartlySelected()"
+                              (change)="togglePageSelection()" title="Select" />
+                            <span class="custom-checkbox-box">
+                              <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                              </svg>
+                            </span>
+                          </label>
+                        </th>
+                        }
+                        <th class="col-name sticky-col sticky-left-name py-3 px-4 text-left font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap group/th relative" (click)="toggleTableSort('nameEn')">
+                          <div class="flex items-center gap-1.5 whitespace-nowrap">
+                            <span>Item Name</span>
+                            @if (tableSortKey() === 'nameEn') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                            <!-- Hover Filter Funnel Icon (Image 2) -->
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'nameEn' || isColumnFilterActive('nameEn')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'nameEn' || isColumnFilterActive('nameEn')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'nameEn' || isColumnFilterActive('nameEn')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'nameEn' || isColumnFilterActive('nameEn')">
+                              <button type="button" (click)="openColumnMenu('nameEn', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('nameEn')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('nameEn')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        @if (!hiddenColumns().has('sku')) {
+                        <th class="col-sku sticky-col sticky-left-sku py-3 px-3 text-left font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap group/th relative" (click)="toggleTableSort('sku')">
+                          <div class="flex items-center gap-1.5 whitespace-nowrap">
+                            <span>SKU / Code</span>
+                            @if (tableSortKey() === 'sku') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'sku' || isColumnFilterActive('sku')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'sku' || isColumnFilterActive('sku')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'sku' || isColumnFilterActive('sku')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'sku' || isColumnFilterActive('sku')">
+                              <button type="button" (click)="openColumnMenu('sku', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('sku')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('sku')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        }
+                        @if (!hiddenColumns().has('itemType')) {
+                        <th class="col-item-type py-3 px-3 text-left font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap min-w-[130px] group/th relative" (click)="toggleTableSort('itemType')">
+                          <div class="flex items-center gap-1.5 whitespace-nowrap">
+                            <span>Item Type</span>
+                            @if (tableSortKey() === 'itemType') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'itemType' || isColumnFilterActive('itemType')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'itemType' || isColumnFilterActive('itemType')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'itemType' || isColumnFilterActive('itemType')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'itemType' || isColumnFilterActive('itemType')">
+                              <button type="button" (click)="openColumnMenu('itemType', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('itemType')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('itemType')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        }
+                        @if (!hiddenColumns().has('category')) {
+                        <th class="col-category py-3 px-3 text-left font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap min-w-[170px] group/th relative" (click)="toggleTableSort('category')">
+                          <div class="flex items-center gap-1.5 whitespace-nowrap">
+                            <span>Category</span>
+                            @if (tableSortKey() === 'category') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'category' || isColumnFilterActive('category')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'category' || isColumnFilterActive('category')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'category' || isColumnFilterActive('category')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'category' || isColumnFilterActive('category')">
+                              <button type="button" (click)="openColumnMenu('category', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('category')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('category')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        }
+                        @if (!hiddenColumns().has('brand')) {
+                        <th class="col-brand py-3 px-3 text-left font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap min-w-[140px] group/th relative" (click)="toggleTableSort('brand')">
+                          <div class="flex items-center gap-1.5 whitespace-nowrap">
+                            <span>Brand</span>
+                            @if (tableSortKey() === 'brand') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'brand' || isColumnFilterActive('brand')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'brand' || isColumnFilterActive('brand')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'brand' || isColumnFilterActive('brand')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'brand' || isColumnFilterActive('brand')">
+                              <button type="button" (click)="openColumnMenu('brand', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('brand')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('brand')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        }
+                        @if (!hiddenColumns().has('baseUom')) {
+                        <th class="col-base-uom py-3 px-3 text-left font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap min-w-[120px] group/th relative" (click)="toggleTableSort('baseUom')">
+                          <div class="flex items-center gap-1.5 whitespace-nowrap">
+                            <span>Base UOM</span>
+                            @if (tableSortKey() === 'baseUom') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'baseUom' || isColumnFilterActive('baseUom')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'baseUom' || isColumnFilterActive('baseUom')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'baseUom' || isColumnFilterActive('baseUom')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'baseUom' || isColumnFilterActive('baseUom')">
+                              <button type="button" (click)="openColumnMenu('baseUom', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('baseUom')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('baseUom')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        }
+                        @if (!hiddenColumns().has('salesPrice')) {
+                        <th class="col-sales-price py-3 px-3 text-right font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap min-w-[130px] group/th relative" (click)="toggleTableSort('salesPrice')">
+                          <div class="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                            <span>Sales Price</span>
+                            @if (tableSortKey() === 'salesPrice') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'salesPrice' || isColumnFilterActive('salesPrice')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'salesPrice' || isColumnFilterActive('salesPrice')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'salesPrice' || isColumnFilterActive('salesPrice')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'salesPrice' || isColumnFilterActive('salesPrice')">
+                              <button type="button" (click)="openColumnMenu('salesPrice', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('salesPrice')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('salesPrice')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        }
+                        @if (!hiddenColumns().has('costPrice')) {
+                        <th class="col-cost-price py-3 px-3 text-right font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap min-w-[130px] group/th relative" (click)="toggleTableSort('costPrice')">
+                          <div class="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                            <span>Cost Price</span>
+                            @if (tableSortKey() === 'costPrice') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'costPrice' || isColumnFilterActive('costPrice')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'costPrice' || isColumnFilterActive('costPrice')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'costPrice' || isColumnFilterActive('costPrice')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'costPrice' || isColumnFilterActive('costPrice')">
+                              <button type="button" (click)="openColumnMenu('costPrice', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('costPrice')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('costPrice')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        }
+                        @if (!hiddenColumns().has('marginPct')) {
+                        <th class="col-margin-pct py-3 px-3 text-right font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap min-w-[110px]" (click)="toggleTableSort('marginPct')">
+                          <span class="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                            Margin %
+                            @if (tableSortKey() === 'marginPct') {
+                              <span class="text-xs">{{ tableSortDir() === 'asc' ? '▲' : '▼' }}</span>
+                            }
+                          </span>
+                        </th>
+                        }
+                        @if (!hiddenColumns().has('status')) {
+                        <th class="col-status sticky-col sticky-right-status py-3 px-3 text-center font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] cursor-pointer whitespace-nowrap group/th relative" (click)="toggleTableSort('status')">
+                          <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
+                            <span>Status</span>
+                            <div class="ag-header-icons inline-flex items-center gap-0.5 shrink-0 opacity-0 max-w-0 overflow-hidden pointer-events-none group-hover/th:opacity-100 group-hover/th:max-w-[32px] group-hover/th:ml-1 group-hover/th:pointer-events-auto group-hover/th:overflow-visible transition-all duration-200"
+                              [class.!opacity-100]="activeColumnMenu() === 'status' || isColumnFilterActive('status')"
+                              [class.!max-w-[32px]]="activeColumnMenu() === 'status' || isColumnFilterActive('status')"
+                              [class.!pointer-events-auto]="activeColumnMenu() === 'status' || isColumnFilterActive('status')"
+                              [class.!overflow-visible]="activeColumnMenu() === 'status' || isColumnFilterActive('status')">
+                              <button type="button" (click)="openColumnMenu('status', $event)"
+                                class="w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer text-[#00a6f4] dark:text-[#38bdf8] hover:bg-sky-100 dark:hover:bg-slate-700"
+                                [class.text-[#00a6f4]]="isColumnFilterActive('status')"
+                                [class.dark:text-[#38bdf8]]="isColumnFilterActive('status')"
+                                title="Filter">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M4 6h16v2H4zm3 5h10v2H7zm3 5h4v2h-4z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </th>
+                        }
+                        <th class="col-action sticky-col sticky-right-action py-3 px-3.5 text-center font-bold text-[12px] text-[#00a6f4] dark:text-[#38bdf8] whitespace-nowrap">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700 font-medium">
+                      @for (item of pagedItemList(); track item.itemId; let rIdx = $index) {
+                      <tr class="group transition-colors"
+                        [class.bg-sky-50/60]="selectedItemIds().has(item.itemId)">
+                        <!-- Select Checkbox -->
+                        @if (isSelectColumnVisible()) {
+                        <td class="col-select sticky-col sticky-left-0 py-3 px-3 text-center cursor-pointer"
+                          [id]="'cell-' + rIdx + '-select'"
+                          (click)="selectCell(rIdx, 'select', $event); $event.stopPropagation()">
+                          <div class="rounded-md p-0.5 inline-flex items-center justify-center transition-all"
+                            [class.cell-focus-box]="isCellFocused(rIdx, 'select')">
+                            <label class="custom-checkbox-wrap" (click)="$event.stopPropagation()">
+                              <input type="checkbox" class="sr-only custom-checkbox-input"
+                                [checked]="selectedItemIds().has(item.itemId)"
+                                (change)="toggleRowSelection(item.itemId)" title="Select" />
+                              <span class="custom-checkbox-box">
+                                <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                  <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                                </svg>
+                              </span>
+                            </label>
+                          </div>
+                        </td>
+                        }
+
+                        <!-- Item Name (Image Thumbnail + Name) -->
+                        <td class="col-name sticky-col sticky-left-name py-2.5 px-4 group/cell relative"
+                          [id]="'cell-' + rIdx + '-nameEn'"
+                          (click)="onCellClick(item, rIdx, 'nameEn', $event)"
+                          (dblclick)="onCellDblClick(item, rIdx, 'nameEn', $event)">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-750 border border-slate-200/80 dark:border-slate-700 shrink-0 flex items-center justify-center shadow-2xs">
+                              <img [src]="item.productImage" [alt]="item.nameEn"
+                                (error)="onItemImageError($event, item)"
+                                class="w-full h-full object-cover rounded-lg" />
+                            </div>
+                            @if (isCellEditing(item.itemId, 'nameEn')) {
+                              <div class="flex items-center gap-1.5 flex-1 min-w-0" (click)="$event.stopPropagation()">
+                                <input type="text" [ngModel]="editingCellValue()"
+                                  (ngModelChange)="editingCellValue.set($event)"
+                                  (keydown.enter)="saveCellEdit(item, 'nameEn', $event)"
+                                  (keydown.escape)="cancelCellEdit($event)"
+                                  (blur)="saveCellEdit(item, 'nameEn', $event)"
+                                  class="px-2 py-1 text-xs font-semibold border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-full shadow-xs"
+                                  autofocus />
+                              </div>
+                            } @else {
+                              <div class="min-w-0 flex-1 flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                                [class.cell-focus-box]="isCellFocused(rIdx, 'nameEn')" title="Edit">
+                                <div class="min-w-0">
+                                  <div class="font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#00a6f4] transition-colors truncate max-w-[170px]" [title]="item.nameEn">
+                                    {{ item.nameEn }}
+                                  </div>
+                                  @if (item.nameAr) {
+                                  <div class="text-[11px] text-slate-400 dark:text-slate-500 truncate max-w-[170px]">
+                                    {{ item.nameAr }}
+                                  </div>
+                                  }
+                                </div>
+                                <button type="button" (click)="startCellEdit(item, 'nameEn', $event)"
+                                  class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer shrink-0"
+                                  title="Edit">
+                                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                  </svg>
+                                </button>
+                              </div>
+                            }
+                          </div>
+                        </td>
+
+                        <!-- SKU / Code -->
+                        @if (!hiddenColumns().has('sku')) {
+                        <td class="col-sku sticky-col sticky-left-sku py-3 px-3 font-mono font-bold text-slate-700 dark:text-slate-200 whitespace-nowrap group/cell relative"
+                          [id]="'cell-' + rIdx + '-sku'"
+                          (click)="onCellClick(item, rIdx, 'sku', $event)"
+                          (dblclick)="onCellDblClick(item, rIdx, 'sku', $event)">
+                          @if (isCellEditing(item.itemId, 'sku')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="text" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event.toUpperCase())"
+                                (keydown.enter)="saveCellEdit(item, 'sku', $event)"
+                                (keydown.escape)="cancelCellEdit($event)"
+                                (blur)="saveCellEdit(item, 'sku', $event)"
+                                class="px-2 py-1 text-xs font-mono font-bold border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-28 shadow-xs"
+                                autofocus />
+                            </div>
+                          } @else {
+                            <div class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'sku')" title="Edit">
+                              <span>{{ item.sku }}</span>
+                              <button type="button" (click)="startCellEdit(item, 'sku', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </td>
+                        }
+
+                        <!-- Item Type -->
+                        @if (!hiddenColumns().has('itemType')) {
+                        <td class="col-item-type py-3 px-3 whitespace-nowrap min-w-[130px] group/cell relative"
+                          [id]="'cell-' + rIdx + '-itemType'"
+                          (click)="onCellClick(item, rIdx, 'itemType', $event)"
+                          (dblclick)="onCellDblClick(item, rIdx, 'itemType', $event)">
+                          @if (isCellEditing(item.itemId, 'itemType')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <select [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (change)="saveCellEdit(item, 'itemType', $event)"
+                                (blur)="saveCellEdit(item, 'itemType', $event)"
+                                class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none shadow-xs"
+                                autofocus>
+                                <option value="Stock Item">Stock Item</option>
+                                <option value="Non-Stock Item">Non-Stock Item</option>
+                                <option value="Service Item">Service Item</option>
+                                <option value="Assembly/Bundle">Assembly/Bundle</option>
+                                <option value="Fixed Asset">Fixed Asset</option>
+                              </select>
+                            </div>
+                          } @else {
+                            <div class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'itemType')" title="Edit">
+                              <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                {{ item.itemType || 'Stock Item' }}
+                              </span>
+                              <button type="button" (click)="startCellEdit(item, 'itemType', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </td>
+                        }
+
+                        <!-- Category -->
+                        @if (!hiddenColumns().has('category')) {
+                        <td class="col-category py-3 px-3 text-slate-600 dark:text-slate-300 whitespace-nowrap min-w-[170px] group/cell relative"
+                          [id]="'cell-' + rIdx + '-category'"
+                          (click)="onCellClick(item, rIdx, 'category', $event)"
+                          (dblclick)="onCellDblClick(item, rIdx, 'category', $event)">
+                          @if (isCellEditing(item.itemId, 'category')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="text" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(item, 'category', $event)"
+                                (keydown.escape)="cancelCellEdit($event)"
+                                (blur)="saveCellEdit(item, 'category', $event)"
+                                class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-36 shadow-xs"
+                                autofocus />
+                            </div>
+                          } @else {
+                            <div class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'category')" title="Edit">
+                              <span>{{ item.category }}</span>
+                              <button type="button" (click)="startCellEdit(item, 'category', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </td>
+                        }
+
+                        <!-- Brand -->
+                        @if (!hiddenColumns().has('brand')) {
+                        <td class="col-brand py-3 px-3 text-slate-600 dark:text-slate-300 whitespace-nowrap min-w-[140px] group/cell relative"
+                          [id]="'cell-' + rIdx + '-brand'"
+                          (click)="onCellClick(item, rIdx, 'brand', $event)"
+                          (dblclick)="onCellDblClick(item, rIdx, 'brand', $event)">
+                          @if (isCellEditing(item.itemId, 'brand')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="text" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(item, 'brand', $event)"
+                                (keydown.escape)="cancelCellEdit($event)"
+                                (blur)="saveCellEdit(item, 'brand', $event)"
+                                class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-32 shadow-xs"
+                                autofocus />
+                            </div>
+                          } @else {
+                            <div class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'brand')" title="Edit">
+                              <span>{{ item.brand || '—' }}</span>
+                              <button type="button" (click)="startCellEdit(item, 'brand', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </td>
+                        }
+
+                        <!-- Base UOM -->
+                        @if (!hiddenColumns().has('baseUom')) {
+                        <td class="col-base-uom py-3 px-3 text-slate-600 dark:text-slate-300 whitespace-nowrap min-w-[120px] group/cell relative"
+                          [id]="'cell-' + rIdx + '-baseUom'"
+                          (click)="onCellClick(item, rIdx, 'baseUom', $event)"
+                          (dblclick)="onCellDblClick(item, rIdx, 'baseUom', $event)">
+                          @if (isCellEditing(item.itemId, 'baseUom')) {
+                            <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
+                              <input type="text" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(item, 'baseUom', $event)"
+                                (keydown.escape)="cancelCellEdit($event)"
+                                (blur)="saveCellEdit(item, 'baseUom', $event)"
+                                class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-24 shadow-xs"
+                                autofocus />
+                            </div>
+                          } @else {
+                            <div class="flex items-center justify-between gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'baseUom')" title="Edit">
+                              <span>{{ item.baseUom }}</span>
+                              <button type="button" (click)="startCellEdit(item, 'baseUom', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </td>
+                        }
+
+                        <!-- Sales Price -->
+                        @if (!hiddenColumns().has('salesPrice')) {
+                        <td class="col-sales-price py-3 px-3 text-right font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap min-w-[130px] group/cell relative"
+                          [id]="'cell-' + rIdx + '-salesPrice'"
+                          (click)="onCellClick(item, rIdx, 'salesPrice', $event)"
+                          (dblclick)="onCellDblClick(item, rIdx, 'salesPrice', $event)">
+                          @if (isCellEditing(item.itemId, 'salesPrice')) {
+                            <div class="flex items-center justify-end gap-1.5" (click)="$event.stopPropagation()">
+                              <span class="text-xs text-slate-400">AED</span>
+                              <input type="number" step="0.01" min="0" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(item, 'salesPrice', $event)"
+                                (keydown.escape)="cancelCellEdit($event)"
+                                (blur)="saveCellEdit(item, 'salesPrice', $event)"
+                                class="px-2 py-1 text-xs font-mono font-bold border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-24 text-right shadow-xs"
+                                autofocus />
+                            </div>
+                          } @else {
+                            <div class="flex items-center justify-end gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'salesPrice')" title="Edit">
+                              <span>AED {{ item.salesPrice | number:'1.2-2' }}</span>
+                              <button type="button" (click)="startCellEdit(item, 'salesPrice', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </td>
+                        }
+
+                        <!-- Cost Price -->
+                        @if (!hiddenColumns().has('costPrice')) {
+                        <td class="col-cost-price py-3 px-3 text-right text-slate-600 dark:text-slate-300 whitespace-nowrap min-w-[130px] group/cell relative"
+                          [id]="'cell-' + rIdx + '-costPrice'"
+                          (click)="onCellClick(item, rIdx, 'costPrice', $event)"
+                          (dblclick)="onCellDblClick(item, rIdx, 'costPrice', $event)">
+                          @if (isCellEditing(item.itemId, 'costPrice')) {
+                            <div class="flex items-center justify-end gap-1.5" (click)="$event.stopPropagation()">
+                              <span class="text-xs text-slate-400">AED</span>
+                              <input type="number" step="0.01" min="0" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
+                                (keydown.enter)="saveCellEdit(item, 'costPrice', $event)"
+                                (keydown.escape)="cancelCellEdit($event)"
+                                (blur)="saveCellEdit(item, 'costPrice', $event)"
+                                class="px-2 py-1 text-xs font-mono border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-24 text-right shadow-xs"
+                                autofocus />
+                            </div>
+                          } @else {
+                            <div class="flex items-center justify-end gap-1.5 cursor-pointer rounded-md px-1.5 py-0.5 transition-all"
+                              [class.cell-focus-box]="isCellFocused(rIdx, 'costPrice')" title="Edit">
+                              <span>AED {{ item.costPrice | number:'1.2-2' }}</span>
+                              <button type="button" (click)="startCellEdit(item, 'costPrice', $event)"
+                                class="opacity-0 group-hover/cell:opacity-100 text-[#00a6f4] hover:text-sky-600 p-0.5 transition cursor-pointer"
+                                title="Edit">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </td>
+                        }
+
+                        <!-- Margin % -->
+                        @if (!hiddenColumns().has('marginPct')) {
+                        <td class="col-margin-pct py-3 px-3 text-right font-bold text-emerald-600 whitespace-nowrap min-w-[110px]"
+                          [id]="'cell-' + rIdx + '-marginPct'"
+                          (click)="selectCell(rIdx, 'marginPct', $event)">
+                          <div class="flex items-center justify-end rounded-md px-1.5 py-0.5 transition-all"
+                            [class.cell-focus-box]="isCellFocused(rIdx, 'marginPct')">
+                            <span>{{ item.marginPct || 38.82 }}%</span>
+                          </div>
+                        </td>
+                        }
+
+                        <!-- Status Pill (Exact 1:1 Country List View Badge) -->
+                        @if (!hiddenColumns().has('status')) {
+                        <td class="col-status sticky-col sticky-right-status py-3 px-3 text-center whitespace-nowrap"
+                          [id]="'cell-' + rIdx + '-status'"
+                          (click)="selectCell(rIdx, 'status', $event)">
+                          <div class="inline-flex rounded-md p-0.5 transition-all"
+                            [class.cell-focus-box]="isCellFocused(rIdx, 'status')">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border"
+                              [class.bg-emerald-50]="item.status === 'Active'"
+                              [class.text-emerald-600]="item.status === 'Active'"
+                              [class.border-emerald-200]="item.status === 'Active'"
+                              [class.dark:bg-emerald-950/40]="item.status === 'Active'"
+                              [class.dark:text-emerald-400]="item.status === 'Active'"
+                              [class.dark:border-emerald-800]="item.status === 'Active'"
+                              [class.bg-rose-50]="item.status === 'Inactive'"
+                              [class.text-rose-600]="item.status === 'Inactive'"
+                              [class.border-rose-200]="item.status === 'Inactive'"
+                              [class.dark:bg-rose-950/40]="item.status === 'Inactive'"
+                              [class.dark:text-rose-400]="item.status === 'Inactive'"
+                              [class.dark:border-rose-800]="item.status === 'Inactive'"
+                              [class.bg-sky-50]="item.status === 'Draft'"
+                              [class.text-[#00a6f4]]="item.status === 'Draft'"
+                              [class.border-sky-200]="item.status === 'Draft'"
+                              [class.dark:bg-sky-950/40]="item.status === 'Draft'"
+                              [class.dark:text-[#38bdf8]]="item.status === 'Draft'"
+                              [class.dark:border-sky-800]="item.status === 'Draft'">
+                              <span class="w-1.5 h-1.5 rounded-full"
+                                [class.bg-emerald-500]="item.status === 'Active'"
+                                [class.bg-rose-500]="item.status === 'Inactive'"
+                                [class.bg-[#00a6f4]]="item.status === 'Draft'"></span>
+                              {{ item.status }}
+                            </span>
+                          </div>
+                        </td>
+                        }
+
+                        <!-- Action Column (Hover only round blue chevron button matching Country module) -->
+                        <td class="col-action sticky-col sticky-right-action py-3 px-4 text-end whitespace-nowrap"
+                          (click)="$event.stopPropagation()">
+                          <div class="flex items-center justify-end gap-2.5">
+                            <span class="text-slate-500 dark:text-slate-400 whitespace-nowrap text-xs font-normal">
+                              {{ getItemRelativeTime(item, rIdx) }}
+                            </span>
+                            <button type="button" (click)="openEditFromGrid(item, $event)"
+                              class="w-7 h-7 rounded-full bg-[#00a6f4] hover:bg-sky-500 text-white flex items-center justify-center shadow-xs cursor-pointer transition-all duration-150 shrink-0 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:scale-110 active:scale-95"
+                              [class.!opacity-100]="selectedItemIds().has(item.itemId)"
+                              [class.!pointer-events-auto]="selectedItemIds().has(item.itemId)" title="Edit">
+                              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m9 18 6-6-6-6" />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      } @empty {
+                      <tr>
+                        <td colspan="12" class="py-12 text-center text-slate-400 text-xs font-semibold">
+                          No items match the search query.
+                        </td>
+                      </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Single Horizontal Scrollbar Bar strictly between Fixed Left Columns (Name, SKU) and Fixed Right Columns (Status, Action) -->
+                <div class="middle-scrollbar-bar shrink-0 relative h-[6px] bg-white dark:bg-slate-800 select-none flex items-center border-t border-slate-200/60 dark:border-slate-700">
+                  <div class="custom-middle-scrollbar-dock absolute flex items-center transition-all select-none"
+                    style="left: 446px; right: 278px;">
+                    <!-- Middle Scroll Track: Pure clean ultra-thin scrollbar -->
+                    <div class="middle-columns-scrollbar-track flex-1 flex items-center overflow-x-auto"
+                      #middleScrollbarTrack (scroll)="onMiddleScrollbarScroll($event)">
+                      <div [style.width.px]="scrollableScrollWidth()" class="h-[6px] shrink-0"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Single Column Filter Popover: Outside table stacking context, fixed z-[9999] -->
+                @if (activeColumnMenu(); as colKey) {
+                @if (columnMenuPos(); as pos) {
+                <!-- Backdrop Overlay -->
+                <div class="fixed inset-0 z-[9998]" (click)="closeColumnMenu()"></div>
+
+                <div data-popover
+                  class="fixed z-[9999] w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-2.5 text-start font-normal animate-in fade-in duration-150"
+                  [style.top.px]="pos.top" [style.left.px]="pos.left" (click)="$event.stopPropagation()">
+
+                  <!-- 1. Sort Ascending -->
+                  <button type="button" (click)="sortColumnDirect(colKey, 'asc')"
+                    class="w-full flex items-center gap-2.5 px-3.5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer transition">
+                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                      stroke-width="2.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                    </svg>
+                    <span>Sort Ascending</span>
+                    @if (tableSortKey() === colKey && tableSortDir() === 'asc') {
+                    <span class="ml-auto text-[#00a6f4] font-bold">✓</span>
+                    }
+                  </button>
+
+                  <!-- 2. Sort Descending -->
+                  <button type="button" (click)="sortColumnDirect(colKey, 'desc')"
+                    class="w-full flex items-center gap-2.5 px-3.5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer transition">
+                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                      stroke-width="2.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                    <span>Sort Descending</span>
+                    @if (tableSortKey() === colKey && tableSortDir() === 'desc') {
+                    <span class="ml-auto text-[#00a6f4] font-bold">✓</span>
+                    }
+                  </button>
+
+                  <div class="border-t border-slate-100 dark:border-slate-700 my-1.5"></div>
+
+                  <!-- 3. Search in Column Values -->
+                  <div class="px-3 py-1">
+                    <div class="relative">
+                      <svg
+                        class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                      </svg>
+                      <input type="text" [ngModel]="columnMenuSearch()" (ngModelChange)="columnMenuSearch.set($event)"
+                        placeholder="Search..." (click)="$event.stopPropagation()"
+                        class="w-full pl-8 pr-2.5 py-1.5 text-xs rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#00a6f4] focus:ring-1 focus:ring-[#00a6f4]/20" />
+                    </div>
+                  </div>
+
+                  <!-- 4. Checkbox List of Column Values -->
+                  <div class="max-h-44 overflow-y-auto custom-scrollbar px-3 py-1 space-y-1 text-xs">
+                    <label
+                      class="flex items-center gap-2 py-1 cursor-pointer select-none font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700/60 pb-1.5 mb-1">
+                      <span class="custom-checkbox-wrap">
+                        <input type="checkbox" class="sr-only custom-checkbox-input"
+                          [checked]="isColumnAllSelected(colKey)" (change)="toggleColumnSelectAll(colKey)" />
+                        <span class="custom-checkbox-box">
+                          <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                          </svg>
+                        </span>
+                      </span>
+                      <span>(Select All)</span>
+                    </label>
+                    @for (val of getFilteredDistinctValues(colKey); track val) {
+                    <label
+                      class="flex items-center gap-2 py-0.5 cursor-pointer select-none text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                      <span class="custom-checkbox-wrap">
+                        <input type="checkbox" class="sr-only custom-checkbox-input"
+                          [checked]="isColumnValueSelected(colKey, val)" (change)="toggleColumnValue(colKey, val)" />
+                        <span class="custom-checkbox-box">
+                          <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                          </svg>
+                        </span>
+                      </span>
+                      <span class="truncate">{{ val }}</span>
+                      <span class="text-xs text-slate-400 font-normal shrink-0">({{
+                        getColumnValueCount(colKey, val) }})</span>
+                    </label>
+                    } @empty {
+                    <p class="py-2 text-center text-slate-400 text-[11px]">No matches</p>
+                    }
+                  </div>
+
+                  <!-- 5. Clear & Apply Actions -->
+                  <div
+                    class="flex items-center justify-between px-3.5 pt-2 mt-1 border-t border-slate-100 dark:border-slate-700">
+                    <button type="button" (click)="clearColumnFilter(colKey)"
+                      class="text-xs text-slate-500 hover:text-rose-500 font-semibold cursor-pointer transition">
+                      Clear
+                    </button>
+                    <button type="button" (click)="applyColumnFilter(colKey)"
+                      class="px-4 py-1 rounded-full bg-[#00a6f4] text-white text-xs font-bold hover:bg-sky-500 cursor-pointer transition shadow-2xs">
+                      Apply
+                    </button>
+                  </div>
+                </div>
+                }
+                }
+
+                <!-- Bottom Pagination (Exact 1:1 replica of Country List View Pagination) -->
+                <div class="relative z-30 shrink-0 flex flex-wrap items-center justify-between gap-4 px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  <!-- Left: Page Size Selectors (10, 25, 50, 75, ...) -->
+                  <div class="flex items-center space-x-2 relative">
+                    @for (size of pageSizeOptions; track size) {
+                    <button type="button" (click)="setPageSize(size)"
+                      class="h-8 min-w-[60px] px-4 rounded-full border text-sm font-medium cursor-pointer transition-all flex items-center justify-center select-none shadow-xs"
+                      [class.border-[#0070ba]]="pageSize() === size" [class.bg-[#0070ba]]="pageSize() === size"
+                      [class.text-white]="pageSize() === size" [class.hover:bg-[#005a96]]="pageSize() === size"
+                      [class.border-sky-300]="pageSize() !== size" [class.bg-white]="pageSize() !== size"
+                      [class.text-sky-500]="pageSize() !== size" [class.hover:bg-[#0070ba]]="pageSize() !== size"
+                      [class.hover:border-[#0070ba]]="pageSize() !== size"
+                      [class.hover:text-white]="pageSize() !== size" [class.dark:bg-slate-800]="pageSize() !== size"
+                      [class.dark:text-white]="pageSize() !== size" [class.dark:border-sky-800]="pageSize() !== size">
+                      {{ size }}
+                    </button>
+                    }
+
+                    <!-- '...' more page sizes button -->
+                    <div class="relative" data-popover>
+                      <button type="button" (click)="togglePageSizeMenu($event)"
+                        class="h-8 min-w-[60px] px-4 rounded-full border text-sm font-medium cursor-pointer transition-all flex items-center justify-center select-none shadow-xs"
+                        [class.border-[#0070ba]]="isPageSizeMenuOpen() || pageSize() > 75"
+                        [class.bg-[#0070ba]]="isPageSizeMenuOpen() || pageSize() > 75"
+                        [class.text-white]="isPageSizeMenuOpen() || pageSize() > 75"
+                        [class.border-sky-300]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                        [class.bg-white]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                        [class.text-sky-500]="!isPageSizeMenuOpen() && pageSize() <= 75"
+                        title="Rows">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
+                          <circle cx="19" cy="12" r="1.5" fill="currentColor"></circle>
+                          <circle cx="5" cy="12" r="1.5" fill="currentColor"></circle>
+                        </svg>
+                      </button>
+
+                      <!-- Extended page size popup menu -->
+                      @if (isPageSizeMenuOpen()) {
+                      <div class="absolute bottom-full mb-3 left-0 w-36 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-sky-200 dark:border-slate-700 p-3 flex flex-col gap-2 z-40 animate-in fade-in duration-150">
+                        @for (opt of extendedPageSizes; track opt) {
+                        <button type="button" (click)="selectExtendedPageSize(opt)"
+                          class="w-full py-1.5 px-3 rounded-full border border-sky-200 dark:border-slate-700 text-[#0070ba] text-xs font-bold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer"
+                          [class.bg-[#e6f6fe]]="pageSize() === opt">
+                          {{ opt }}
+                        </button>
+                        }
+                        @if (!isCustomPageSizeOpen()) {
+                        <button type="button" (click)="isCustomPageSizeOpen.set(true)"
+                          class="w-full py-1.5 px-3 rounded-full border border-sky-200 dark:border-slate-700 text-[#0070ba] text-xs font-bold hover:bg-[#e6f6fe] dark:hover:bg-slate-700 transition text-center cursor-pointer">
+                          Custom
+                        </button>
+                        } @else {
+                        <div class="flex flex-col gap-1.5 pt-1 border-t border-sky-100 dark:border-slate-700">
+                          <div class="flex items-center gap-1.5">
+                            <input type="number" min="10" max="999" [value]="customPageSizeInput()"
+                              (input)="onCustomPageSizeChange($any($event.target).value)"
+                              (keydown.enter)="isCustomPageSizeValid() && applyCustomPageSize()"
+                              placeholder="10 - 999" autofocus
+                              class="w-20 px-2.5 py-1 text-center rounded-full border text-xs font-semibold focus:outline-none bg-white dark:bg-slate-750"
+                              [class.border-rose-400]="pageSizeErrorMessage() && customPageSizeInput()"
+                              [class.text-rose-600]="pageSizeErrorMessage() && customPageSizeInput()"
+                              [class.border-sky-300]="!pageSizeErrorMessage() || !customPageSizeInput()"
+                              [class.text-[#0070ba]]="!pageSizeErrorMessage() || !customPageSizeInput()" />
+                            <button type="button" (click)="applyCustomPageSize()"
+                              [disabled]="!isCustomPageSizeValid()" [class.opacity-40]="!isCustomPageSizeValid()"
+                              class="flex-1 py-1 px-2.5 rounded-full bg-[#0070ba] text-white text-xs font-bold transition shadow-2xs">
+                              Go
+                            </button>
+                          </div>
+                        </div>
+                        }
+                      </div>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Center: Range Label -->
+                  <div class="text-sm text-gray-600 dark:text-slate-300 font-normal select-none">
+                    {{ pageRangeLabel() }}
+                  </div>
+
+                  <!-- Right: Pagination Navigation Controls -->
+                  <div class="flex items-center space-x-2">
+                    <!-- First Page («) -->
+                    <button type="button" (click)="goToPage(1)" [disabled]="currentPage() === 1"
+                      class="h-8 px-3.5 min-w-[44px] rounded-full flex items-center justify-center bg-sky-200 border border-sky-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
+                      title="First" aria-label="First page">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m11 17-5-5 5-5" />
+                        <path d="m18 17-5-5 5-5" />
+                      </svg>
+                    </button>
+
+                    <!-- Previous Page (‹) -->
+                    <button type="button" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
+                      class="h-8 px-3.5 min-w-[44px] rounded-full flex items-center justify-center bg-sky-200 border border-sky-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
+                      title="Previous" aria-label="Previous page">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m15 18-6-6 6-6" />
+                      </svg>
+                    </button>
+
+                    <!-- Active Page Number Pill -->
+                    <div class="relative z-50" data-popover>
+                      <div (click)="togglePageDropdown($event)"
+                        class="h-8 w-16 px-2 rounded-full border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-slate-800 flex items-center justify-center cursor-pointer select-none transition hover:border-[#0070ba] shadow-xs"
+                        title="Page">
+                        <input type="number" min="1" [max]="totalPages()" [value]="pageInputValue()"
+                          (input)="onPageInputKey($any($event.target).value)"
+                          (keydown.enter)="commitPageInput(); isPageDropdownOpen.set(false)"
+                          (blur)="commitPageInput()" (click)="togglePageDropdown($event)"
+                          class="w-full text-center text-sm font-semibold text-sky-500 dark:text-[#38bdf8] bg-transparent outline-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-pointer" />
+                      </div>
+
+                      <!-- Dropdown Popover -->
+                      @if (isPageDropdownOpen()) {
+                      <div class="page-dropdown-container absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-32 bg-[#f8fcff] dark:bg-slate-800 rounded-[28px] border-2 border-[#a5e3fd] dark:border-slate-600 p-2.5 z-50 animate-in fade-in duration-150"
+                        (click)="$event.stopPropagation()">
+                        <div class="max-h-48 overflow-y-auto custom-scrollbar flex flex-col gap-1 text-center">
+                          @for (p of pagesList(); track p) {
+                          <button type="button" (click)="selectPageFromDropdown(p)"
+                            class="py-1 px-2 rounded-full text-xs font-bold transition cursor-pointer"
+                            [class.bg-[#00a6f4]]="p === currentPage()" [class.text-white]="p === currentPage()"
+                            [class.hover:bg-sky-100]="p !== currentPage()" [class.text-slate-700]="p !== currentPage()">
+                            {{ p }}
+                          </button>
+                          }
+                        </div>
+                      </div>
+                      }
+                    </div>
+
+                    <!-- Next Page (›) -->
+                    <button type="button" (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+                      class="h-8 px-3.5 min-w-[44px] rounded-full flex items-center justify-center bg-sky-200 border border-sky-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
+                      title="Next" aria-label="Next page">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6" />
+                      </svg>
+                    </button>
+
+                    <!-- Last Page (») -->
+                    <button type="button" (click)="goToPage(totalPages())" [disabled]="currentPage() === totalPages()"
+                      class="h-8 px-3.5 min-w-[44px] rounded-full flex items-center justify-center bg-sky-200 border border-sky-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 hover:bg-[#0070ba] hover:border-[#0070ba] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer shrink-0 shadow-xs"
+                      title="Last" aria-label="Last page">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m13 17 5-5-5-5" />
+                        <path d="m6 17 5-5-5-5" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VISIBILITY SIDE PANEL (slides in from right) -->
+              @if (isVisibilityOpen()) {
+              <aside
+                class="visibility-panel side-panel-slide w-full md:w-80 shrink-0 md:h-full max-h-[600px] md:max-h-none flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 shadow-xl overflow-hidden relative"
+                (click)="$event.stopPropagation()">
+                <!-- Header with Search Input & Close 'X' Button -->
+                <div class="p-3 border-b border-slate-100 dark:border-slate-700 shrink-0 flex items-center gap-2">
+                  <div class="relative flex-1">
+                    <svg class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    <input type="text" [ngModel]="visibilitySearch()" (ngModelChange)="visibilitySearch.set($event)"
+                      placeholder="Search"
+                      class="w-full pl-8 pr-8 py-1.5 rounded-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4]" />
+                    <svg class="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer"
+                      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                      <line x1="12" x2="12" y1="19" y2="22" />
+                    </svg>
+                  </div>
+                  <button type="button" (click)="isVisibilityOpen.set(false)"
+                    class="w-6 h-6 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition shrink-0"
+                    title="Close">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Select All Row -->
+                <div
+                  class="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50 shrink-0">
+                  <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">Select All</span>
+                  <button type="button" (click)="toggleAllColumnsVisible()"
+                    class="w-9 h-5 rounded-full flex items-center p-0.5 cursor-pointer transition-colors"
+                    [class.bg-[#00a6f4]]="isAllColumnsVisible()" [class.bg-slate-200]="!isAllColumnsVisible()"
+                    [class.dark:bg-slate-600]="!isAllColumnsVisible()" [class.justify-end]="isAllColumnsVisible()"
+                    [class.justify-start]="!isAllColumnsVisible()">
+                    <span class="w-4 h-4 bg-white rounded-full shadow-sm"></span>
+                  </button>
+                </div>
+
+                <!-- Scrollable Column Items with Switches -->
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 custom-scrollbar">
+                  <!-- Select Column Toggle -->
+                  <div
+                    class="flex items-center justify-between py-1 px-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
+                    <span class="text-xs text-slate-700 dark:text-slate-300 font-medium">Select</span>
+                    <button type="button" (click)="isSelectColumnVisible.set(!isSelectColumnVisible())"
+                      class="w-9 h-5 rounded-full flex items-center p-0.5 cursor-pointer transition-colors"
+                      [class.bg-[#00a6f4]]="isSelectColumnVisible()" [class.bg-slate-200]="!isSelectColumnVisible()"
+                      [class.dark:bg-slate-600]="!isSelectColumnVisible()" [class.justify-end]="isSelectColumnVisible()"
+                      [class.justify-start]="!isSelectColumnVisible()">
+                      <span class="w-4 h-4 bg-white rounded-full shadow-sm"></span>
+                    </button>
+                  </div>
+
+                  <!-- Individual Columns -->
+                  @for (col of filteredVisibilityColumns(); track col.key) {
+                  <div
+                    class="flex items-center justify-between py-1 px-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
+                    <span class="text-xs text-slate-700 dark:text-slate-300 font-medium capitalize">{{ col.label }}</span>
+                    <button type="button" (click)="toggleColumn(col.key)"
+                      class="w-9 h-5 rounded-full flex items-center p-0.5 cursor-pointer transition-colors"
+                      [class.bg-[#00a6f4]]="!hiddenColumns().has(col.key)"
+                      [class.bg-slate-200]="hiddenColumns().has(col.key)"
+                      [class.dark:bg-slate-600]="hiddenColumns().has(col.key)"
+                      [class.justify-end]="!hiddenColumns().has(col.key)"
+                      [class.justify-start]="hiddenColumns().has(col.key)">
+                      <span class="w-4 h-4 bg-white rounded-full shadow-sm"></span>
+                    </button>
+                  </div>
+                  }
+                </div>
+              </aside>
+              }
+
+              <!-- FILTER SIDE PANEL: tick values per field, then Apply (slides in from the right) -->
+              @if (isFilterPanelOpen() && filterDraft()) {
+              <aside
+                class="filter-panel side-panel-slide w-full md:w-80 shrink-0 md:h-full max-h-[560px] md:max-h-none flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 shadow-xs overflow-hidden relative">
+                <button type="button" (click)="isFilterPanelOpen.set(false)"
+                  class="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                  title="Close">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <div class="p-3 pt-8 border-b border-slate-100 dark:border-slate-700 shrink-0">
+                  <div class="relative">
+                    <input type="text" [ngModel]="filterSearch()" (ngModelChange)="filterSearch.set($event)"
+                      placeholder="Search"
+                      class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                      class="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-3 py-2">
+                  @for (f of visibleFilterFields(); track f.key) {
+                  <div class="py-1.5">
+                    <label
+                      class="flex items-center gap-2.5 px-1 py-1.5 border-b border-slate-100 dark:border-slate-700 cursor-pointer">
+                      <span class="custom-checkbox-wrap">
+                        <input type="checkbox" class="sr-only custom-checkbox-input"
+                          [checked]="filterFieldState(f.key) === 'all'"
+                          [indeterminate]="filterFieldState(f.key) === 'some'" (change)="toggleFilterField(f.key)" />
+                        <span class="custom-checkbox-box">
+                          <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                          </svg>
+                          <svg class="custom-checkbox-icon dash-icon" viewBox="0 0 16 16" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <line x1="3.5" y1="8" x2="12.5" y2="8" />
+                          </svg>
+                        </span>
+                      </span>
+                      <span class="text-[13px] font-bold text-slate-800 dark:text-white">{{ f.label }}</span>
+                    </label>
+                    <div class="pl-7 pt-1 space-y-0.5">
+                      @for (v of f.values; track v) {
+                      <label
+                        class="flex items-center justify-between gap-2.5 py-1 px-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-750 cursor-pointer transition-colors">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                          <span class="custom-checkbox-wrap">
+                            <input type="checkbox" class="sr-only custom-checkbox-input"
+                              [checked]="isFilterValueChecked(f.key, v)" (change)="toggleFilterValue(f.key, v)" />
+                            <span class="custom-checkbox-box">
+                              <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3.5 8.5 6.5 11.5 12.5 5" />
+                              </svg>
+                            </span>
+                          </span>
+                          <span class="text-[13px] text-slate-700 dark:text-slate-200 truncate">{{ v }}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-normal shrink-0">({{ getFilterValueCount(f.key, v)
+                          }})</span>
+                      </label>
+                      }
+                    </div>
+                  </div>
+                  } @empty {
+                  <p class="text-center text-xs text-slate-400 py-8">No matching fields found</p>
+                  }
+                </div>
+
+                <div
+                  class="shrink-0 flex items-center justify-between gap-3 px-3 py-2.5 border-t border-slate-100 dark:border-slate-700">
+                  <button type="button" (click)="resetFilterPanel()"
+                    class="h-8 px-5 rounded-full border border-[#00a6f4] text-[#00a6f4] text-[13px] font-semibold hover:bg-sky-50 dark:hover:bg-slate-700 cursor-pointer">
+                    Reset
+                  </button>
+                  <button type="button" (click)="applyFilterPanel()"
+                    class="h-8 px-5 rounded-full border border-[#00a6f4] text-[#00a6f4] text-[13px] font-semibold hover:bg-[#00a6f4] hover:text-white cursor-pointer transition-colors">
+                    Apply
+                  </button>
+                </div>
+              </aside>
+              }
+
+              <!-- EXPORT / SHARE SIDE PANEL: pick fields, then a format or share (slides in from the right) -->
+              @if (isExportPanelOpen() || isSharePanelOpen()) {
+              <aside
+                class="export-panel side-panel-slide w-full md:w-80 shrink-0 md:h-full max-h-[520px] md:max-h-none flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-[#E2E4EB] dark:border-slate-700 shadow-xs overflow-hidden relative">
+                <button type="button" (click)="isExportPanelOpen.set(false); isSharePanelOpen.set(false)"
+                  class="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 flex items-center justify-center cursor-pointer"
+                  title="Close">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <div class="p-3 pt-8 border-b border-slate-100 dark:border-slate-700 shrink-0">
+                  <div class="relative">
+                    <input type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
+                      placeholder="Search"
+                      class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                      class="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                </div>
+
+                <label
+                  class="form-switch justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 shrink-0">
+                  <span class="form-switch-label">Select All</span>
+                  <input type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
+                    (change)="setAllExportFields($any($event.target).checked)" />
+                  <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                </label>
+
+                <div class="flex flex-1 min-h-0">
+                  <div class="flex-1 min-w-0 overflow-y-auto custom-scrollbar px-3 py-3 space-y-1">
+                    @for (f of visibleExportFields(); track f.key) {
+                    <label
+                      class="form-switch justify-between px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60">
+                      <span class="form-switch-label font-medium!">{{ f.label }}</span>
+                      <input type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
+                        (change)="toggleExportField(f.key)" />
+                      <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
+                    </label>
+                    } @empty {
+                    <p class="text-center text-xs text-slate-400 py-8">No matching fields found</p>
+                    }
+                  </div>
+
+                  <div
+                    class="w-16 shrink-0 border-l border-slate-100 dark:border-slate-700 overflow-y-auto custom-scrollbar flex flex-col items-center gap-3 py-3">
+                    @for (b of exportButtons; track b.id) {
+                    <button type="button" (click)="runExport(b.id)" class="export-format-btn" [style.color]="b.color"
+                      [title]="b.label">
+                      @switch (b.id) {
+                      @case ('excel') {
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                        <path d="M8 13h2" />
+                        <path d="M14 13h2" />
+                        <path d="M8 17h2" />
+                        <path d="M14 17h2" />
+                      </svg>
+                      }
+                      @case ('pdf') {
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                        <path d="M10 9H8" />
+                        <path d="M16 13H8" />
+                        <path d="M16 17H8" />
+                      </svg>
+                      }
+                      @case ('csv') {
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <path d="m7 10 5 5 5-5" />
+                        <path d="M12 15V3" />
+                      </svg>
+                      }
+                      @case ('print') {
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                        <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" />
+                        <rect x="6" y="14" width="12" height="8" rx="1" />
+                      </svg>
+                      }
+                      @case ('docs') {
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                        <path d="m8 12 1.5 6L12 13l2.5 5L16 12" />
+                      </svg>
+                      }
+                      @case ('whatsapp') {
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+                      </svg>
+                      }
+                      @case ('email') {
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="20" height="16" x="2" y="4" rx="2" />
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                      </svg>
+                      }
+                      }
+                    </button>
+                    }
+                  </div>
+                </div>
+              </aside>
+              }
+            </div>
+
+            <!-- RECYCLE BIN MODAL -->
+            @if (isRecycleBinModalOpen()) {
+            <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+              (click)="closeRecycleBinModal()">
+              <div
+                class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
+                (click)="$event.stopPropagation()">
+
+                <!-- Top header -->
+                <div
+                  class="flex items-center justify-between px-6 sm:px-7 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40">
+                  <div class="flex items-center gap-2.5">
+                    <div
+                      class="w-8 h-8 rounded-full bg-rose-100 dark:bg-rose-950/80 text-rose-500 flex items-center justify-center shrink-0">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5" />
+                        <path d="M11 19h8.2a1.8 1.8 0 0 0 1.565-.914c.338-.59.332-1.312-.016-1.895L17.8 11" />
+                        <path d="m14 5 2.8 4.7" />
+                        <path d="m3 14 3 5-3 5" />
+                        <path d="m18 10 3-5 3 5" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 class="text-base font-bold text-slate-900 dark:text-white">Recycle Bin</h3>
+                      <p class="text-xs text-slate-400">Restore or permanently delete removed items</p>
+                    </div>
+                  </div>
+
+                  <button type="button" (click)="closeRecycleBinModal()"
+                    class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-black dark:text-white bg-transparent hover:text-[#f87171] hover:border-[#f87171] hover:bg-transparent flex items-center justify-center transition cursor-pointer"
+                    title="Close">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round">
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Table of Deleted Items -->
+                <div class="overflow-y-auto custom-scrollbar flex-1 px-7 py-3">
+                  <div class="rounded-xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+                    <table class="w-full text-xs">
+                      <thead class="bg-slate-50/70 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400">
+                        <tr>
+                          <th class="py-3 px-5 text-start font-semibold">Item</th>
+                          <th class="py-3 px-4 text-start font-semibold">SKU / Code</th>
+                          <th class="py-3 px-5 text-end font-semibold">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-100 dark:divide-slate-700/80 text-slate-700 dark:text-slate-200">
+                        @for (item of itemService.deletedItems(); track item.itemId) {
+                        <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-700/30 transition-colors">
+                          <td class="py-3.5 px-5 whitespace-nowrap">
+                            <label class="flex items-center gap-3 cursor-pointer select-none">
+                              <input type="checkbox" [checked]="selectedBinIds().has(item.itemId)" (change)="toggleBinSelection(item.itemId)"
+                                class="sr-only" />
+                              <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all"
+                                [class.border-[#00a6f4]]="selectedBinIds().has(item.itemId)"
+                                [class.bg-[#00a6f4]]="selectedBinIds().has(item.itemId)"
+                                [class.border-slate-300]="!selectedBinIds().has(item.itemId)"
+                                [class.dark:border-slate-600]="!selectedBinIds().has(item.itemId)">
+                                @if (selectedBinIds().has(item.itemId)) {
+                                <svg class="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                  stroke-width="3">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                }
+                              </span>
+                              <span class="font-medium text-slate-900 dark:text-white">{{ item.nameEn }}</span>
+                            </label>
+                          </td>
+
+                          <td class="py-3.5 px-4 whitespace-nowrap text-slate-500 font-mono text-xs">
+                            {{ item.sku }}
+                          </td>
+
+                          <td class="py-3.5 px-5 whitespace-nowrap text-end">
+                            <button type="button" (click)="restoreItemFromBin(item)"
+                              class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-[#00a6f4] dark:hover:text-[#00a6f4] transition cursor-pointer">
+                              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+                                <path d="M3 3v5h5" />
+                              </svg>
+                              <span>Restore</span>
+                            </button>
+                          </td>
+                        </tr>
+                        } @empty {
+                        <tr>
+                          <td colspan="3" class="py-12 text-center text-slate-400">
+                            No deleted items in the recycle bin.
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Bottom Bar -->
+                <div
+                  class="flex items-center justify-between gap-3 px-7 py-4 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  <span class="text-xs text-slate-500 font-medium">
+                    {{ selectedBinIds().size }} selected
+                  </span>
+
+                  <div class="flex items-center gap-2.5">
+                    <button type="button" (click)="restoreAllFromBin()"
+                      class="px-4 py-2 rounded-full border border-sky-200 dark:border-sky-800 text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 text-xs font-semibold transition cursor-pointer">
+                      Restore All
+                    </button>
+
+                    <button type="button" (click)="clearBinSelection()"
+                      class="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer">
+                      Clear Selection
+                    </button>
+
+                    <button type="button" (click)="deleteSelectedFromBin()"
+                      class="px-5 py-2 rounded-full bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-sm">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                      <span>Delete Permanently</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- IMPORT MODAL -->
+            @if (isImportModalOpen()) {
+            <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+              (click)="closeImportModal()">
+              <div
+                class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
+                (click)="$event.stopPropagation()">
+
+                <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700">
+                  <div>
+                    <h3 class="text-base font-bold text-slate-800 dark:text-white">Import Items</h3>
+                    <p class="text-xs text-slate-400">Upload CSV file to import multiple items at once</p>
+                  </div>
+                  <button type="button" (click)="closeImportModal()"
+                    class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition shrink-0"
+                    title="Close">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="p-6 space-y-4 overflow-y-auto">
+                  <div class="border-2 border-dashed border-sky-200 dark:border-slate-700 rounded-2xl p-8 text-center bg-sky-50/40 dark:bg-slate-900/30">
+                    <svg class="w-12 h-12 text-[#00a6f4] mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16 16l-4-4-4 4" />
+                      <path d="M12 12v9" />
+                      <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                    </svg>
+                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Drag and drop your CSV file here, or click to browse</p>
+                    <p class="text-xs text-slate-400">Accepted format: .csv (Max 10MB)</p>
+                    <button type="button" (click)="downloadItemTemplate()"
+                      class="mt-4 px-4 py-2 rounded-full border border-[#00a6f4] text-[#00a6f4] text-xs font-semibold hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer">
+                      Download Sample CSV Template
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40">
+                  <button type="button" (click)="closeImportModal()"
+                    class="px-5 py-2 rounded-full border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer">
+                    Cancel
+                  </button>
+                  <button type="button" (click)="closeImportModal()"
+                    class="px-5 py-2 rounded-full bg-[#00a6f4] hover:bg-sky-500 text-white text-xs font-bold transition cursor-pointer shadow-xs">
+                    Import Items
+                  </button>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- HISTORY AUDIT MODAL -->
+            @if (isHistoryModalOpen()) {
+            <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+              (click)="closeHistoryModal()">
+              <div
+                class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
+                (click)="$event.stopPropagation()">
+
+                <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700">
+                  <div>
+                    <h3 class="text-base font-bold text-slate-800 dark:text-white">Audit History</h3>
+                    <p class="text-xs text-slate-400">Track all changes, imports, and updates in Items module</p>
+                  </div>
+                  <button type="button" (click)="closeHistoryModal()"
+                    class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition shrink-0"
+                    title="Close">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="p-6 overflow-y-auto space-y-3">
+                  @for (log of itemAuditLogs(); track $index) {
+                  <div class="flex items-start gap-3 p-3 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/40 dark:bg-slate-900/30">
+                    <div class="w-8 h-8 rounded-full bg-sky-100 dark:bg-sky-950/80 text-[#00a6f4] flex items-center justify-center shrink-0">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                      </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs font-bold text-slate-800 dark:text-white">{{ log.event }}</span>
+                        <span class="text-[11px] text-slate-400">{{ log.date }}</span>
+                      </div>
+                      <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">{{ log.detail }}</p>
+                      <p class="text-[11px] text-slate-400 mt-1">By {{ log.user }}</p>
+                    </div>
+                  </div>
+                  }
+                </div>
+
+                <div class="flex items-center justify-end px-6 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40">
+                  <button type="button" (click)="closeHistoryModal()"
+                    class="px-5 py-2 rounded-full bg-[#00a6f4] hover:bg-sky-500 text-white text-xs font-bold transition cursor-pointer shadow-xs">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+            }
+
+          </div>
+        }
+      } @else {
+
+
 
       <!-- ========================================================================= -->
       <!-- 1. TOP HEADER: Title, Breadcrumb & Record Navigation Pager                -->
@@ -30,10 +2081,12 @@
             </button>
 
             <div class="min-w-0 flex flex-col justify-center">
-              <h1
-                class="text-[15px] sm:text-[18px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
-                {{ pageMode() === 'add' ? 'Add Item' : (pageMode() === 'view' ? 'View Item' : 'Edit Item') }}
-              </h1>
+              <div class="flex items-center gap-2">
+                <h1
+                  class="text-[15px] sm:text-[18px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
+                  {{ pageMode() === 'add' ? 'Add Item' : (pageMode() === 'view' ? 'View Item' : 'Edit Item') }}
+                </h1>
+              </div>
             </div>
           </div>
 
@@ -631,7 +2684,7 @@
                 <!-- Left Scroll Button (Secondary background by default) -->
                 <button type="button" (click)="scrollTabs('left')"
                   class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer mr-1 sm:mr-1.5 shadow-xs active:scale-95"
-                  title="Scroll left" aria-label="Scroll tabs left">
+                  title="Left" aria-label="Scroll tabs left">
                   <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
@@ -688,7 +2741,7 @@
                 <!-- Right Scroll Button (Secondary background by default) -->
                 <button type="button" (click)="scrollTabs('right')"
                   class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer ml-1 sm:ml-1.5 shadow-xs active:scale-95"
-                  title="Scroll right" aria-label="Scroll tabs right">
+                  title="Right" aria-label="Scroll tabs right">
                   <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
@@ -3623,10 +5676,6 @@
             <div
               class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-700">
               <div class="flex items-center gap-3">
-                <button type="button" (click)="handleEditClick()"
-                  class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-600 hover:border-[#00a6f4] hover:text-[#00a6f4] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer bg-white dark:bg-slate-800">
-                  <span>&larr; Back to Form</span>
-                </button>
                 <div>
                   <h2
                     class="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
@@ -3734,273 +5783,6 @@
               </div>
             </div>
           </div>
-
-          } @else if (activeActionView() === 'grid') {
-          <!-- ===================================================================== -->
-          <!-- GRID ITEM LIST VIEW                                                   -->
-          <!-- ===================================================================== -->
-          <div
-            class="flex-1 flex flex-col min-h-0 overflow-y-auto custom-scrollbar p-3 sm:p-5 space-y-3.5 animate-in fade-in duration-200">
-            <!-- Grid Header & Filters -->
-            <div
-              class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-700">
-              <div class="flex items-center gap-2.5">
-                <button type="button" (click)="handleEditClick()"
-                  class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-600 hover:border-[#00a6f4] hover:text-[#00a6f4] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer bg-white dark:bg-slate-800">
-                  <span>&larr; Back to Form</span>
-                </button>
-                <div>
-                  <h2
-                    class="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                    <span>Grid Item List</span>
-                    <span
-                      class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200 dark:border-sky-800">
-                      {{ filteredItemList().length }} Records
-                    </span>
-                  </h2>
-                </div>
-              </div>
-
-              <!-- Search Bar & Category Filter -->
-              <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
-                <input type="text" [ngModel]="itemListSearchQuery()" (ngModelChange)="itemListSearchQuery.set($event)"
-                  placeholder="Search item list..."
-                  class="h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#00a6f4] w-full sm:w-60 flex-1 sm:flex-none" />
-
-                <div class="relative" data-dropdown>
-                  <button type="button" (click)="toggleDropdown('gridCategoryFilter', $event)"
-                    class="h-9 px-3 rounded-xl border bg-white dark:bg-slate-800 text-xs font-semibold flex items-center justify-between gap-2 transition cursor-pointer select-none"
-                    [class.border-[#00a6f4]]="activeDropdown() === 'gridCategoryFilter'"
-                    [class.ring-2]="activeDropdown() === 'gridCategoryFilter'"
-                    [class.ring-[#00a6f4]/20]="activeDropdown() === 'gridCategoryFilter'"
-                    [class.border-slate-300]="activeDropdown() !== 'gridCategoryFilter'"
-                    [class.dark:border-slate-600]="activeDropdown() !== 'gridCategoryFilter'">
-                    <span>{{ itemListCategoryFilter() === 'All' ? 'All Categories' : itemListCategoryFilter() }}</span>
-                    <svg class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" [class.rotate-180]="activeDropdown() === 'gridCategoryFilter'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                      <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                  </button>
-
-                  @if (activeDropdown() === 'gridCategoryFilter') {
-                  <div (click)="$event.stopPropagation()"
-                    class="absolute left-0 top-[calc(100%+6px)] z-50 min-w-[200px] p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-                    <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
-                      <button type="button" (click)="selectDropdownValue('itemListCategoryFilter', 'All')"
-                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs"
-                        [class.bg-[#dff3fd]]="itemListCategoryFilter() === 'All'"
-                        [class.dark:bg-sky-950/70]="itemListCategoryFilter() === 'All'">
-                        <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] transition-colors" [class.text-[#0070ba]]="itemListCategoryFilter() === 'All'" [class.dark:text-[#38bdf8]]="itemListCategoryFilter() === 'All'" [class.font-bold]="itemListCategoryFilter() === 'All'">All Categories</span>
-                        @if (itemListCategoryFilter() === 'All') {
-                        <svg class="w-4 h-4 text-[#00a6f4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        }
-                      </button>
-                      @for (cat of categoryOptions; track cat) {
-                      <button type="button" (click)="selectDropdownValue('itemListCategoryFilter', cat)"
-                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs"
-                        [class.bg-[#dff3fd]]="itemListCategoryFilter() === cat"
-                        [class.dark:bg-sky-950/70]="itemListCategoryFilter() === cat">
-                        <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] transition-colors truncate" [class.text-[#0070ba]]="itemListCategoryFilter() === cat" [class.dark:text-[#38bdf8]]="itemListCategoryFilter() === cat" [class.font-bold]="itemListCategoryFilter() === cat">{{ cat }}</span>
-                        @if (itemListCategoryFilter() === cat) {
-                        <svg class="w-4 h-4 text-[#00a6f4] ml-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        }
-                      </button>
-                      }
-                    </div>
-                  </div>
-                  }
-                </div>
-
-                <button type="button" (click)="switchToAddMode()"
-                  class="h-9 px-3.5 rounded-xl bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer flex items-center gap-1 shadow-sm">
-                  <span>+ Add</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Cards Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
-              @for (item of filteredItemList(); track item.itemId) {
-              <div
-                class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-xs hover:shadow-md hover:border-[#00a6f4] transition-all flex flex-col justify-between group">
-                <div>
-                  <div class="flex items-center justify-between text-[11px] mb-2">
-                    <span
-                      class="font-mono font-bold px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200 dark:border-sky-800">
-                      {{ item.sku }}
-                    </span>
-                    <span class="font-bold text-emerald-600 dark:text-emerald-400">
-                      {{ item.status }}
-                    </span>
-                  </div>
-                  <h3
-                    class="text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#00a6f4] transition line-clamp-2">
-                    {{ item.nameEn }}
-                  </h3>
-                  <div class="text-[11px] text-slate-400 mt-1 truncate">{{ item.category }} &bull; {{ item.baseUom }}
-                  </div>
-                </div>
-
-                <div
-                  class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/70 flex items-center justify-between">
-                  <div>
-                    <div class="text-[10px] text-slate-400 uppercase font-semibold">Sales Price</div>
-                    <div class="text-sm font-extrabold text-slate-900 dark:text-white">AED {{ item.salesPrice |
-                      number:'1.2-2' }}</div>
-                  </div>
-                  <div class="flex items-center gap-1.5">
-                    <button type="button" (click)="selectItemFromList(item, 'view')"
-                      class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-500 hover:text-teal-600 text-[11px] font-bold text-slate-600 dark:text-slate-300 transition cursor-pointer">
-                      View
-                    </button>
-                    <button type="button" (click)="selectItemFromList(item, 'edit')"
-                      class="px-2.5 py-1 rounded-lg bg-[#00a6f4] hover:bg-[#0092d6] text-white text-[11px] font-bold transition cursor-pointer shadow-xs">
-                      Edit
-                    </button>
-                  </div>
-                </div>
-              </div>
-              }
-            </div>
-          </div>
-
-          } @else if (activeActionView() === 'table') {
-          <!-- ===================================================================== -->
-          <!-- TABLE ITEM LIST VIEW                                                  -->
-          <!-- ===================================================================== -->
-          <div class="flex-1 flex flex-col min-h-0 p-3 sm:p-5 space-y-3.5 animate-in fade-in duration-200">
-            <!-- Table Header & Filters -->
-            <div
-              class="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-700">
-              <div class="flex items-center gap-2.5">
-                <button type="button" (click)="handleEditClick()"
-                  class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-600 hover:border-[#00a6f4] hover:text-[#00a6f4] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer bg-white dark:bg-slate-800">
-                  <span>&larr; Back to Form</span>
-                </button>
-                <div>
-                  <h2
-                    class="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                    <span>Table Item List</span>
-                    <span
-                      class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200 dark:border-sky-800">
-                      {{ filteredItemList().length }} Rows
-                    </span>
-                  </h2>
-                </div>
-              </div>
-
-              <!-- Search Bar & Filters -->
-              <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
-                <input type="text" [ngModel]="itemListSearchQuery()" (ngModelChange)="itemListSearchQuery.set($event)"
-                  placeholder="Filter table rows..."
-                  class="h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#00a6f4] w-full sm:w-60 flex-1 sm:flex-none" />
-
-                <div class="relative" data-dropdown>
-                  <button type="button" (click)="toggleDropdown('gridCategoryFilter', $event)"
-                    class="h-9 px-3 rounded-xl border bg-white dark:bg-slate-800 text-xs font-semibold flex items-center justify-between gap-2 transition cursor-pointer select-none"
-                    [class.border-[#00a6f4]]="activeDropdown() === 'gridCategoryFilter'"
-                    [class.ring-2]="activeDropdown() === 'gridCategoryFilter'"
-                    [class.ring-[#00a6f4]/20]="activeDropdown() === 'gridCategoryFilter'"
-                    [class.border-slate-300]="activeDropdown() !== 'gridCategoryFilter'"
-                    [class.dark:border-slate-600]="activeDropdown() !== 'gridCategoryFilter'">
-                    <span>{{ itemListCategoryFilter() === 'All' ? 'All Categories' : itemListCategoryFilter() }}</span>
-                    <svg class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" [class.rotate-180]="activeDropdown() === 'gridCategoryFilter'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                      <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                  </button>
-
-                  @if (activeDropdown() === 'gridCategoryFilter') {
-                  <div (click)="$event.stopPropagation()"
-                    class="absolute left-0 top-[calc(100%+6px)] z-50 min-w-[200px] p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-                    <div class="max-h-56 overflow-y-auto custom-scrollbar flex flex-col space-y-0.5">
-                      <button type="button" (click)="selectDropdownValue('itemListCategoryFilter', 'All')"
-                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs"
-                        [class.bg-[#dff3fd]]="itemListCategoryFilter() === 'All'"
-                        [class.dark:bg-sky-950/70]="itemListCategoryFilter() === 'All'">
-                        <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] transition-colors" [class.text-[#0070ba]]="itemListCategoryFilter() === 'All'" [class.dark:text-[#38bdf8]]="itemListCategoryFilter() === 'All'" [class.font-bold]="itemListCategoryFilter() === 'All'">All Categories</span>
-                        @if (itemListCategoryFilter() === 'All') {
-                        <svg class="w-4 h-4 text-[#00a6f4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        }
-                      </button>
-                      @for (cat of categoryOptions; track cat) {
-                      <button type="button" (click)="selectDropdownValue('itemListCategoryFilter', cat)"
-                        class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs"
-                        [class.bg-[#dff3fd]]="itemListCategoryFilter() === cat"
-                        [class.dark:bg-sky-950/70]="itemListCategoryFilter() === cat">
-                        <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] transition-colors truncate" [class.text-[#0070ba]]="itemListCategoryFilter() === cat" [class.dark:text-[#38bdf8]]="itemListCategoryFilter() === cat" [class.font-bold]="itemListCategoryFilter() === cat">{{ cat }}</span>
-                        @if (itemListCategoryFilter() === cat) {
-                        <svg class="w-4 h-4 text-[#00a6f4] ml-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        }
-                      </button>
-                      }
-                    </div>
-                  </div>
-                  }
-                </div>
-
-                <button type="button" (click)="switchToAddMode()"
-                  class="h-9 px-3.5 rounded-xl bg-[#00a6f4] hover:bg-[#0092d6] text-white text-xs font-bold transition cursor-pointer flex items-center gap-1 shadow-sm">
-                  <span>+ Add</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Tabular Records Table (Internally Scrollable) -->
-            <div
-              class="flex-1 min-h-0 overflow-auto custom-scrollbar bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs">
-              <table class="w-full text-left text-xs">
-                <thead
-                  class="sticky top-0 bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-700 text-slate-500 font-bold uppercase tracking-wider text-[10px] z-10">
-                  <tr>
-                    <th class="px-4 py-3">SKU / Code</th>
-                    <th class="px-4 py-3">Item Name (EN)</th>
-                    <th class="px-4 py-3">Category</th>
-                    <th class="px-4 py-3">Brand</th>
-                    <th class="px-4 py-3">UOM</th>
-                    <th class="px-4 py-3 text-right">Cost Price</th>
-                    <th class="px-4 py-3 text-right">Sales Price</th>
-                    <th class="px-4 py-3 text-right">Margin %</th>
-                    <th class="px-4 py-3">Status</th>
-                    <th class="px-4 py-3 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60 font-medium">
-                  @for (item of filteredItemList(); track item.itemId) {
-                  <tr (dblclick)="selectItemFromList(item, 'edit')"
-                    class="hover:bg-sky-50/60 dark:hover:bg-slate-750 transition cursor-pointer">
-                    <td class="px-4 py-2.5 font-mono font-bold text-[#00a6f4]">{{ item.sku }}</td>
-                    <td class="px-4 py-2.5 font-bold text-slate-800 dark:text-slate-100 max-w-xs truncate">{{
-                      item.nameEn }}</td>
-                    <td class="px-4 py-2.5 text-slate-500">{{ item.category }}</td>
-                    <td class="px-4 py-2.5 text-slate-600 dark:text-slate-300">{{ item.brand || '—' }}</td>
-                    <td class="px-4 py-2.5">{{ item.baseUom }}</td>
-                    <td class="px-4 py-2.5 text-right font-mono">AED {{ item.costPrice | number:'1.2-2' }}</td>
-                    <td class="px-4 py-2.5 text-right font-mono font-bold text-slate-900 dark:text-white">AED {{
-                      item.salesPrice | number:'1.2-2' }}</td>
-                    <td class="px-4 py-2.5 text-right font-bold text-emerald-600">{{ item.marginPct || 38.82 }}%</td>
-                    <td class="px-4 py-2.5">
-                      <span
-                        class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200">
-                        {{ item.status }}
-                      </span>
-                    </td>
-                    <td class="px-4 py-2.5 text-center">
-                      <div class="flex items-center justify-center gap-1.5">
-                        <button type="button" (click)="selectItemFromList(item, 'view')"
-                          class="px-2 py-0.5 rounded text-[11px] font-bold text-teal-600 hover:bg-teal-50 transition cursor-pointer">
-                          View
-                        </button>
-                        <button type="button" (click)="selectItemFromList(item, 'edit')"
-                          class="px-2 py-0.5 rounded text-[11px] font-bold text-[#00a6f4] hover:bg-sky-50 transition cursor-pointer">
-                          Edit
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </div>
           }
 
         </div>
@@ -4008,6 +5790,7 @@
         <!-- ======================================================================= -->
         <!-- SECTION 3: RIGHT ACTION PANEL CARD FRAME (Vertically Formatted)          -->
         <!-- ======================================================================= -->
+        @if (activeActionView() === 'form') {
         <aside id="section-action-panel"
           [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceTourStep() === 3"
           class="hidden md:flex flex-col items-center justify-start bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-1.5 shrink-0 select-none relative z-20 transition-all h-full min-h-[460px]">
@@ -4190,6 +5973,7 @@
             }
           </div>
         </aside>
+        }
       </form>
 
       <!-- Mobile Quick Actions Dock (Horizontal scrollable dock with active view indicators) -->
@@ -4371,6 +6155,7 @@
       <!-- ========================================================================= -->
       <!-- 4. FIXED FOOTER BAR: Stay on Page | Clear & Save / Update (Req 6 & 7)     -->
       <!-- ========================================================================= -->
+      @if (activeActionView() === 'form') {
       <div id="section-footer-actions"
         [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceTourStep() === 4"
         class="item-panel-footer shrink-0 flex items-center justify-between gap-2 px-3 sm:px-8 py-1.5 sm:py-2 border-t border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xs select-none transition-all sticky bottom-0 z-30 shadow-xs">
@@ -4397,6 +6182,9 @@
           </button>
         </div>
       </div>
+
+      }
+      }
 
     </div>
   </div>
@@ -4742,7 +6530,7 @@
   
   <!-- 1. Dedicated Dimmed Backdrop at z-40 so spotlighted element at z-45 shines through -->
   <div class="fixed inset-0 z-[120] bg-slate-950/60 backdrop-blur-[1.5px] cursor-pointer transition-opacity duration-300"
-    (click)="closeGuidanceTour()" title="Exit Tour">
+    (click)="closeGuidanceTour()" title="Exit">
   </div>
 
   <!-- 2. Dedicated Spotlight Guidance Panel displayed SEPARATELY on the right side without overlapping tables/content -->

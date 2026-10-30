@@ -35,7 +35,7 @@
           <button
             type="button"
             (click)="navService.toggleMobileMenu()"
-            title="Open Menu"
+            title="Menu"
             aria-label="Toggle navigation menu"
             class="md:hidden w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#00a6f4] to-[#0052cc] text-white shadow-md shadow-blue-500/25 active:scale-95 transition-all cursor-pointer shrink-0"
           >
@@ -47,7 +47,7 @@
           </button>
           <div
             class="w-7 h-7 sm:w-11 sm:h-11 rounded-full overflow-hidden flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105"
-            title="ABC TRADING LLC">
+            title="Company">
             <img src="assets/images/client-logo-extracted.png" alt="ABC TRADING LLC"
               class="w-full h-full object-contain rounded-full select-none pointer-events-none" draggable="false" />
           </div>
@@ -68,7 +68,7 @@
 
           <!-- 1. Search Icon 🔍 with Anchored Dropdown Popover (Exact match to Reference Images 2 & 3) -->
           <div class="relative">
-            <button type="button" (click)="toggleSearch($event)" title="Search (Click for voice & image search)"
+            <button type="button" (click)="toggleSearch($event)" title="Search"
               class="search-trigger-btn top-action-btn w-7.5 h-7.5 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg sm:rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer relative"
               [class.bg-blue-50]="navService.isSearchOpen()" [class.text-[#1863c0]]="navService.isSearchOpen()">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24"
@@ -98,7 +98,7 @@
 
                 <!-- Voice Search Icon 🎙️ (Speech-to-Text) -->
                 <button type="button" (click)="toggleVoiceSearch($event)"
-                  [title]="isListening() ? 'Listening... click to stop' : 'Voice Search (Click and speak)'"
+                  [title]="isListening() ? 'Listening' : 'Voice'"
                   class="p-1 rounded-lg text-slate-400 hover:text-[#1863c0] transition cursor-pointer relative"
                   [class.text-red-500]="isListening()" [class.animate-pulse]="isListening()">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
@@ -113,7 +113,7 @@
 
                 <!-- Camera Icon 📷 (Image Search - Styled in Rapid ERP Brand Blue Theme) -->
                 <button type="button" (click)="toggleImageSearch($event)"
-                  title="Image Search (Upload photo or take picture)"
+                  title="Camera"
                   class="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#1863c0] to-[#06a9ea] hover:opacity-90 text-white flex items-center justify-center transition cursor-pointer shadow-xs">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -314,7 +314,7 @@
           </div>
 
           <!-- 2. Fullscreen Icon ⤢ (Matching User Reference Image 2) -->
-          <button type="button" (click)="toggleFullscreen()" title="Toggle Fullscreen"
+          <button type="button" (click)="toggleFullscreen()" title="Fullscreen"
             class="hidden sm:inline-flex top-action-btn w-9 h-9 items-center justify-center rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="2.2">
@@ -377,7 +377,7 @@
 
           <!-- 4. History / Clock Icon 🕒 -->
           <div class="relative hidden sm:block">
-            <button type="button" (click)="toggleHistory($event)" title="Recent Activity History"
+            <button type="button" (click)="toggleHistory($event)" title="History"
               class="history-trigger-btn top-action-btn w-9 h-9 flex items-center justify-center rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer"
               [class.bg-blue-50]="navService.isHistoryOpen()" [class.text-[#1863c0]]="navService.isHistoryOpen()">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -414,7 +414,7 @@
 
           <!-- 5. Favorites / Star Icon ⭐ -->
           <div class="relative hidden sm:block">
-            <button type="button" (click)="toggleFavorites($event)" title="Bookmarked Shortcuts"
+            <button type="button" (click)="toggleFavorites($event)" title="Shortcuts"
               class="favorites-trigger-btn top-action-btn w-9 h-9 flex items-center justify-center rounded-xl text-slate-600 dark:text-slate-300 hover:text-amber-500 hover:bg-amber-50/50 dark:hover:bg-slate-700/80 transition-all cursor-pointer"
               [class.bg-amber-50]="navService.isFavoritesOpen()" [class.text-amber-500]="navService.isFavoritesOpen()">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -484,7 +484,7 @@
 
           <!-- 6. Language / Globe Icon 🌐 (Matching User Reference Image 3 & 4) -->
           <div class="relative hidden sm:block">
-            <button type="button" (click)="toggleLanguage($event)" title="Change Language"
+            <button type="button" (click)="toggleLanguage($event)" title="Language"
               class="language-trigger-btn top-action-btn h-9 px-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer flex items-center justify-center gap-1.5"
               [class.bg-blue-50]="navService.isLanguageOpen()" [class.text-[#1863c0]]="navService.isLanguageOpen()">
               <!-- Clean Globe Icon from Image 3 Reference -->
@@ -566,7 +566,7 @@
 
           <!-- Mobile More Actions Menu (⋯) -->
           <div class="relative sm:hidden">
-            <button type="button" (click)="toggleMoreMenu($event)" title="More tools"
+            <button type="button" (click)="toggleMoreMenu($event)" title="Tools"
               class="more-menu-trigger-btn top-action-btn w-7.5 h-7.5 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer relative"
               [class.bg-blue-50]="isMoreMenuOpen()" [class.text-[#1863c0]]="isMoreMenuOpen()">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
@@ -786,7 +786,7 @@
           </div>
 
           <!-- 7. Dark / Light Mode Toggle (Top Right Theme Function - Light by default, toggles to Dark) -->
-          <button type="button" (click)="toggleDarkMode()" title="Toggle Light / Dark Mode"
+          <button type="button" (click)="toggleDarkMode()" title="Theme"
             class="top-action-btn w-7.5 h-7.5 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg sm:rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#1863c0] hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all cursor-pointer">
             @if (!navService.isDarkMode()) {
             <!-- Crescent Moon (Click for Dark Mode) -->
@@ -954,7 +954,7 @@
               <!-- Export Report Button -->
               <button type="button" (click)="exportReport()"
                 class="h-9 px-3.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-750 hover:text-[#1863c0] dark:hover:text-[#38bdf8] flex items-center gap-2 shadow-2xs transition cursor-pointer active:scale-95"
-                title="Export analytics report">
+                title="Export">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-500" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -1670,7 +1670,7 @@
                         <td class="py-2.5 px-2 text-end">
                           <div class="inline-flex items-center gap-1.5 text-slate-400">
                             <button type="button" (click)="viewActivity(act)"
-                              class="p-1 hover:text-[#1863c0] transition cursor-pointer" title="View details">
+                              class="p-1 hover:text-[#1863c0] transition cursor-pointer" title="Details">
                               <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -1680,7 +1680,7 @@
                               </svg>
                             </button>
                             <button type="button" (click)="editActivity(act)"
-                              class="p-1 hover:text-[#1863c0] transition cursor-pointer" title="Edit entry">
+                              class="p-1 hover:text-[#1863c0] transition cursor-pointer" title="Edit">
                               <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -1948,7 +1948,7 @@
     <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
       <button type="button" (click)="toggleHelpModal()"
         class="text-xs text-slate-600 hover:text-[#00a6f4] dark:text-slate-300 dark:hover:text-[#38bdf8] font-normal transition-colors cursor-pointer flex items-center gap-2 group"
-        title="Rapid Documentation & Support">
+        title="Docs">
         <span>{{ navService.translateText('Need help?') }}</span>
       </button>
     </div>
@@ -1957,7 +1957,7 @@
     <div class="flex items-center gap-2">
       <button type="button" (click)="toggleLiveChat()"
         class="text-xs text-slate-600 hover:text-[#00a6f4] dark:text-slate-300 dark:hover:text-[#38bdf8] font-medium transition-colors cursor-pointer flex items-center gap-1.5 group"
-        title="Open 24/7 Live Support Chat">
+        title="Chat">
         <span class="w-2 h-2 rounded-full bg-[#10b981] inline-block shrink-0"></span>
         <span>{{ navService.translateText('Live Chat') }}</span>
       </button>

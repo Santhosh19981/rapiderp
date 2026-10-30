@@ -527,8 +527,8 @@ button.accordion-trigger-btn:not(:disabled):hover div,
 /* Caret pointing UP ▲ (Tooltip is below element) */
 #rapiderp-global-tooltip[data-pos="bottom"] #rapiderp-tooltip-caret {
   top: -6px;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  left: 50%;
+  transform: translateX(-50%);
   border-width: 0 6px 6px 6px;
   border-color: transparent transparent #00a6f4 transparent;
 }
@@ -536,8 +536,8 @@ button.accordion-trigger-btn:not(:disabled):hover div,
 /* Caret pointing DOWN ▼ (Tooltip is above element) */
 #rapiderp-global-tooltip[data-pos="top"] #rapiderp-tooltip-caret {
   bottom: -6px;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  left: 50%;
+  transform: translateX(-50%);
   border-width: 6px 6px 0 6px;
   border-color: #00a6f4 transparent transparent transparent;
 }
@@ -545,8 +545,8 @@ button.accordion-trigger-btn:not(:disabled):hover div,
 /* Caret pointing RIGHT ▶ (Tooltip is to the left of element) */
 #rapiderp-global-tooltip[data-pos="left"] #rapiderp-tooltip-caret {
   right: -6px;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
+  top: 50%;
+  transform: translateY(-50%);
   border-width: 6px 0 6px 6px;
   border-color: transparent transparent transparent #00a6f4;
 }
@@ -554,8 +554,8 @@ button.accordion-trigger-btn:not(:disabled):hover div,
 /* Caret pointing LEFT ◀ (Tooltip is to the right of element) */
 #rapiderp-global-tooltip[data-pos="right"] #rapiderp-tooltip-caret {
   left: -6px;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
+  top: 50%;
+  transform: translateY(-50%);
   border-width: 6px 6px 6px 0;
   border-color: transparent #00a6f4 transparent transparent;
 }
