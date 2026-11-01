@@ -242,7 +242,7 @@
                   (ngModelChange)="searchQuery.set($event); currentPage.set(1)" placeholder="Search"
                   class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
                 @if (searchQuery()) {
-                <button type="button" (click)="searchQuery.set(''); currentPage.set(1)"
+                <button type="button" (click)="searchQuery.set(''); currentPage.set(1)" aria-label="Clear search" title="Clear search"
                   class="p-1 rounded-full text-slate-400 hover:text-slate-600 transition cursor-pointer mr-1">
                   <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18" />
@@ -557,7 +557,7 @@
                 class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
 
               @if (fieldSearchQuery()) {
-              <button type="button" (click)="fieldSearchQuery.set(''); isFieldSearchOpen.set(false)"
+              <button type="button" (click)="fieldSearchQuery.set(''); isFieldSearchOpen.set(false)" aria-label="Clear field search" title="Clear field search"
                 class="p-1 rounded-full text-slate-400 hover:text-slate-600 transition cursor-pointer mr-1">
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="18" y1="6" x2="6" y2="18" />
