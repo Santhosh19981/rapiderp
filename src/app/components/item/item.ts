@@ -466,7 +466,7 @@ export class ItemComponent implements OnInit {
 
   // Action Dock Panel State
   isMoreActionsOpen = signal<boolean>(false);
-  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('overview');
+  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('grid');
   actionPanelPage = signal<'top' | 'bottom'>('top');
 
   // Mobile Section Navigation ('general' info, 'tabs' specifications, or 'all')
@@ -2762,7 +2762,7 @@ export class ItemComponent implements OnInit {
       } else if (mode === 'table' || mode === 'list') {
         this.activeActionView.set('table');
       } else {
-        this.activeActionView.set('overview');
+        this.activeActionView.set('grid');
       }
     });
   }
@@ -3675,12 +3675,12 @@ export class ItemComponent implements OnInit {
     this.isMoreActionsOpen.set(false);
   }
 
-  switchView(mode: 'overview' | 'grid' | 'table'): void {
+  switchView(mode: 'grid' | 'table'): void {
     this.activeActionView.set(mode);
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        mode: mode === 'overview' ? null : mode,
+        mode: mode === 'grid' ? null : mode,
         view: null,
       },
       queryParamsHandling: 'merge',
@@ -3688,8 +3688,7 @@ export class ItemComponent implements OnInit {
   }
 
   handleOverviewClick(): void {
-    this.switchView('overview');
-    this.showToast('Item Overview Dashboard active');
+    this.handleGridClick();
   }
 
   handleGridClick(): void {

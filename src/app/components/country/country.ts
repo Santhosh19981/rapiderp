@@ -21,7 +21,7 @@ import { AuditService } from '../../services/audit.service';
 import { TenantService, ConfigurableField } from '../../services/tenant.service';
 import { DropdownOption, SelectDropdown } from '../select-dropdown/select-dropdown';
 
-export type CountryViewMode = 'overview' | 'grid' | 'list' | 'add' | 'edit' | 'view';
+export type CountryViewMode = 'grid' | 'list' | 'add' | 'edit' | 'view';
 
 export type FormStatus = 'Active' | 'Inactive' | 'Draft' | 'Delete';
 
@@ -100,8 +100,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   scrollableScrollWidth = signal<number>(1424);
 
-  // Current view mode: 'overview' | 'grid' | 'list' | 'add' | 'edit' | 'view'
-  viewMode = signal<CountryViewMode>('overview');
+  // Current view mode: 'grid' | 'list' | 'add' | 'edit' | 'view'
+  viewMode = signal<CountryViewMode>('grid');
 
   pageHeaderTitle = computed<string>(() => {
     switch (this.viewMode()) {
@@ -109,8 +109,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
         return 'Country Grid View';
       case 'list':
         return 'Country List View';
-      case 'overview':
-        return 'Country Overview';
       case 'add':
         return 'Add Country';
       case 'edit':
@@ -3802,7 +3800,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         }
       }
 
-      if (mode && ['overview', 'grid', 'list', 'add', 'edit', 'view'].includes(mode)) {
+      if (mode && ['grid', 'list', 'add', 'edit', 'view'].includes(mode)) {
         if (mode === 'add') {
           this.currentCountryId.set(null);
           this.selectedMasterCountry.set(null);
@@ -3822,14 +3820,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
         if (this.viewMode() !== mode) {
           this.selectedCell.set(null);
           this.editingCell.set(null);
-          this.viewMode.set(mode);
+          this.viewMode.set(mode as CountryViewMode);
           if (mode === 'grid' || mode === 'list') {
             this.focusSearch();
           }
         }
       } else {
-        if (this.viewMode() !== 'overview') {
-          this.viewMode.set('overview');
+        if (this.viewMode() !== 'grid') {
+          this.viewMode.set('grid');
         }
       }
 
@@ -4891,7 +4889,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        mode: mode === 'overview' ? null : mode,
+        mode: mode === 'grid' ? null : mode,
         id: (mode === 'edit' || mode === 'view') ? this.currentCountryId() : null,
       },
       queryParamsHandling: 'merge',
