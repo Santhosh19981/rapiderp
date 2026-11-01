@@ -942,8 +942,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   commitRecordInput(): void {
-    const raw = parseInt(this.recordInputValue().trim(), 10);
-    if (!isNaN(raw)) {
+    const raw = Number.parseInt(this.recordInputValue().trim(), 10);
+    if (!Number.isNaN(raw)) {
       this.goToCountryByDisplayNumber(raw);
       this.isRecordDropdownOpen.set(false);
     } else {
@@ -2807,21 +2807,26 @@ export class CountryComponent implements OnInit, AfterViewInit {
       } catch { }
     }
 
-    // Default currency / country detector:
-    // e.g. "default currency, no", "default currency no", "default currency yes", "default no", "default yes"
-    const defaultMatch = text.match(/(?:default\s*(?:currency|country)?\s*(?:is|:)?\s*(no|yes|false|true|off|on|not\s*default))/i);
-    if (defaultMatch) {
-      const v = defaultMatch[1].toLowerCase();
-      isDefault = (v === 'yes' || v === 'true' || v === 'on');
+    // Default currency / country detector
+    const lowerText = text.toLowerCase();
+    if (lowerText.includes('default')) {
+      if (/\b(?:no|false|off|not default)\b/.test(lowerText)) {
+        isDefault = false;
+      } else if (/\b(?:yes|true|on)\b/.test(lowerText)) {
+        isDefault = true;
+      }
     }
 
     // Status detector: "strategy is active", "status is active", "status active", "status is inactive", etc.
-    const statusMatch = text.match(/(?:status|strategy|statue)\s*(?:is|:)?\s*(active|inactive)/i);
-    if (statusMatch) {
-      status = statusMatch[1].toLowerCase() === 'inactive' ? 'Inactive' : 'Active';
-    } else if (/\b(?:status|strategy)\s+active\b/i.test(text) || /\bactive\s+status\b/i.test(text)) {
+    if (/\b(?:status|strategy|statue)\b/i.test(lowerText)) {
+      if (lowerText.includes('inactive')) {
+        status = 'Inactive';
+      } else if (lowerText.includes('active')) {
+        status = 'Active';
+      }
+    } else if (/\bactive\b/i.test(lowerText)) {
       status = 'Active';
-    } else if (/\b(?:status|strategy)\s+inactive\b/i.test(text) || /\binactive\s+status\b/i.test(text)) {
+    } else if (/\binactive\b/i.test(lowerText)) {
       status = 'Inactive';
     }
 
@@ -3261,7 +3266,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isNameAutocompleteOpen.set(false);
     this.markFieldTouched('name');
     if (this.viewMode() === 'edit') {
-      this.router.navigate([], {
+      void this.router.navigate([], {
         relativeTo: this.route,
         queryParams: { mode: 'edit', id: c.id },
         queryParamsHandling: 'merge',
@@ -3302,7 +3307,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const code = val.toUpperCase();
     this.formIsoCode2.set(code);
     this.formCode.set(code);
-    const matched = this.lookupTableData.find((p) => p.code.toLowerCase() === code.toLowerCase() || p.code.toLowerCase() === code.toLowerCase());
+    const matched = this.lookupTableData.find((p) => p.code?.toLowerCase() === code.toLowerCase());
     if (matched) {
       this.applyPreset(matched);
     } else {
@@ -3470,7 +3475,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.currentCountryId.set(match.id);
       this.selectedMasterCountry.set(match);
       if (this.viewMode() === 'edit') {
-        this.router.navigate([], {
+        void this.router.navigate([], {
           relativeTo: this.route,
           queryParams: { mode: 'edit', id: match.id },
           queryParamsHandling: 'merge',
@@ -4309,7 +4314,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const raw = String(this.customPageSizeInput() ?? '').trim();
     if (!raw) return false;
     const n = Number(raw);
-    return !isNaN(n) && Number.isInteger(n) && n >= 10 && n <= 999;
+    return !Number.isNaN(n) && Number.isInteger(n) && n >= 10 && n <= 999;
   }
 
   onCustomPageSizeChange(val: any): void {
@@ -4321,7 +4326,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       return;
     }
     const n = Number(raw);
-    if (isNaN(n) || !Number.isInteger(n)) {
+    if (Number.isNaN(n) || !Number.isInteger(n)) {
       this.pageSizeErrorMessage.set('Please enter a valid whole number');
     } else if (n < 10) {
       this.pageSizeErrorMessage.set('Minimum page size is 10');
@@ -4335,8 +4340,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
   applyCustomPageSize(): void {
     const raw = String(this.customPageSizeInput() ?? '').trim();
     const val = Number(raw);
-    if (isNaN(val) || !Number.isInteger(val) || val < 10 || val > 999) {
-      if (isNaN(val)) this.pageSizeErrorMessage.set('Please enter a valid number');
+    if (Number.isNaN(val) || !Number.isInteger(val) || val < 10 || val > 999) {
+      if (Number.isNaN(val)) this.pageSizeErrorMessage.set('Please enter a valid number');
       else if (val < 10) this.pageSizeErrorMessage.set('Minimum page size is 10');
       else if (val > 999) this.pageSizeErrorMessage.set('Maximum page size is 999');
       return;
@@ -4380,8 +4385,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   commitPageInput(): void {
-    const raw = parseInt(this.pageInputValue().trim(), 10);
-    if (!isNaN(raw)) {
+    const raw = Number.parseInt(this.pageInputValue().trim(), 10);
+    if (!Number.isNaN(raw)) {
       const clamped = Math.max(1, Math.min(this.totalPages(), raw));
       this.goToPage(clamped);
       this.pageInputValue.set(String(clamped));
@@ -4654,7 +4659,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const rawVal = this.editingCellValue().trim();
     let parsedVal: any = rawVal;
     if (field === 'states' || field === 'cities' || field === 'areas') {
-      parsedVal = rawVal ? parseInt(rawVal, 10) || 0 : 0;
+      parsedVal = rawVal ? Number.parseInt(rawVal, 10) || 0 : 0;
     } else if (field === 'code' || field === 'currency') {
       parsedVal = rawVal.toUpperCase();
     }
@@ -4854,7 +4859,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   formatDate(value?: string | null): string {
     if (!value) return '—';
     const d = new Date(value);
-    if (isNaN(d.getTime())) return value;
+    if (Number.isNaN(d.getTime())) return value;
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
   }
@@ -4886,7 +4891,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.focusSearch();
     }
 
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
         mode: mode === 'grid' ? null : mode,
@@ -4898,7 +4903,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   setFilterTab(tab: string): void {
     this.activeFilterTab.set(tab);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
         tab: tab === 'all' ? null : tab,
@@ -4935,7 +4940,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isViewNameAutocompleteOpen.set(false);
     this.isSideSectionOpen.set(true);
     this.viewMode.set('view');
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: 'view', id: country.id },
       queryParamsHandling: 'merge',
@@ -4957,7 +4962,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.selectedMasterCountry.set(country);
     this.isSideSectionOpen.set(true);
     this.viewMode.set('edit');
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: 'edit', id: country.id },
       queryParamsHandling: 'merge',
@@ -5160,7 +5165,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.isFilterPanelOpen.set(false);
     // Set the mode directly: switchView would reload saved data over the snapshot
     this.viewMode.set(form.mode);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: form.mode, id: form.countryId || null },
       queryParamsHandling: 'merge',
@@ -5419,7 +5424,9 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   voiceSearchCountry(query: string): void {
-    const clean = query.replace(/^[.\s,;]+|[.\s,;]+$/g, '').trim();
+    let clean = query.trim();
+    while (clean.length > 0 && ',;.'.includes(clean[0])) clean = clean.slice(1).trim();
+    while (clean.length > 0 && ',;.'.includes(clean[clean.length - 1])) clean = clean.slice(0, -1).trim();
     if (!clean) return;
 
     let match = this.lookupTableData.find(
