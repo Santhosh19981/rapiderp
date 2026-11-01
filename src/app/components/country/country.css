@@ -1851,4 +1851,179 @@ button.flag-gallery-card:hover .flag-card-name {
   box-shadow: 0 25px 50px -10px rgba(239, 68, 68, 0.32), 0 12px 30px -5px rgba(0, 0, 0, 0.12);
 }
 
+/* ========================================================================= */
+/* ITEM/COUNTRY FORM & VIEW MODE STYLES (Matching Item Add/Edit/View UI)      */
+/* ========================================================================= */
+
+.country-view-mode #section-general-info .grid,
+.country-view-mode #section-tabwise-info .grid,
+.item-view-mode #section-general-info .grid,
+.item-view-mode #section-tabwise-info .grid {
+  align-items: start !important;
+}
+
+/* Field Container in View Mode (Reset border, pill background, padding) */
+.country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr),
+.country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr),
+.item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr),
+.item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) {
+  border: none !important;
+  border-width: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 44px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  cursor: default !important;
+}
+
+/* RTL field containers (Arabic) */
+.country-view-mode [dir="rtl"] .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr),
+.country-view-mode .group[dir="rtl"] > div:not(#field-status):not(#field-nameEn):not(#field-nameAr),
+.country-view-mode [dir="rtl"] div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr),
+.item-view-mode [dir="rtl"] .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr),
+.item-view-mode .group[dir="rtl"] > div:not(#field-status):not(#field-nameEn):not(#field-nameAr),
+.item-view-mode [dir="rtl"] div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) {
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+/* Labels: Small, muted, tracking-wide, sitting directly on top */
+.country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label {
+  position: static !important;
+  transform: none !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  margin: 0 0 4px 0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  color: #64748b !important;
+  letter-spacing: 0.025em !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
+
+:host-context(.dark) .country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.dark .country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+:host-context(.dark) .country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.dark .country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+:host-context(.dark) .item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.dark .item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+:host-context(.dark) .item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label,
+.dark .item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label {
+  color: #94a3b8 !important;
+}
+
+/* Hide required asterisks in view mode */
+.country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label span,
+.country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label span,
+.item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label span,
+.item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) .floating-notch-label span {
+  display: none !important;
+}
+
+/* Values: Bold, high contrast, clean text */
+.country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+.country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+.country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+.item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+.item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label) {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 20px !important;
+  color: #0f172a !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  width: 100% !important;
+  pointer-events: none !important;
+  cursor: default !important;
+  user-select: text !important;
+}
+
+:host-context(.dark) .country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+.dark .country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+:host-context(.dark) .country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.dark .country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+:host-context(.dark) .country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+.dark .country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+:host-context(.dark) .country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.dark .country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+:host-context(.dark) .item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+.dark .item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+:host-context(.dark) .item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.dark .item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+:host-context(.dark) .item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+.dark .item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) input,
+:host-context(.dark) .item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label),
+.dark .item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) > span:not(.floating-notch-label) {
+  color: #ffffff !important;
+}
+
+/* Hide interactive buttons inside fields in view mode */
+.country-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) button,
+.country-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) button,
+.item-view-mode .group > div:not(#field-status):not(#field-nameEn):not(#field-nameAr) button,
+.item-view-mode div:has(> .floating-notch-label):not(#field-status):not(#field-nameEn):not(#field-nameAr) button {
+  display: none !important;
+}
+
+/* Pulse animation for play button */
+@keyframes playPulseRing {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+.play-pulse-ring {
+  animation: playPulseRing 2.4s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+/* Side toolbar scroll */
+.side-toolbar-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.side-toolbar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile section toggle */
+@media (max-width: 639px) {
+  .mobile-section-hide {
+    display: none !important;
+  }
+}
+
 

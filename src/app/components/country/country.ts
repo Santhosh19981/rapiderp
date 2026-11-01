@@ -872,6 +872,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   formNationality = signal<string>('');
   formIsd = signal<string>('');
   formName = signal<string>('');
+  formNameAr = signal<string>('');
   formCurrency = signal<string>('');
   formDefault = signal<'Yes' | 'No'>('No');
   formStatus = signal<FormStatus>('Active');
@@ -1059,6 +1060,196 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const s = this.expandedSections();
     return !!(s[1] && s[2] && s[3] && s[4] && s[5]);
   });
+
+  // Action Panel Dock Page State (matching Item vertical dock: Page 1 / Page 2)
+  actionPanelPage = signal<'top' | 'bottom'>('top');
+
+  scrollActionPanel(direction: 'up' | 'down'): void {
+    this.actionPanelPage.set(direction === 'down' ? 'bottom' : 'top');
+  }
+
+  // Active Dropdown state (Status, etc.)
+  activeDropdown = signal<string | null>(null);
+
+  toggleDropdown(name: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.activeDropdown.update((v) => (v === name ? null : name));
+  }
+
+  // Horizontal Tab Bar State for Section 2 (Tab-wise card)
+  readonly sectionTabs = [
+    { id: 'identity', name: 'Identity & Codes', shortName: 'Identity' },
+    { id: 'regional', name: 'Regional & Language', shortName: 'Regional' },
+    { id: 'tax', name: 'Tax & Regulatory', shortName: 'Tax & Regulatory' },
+    { id: 'localization', name: 'Localization & Business', shortName: 'Localization' },
+    { id: 'additional', name: 'Additional Info', shortName: 'Additional Info' },
+  ];
+
+  activeTab = signal<string>('identity');
+
+  selectTab(tabId: string): void {
+    this.activeTab.set(tabId);
+    setTimeout(() => {
+      const btn = document.getElementById('tab-btn-' + tabId);
+      if (btn) {
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }, 50);
+  }
+
+  @ViewChild('tabsContainer') tabsContainerRef?: ElementRef<HTMLDivElement>;
+
+  scrollTabs(direction: 'left' | 'right'): void {
+    if (!this.tabsContainerRef?.nativeElement) return;
+    const el = this.tabsContainerRef.nativeElement;
+    const scrollAmount = 260;
+    el.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    });
+  }
+
+  // Mobile segmented view (< sm): switch between 'general' and 'tabs'
+  mobileSection = signal<'general' | 'tabs'>('general');
+
+  // Video Tutorial & Guidance Modal
+  isVideoTutorialOpen = signal<boolean>(false);
+
+  openVideoTutorial(): void {
+    this.isVideoTutorialOpen.set(true);
+  }
+
+  closeVideoTutorial(): void {
+    this.isVideoTutorialOpen.set(false);
+  }
+
+  openGuidanceTour(): void {
+    this.showToast('Country Master: Guidance tour is active.');
+  }
+
+  openFlagFileInput(): void {
+    this.triggerFlagUpload();
+  }
+
+  selectStatus(status: any): void {
+    this.setStatus(status);
+    this.activeDropdown.set(null);
+  }
+
+  // Auto Generate ISO Code
+  autoGenerateIso(): void {
+    const name = this.formName().trim();
+    if (name && name.length >= 2) {
+      const code2 = name.substring(0, 2).toUpperCase();
+      this.formIsoCode2.set(code2);
+      this.formCode.set(code2);
+      if (name.length >= 3) {
+        this.formIsoCode3.set(name.substring(0, 3).toUpperCase());
+      }
+      this.showToast(`Auto-generated ISO codes for "${name}"`);
+    } else {
+      this.formIsoCode2.set('AE');
+      this.formIsoCode3.set('ARE');
+      this.showToast('Generated sample ISO codes');
+    }
+  }
+
+  // Field Search (Find field) in Header
+  fieldSearchQuery = signal<string>('');
+  isFieldSearchOpen = signal<boolean>(false);
+  isFieldVoiceListening = signal<boolean>(false);
+
+  toggleFieldVoiceSearch(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isFieldVoiceListening.update((v) => !v);
+    if (this.isFieldVoiceListening()) {
+      setTimeout(() => {
+        this.fieldSearchQuery.set('Currency');
+        this.isFieldSearchOpen.set(true);
+        this.isFieldVoiceListening.set(false);
+        this.showToast('Voice Search: "Currency"');
+      }, 1200);
+    }
+  }
+
+  readonly countryFormFields = [
+    { id: 'field-status', label: 'Status', category: 'General', tabId: 'general', location: 'General Information', keywords: 'status active inactive draft' },
+    { id: 'field-nameEn', label: 'Country Name (EN)', category: 'General', tabId: 'general', location: 'General Information', keywords: 'country name english en title' },
+    { id: 'field-nameAr', label: 'Country Name (AR)', category: 'General', tabId: 'general', location: 'General Information', keywords: 'arabic country name اسم الدولة بالعربية' },
+    { id: 'field-shortName', label: 'Short Name', category: 'General', tabId: 'general', location: 'General Information', keywords: 'short name code display' },
+    { id: 'field-iso2', label: 'ISO Code 2', category: 'General', tabId: 'general', location: 'General Information', keywords: 'iso alpha 2 code country' },
+    { id: 'field-iso3', label: 'ISO Code 3', category: 'General', tabId: 'general', location: 'General Information', keywords: 'iso alpha 3 code' },
+    { id: 'field-isoNumeric', label: 'ISO Numeric Code', category: 'General', tabId: 'general', location: 'General Information', keywords: 'iso numeric number code' },
+    { id: 'field-isd', label: 'International Dialing Code', category: 'General', tabId: 'general', location: 'General Information', keywords: 'isd phone dialing calling code +' },
+    { id: 'field-currency', label: 'Default Currency', category: 'General', tabId: 'general', location: 'General Information', keywords: 'currency money default aed usd' },
+    { id: 'field-nationality', label: 'Nationality', category: 'General', tabId: 'general', location: 'General Information', keywords: 'nationality citizen passport' },
+    { id: 'field-default', label: 'Default Country', category: 'General', tabId: 'general', location: 'General Information', keywords: 'default country primary switch' },
+    { id: 'field-continent', label: 'Continent', category: 'General', tabId: 'general', location: 'General Information', keywords: 'continent region geography' },
+    { id: 'field-capital', label: 'Capital City', category: 'General', tabId: 'general', location: 'General Information', keywords: 'capital city government' },
+    { id: 'field-subregion', label: 'Subregion', category: 'General', tabId: 'general', location: 'General Information', keywords: 'subregion middle east gulf' },
+    { id: 'field-flag', label: 'Flag', category: 'General', tabId: 'general', location: 'General Information', keywords: 'flag emblem banner svg' },
+    { id: 'field-tab-shortName', label: 'Short Name (Code)', category: 'Identity', tabId: 'identity', location: 'Tab: Identity & Codes', keywords: 'short name code' },
+    { id: 'field-tab-iso2', label: 'ISO Alpha-2 Code', category: 'Identity', tabId: 'identity', location: 'Tab: Identity & Codes', keywords: 'iso2 code' },
+    { id: 'field-tab-iso3', label: 'ISO Alpha-3 Code', category: 'Identity', tabId: 'identity', location: 'Tab: Identity & Codes', keywords: 'iso3 code' },
+    { id: 'field-tab-numeric', label: 'Numeric Code', category: 'Identity', tabId: 'identity', location: 'Tab: Identity & Codes', keywords: 'numeric code' },
+    { id: 'field-tab-isd', label: 'ISD Calling Code', category: 'Identity', tabId: 'identity', location: 'Tab: Identity & Codes', keywords: 'calling dialing isd' },
+    { id: 'field-tab-currency', label: 'Currency', category: 'Identity', tabId: 'identity', location: 'Tab: Identity & Codes', keywords: 'currency' },
+    { id: 'field-tab-nationality', label: 'Nationality Name', category: 'Identity', tabId: 'identity', location: 'Tab: Identity & Codes', keywords: 'nationality' },
+    { id: 'field-officialLanguages', label: 'Official Languages', category: 'Regional', tabId: 'regional', location: 'Tab: Regional & Language', keywords: 'languages official spoken' },
+    { id: 'field-defaultLanguage', label: 'Default Language', category: 'Regional', tabId: 'regional', location: 'Tab: Regional & Language', keywords: 'default language primary' },
+    { id: 'field-defaultTimeZone', label: 'Default Time Zone', category: 'Regional', tabId: 'regional', location: 'Tab: Regional & Language', keywords: 'time zone timezone utc gmt' },
+    { id: 'field-defaultDateFormat', label: 'Default Date Format', category: 'Regional', tabId: 'regional', location: 'Tab: Regional & Language', keywords: 'date format dd/mm/yyyy mm/dd/yyyy' },
+    { id: 'field-defaultNumberFormat', label: 'Default Number Format', category: 'Regional', tabId: 'regional', location: 'Tab: Regional & Language', keywords: 'number format decimal 1,234.56' },
+    { id: 'field-postalCodeRequired', label: 'Postal Code Required', category: 'Regional', tabId: 'regional', location: 'Tab: Regional & Language', keywords: 'postal code zip required' },
+    { id: 'field-addressFormat', label: 'Address Format', category: 'Regional', tabId: 'regional', location: 'Tab: Regional & Language', keywords: 'address format template line' },
+    { id: 'field-taxRequired', label: 'Tax Config Required', category: 'Tax', tabId: 'tax', location: 'Tab: Tax & Regulatory', keywords: 'tax config required mandatory' },
+    { id: 'field-taxAuthority', label: 'Tax Authority', category: 'Tax', tabId: 'tax', location: 'Tab: Tax & Regulatory', keywords: 'tax authority fta irs revenue' },
+    { id: 'field-trnFormat', label: 'TRN Format', category: 'Tax', tabId: 'tax', location: 'Tab: Tax & Regulatory', keywords: 'trn vat number tax registration format' },
+    { id: 'field-electronicInvoicing', label: 'Electronic Invoicing', category: 'Tax', tabId: 'tax', location: 'Tab: Tax & Regulatory', keywords: 'electronic invoicing e-invoice zatca' },
+    { id: 'field-complianceNotes', label: 'Compliance Notes', category: 'Tax', tabId: 'tax', location: 'Tab: Tax & Regulatory', keywords: 'compliance notes regulatory audit' },
+    { id: 'field-approvalStatus', label: 'Approval Status', category: 'Tax', tabId: 'tax', location: 'Tab: Tax & Regulatory', keywords: 'approval status approved certified' },
+    { id: 'field-geoRegion', label: 'Geographic Region', category: 'Localization', tabId: 'localization', location: 'Tab: Localization & Business', keywords: 'geographic region emea mena apac' },
+    { id: 'field-adminDivision', label: 'Admin Division Name', category: 'Localization', tabId: 'localization', location: 'Tab: Localization & Business', keywords: 'admin division state province emirate' },
+    { id: 'field-currencyFormatting', label: 'Currency Formatting', category: 'Localization', tabId: 'localization', location: 'Tab: Localization & Business', keywords: 'currency formatting decimals symbol' },
+    { id: 'field-fiscalYear', label: 'Fiscal Year Start', category: 'Localization', tabId: 'localization', location: 'Tab: Localization & Business', keywords: 'fiscal year financial accounting start' },
+    { id: 'field-businessDays', label: 'Business Days', category: 'Localization', tabId: 'localization', location: 'Tab: Localization & Business', keywords: 'business days working week monday' },
+    { id: 'field-recordId', label: 'Record ID', category: 'Additional', tabId: 'additional', location: 'Tab: Additional Info', keywords: 'record id identifier guid' },
+    { id: 'field-createdAt', label: 'Created Date', category: 'Additional', tabId: 'additional', location: 'Tab: Additional Info', keywords: 'created date timestamp' },
+    { id: 'field-createdBy', label: 'Created By', category: 'Additional', tabId: 'additional', location: 'Tab: Additional Info', keywords: 'created by author user' },
+    { id: 'field-updatedAt', label: 'Last Modified Date', category: 'Additional', tabId: 'additional', location: 'Tab: Additional Info', keywords: 'updated modified date timestamp' },
+    { id: 'field-updatedBy', label: 'Last Modified By', category: 'Additional', tabId: 'additional', location: 'Tab: Additional Info', keywords: 'modified updated by user' },
+    { id: 'field-recordOrigin', label: 'Record Origin', category: 'Additional', tabId: 'additional', location: 'Tab: Additional Info', keywords: 'record origin system imported seed' },
+    { id: 'field-lastAudit', label: 'Last Audit', category: 'Additional', tabId: 'additional', location: 'Tab: Additional Info', keywords: 'last audit verified checked' },
+  ];
+
+  filteredFormFields = computed(() => {
+    const q = this.fieldSearchQuery().trim().toLowerCase();
+    if (!q) return [];
+    return this.countryFormFields.filter(
+      (f) =>
+        f.label.toLowerCase().includes(q) ||
+        f.keywords.toLowerCase().includes(q) ||
+        f.location.toLowerCase().includes(q)
+    );
+  });
+
+  selectSearchField(field: any): void {
+    this.fieldSearchQuery.set('');
+    this.isFieldSearchOpen.set(false);
+    if (field.tabId === 'general') {
+      this.mobileSection.set('general');
+    } else {
+      this.mobileSection.set('tabs');
+      this.selectTab(field.tabId);
+    }
+    setTimeout(() => {
+      const el = document.getElementById(field.id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.focus?.();
+      }
+    }, 100);
+  }
 
   // Country Data mapping for 5 sections adhering to requirement document
   getCountryShortName(nameOrCode?: string): string {
@@ -3039,9 +3230,13 @@ export class CountryComponent implements OnInit, AfterViewInit {
       this.formSubregion.set('');
       this.formCapital.set('');
       this.formFlag.set(null);
+      this.formNameAr.set('');
       this.selectedMasterCountry.set(null);
       this.selectedReferenceRecordName.set(null);
       return;
+    }
+    if (!this.formTranslations()['ar']) {
+      this.formNameAr.set(this.getCountryTranslation(clean, 'ar') || '');
     }
     this.nameDebounceTimer = setTimeout(() => {
       const exact = this.lookupTableData.find(
@@ -4845,6 +5040,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.formCapital.set(country.capital || '');
     this.formCustomFields.set({ ...(country.customFields || {}) });
     this.formTranslations.set({ ...(country.translations || {}) });
+    this.formNameAr.set(country.translations?.['ar'] || this.getCountryTranslation(country.name, 'ar') || '');
     this.selectedReferenceRecordName.set(country.name);
     this.selectedMasterCountry.set(country);
   }
@@ -4858,6 +5054,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.formNationality.set('');
     this.formIsd.set('');
     this.formName.set('');
+    this.formNameAr.set('');
     this.formCurrency.set('');
     this.formDefault.set('No');
     this.formStatus.set('Active');
@@ -5417,6 +5614,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   // Form submission (Create & Edit) adhering strictly to Section 4.5, 4.7, 4.8 & 15.2
   onSubmitForm(): void {
+    if (this.viewMode() === 'view') {
+      this.openEditForActiveCountry();
+      return;
+    }
     this.hasSubmitAttempted.set(true);
 
     // Mark all fields touched
@@ -5456,7 +5657,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const isd = this.formIsd().trim();
 
     const status = this.formStatus();
-    const translations = this.formTranslations();
+    const translations = {
+      ...this.formTranslations(),
+      ...(this.formNameAr().trim() ? { ar: this.formNameAr().trim() } : {}),
+    };
     const payload: Partial<Country> = {
       name,
       code,
