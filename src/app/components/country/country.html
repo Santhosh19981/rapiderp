@@ -105,8 +105,7 @@
       <div class="country-body flex-1 min-h-0 flex flex-col custom-scrollbar"
         [class.overflow-y-auto]="viewMode() === 'grid' || viewMode() === 'list'"
         [class.md:overflow-hidden]="viewMode() === 'grid' || viewMode() === 'list'"
-        [class.overflow-hidden]="viewMode() !== 'grid' && viewMode() !== 'list'"
-        (scroll)="onGridScroll($event)">
+        [class.overflow-hidden]="viewMode() !== 'grid' && viewMode() !== 'list'" (scroll)="onGridScroll($event)">
 
         <!-- ======================================================================= -->
         <!-- VIEW A: GRID & LIST VIEW (Exact Replica of Reference Image 1)           -->
@@ -342,78 +341,7 @@
               </button>
             </div>
 
-            <!-- Right Zone: Dynamic View Switcher (Overview + List/Grid) on left, Share/Export/Filter on right -->
-            <div class="flex items-center gap-2 shrink-0">
-              <!-- Dynamic View Switcher: Overview + List (when on grid) / Grid (when on list) -->
-              <div
-                class="flex items-center bg-slate-100 dark:bg-slate-700/80 p-0.5 rounded-full border border-slate-200/80 dark:border-slate-600 shrink-0">
-                @if (viewMode() === 'grid') {
-                <button type="button" (click)="switchView('list')"
-                  class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
-                  data-tooltip="List" data-tooltip-pos="bottom">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="8" y1="6" x2="21" y2="6" stroke-linecap="round" />
-                    <line x1="8" y1="12" x2="21" y2="12" stroke-linecap="round" />
-                    <line x1="8" y1="18" x2="21" y2="18" stroke-linecap="round" />
-                    <circle cx="4" cy="6" r="1.5" fill="currentColor" />
-                    <circle cx="4" cy="12" r="1.5" fill="currentColor" />
-                    <circle cx="4" cy="18" r="1.5" fill="currentColor" />
-                  </svg>
-                  <span>List</span>
-                </button>
-                } @else {
-                <button type="button" (click)="switchView('grid')"
-                  class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
-                  data-tooltip="Grid" data-tooltip-pos="bottom">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7" rx="1" />
-                    <rect x="14" y="3" width="7" height="7" rx="1" />
-                    <rect x="3" y="14" width="7" height="7" rx="1" />
-                    <rect x="14" y="14" width="7" height="7" rx="1" />
-                  </svg>
-                  <span>Grid</span>
-                </button>
-                }
-              </div>
 
-              @if (viewMode() === 'list') {
-              <span class="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-0.5"></span>
-
-              <button type="button" (click)="toggleSharePanel()"
-                class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs"
-                data-tooltip="Share" data-tooltip-pos="bottom">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3" />
-                  <circle cx="6" cy="12" r="3" />
-                  <circle cx="18" cy="19" r="3" />
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                </svg>
-                <span>Share</span>
-              </button>
-
-              <button type="button" (click)="toggleExportPanel()"
-                class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs"
-                data-tooltip="Export" data-tooltip-pos="bottom">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" x2="12" y1="3" y2="15" />
-                </svg>
-                <span>Export</span>
-              </button>
-
-              <button type="button" (click)="toggleFilterPanel()"
-                class="h-[32px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-2xs"
-                data-tooltip="Filter" data-tooltip-pos="bottom">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-                </svg>
-                <span>Filter</span>
-              </button>
-              }
-            </div>
           </div>
 
           <!-- Bulk actions sub-bar (Exact Replica of Screenshots 1 & 2) -->
@@ -1344,8 +1272,7 @@
                           [class.hover:text-white]="!isPageSizeMenuOpen() && pageSize() <= 75"
                           [class.dark:bg-slate-800]="!isPageSizeMenuOpen() && pageSize() <= 75"
                           [class.dark:text-white]="!isPageSizeMenuOpen() && pageSize() <= 75"
-                          [class.dark:border-sky-800]="!isPageSizeMenuOpen() && pageSize() <= 75"
-                          title="Rows">
+                          [class.dark:border-sky-800]="!isPageSizeMenuOpen() && pageSize() <= 75" title="Rows">
                           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
@@ -1803,13 +1730,14 @@
         <!-- ======================================================================= -->
         <!-- VIEW B: ADD / EDIT COUNTRY — Exact Replica of MOD-4, Image 2, 3, 4        -->
         <!-- ======================================================================= -->
-                <!-- ======================================================================= -->
+        <!-- ======================================================================= -->
         <!-- VIEW B: COUNTRY ADD / EDIT / VIEW — Exact Replica of Item Master UI     -->
         <!-- ======================================================================= -->
         @if (viewMode() === 'add' || viewMode() === 'edit' || viewMode() === 'view') {
 
         <!-- Invisible dummy inputs to prevent Google Chrome aggressive autofill -->
-        <div style="position: absolute; top: -9999px; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+        <div style="position: absolute; top: -9999px; left: -9999px; opacity: 0; pointer-events: none;"
+          aria-hidden="true">
           <input type="text" name="fake_user_prevent_autofill" tabindex="-1" autocomplete="off" />
           <input type="password" name="fake_pass_prevent_autofill" tabindex="-1" autocomplete="off" />
         </div>
@@ -1827,15 +1755,18 @@
               <button type="button" (click)="openVideoTutorial()" data-tooltip="Tutorial" data-tooltip-pos="bottom"
                 class="group relative w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-[#00a6f4]/30 hover:scale-105 hover:shadow-lg hover:shadow-[#00a6f4]/45 transition cursor-pointer">
                 <span class="absolute inset-0 rounded-xl bg-[#00a2e8] play-pulse-ring pointer-events-none"></span>
-                <svg class="w-4 h-4 fill-current ml-0.5 relative z-10 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 fill-current ml-0.5 relative z-10 transition-transform group-hover:scale-110"
+                  viewBox="0 0 24 24">
                   <polygon points="6 3 20 12 6 21 6 3" />
                 </svg>
               </button>
 
               <div class="min-w-0 flex flex-col justify-center">
                 <div class="flex items-center gap-2">
-                  <h1 class="text-[15px] sm:text-[18px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
-                    {{ viewMode() === 'add' ? 'Add Country' : (viewMode() === 'view' ? 'View Country' : 'Edit Country') }}
+                  <h1
+                    class="text-[15px] sm:text-[18px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
+                    {{ viewMode() === 'add' ? 'Add Country' : (viewMode() === 'view' ? 'View Country' : 'Edit Country')
+                    }}
                   </h1>
                 </div>
               </div>
@@ -1846,20 +1777,24 @@
               <button type="button" (click)="goToPreviousCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
                 data-tooltip="Prev" data-tooltip-pos="bottom"
                 class="w-7 h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] flex items-center justify-center hover:bg-[#008ecb] hover:border-[#008ecb] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
-                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
 
-              <div [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()" data-tooltip-pos="bottom"
+              <div [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()"
+                data-tooltip-pos="bottom"
                 class="w-7 h-7 rounded-full bg-[#00a6f4] text-white border-2 border-[#00a6f4] flex items-center justify-center text-xs font-black select-none shadow-md shadow-[#00a6f4]/25">
                 {{ currentCountryDisplayNumber() }}
               </div>
 
-              <button type="button" (click)="goToNextCountry()" [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
-                data-tooltip="Next" data-tooltip-pos="bottom"
+              <button type="button" (click)="goToNextCountry()"
+                [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()" data-tooltip="Next"
+                data-tooltip-pos="bottom"
                 class="w-7 h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] flex items-center justify-center hover:bg-[#008ecb] hover:border-[#008ecb] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
-                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
@@ -1870,7 +1805,8 @@
           <div #fieldSearchContainer class="relative w-full sm:max-w-xs md:max-w-md mx-0 sm:mx-auto">
             <div
               class="relative flex items-center w-full h-8.5 px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-2xs">
-              <svg class="w-4 h-4 text-slate-400 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="w-4 h-4 text-slate-400 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
@@ -1911,14 +1847,16 @@
                 <button type="button" (click)="selectSearchField(field)"
                   class="w-full px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-slate-700/70 transition flex items-center justify-between group cursor-pointer">
                   <div class="flex flex-col min-w-0 pr-2">
-                    <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 group-hover:text-[#00a6f4] transition truncate">
+                    <span
+                      class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 group-hover:text-[#00a6f4] transition truncate">
                       {{ field.label }}
                     </span>
                     @if (field.location) {
                     <span class="text-[10px] text-slate-400 dark:text-slate-500 truncate">{{ field.location }}</span>
                     }
                   </div>
-                  <svg class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:text-[#00a6f4] shrink-0 transition-transform group-hover:translate-x-1"
+                  <svg
+                    class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:text-[#00a6f4] shrink-0 transition-transform group-hover:translate-x-1"
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
@@ -1931,19 +1869,23 @@
 
           <!-- Mobile Segmented Controller (< sm only) -->
           <div class="sm:hidden w-full pt-1 pb-0.5">
-            <div class="flex items-center p-1 bg-slate-200/75 dark:bg-slate-800 rounded-2xl gap-1 shadow-2xs select-none">
+            <div
+              class="flex items-center p-1 bg-slate-200/75 dark:bg-slate-800 rounded-2xl gap-1 shadow-2xs select-none">
               <button type="button" (click)="mobileSection.set('general')"
                 class="flex-1 py-1.5 px-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer"
-                [class.bg-white]="mobileSection() === 'general'" [class.dark:bg-slate-700]="mobileSection() === 'general'"
+                [class.bg-white]="mobileSection() === 'general'"
+                [class.dark:bg-slate-700]="mobileSection() === 'general'"
                 [class.text-[#00a6f4]]="mobileSection() === 'general'" [class.shadow-xs]="mobileSection() === 'general'"
-                [class.text-slate-600]="mobileSection() !== 'general'" [class.dark:text-slate-400]="mobileSection() !== 'general'">
+                [class.text-slate-600]="mobileSection() !== 'general'"
+                [class.dark:text-slate-400]="mobileSection() !== 'general'">
                 <span>General Info</span>
               </button>
               <button type="button" (click)="mobileSection.set('tabs')"
                 class="flex-1 py-1.5 px-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer"
                 [class.bg-white]="mobileSection() === 'tabs'" [class.dark:bg-slate-700]="mobileSection() === 'tabs'"
                 [class.text-[#00a6f4]]="mobileSection() === 'tabs'" [class.shadow-xs]="mobileSection() === 'tabs'"
-                [class.text-slate-600]="mobileSection() !== 'tabs'" [class.dark:text-slate-400]="mobileSection() !== 'tabs'">
+                [class.text-slate-600]="mobileSection() !== 'tabs'"
+                [class.dark:text-slate-400]="mobileSection() !== 'tabs'">
                 <span>Specifications</span>
               </button>
             </div>
@@ -1951,8 +1893,11 @@
 
           <!-- Desktop Only (sm+): Grid/List Toggle & Record Pagination -->
           <div class="hidden sm:flex items-center gap-2 sm:gap-3 select-none shrink-0">
-            <div class="flex items-center bg-slate-100 dark:bg-slate-700/80 p-0.5 rounded-full border border-slate-200/80 dark:border-slate-600">
-              <button type="button" (click)="switchView('grid')" class="h-7 px-2.5 rounded-full text-xs font-semibold flex items-center gap-1 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]" title="Grid">
+            <div
+              class="flex items-center bg-slate-100 dark:bg-slate-700/80 p-0.5 rounded-full border border-slate-200/80 dark:border-slate-600">
+              <button type="button" (click)="switchView('grid')"
+                class="h-7 px-2.5 rounded-full text-xs font-semibold flex items-center gap-1 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
+                title="Grid">
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="3" width="7" height="7" rx="1.5" />
                   <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -1960,36 +1905,31 @@
                   <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 </svg>
               </button>
-              <button type="button" (click)="switchView('list')" class="h-7 px-2.5 rounded-full text-xs font-semibold flex items-center gap-1 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]" title="List">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="8" y1="6" x2="21" y2="6" />
-                  <line x1="8" y1="12" x2="21" y2="12" />
-                  <line x1="8" y1="18" x2="21" y2="18" />
-                  <line x1="3" y1="6" x2="3.01" y2="6" />
-                  <line x1="3" y1="12" x2="3.01" y2="12" />
-                  <line x1="3" y1="18" x2="3.01" y2="18" />
-                </svg>
-              </button>
+
             </div>
 
             <div class="flex items-center gap-1.5 sm:gap-2">
               <button type="button" (click)="goToPreviousCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
                 data-tooltip="Prev" data-tooltip-pos="bottom"
                 class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] flex items-center justify-center hover:bg-[#008ecb] hover:border-[#008ecb] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
-                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
 
-              <div [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()" data-tooltip-pos="bottom"
+              <div [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()"
+                data-tooltip-pos="bottom"
                 class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-[#00a6f4] text-white border-2 border-[#00a6f4] flex items-center justify-center text-xs font-black select-none shadow-md shadow-[#00a6f4]/25">
                 {{ currentCountryDisplayNumber() }}
               </div>
 
-              <button type="button" (click)="goToNextCountry()" [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()"
-                data-tooltip="Next" data-tooltip-pos="bottom"
+              <button type="button" (click)="goToNextCountry()"
+                [disabled]="currentCountryDisplayNumber() >= totalRecordsCount()" data-tooltip="Next"
+                data-tooltip-pos="bottom"
                 class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] flex items-center justify-center hover:bg-[#008ecb] hover:border-[#008ecb] disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
-                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
@@ -2001,8 +1941,7 @@
         <!-- 2. MAIN BODY: Form Work Area on Left & Action Dock on Right               -->
         <!-- ========================================================================= -->
         <form ngNoForm (submit)="$event.preventDefault(); onSubmitForm()" autocomplete="off" spellcheck="false"
-          [class.country-view-mode]="viewMode() === 'view'"
-          [class.item-view-mode]="viewMode() === 'view'"
+          [class.country-view-mode]="viewMode() === 'view'" [class.item-view-mode]="viewMode() === 'view'"
           class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative p-1 sm:p-2 md:p-2 gap-1.5 sm:gap-2 md:gap-2.5 bg-slate-100/70 dark:bg-slate-900/60">
 
           <!-- Left Work Area (Holds Frame 1: General Info Card & Frame 2: Tab-wise Card) -->
@@ -2011,14 +1950,14 @@
             <!-- ===================================================================== -->
             <!-- SECTION 1: GENERAL INFORMATION CARD FRAME (Horizontally Stacked Top)  -->
             <!-- ===================================================================== -->
-            <section id="section-general-info"
-              [class.mobile-section-hide]="mobileSection() === 'tabs'"
+            <section id="section-general-info" [class.mobile-section-hide]="mobileSection() === 'tabs'"
               class="relative z-20 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-3 pb-2 sm:px-3 sm:pt-3.5 sm:pb-2.5 flex-1 sm:flex-initial min-h-0 sm:shrink-0 flex flex-col overflow-hidden sm:overflow-visible transition-all">
 
               <!-- Hidden flag input for upload -->
               <input #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)" class="hidden" />
 
-              <div class="general-info-fields-scroll flex-1 sm:flex-initial min-h-0 overflow-y-auto sm:overflow-visible custom-scrollbar overscroll-contain touch-pan-y pr-1 my-0.5 transition-all">
+              <div
+                class="general-info-fields-scroll flex-1 sm:flex-initial min-h-0 overflow-y-auto sm:overflow-visible custom-scrollbar overscroll-contain touch-pan-y pr-1 my-0.5 transition-all">
                 <div class="grid grid-cols-12 gap-x-3 sm:gap-x-4 gap-y-4 sm:gap-y-5.5 items-center pt-2 pb-8 sm:pb-1.5">
 
                   <!-- ROW 1 (3 columns: Status, Country Name EN, Country Name AR) -->
@@ -2038,8 +1977,7 @@
                       </span>
 
                       <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full"
-                          [class.bg-emerald-500]="formStatus() === 'Active'"
+                        <span class="w-2 h-2 rounded-full" [class.bg-emerald-500]="formStatus() === 'Active'"
                           [class.bg-slate-400]="formStatus() === 'Inactive'"
                           [class.bg-amber-500]="formStatus() === 'Draft'"></span>
                         <span class="text-xs sm:text-sm font-semibold truncate text-slate-800 dark:text-white">
@@ -2049,7 +1987,8 @@
 
                       <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
                         [class.rotate-180]="activeDropdown() === 'status'">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                           <polyline points="6 9 12 15 18 9" />
                         </svg>
                       </span>
@@ -2062,22 +2001,20 @@
                         @for (st of ['Active', 'Inactive', 'Draft']; track st) {
                         <button type="button" (click)="selectStatus(st)"
                           class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-left hover:bg-sky-50 dark:hover:bg-slate-700/60 transition cursor-pointer group/item text-xs sm:text-sm"
-                          [class.bg-[#dff3fd]]="formStatus() === st"
-                          [class.dark:bg-sky-950/70]="formStatus() === st">
+                          [class.bg-[#dff3fd]]="formStatus() === st" [class.dark:bg-sky-950/70]="formStatus() === st">
                           <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full"
-                              [class.bg-emerald-500]="st === 'Active'"
-                              [class.bg-slate-400]="st === 'Inactive'"
-                              [class.bg-amber-500]="st === 'Draft'"></span>
-                            <span class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
+                            <span class="w-2 h-2 rounded-full" [class.bg-emerald-500]="st === 'Active'"
+                              [class.bg-slate-400]="st === 'Inactive'" [class.bg-amber-500]="st === 'Draft'"></span>
+                            <span
+                              class="font-semibold text-slate-700 dark:text-slate-200 group-hover/item:text-[#0070ba] dark:group-hover/item:text-[#38bdf8] truncate transition-colors"
                               [class.text-[#0070ba]]="formStatus() === st"
-                              [class.dark:text-[#38bdf8]]="formStatus() === st"
-                              [class.font-bold]="formStatus() === st">
+                              [class.dark:text-[#38bdf8]]="formStatus() === st" [class.font-bold]="formStatus() === st">
                               {{ st }}
                             </span>
                           </div>
                           @if (formStatus() === st) {
-                          <svg class="w-4 h-4 text-[#0070ba] dark:text-[#38bdf8] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                          <svg class="w-4 h-4 text-[#0070ba] dark:text-[#38bdf8] shrink-0 ml-2" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                           }
@@ -2102,7 +2039,8 @@
                       <div class="flex items-center gap-1 shrink-0 ml-1.5">
                         <button type="button" (click)="openTranslationPopup()" title="Translate"
                           class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer">
-                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <path d="m5 8 6 6" />
                             <path d="m4 14 6-6 2-3" />
                             <path d="M2 5h12" />
@@ -2129,8 +2067,8 @@
                       <span class="floating-notch-label right-5 left-auto">
                         اسم الدولة (بالعربية)
                       </span>
-                      <input type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)" name="countryNameAr"
-                        placeholder="مثال: الإمارات العربية المتحدة"
+                      <input type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
+                        name="countryNameAr" placeholder="مثال: الإمارات العربية المتحدة"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
                     </div>
                   </div>
@@ -2154,8 +2092,8 @@
                       <span class="floating-notch-label">
                         ISO Code 2 <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
-                      <input type="text" maxlength="2" [ngModel]="formIsoCode2()" (ngModelChange)="onIsoCode2Change($event)" name="isoCode2" required
-                        placeholder="e.g. AE"
+                      <input type="text" maxlength="2" [ngModel]="formIsoCode2()"
+                        (ngModelChange)="onIsoCode2Change($event)" name="isoCode2" required placeholder="e.g. AE"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                       <button type="button" (click)="autoGenerateIso()"
                         class="text-[11px] font-bold text-[#00a6f4] hover:text-[#008fd3] bg-sky-50 dark:bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 hover:border-[#00a6f4] transition cursor-pointer shrink-0">
@@ -2171,8 +2109,8 @@
                       <span class="floating-notch-label">
                         ISO Code 3 <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
-                      <input type="text" maxlength="3" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)" name="isoCode3" required
-                        placeholder="e.g. ARE"
+                      <input type="text" maxlength="3" [ngModel]="formIsoCode3()"
+                        (ngModelChange)="formIsoCode3.set($event)" name="isoCode3" required placeholder="e.g. ARE"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2182,8 +2120,8 @@
                     <div id="field-isoNumeric"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">ISO Numeric Code</span>
-                      <input type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)" name="isoNumeric"
-                        placeholder="e.g. 784"
+                      <input type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)"
+                        name="isoNumeric" placeholder="e.g. 784"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2205,8 +2143,8 @@
                     <div id="field-currency"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Default Currency</span>
-                      <input type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)" name="currency"
-                        placeholder="e.g. AED"
+                      <input type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
+                        name="currency" placeholder="e.g. AED"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2216,8 +2154,8 @@
                     <div id="field-nationality"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Nationality</span>
-                      <input type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)" name="nationality"
-                        placeholder="e.g. Emirati"
+                      <input type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)"
+                        name="nationality" placeholder="e.g. Emirati"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2229,8 +2167,10 @@
                       <span class="floating-notch-label">Default Country</span>
                       <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Set as Default</span>
                       <label class="form-switch m-0 flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'" (change)="toggleDefault($event)" />
-                        <span class="form-switch-track scale-90 origin-right"><span class="form-switch-thumb"></span></span>
+                        <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
+                          (change)="toggleDefault($event)" />
+                        <span class="form-switch-track scale-90 origin-right"><span
+                            class="form-switch-thumb"></span></span>
                       </label>
                     </div>
                   </div>
@@ -2241,8 +2181,8 @@
                     <div id="field-continent"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Continent</span>
-                      <input type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)" name="continent"
-                        placeholder="e.g. Asia"
+                      <input type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)"
+                        name="continent" placeholder="e.g. Asia"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2252,8 +2192,8 @@
                     <div id="field-capital"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Capital City</span>
-                      <input type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)" name="capital"
-                        placeholder="e.g. Abu Dhabi"
+                      <input type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)"
+                        name="capital" placeholder="e.g. Abu Dhabi"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2263,8 +2203,8 @@
                     <div id="field-subregion"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Subregion</span>
-                      <input type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)" name="subregion"
-                        placeholder="e.g. Middle East"
+                      <input type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)"
+                        name="subregion" placeholder="e.g. Middle East"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2276,8 +2216,10 @@
                       <span class="floating-notch-label">Flag</span>
                       <div class="flex items-center gap-2 min-w-0">
                         @if (formFlag()) {
-                        <img [src]="formFlag()" alt="Flag" class="w-6 h-4 object-cover rounded shadow-2xs border border-slate-200 dark:border-slate-600 shrink-0" />
-                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">Flag Attached</span>
+                        <img [src]="formFlag()" alt="Flag"
+                          class="w-6 h-4 object-cover rounded shadow-2xs border border-slate-200 dark:border-slate-600 shrink-0" />
+                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">Flag
+                          Attached</span>
                         } @else {
                         <span class="text-xs text-slate-400 truncate">No flag uploaded</span>
                         }
@@ -2285,7 +2227,8 @@
                       <button type="button" (click)="openFlagFileInput()"
                         class="p-1 rounded-lg text-slate-400 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer shrink-0">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </button>
                     </div>
@@ -2298,8 +2241,7 @@
             <!-- ===================================================================== -->
             <!-- SECTION 2: TAB-WISE INFORMATION CARD FRAME (Horizontally Stacked)     -->
             <!-- ===================================================================== -->
-            <section id="section-tabwise-info"
-              [class.mobile-section-hide]="mobileSection() === 'general'"
+            <section id="section-tabwise-info" [class.mobile-section-hide]="mobileSection() === 'general'"
               class="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-2 pb-2.5 sm:px-3 sm:pt-2 sm:pb-3 flex-1 min-h-0 flex flex-col overflow-hidden transition-all">
 
               <!-- HORIZONTAL TABS BAR -->
@@ -2308,7 +2250,8 @@
                   <button type="button" (click)="scrollTabs('left')"
                     class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer mr-1 sm:mr-1.5 shadow-xs active:scale-95"
                     title="Left" aria-label="Scroll tabs left">
-                    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                      stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
@@ -2318,12 +2261,9 @@
                     @for (tab of sectionTabs; track tab.id) {
                     <button type="button" (click)="selectTab(tab.id)" [id]="'tab-btn-' + tab.id"
                       class="min-w-[88px] sm:min-w-[108px] h-7.5 sm:h-8 px-3 sm:px-4 rounded-full text-[11px] sm:text-xs font-semibold transition-all duration-150 cursor-pointer flex items-center justify-center text-center gap-1 sm:gap-1.5 border whitespace-nowrap shrink-0 active:scale-95"
-                      [class.bg-[#00a6f4]]="activeTab() === tab.id"
-                      [class.text-white]="activeTab() === tab.id"
-                      [class.border-[#00a6f4]]="activeTab() === tab.id"
-                      [class.font-bold]="activeTab() === tab.id"
-                      [class.shadow-xs]="activeTab() === tab.id"
-                      [class.bg-sky-50]="activeTab() !== tab.id"
+                      [class.bg-[#00a6f4]]="activeTab() === tab.id" [class.text-white]="activeTab() === tab.id"
+                      [class.border-[#00a6f4]]="activeTab() === tab.id" [class.font-bold]="activeTab() === tab.id"
+                      [class.shadow-xs]="activeTab() === tab.id" [class.bg-sky-50]="activeTab() !== tab.id"
                       [class.dark:bg-sky-950/40]="activeTab() !== tab.id"
                       [class.text-[#00a6f4]]="activeTab() !== tab.id"
                       [class.dark:text-[#38bdf8]]="activeTab() !== tab.id"
@@ -2335,14 +2275,10 @@
 
                     <button type="button" (click)="selectTab('all')" id="tab-btn-all"
                       class="min-w-[88px] sm:min-w-[108px] h-7.5 sm:h-8 px-3 sm:px-4 rounded-full text-[11px] sm:text-xs font-semibold transition-all duration-150 cursor-pointer flex items-center justify-center text-center gap-1 sm:gap-1.5 border whitespace-nowrap shrink-0 active:scale-95"
-                      [class.bg-[#00a6f4]]="activeTab() === 'all'"
-                      [class.text-white]="activeTab() === 'all'"
-                      [class.border-[#00a6f4]]="activeTab() === 'all'"
-                      [class.font-bold]="activeTab() === 'all'"
-                      [class.shadow-xs]="activeTab() === 'all'"
-                      [class.bg-white]="activeTab() !== 'all'"
-                      [class.dark:bg-slate-800]="activeTab() !== 'all'"
-                      [class.text-slate-700]="activeTab() !== 'all'"
+                      [class.bg-[#00a6f4]]="activeTab() === 'all'" [class.text-white]="activeTab() === 'all'"
+                      [class.border-[#00a6f4]]="activeTab() === 'all'" [class.font-bold]="activeTab() === 'all'"
+                      [class.shadow-xs]="activeTab() === 'all'" [class.bg-white]="activeTab() !== 'all'"
+                      [class.dark:bg-slate-800]="activeTab() !== 'all'" [class.text-slate-700]="activeTab() !== 'all'"
                       [class.dark:text-slate-300]="activeTab() !== 'all'"
                       [class.border-slate-300]="activeTab() !== 'all'"
                       [class.dark:border-slate-600]="activeTab() !== 'all'">
@@ -2353,7 +2289,8 @@
                   <button type="button" (click)="scrollTabs('right')"
                     class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer ml-1 sm:ml-1.5 shadow-xs active:scale-95"
                     title="Right" aria-label="Scroll tabs right">
-                    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                      stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
@@ -2361,7 +2298,8 @@
               </div>
 
               <!-- Dedicated Internal Scroll Container -->
-              <div class="tabs-accordions-scroll flex-1 min-h-0 h-full overflow-y-auto custom-scrollbar overscroll-contain touch-pan-y pt-2 pb-8 sm:pb-2 px-1 pr-1.5 space-y-2.5">
+              <div
+                class="tabs-accordions-scroll flex-1 min-h-0 h-full overflow-y-auto custom-scrollbar overscroll-contain touch-pan-y pt-2 pb-8 sm:pb-2 px-1 pr-1.5 space-y-2.5">
                 <div class="space-y-4">
 
                   <!-- TAB 1: Identity & Codes -->
@@ -2374,63 +2312,93 @@
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Short Name (Code)</span>
-                          <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="tab_shortName" placeholder="e.g. UAE" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)"
+                            name="tab_shortName" placeholder="e.g. UAE"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Alpha-2 Code</span>
-                          <input type="text" [ngModel]="formIsoCode2()" (ngModelChange)="onIsoCode2Change($event)" name="tab_iso2" placeholder="e.g. AE" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formIsoCode2()" (ngModelChange)="onIsoCode2Change($event)"
+                            name="tab_iso2" placeholder="e.g. AE"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Alpha-3 Code</span>
-                          <input type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)" name="tab_iso3" placeholder="e.g. ARE" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)"
+                            name="tab_iso3" placeholder="e.g. ARE"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Numeric Code</span>
-                          <input type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)" name="tab_numeric" placeholder="e.g. 784" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)"
+                            name="tab_numeric" placeholder="e.g. 784"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Dialing Code (ISD)</span>
-                          <input type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="tab_isd" placeholder="e.g. +971" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="tab_isd"
+                            placeholder="e.g. +971"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Currency</span>
-                          <input type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)" name="tab_currency" placeholder="e.g. AED" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
+                            name="tab_currency" placeholder="e.g. AED"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Nationality</span>
-                          <input type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)" name="tab_nationality" placeholder="e.g. Emirati" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)"
+                            name="tab_nationality" placeholder="e.g. Emirati"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Continent</span>
-                          <input type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)" name="tab_continent" placeholder="e.g. Asia" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)"
+                            name="tab_continent" placeholder="e.g. Asia"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Capital City</span>
-                          <input type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)" name="tab_capital" placeholder="e.g. Abu Dhabi" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)"
+                            name="tab_capital" placeholder="e.g. Abu Dhabi"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Subregion</span>
-                          <input type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)" name="tab_subregion" placeholder="e.g. Middle East" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)"
+                            name="tab_subregion" placeholder="e.g. Middle East"
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                     </div>
@@ -2442,50 +2410,65 @@
                   <div class="tab-pane space-y-2 animate-in fade-in duration-150">
                     @if (activeTab() === 'all') {
                     <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                      <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Regional & Language Settings</h3>
+                      <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Regional & Language Settings
+                      </h3>
                     </div>
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Official Languages</span>
-                          <input type="text" [value]="formOfficialLanguages()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formOfficialLanguages()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Language</span>
-                          <input type="text" [value]="formDefaultLanguage()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formDefaultLanguage()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Time Zone</span>
-                          <input type="text" [value]="formDefaultTimeZone()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formDefaultTimeZone()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Date Format</span>
-                          <input type="text" [value]="formDefaultDateFormat()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formDefaultDateFormat()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Number Format</span>
-                          <input type="text" [value]="formDefaultNumberFormat()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formDefaultNumberFormat()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Postal Code Required</span>
-                          <input type="text" [value]="formPostalCodeRequired()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formPostalCodeRequired()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-12 md:col-span-8 lg:col-span-6 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Address Format</span>
-                          <input type="text" [value]="formAddressFormat()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none truncate" />
+                          <input type="text" [value]="formAddressFormat()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none truncate" />
                         </div>
                       </div>
                     </div>
@@ -2497,56 +2480,73 @@
                   <div class="tab-pane space-y-2 animate-in fade-in duration-150">
                     @if (activeTab() === 'all') {
                     <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                      <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Tax & Regulatory Information</h3>
+                      <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Tax & Regulatory Information
+                      </h3>
                     </div>
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Tax Config Required</span>
-                          <input type="text" [value]="formTaxRequired()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formTaxRequired()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Tax Authority</span>
-                          <input type="text" [value]="formTaxAuthority()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formTaxAuthority()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">TRN Format</span>
-                          <input type="text" [value]="formTrnFormat()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formTrnFormat()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Electronic Invoicing</span>
-                          <input type="text" [value]="formElectronicInvoicing()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formElectronicInvoicing()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Approval Status</span>
-                          <input type="text" [value]="formApprovalStatus()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formApprovalStatus()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Withholding Tax</span>
-                          <input type="text" [value]="formWithholdingTax()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formWithholdingTax()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Customs Regime</span>
-                          <input type="text" [value]="formCustomsRegime()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formCustomsRegime()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Trade Treaty</span>
-                          <input type="text" [value]="formTradeTreaty()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formTradeTreaty()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                     </div>
@@ -2558,50 +2558,65 @@
                   <div class="tab-pane space-y-2 animate-in fade-in duration-150">
                     @if (activeTab() === 'all') {
                     <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                      <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Localization & Business Settings</h3>
+                      <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Localization & Business
+                        Settings</h3>
                     </div>
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Geographic Region</span>
-                          <input type="text" [value]="formGeographicRegion()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formGeographicRegion()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Admin Division Name</span>
-                          <input type="text" [value]="formAdminDivision()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formAdminDivision()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Currency Formatting</span>
-                          <input type="text" [value]="formCurrencyFormatting()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formCurrencyFormatting()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Fiscal Year Start</span>
-                          <input type="text" [value]="formFiscalYear()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formFiscalYear()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Business Days</span>
-                          <input type="text" value="Monday – Friday" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" value="Monday – Friday" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Weekend Definition</span>
-                          <input type="text" value="Saturday – Sunday" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" value="Saturday – Sunday" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Public Holidays Calendar</span>
-                          <input type="text" value="Standard National Calendar" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" value="Standard National Calendar" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                     </div>
@@ -2613,56 +2628,73 @@
                   <div class="tab-pane space-y-2 animate-in fade-in duration-150">
                     @if (activeTab() === 'all') {
                     <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                      <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Additional Information & Record Control</h3>
+                      <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Additional Information &
+                        Record Control</h3>
                     </div>
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Record ID</span>
-                          <input type="text" [value]="currentCountryId() || 'NEW-REC'" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
+                          <input type="text" [value]="currentCountryId() || 'NEW-REC'" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Created Date</span>
-                          <input type="text" [value]="viewCountry()?.createdAt || '2023-01-01'" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="viewCountry()?.createdAt || '2023-01-01'" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Created By</span>
-                          <input type="text" value="System Administrator" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" value="System Administrator" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Modified Date</span>
-                          <input type="text" [value]="viewCountry()?.updatedAt || '2023-01-01'" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="viewCountry()?.updatedAt || '2023-01-01'" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Modified By</span>
-                          <input type="text" value="Admin (System Admin)" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" value="Admin (System Admin)" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Record Origin</span>
-                          <input type="text" [value]="formRecordOrigin()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formRecordOrigin()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Audit</span>
-                          <input type="text" [value]="formLastAudit()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
+                          <input type="text" [value]="formLastAudit()" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                        <div
+                          class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Master Record Version</span>
-                          <input type="text" value="v2.4.0" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
+                          <input type="text" value="v2.4.0" readonly
+                            class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
                         </div>
                       </div>
                     </div>
@@ -2681,7 +2713,8 @@
           <aside id="section-action-panel"
             class="hidden md:flex flex-col items-center justify-start bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-1.5 shrink-0 select-none relative z-20 transition-all h-full min-h-[460px]">
 
-            <div class="w-[70px] sm:w-[74px] h-full flex flex-col items-center overflow-hidden side-toolbar-scroll pt-2 pb-2.5 sm:pb-3 px-1">
+            <div
+              class="w-[70px] sm:w-[74px] h-full flex flex-col items-center overflow-hidden side-toolbar-scroll pt-2 pb-2.5 sm:pb-3 px-1">
 
               @if (actionPanelPage() === 'top') {
               <!-- PAGE 1: 6 Icons + 7th Down Arrow -->
@@ -2692,7 +2725,8 @@
                 @if (viewMode() !== 'add') {
                 <button type="button" (click)="openCreate()" data-tooltip="Add" data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-500 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="9" />
                     <line x1="12" y1="8" x2="12" y2="16" />
                     <line x1="8" y1="12" x2="16" y2="12" />
@@ -2704,7 +2738,8 @@
                 @if (viewMode() !== 'edit') {
                 <button type="button" (click)="openEditForActiveCountry()" data-tooltip="Edit" data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-amber-500 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
@@ -2715,7 +2750,8 @@
                 @if (viewMode() !== 'view') {
                 <button type="button" (click)="openViewForActiveCountry()" data-tooltip="View" data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-teal-500 text-teal-600 dark:text-teal-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
@@ -2726,7 +2762,8 @@
                 <button type="button" (click)="switchView('grid')" data-tooltip="Grid" data-tooltip-pos="left"
                   class="group w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-[#00a6f4] dark:text-[#38bdf8] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                   [class.ring-2]="viewMode() === 'grid'" [class.ring-[#00a6f4]]="viewMode() === 'grid'">
-                  <svg class="w-6 h-6 transition-transform duration-700 group-hover:rotate-180 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <svg class="w-6 h-6 transition-transform duration-700 group-hover:rotate-180 group-hover:scale-110"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <circle cx="12" cy="12" r="2.2" fill="currentColor" />
                     <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(0 12 12)" />
                     <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)" />
@@ -2738,7 +2775,8 @@
                 <button type="button" (click)="switchView('list')" data-tooltip="Table" data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-sky-600 dark:text-sky-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                   [class.ring-2]="viewMode() === 'list'" [class.ring-sky-500]="viewMode() === 'list'">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="4" width="18" height="16" rx="2" />
                     <line x1="3" y1="10" x2="21" y2="10" />
                     <line x1="9" y1="4" x2="9" y2="20" />
@@ -2766,9 +2804,11 @@
                 </button>
 
                 <!-- 7. Recycle Bin -->
-                <button type="button" (click)="openActivityModal('deleted')" data-tooltip="Recycle" data-tooltip-pos="left"
+                <button type="button" (click)="openActivityModal('deleted')" data-tooltip="Recycle"
+                  data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-rose-400 text-rose-600 dark:text-rose-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 6h18" />
                     <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
                     <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
@@ -2778,9 +2818,11 @@
                 </button>
 
                 <!-- 8. History -->
-                <button type="button" (click)="openActivityModal('history')" data-tooltip="History" data-tooltip-pos="left"
+                <button type="button" (click)="openActivityModal('history')" data-tooltip="History"
+                  data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-blue-400 text-blue-600 dark:text-blue-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                   </svg>
@@ -2789,7 +2831,8 @@
                 <!-- 9. Export -->
                 <button type="button" (click)="openExportModal()" data-tooltip="Export" data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-violet-400 text-violet-600 dark:text-violet-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                     <polyline points="7 10 12 15 17 10" />
                     <line x1="12" y1="15" x2="12" y2="3" />
@@ -2797,9 +2840,11 @@
                 </button>
 
                 <!-- 10. Share -->
-                <button type="button" (click)="openShareModalUnified('email')" data-tooltip="Share" data-tooltip-pos="left"
+                <button type="button" (click)="openShareModalUnified('email')" data-tooltip="Share"
+                  data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-400 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="18" cy="5" r="3" />
                     <circle cx="6" cy="12" r="3" />
                     <circle cx="18" cy="19" r="3" />
@@ -2811,15 +2856,18 @@
                 <!-- 11. AI Assistant -->
                 <button type="button" (click)="openAiModal()" data-tooltip="AI" data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-sky-400 text-[#00a6f4] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
-                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                      d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
                   </svg>
                 </button>
 
                 <!-- 12. Guide -->
                 <button type="button" (click)="openGuidanceTour()" data-tooltip="Guidance" data-tooltip-pos="left"
                   class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/80 shadow-xs hover:shadow-md hover:border-amber-400 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none ring-2 ring-amber-400/30">
-                  <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
                       d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
@@ -2947,7 +2995,8 @@
             class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 border border-slate-200 dark:border-slate-700 transition-all shrink-0 cursor-pointer whitespace-nowrap active:scale-95 shadow-2xs"
             title="AI Assistant">
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+              <path
+                d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
             </svg>
             <span class="text-[11px]">AI</span>
           </button>
@@ -2982,8 +3031,11 @@
             <label class="form-switch m-0 flex items-center gap-1.5 sm:gap-2 cursor-pointer">
               <input type="checkbox" class="sr-only" [checked]="keepOnPage()"
                 (change)="keepOnPage.set($any($event.target).checked)" />
-              <span class="form-switch-track scale-90 sm:scale-100 origin-left"><span class="form-switch-thumb"></span></span>
-              <span class="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap">Stay on Page</span>
+              <span class="form-switch-track scale-90 sm:scale-100 origin-left"><span
+                  class="form-switch-thumb"></span></span>
+              <span
+                class="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap">Stay
+                on Page</span>
             </label>
           </div>
 

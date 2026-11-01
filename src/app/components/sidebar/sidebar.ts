@@ -63,6 +63,16 @@ export class Sidebar {
       icon: 'countries',
     },
     {
+      id: 'states',
+      label: 'States',
+      icon: 'states',
+    },
+    {
+      id: 'cities',
+      label: 'Cities',
+      icon: 'cities',
+    },
+    {
       id: 'items',
       label: 'Items',
       icon: 'items',
@@ -681,6 +691,12 @@ export class Sidebar {
     if (item.id === 'countries') {
       this.navService.navigateTo(item.id, '', item.label, '', false);
       this.router.navigate(['/landing', 'countries'], { queryParams: {} });
+    } else if (item.id === 'states' || item.id === 'state') {
+      this.navService.navigateTo(item.id, '', item.label, '', false);
+      this.router.navigate(['/landing', 'states'], { queryParams: {} });
+    } else if (item.id === 'cities' || item.id === 'city') {
+      this.navService.navigateTo(item.id, '', item.label, '', false);
+      this.router.navigate(['/landing', 'cities'], { queryParams: {} });
     } else if (item.id === 'items' || item.id === 'item') {
       this.navService.navigateTo(item.id, '', item.label, '', false);
       this.router.navigate(['/landing', 'items'], { queryParams: {} });

@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Sidebar } from '../sidebar/sidebar';
 import { CountryComponent } from '../country/country';
+import { StateComponent } from '../state/state';
+import { CityComponent } from '../city/city';
 import { ItemComponent } from '../item/item';
 import { AuditHistoryComponent } from '../audit-history/audit-history';
 import { NavigationService, SearchEntry } from '../../services/navigation.service';
@@ -13,7 +15,7 @@ import { TenantService } from '../../services/tenant.service';
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, FormsModule, Sidebar, CountryComponent, ItemComponent, AuditHistoryComponent],
+  imports: [CommonModule, FormsModule, Sidebar, CountryComponent, StateComponent, CityComponent, ItemComponent, AuditHistoryComponent],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
 })
@@ -130,6 +132,18 @@ export class Landing implements OnInit {
   isCountryModule = computed<boolean>(() => {
     const mod = (this.navService.currentModuleId() || '').toLowerCase();
     return mod === 'countries' || mod === 'country';
+  });
+
+  isStateModule = computed<boolean>(() => {
+    const mod = (this.navService.currentModuleId() || '').toLowerCase();
+    const sub = (this.navService.currentSubModuleId() || '').toLowerCase();
+    return mod === 'states' || mod === 'state' || sub === 'states' || sub === 'state';
+  });
+
+  isCityModule = computed<boolean>(() => {
+    const mod = (this.navService.currentModuleId() || '').toLowerCase();
+    const sub = (this.navService.currentSubModuleId() || '').toLowerCase();
+    return mod === 'cities' || mod === 'city' || sub === 'cities' || sub === 'city';
   });
 
   isItemModule = computed<boolean>(() => {
