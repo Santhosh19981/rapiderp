@@ -1171,8 +1171,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   readonly countryFormFields = [
-    { id: 'field-status', label: 'Status', category: 'General', tabId: 'general', location: 'General Information', keywords: 'status active inactive draft' },
     { id: 'field-nameEn', label: 'Country Name (EN)', category: 'General', tabId: 'general', location: 'General Information', keywords: 'country name english en title' },
+    { id: 'field-status', label: 'Status', category: 'General', tabId: 'general', location: 'General Information', keywords: 'status active inactive draft' },
     { id: 'field-nameAr', label: 'Country Name (AR)', category: 'General', tabId: 'general', location: 'General Information', keywords: 'arabic country name اسم الدولة بالعربية' },
     { id: 'field-shortName', label: 'Short Name', category: 'General', tabId: 'general', location: 'General Information', keywords: 'short name code display' },
     { id: 'field-iso2', label: 'ISO Code 2', category: 'General', tabId: 'general', location: 'General Information', keywords: 'iso alpha 2 code country' },

@@ -198,8 +198,8 @@ export class StateComponent implements OnInit {
   ];
 
   formFieldItems: StateFormFieldItem[] = [
-    { id: 'field-status', label: 'Status', section: 'General', tabId: 'general' },
     { id: 'field-nameEn', label: 'State Name (EN)', section: 'General', tabId: 'general' },
+    { id: 'field-status', label: 'Status', section: 'General', tabId: 'general' },
     { id: 'field-nameAr', label: 'اسم الولاية / الإمارة (بالعربية)', section: 'General', tabId: 'general' },
     { id: 'field-id', label: 'State ID', section: 'Essential', tabId: 'identity' },
     { id: 'field-code', label: 'State Code', section: 'Essential', tabId: 'identity' },

@@ -193,8 +193,8 @@ export class CityComponent implements OnInit {
   ];
 
   formFieldItems: CityFormFieldItem[] = [
-    { id: 'field-status', label: 'Status', section: 'General', tabId: 'general' },
     { id: 'field-nameEn', label: 'City Name (EN)', section: 'General', tabId: 'general' },
+    { id: 'field-status', label: 'Status', section: 'General', tabId: 'general' },
     { id: 'field-nameAr', label: 'اسم المدينة (بالعربية)', section: 'General', tabId: 'general' },
     { id: 'field-id', label: 'City ID', section: 'Essential', tabId: 'identity' },
     { id: 'field-code', label: 'City Code', section: 'Essential', tabId: 'identity' },

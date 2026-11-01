@@ -17,7 +17,8 @@
         <div class="flex items-center gap-3 min-w-0">
           <div
             class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500/15 via-[#00a6f4]/20 to-blue-600/15 border border-sky-200/80 dark:border-sky-800 text-[#00a6f4] flex items-center justify-center shrink-0 shadow-xs cursor-pointer">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16" />
               <path d="M1 21h22" />
               <path d="M9 7h1" />
@@ -188,7 +189,8 @@
               </div>
               <div class="flex items-center justify-between flex-1 ml-1.5 mr-2.5 min-w-0">
                 <span class="capsule-title whitespace-nowrap">Updated</span>
-                <span class="text-[11px] sm:text-xs font-black text-[#4E516C] shrink-0 whitespace-nowrap ml-1">{{ lastUpdatedTime() }}</span>
+                <span class="text-[11px] sm:text-xs font-black text-[#4E516C] shrink-0 whitespace-nowrap ml-1">{{
+                  lastUpdatedTime() }}</span>
               </div>
             </div>
 
@@ -208,7 +210,8 @@
               </div>
               <div class="flex items-center justify-between flex-1 ml-1.5 mr-2.5 min-w-0">
                 <span class="capsule-title whitespace-nowrap">Recycle Bin</span>
-                <span class="text-[11px] sm:text-xs font-black text-[#4E516C] shrink-0 whitespace-nowrap ml-1">{{ lastDeletedTime() }}</span>
+                <span class="text-[11px] sm:text-xs font-black text-[#4E516C] shrink-0 whitespace-nowrap ml-1">{{
+                  lastDeletedTime() }}</span>
               </div>
             </div>
 
@@ -232,10 +235,11 @@
                 class="search-input-wrapper relative flex items-center w-full h-[34px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-2xs">
                 <svg class="w-4 h-4 text-slate-400 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event); currentPage.set(1)"
-                  placeholder="Search"
+                <input type="text" [ngModel]="searchQuery()"
+                  (ngModelChange)="searchQuery.set($event); currentPage.set(1)" placeholder="Search"
                   class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
                 @if (searchQuery()) {
                 <button type="button" (click)="searchQuery.set(''); currentPage.set(1)"
@@ -246,8 +250,8 @@
                   </svg>
                 </button>
                 }
-                <button type="button" (click)="toggleFieldVoiceSearch($event)"
-                  data-tooltip="Voice" data-tooltip-pos="bottom"
+                <button type="button" (click)="toggleFieldVoiceSearch($event)" data-tooltip="Voice"
+                  data-tooltip-pos="bottom"
                   class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer relative shrink-0">
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -257,39 +261,7 @@
               </div>
             </div>
 
-            <!-- Right Zone: View Switcher (Grid / List) -->
-            <div class="flex items-center gap-2 shrink-0">
-              <div
-                class="flex items-center bg-slate-100 dark:bg-slate-700/80 p-0.5 rounded-full border border-slate-200/80 dark:border-slate-600 shrink-0">
-                @if (viewMode() === 'grid') {
-                <button type="button" (click)="switchView('list')"
-                  class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
-                  data-tooltip="List" data-tooltip-pos="bottom">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="8" y1="6" x2="21" y2="6" stroke-linecap="round" />
-                    <line x1="8" y1="12" x2="21" y2="12" stroke-linecap="round" />
-                    <line x1="8" y1="18" x2="21" y2="18" stroke-linecap="round" />
-                    <circle cx="4" cy="6" r="1.5" fill="currentColor" />
-                    <circle cx="4" cy="12" r="1.5" fill="currentColor" />
-                    <circle cx="4" cy="18" r="1.5" fill="currentColor" />
-                  </svg>
-                  <span>List</span>
-                </button>
-                } @else {
-                <button type="button" (click)="switchView('grid')"
-                  class="h-7 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
-                  data-tooltip="Grid" data-tooltip-pos="bottom">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7" rx="1" />
-                    <rect x="14" y="3" width="7" height="7" rx="1" />
-                    <rect x="3" y="14" width="7" height="7" rx="1" />
-                    <rect x="14" y="14" width="7" height="7" rx="1" />
-                  </svg>
-                  <span>Grid</span>
-                </button>
-                }
-              </div>
-            </div>
+
           </div>
 
           <!-- 4-COLUMN CARDS GRID (Exact Replica of Country Cards Image 1) -->
@@ -342,7 +314,8 @@
 
                   <!-- Top Row - Icon + City Name (Image 1 style) -->
                   <div class="flex items-center gap-2 w-full min-w-0 pr-1">
-                    <span class="w-5.5 h-4 rounded-xs bg-sky-100 dark:bg-sky-950 text-[#00a6f4] flex items-center justify-center font-bold text-[9px] border border-sky-200 dark:border-sky-800 shrink-0">
+                    <span
+                      class="w-5.5 h-4 rounded-xs bg-sky-100 dark:bg-sky-950 text-[#00a6f4] flex items-center justify-center font-bold text-[9px] border border-sky-200 dark:border-sky-800 shrink-0">
                       {{ c.code.slice(0, 2) }}
                     </span>
                     <h3
@@ -414,9 +387,11 @@
                 class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xs m-2">
                 <table class="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr class="bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-700 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
+                    <tr
+                      class="bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-700 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
                       <th class="p-3 w-10 text-center">
-                        <input type="checkbox" (change)="toggleSelectAll()" class="rounded text-[#00a6f4] cursor-pointer" />
+                        <input type="checkbox" (change)="toggleSelectAll()"
+                          class="rounded text-[#00a6f4] cursor-pointer" />
                       </th>
                       <th class="p-3">City ID</th>
                       <th class="p-3">City Code</th>
@@ -448,42 +423,45 @@
                       <td class="p-3">{{ c.country }}</td>
                       <td class="p-3">
                         @if (c.isDefault) {
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 text-[#0070ba] dark:bg-sky-950/60 dark:text-sky-300">Default</span>
+                        <span
+                          class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 text-[#0070ba] dark:bg-sky-950/60 dark:text-sky-300">Default</span>
                         } @else {
                         <span class="text-slate-400">—</span>
                         }
                       </td>
                       <td class="p-3">
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-bold cursor-pointer"
-                          (click)="toggleCityStatus(c, $event)"
-                          [class.bg-emerald-100]="c.status === 'Active'"
+                          (click)="toggleCityStatus(c, $event)" [class.bg-emerald-100]="c.status === 'Active'"
                           [class.text-emerald-700]="c.status === 'Active'"
                           [class.dark:bg-emerald-950/60]="c.status === 'Active'"
                           [class.dark:text-emerald-300]="c.status === 'Active'"
                           [class.bg-slate-100]="c.status === 'Inactive'"
-                          [class.text-slate-600]="c.status === 'Inactive'"
-                          [class.bg-amber-100]="c.status === 'Draft'"
+                          [class.text-slate-600]="c.status === 'Inactive'" [class.bg-amber-100]="c.status === 'Draft'"
                           [class.text-amber-700]="c.status === 'Draft'">
                           {{ c.status }}
                         </span>
                       </td>
                       <td class="p-3 text-right">
                         <div class="inline-flex items-center gap-1">
-                          <button type="button" (click)="openView(c)" class="p-1 hover:text-[#00a6f4] transition" data-tooltip="View" data-tooltip-pos="top">
+                          <button type="button" (click)="openView(c)" class="p-1 hover:text-[#00a6f4] transition"
+                            data-tooltip="View" data-tooltip-pos="top">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                               <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
                               <circle cx="12" cy="12" r="3" />
                             </svg>
                           </button>
-                          <button type="button" (click)="openEdit(c)" class="p-1 hover:text-amber-500 transition" data-tooltip="Edit" data-tooltip-pos="top">
+                          <button type="button" (click)="openEdit(c)" class="p-1 hover:text-amber-500 transition"
+                            data-tooltip="Edit" data-tooltip-pos="top">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                               <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                             </svg>
                           </button>
-                          <button type="button" (click)="openDeleteModal(c.id, $event)" class="p-1 hover:text-rose-500 transition" data-tooltip="Delete" data-tooltip-pos="top">
+                          <button type="button" (click)="openDeleteModal(c.id, $event)"
+                            class="p-1 hover:text-rose-500 transition" data-tooltip="Delete" data-tooltip-pos="top">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                               <polyline points="3 6 5 6 21 6" />
-                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                              <path
+                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                             </svg>
                           </button>
                         </div>
@@ -497,7 +475,8 @@
 
               <!-- Empty State -->
               @if (filteredCities().length === 0) {
-              <div class="p-12 text-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 m-2">
+              <div
+                class="p-12 text-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 m-2">
                 <p class="text-sm text-slate-500 font-semibold">No cities found matching your criteria</p>
                 <button type="button" (click)="searchQuery.set(''); statusFilter.set('all')"
                   class="mt-3 px-4 py-1.5 rounded-full bg-[#00a6f4] text-white text-xs font-bold hover:bg-[#0092d6] transition cursor-pointer">
@@ -553,8 +532,9 @@
                 class="w-7 h-7 rounded-full bg-[#00a6f4] text-white flex items-center justify-center text-xs font-black shadow-md shadow-[#00a6f4]/25">
                 {{ currentCityDisplayNumber() }}
               </div>
-              <button type="button" (click)="goToNextCity()" [disabled]="currentCityDisplayNumber() >= totalRecordsCount()"
-                data-tooltip="Next" data-tooltip-pos="bottom"
+              <button type="button" (click)="goToNextCity()"
+                [disabled]="currentCityDisplayNumber() >= totalRecordsCount()" data-tooltip="Next"
+                data-tooltip-pos="bottom"
                 class="w-7 h-7 rounded-full bg-[#00a2e8] text-white flex items-center justify-center disabled:opacity-35 disabled:cursor-not-allowed">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -586,8 +566,8 @@
               </button>
               }
 
-              <button type="button" (click)="toggleFieldVoiceSearch($event)"
-                data-tooltip="Voice" data-tooltip-pos="bottom"
+              <button type="button" (click)="toggleFieldVoiceSearch($event)" data-tooltip="Voice"
+                data-tooltip-pos="bottom"
                 class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer relative shrink-0">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -674,11 +654,49 @@
               <div class="general-info-fields-scroll overflow-visible pr-1 my-0.5">
                 <div class="grid grid-cols-12 gap-x-3 sm:gap-x-4 gap-y-4 sm:gap-y-5.5 items-center pt-2 pb-2">
 
-                  <!-- ROW 1 (3 columns: Status, City Name EN, City Name AR) -->
-                  <!-- 1. Status * (Custom Dropdown) -->
+                  <!-- ROW 1 (3 columns: City Name EN, Status, City Name AR) -->
+                  <!-- 1. City Name (EN) * (Max 100 chars, with voice + translate) -->
+                  <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
+                    <div id="field-nameEn"
+                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
+                      <span class="floating-notch-label">
+                        City Name (EN) <span class="text-slate-400 dark:text-slate-500">*</span>
+                      </span>
+                      <input type="text" maxlength="100" [ngModel]="formName()"
+                        (ngModelChange)="onCityNameInput($event)" name="cityNameEn" required
+                        placeholder="e.g. Dubai, Los Angeles" [readonly]="viewMode() === 'view'"
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
+
+                      <div class="flex items-center gap-1 shrink-0 ml-1.5">
+                        <button type="button" (click)="openTranslationPopup()" data-tooltip="Translate"
+                          data-tooltip-pos="bottom"
+                          class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="m5 8 6 6" />
+                            <path d="m4 14 6-6 2-3" />
+                            <path d="M2 5h12" />
+                            <path d="M7 2h1" />
+                            <path d="m22 22-5-10-5 10" />
+                            <path d="M14 18h6" />
+                          </svg>
+                        </button>
+                        <button type="button" (click)="simulateVoiceForField('City Name')" data-tooltip="Voice"
+                          data-tooltip-pos="bottom"
+                          class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer shrink-0">
+                          <svg class="w-3.5 h-3.5 fill-none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 2. Status * (Custom Dropdown) -->
                   <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group" data-dropdown>
-                    <div id="field-status" role="button" tabindex="0" (click)="toggleDropdown('status', $event)"
-                      (keydown.enter)="toggleDropdown('status', $event)"
+                    <div id="field-status" role="button" tabindex="0" (click)="viewMode() !== 'view' && toggleDropdown('status', $event)"
+                      (keydown.enter)="viewMode() !== 'view' && toggleDropdown('status', $event)"
                       class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none"
                       [class.border-[#00a6f4]]="activeDropdown() === 'status'"
                       [class.ring-2]="activeDropdown() === 'status'"
@@ -707,7 +725,7 @@
                       </span>
                     </div>
 
-                    @if (activeDropdown() === 'status') {
+                    @if (activeDropdown() === 'status' && viewMode() !== 'view') {
                     <div (click)="$event.stopPropagation()"
                       class="absolute left-0 right-0 top-[calc(100%+6px)] z-50 p-1.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
                       <div class="flex flex-col space-y-0.5">
@@ -738,41 +756,6 @@
                     }
                   </div>
 
-                  <!-- 2. City Name (EN) * (Max 100 chars, with voice + translate) -->
-                  <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
-                    <div id="field-nameEn"
-                      class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                      <span class="floating-notch-label">
-                        City Name (EN) <span class="text-slate-400 dark:text-slate-500">*</span>
-                      </span>
-                      <input type="text" maxlength="100" [ngModel]="formName()" (ngModelChange)="onCityNameInput($event)"
-                        name="cityNameEn" required placeholder="e.g. Dubai, Los Angeles"
-                        [readonly]="viewMode() === 'view'"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
-
-                      <div class="flex items-center gap-1 shrink-0 ml-1.5">
-                        <button type="button" (click)="openTranslationPopup()" data-tooltip="Translate" data-tooltip-pos="bottom"
-                          class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer">
-                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="m5 8 6 6" />
-                            <path d="m4 14 6-6 2-3" />
-                            <path d="M2 5h12" />
-                            <path d="M7 2h1" />
-                            <path d="m22 22-5-10-5 10" />
-                            <path d="M14 18h6" />
-                          </svg>
-                        </button>
-                        <button type="button" (click)="simulateVoiceForField('City Name')" data-tooltip="Voice" data-tooltip-pos="bottom"
-                          class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer shrink-0">
-                          <svg class="w-3.5 h-3.5 fill-none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
                   <!-- 3. City Name (AR) (اسم المدينة بالعربية) -->
                   <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group" dir="rtl">
                     <div id="field-nameAr"
@@ -781,8 +764,7 @@
                         اسم المدينة (بالعربية)
                       </span>
                       <input type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
-                        name="cityNameAr" placeholder="مثال: دبي"
-                        [readonly]="viewMode() === 'view'"
+                        name="cityNameAr" placeholder="مثال: دبي" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
                     </div>
                   </div>
@@ -808,11 +790,11 @@
                         City Code <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
                       <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="cityCode"
-                        required placeholder="e.g. DXB, LAX"
-                        [readonly]="viewMode() === 'view'"
+                        required placeholder="e.g. DXB, LAX" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                       @if (viewMode() !== 'view') {
-                      <button type="button" (click)="autoGenerateCode()" data-tooltip="Auto generate code" data-tooltip-pos="top"
+                      <button type="button" (click)="autoGenerateCode()" data-tooltip="Auto generate code"
+                        data-tooltip-pos="top"
                         class="text-[11px] font-bold text-[#00a6f4] hover:text-[#008fd3] bg-sky-50 dark:bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 hover:border-[#00a6f4] transition cursor-pointer shrink-0">
                         Auto
                       </button>
@@ -837,7 +819,8 @@
                       </span>
                       <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
                         [class.rotate-180]="activeDropdown() === 'country'">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5">
                           <polyline points="6 9 12 15 18 9" />
                         </svg>
                       </span>
@@ -852,7 +835,8 @@
                         [class.bg-[#dff3fd]]="formCountry() === c" [class.text-[#0070ba]]="formCountry() === c">
                         <span class="font-semibold">{{ c }}</span>
                         @if (formCountry() === c) {
-                        <svg class="w-4 h-4 text-[#0070ba] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <svg class="w-4 h-4 text-[#0070ba] shrink-0" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2.5">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                         }
@@ -879,7 +863,8 @@
                       </span>
                       <span class="text-slate-400 transition-transform duration-200 shrink-0 ml-1.5"
                         [class.rotate-180]="activeDropdown() === 'state'">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5">
                           <polyline points="6 9 12 15 18 9" />
                         </svg>
                       </span>
@@ -894,7 +879,8 @@
                         [class.bg-[#dff3fd]]="formState() === st" [class.text-[#0070ba]]="formState() === st">
                         <span class="font-semibold">{{ st }}</span>
                         @if (formState() === st) {
-                        <svg class="w-4 h-4 text-[#0070ba] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <svg class="w-4 h-4 text-[#0070ba] shrink-0" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2.5">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                         }
@@ -915,9 +901,9 @@
                       </span>
                       <label class="form-switch m-0 flex items-center cursor-pointer">
                         <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
-                          [disabled]="viewMode() === 'view'"
-                          (change)="toggleDefault($event)" />
-                        <span class="form-switch-track scale-90 sm:scale-100 origin-right"><span class="form-switch-thumb"></span></span>
+                          [disabled]="viewMode() === 'view'" (change)="toggleDefault($event)" />
+                        <span class="form-switch-track scale-90 sm:scale-100 origin-right"><span
+                            class="form-switch-thumb"></span></span>
                       </label>
                     </div>
                   </div>
@@ -928,8 +914,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Description</span>
                       <input type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
-                        name="cityDesc" placeholder="Additional city information"
-                        [readonly]="viewMode() === 'view'"
+                        name="cityDesc" placeholder="Additional city information" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -950,7 +935,8 @@
                   <button type="button" (click)="scrollTabs('left')"
                     class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer mr-1 sm:mr-1.5 shadow-xs active:scale-95"
                     data-tooltip="Scroll left" data-tooltip-pos="bottom">
-                    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                      stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
@@ -988,7 +974,8 @@
                   <button type="button" (click)="scrollTabs('right')"
                     class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer ml-1 sm:ml-1.5 shadow-xs active:scale-95"
                     data-tooltip="Scroll right" data-tooltip-pos="bottom">
-                    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                      stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
@@ -996,7 +983,8 @@
               </div>
 
               <!-- Internal Tab Panes Scroll Area -->
-              <div class="tabs-accordions-scroll flex-1 min-h-0 h-full overflow-y-auto custom-scrollbar pt-2 pb-6 px-1 pr-1.5 space-y-3">
+              <div
+                class="tabs-accordions-scroll flex-1 min-h-0 h-full overflow-y-auto custom-scrollbar pt-2 pb-6 px-1 pr-1.5 space-y-3">
 
                 <!-- TAB 1: Identity & Codes -->
                 @if (activeTab() === 'identity' || activeTab() === 'all') {
@@ -1075,9 +1063,9 @@
                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Set as Default</span>
                         <label class="form-switch m-0 flex items-center cursor-pointer">
                           <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
-                            [disabled]="viewMode() === 'view'"
-                            (change)="toggleDefault($event)" />
-                          <span class="form-switch-track scale-90 origin-right"><span class="form-switch-thumb"></span></span>
+                            [disabled]="viewMode() === 'view'" (change)="toggleDefault($event)" />
+                          <span class="form-switch-track scale-90 origin-right"><span
+                              class="form-switch-thumb"></span></span>
                         </label>
                       </div>
                     </div>
@@ -1086,8 +1074,7 @@
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Description</span>
                         <input type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
-                          [readonly]="viewMode() === 'view'"
-                          placeholder="Additional city information"
+                          [readonly]="viewMode() === 'view'" placeholder="Additional city information"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
                     </div>
@@ -1230,7 +1217,8 @@
                 </button>
 
                 <!-- Share -->
-                <button type="button" (click)="openShareModalUnified('email')" data-tooltip="Share" data-tooltip-pos="left"
+                <button type="button" (click)="openShareModalUnified('email')" data-tooltip="Share"
+                  data-tooltip-pos="left"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-400 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -1245,7 +1233,8 @@
                 <!-- Guidance Tour -->
                 <button type="button" (click)="openGuidanceTour()" data-tooltip="Guidance" data-tooltip-pos="left"
                   class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/80 shadow-xs hover:shadow-md hover:border-amber-400 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none">
-                  <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
                       d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
@@ -1264,8 +1253,11 @@
             <label class="form-switch m-0 flex items-center gap-1.5 sm:gap-2 cursor-pointer">
               <input type="checkbox" class="sr-only" [checked]="stayOnPage()"
                 (change)="stayOnPage.set($any($event.target).checked)" />
-              <span class="form-switch-track scale-90 sm:scale-100 origin-left"><span class="form-switch-thumb"></span></span>
-              <span class="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap">Stay on Page</span>
+              <span class="form-switch-track scale-90 sm:scale-100 origin-left"><span
+                  class="form-switch-thumb"></span></span>
+              <span
+                class="text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap">Stay
+                on Page</span>
             </label>
           </div>
 
@@ -1294,7 +1286,8 @@
 
   <!-- Delete Modal -->
   @if (isDeleteModalOpen()) {
-  <div class="fixed inset-0 bg-black/40 backdrop-blur-2xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-150">
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-2xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-150">
     <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4">
       <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mx-auto">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1322,7 +1315,8 @@
 
   <!-- Reset Confirmation Modal -->
   @if (isResetModalOpen()) {
-  <div class="fixed inset-0 bg-black/40 backdrop-blur-2xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-150">
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-2xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-150">
     <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4">
       <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mx-auto">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1352,7 +1346,8 @@
 
   <!-- Toast Notification -->
   @if (toastMessage(); as msg) {
-  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-full shadow-xl text-xs font-bold animate-in fade-in slide-in-from-bottom-3 duration-200"
+  <div
+    class="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-full shadow-xl text-xs font-bold animate-in fade-in slide-in-from-bottom-3 duration-200"
     [class.bg-emerald-600]="toastType() === 'success'" [class.text-white]="toastType() === 'success'"
     [class.bg-rose-600]="toastType() === 'error'" [class.text-white]="toastType() === 'error'"
     [class.bg-sky-600]="toastType() === 'info'" [class.text-white]="toastType() === 'info'">
