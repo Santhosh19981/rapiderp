@@ -5754,18 +5754,6 @@
                 </svg>
               </button>
 
-              <!-- 6. Table Item List -->
-              <button type="button" (click)="handleTableClick()" data-tooltip="Table" data-tooltip-pos="left"
-                class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-sky-600 dark:text-sky-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
-                [class.ring-2]="activeActionView() === 'table'" [class.ring-sky-500]="activeActionView() === 'table'">
-                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="4" width="18" height="16" rx="2" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                  <line x1="9" y1="4" x2="9" y2="20" />
-                </svg>
-              </button>
-
               <!-- 7th Icon: Down Arrow Button in grey color -->
               <button type="button" (click)="scrollActionPanel('down')" data-tooltip="More" data-tooltip-pos="left"
                 class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 border border-slate-300 dark:border-slate-600 flex items-center justify-center shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in duration-150">
@@ -5946,24 +5934,6 @@
             <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(120 12 12)" />
           </svg>
           <span class="text-[11px]">Grid</span>
-        </button>
-
-        <!-- 6. Table View Tab -->
-        <button type="button" (click)="handleTableClick()"
-          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer whitespace-nowrap active:scale-95 shadow-2xs"
-          [class.bg-[#00a6f4]]="activeActionView() === 'table'" [class.text-white]="activeActionView() === 'table'"
-          [class.font-bold]="activeActionView() === 'table'" [class.shadow-xs]="activeActionView() === 'table'"
-          [class.bg-white]="activeActionView() !== 'table'" [class.dark:bg-slate-800]="activeActionView() !== 'table'"
-          [class.text-slate-700]="activeActionView() !== 'table'"
-          [class.dark:text-slate-300]="activeActionView() !== 'table'" [class.border]="activeActionView() !== 'table'"
-          [class.border-slate-200]="activeActionView() !== 'table'"
-          [class.dark:border-slate-700]="activeActionView() !== 'table'" title="Item Table View">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="4" width="18" height="16" rx="2" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-            <line x1="9" y1="4" x2="9" y2="20" />
-          </svg>
-          <span class="text-[11px]">Table</span>
         </button>
 
         <!-- 7. Scan Barcode -->
