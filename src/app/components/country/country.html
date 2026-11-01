@@ -3082,7 +3082,7 @@
                       </span>
                       <input type="text" [ngModel]="formName()" (ngModelChange)="onCountryNameInput($event)"
                         name="countryNameEn" required placeholder="e.g. United Arab Emirates"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
 
                       <div class="flex items-center gap-1 shrink-0 ml-1.5">
                         <button type="button" (click)="openTranslationPopup()" title="Translate"
@@ -3128,7 +3128,7 @@
                       <span class="floating-notch-label">Short Name</span>
                       <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="shortName"
                         placeholder="e.g. UAE"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
@@ -3141,7 +3141,7 @@
                       </span>
                       <input type="text" maxlength="2" [ngModel]="formIsoCode2()" (ngModelChange)="onIsoCode2Change($event)" name="isoCode2" required
                         placeholder="e.g. AE"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                       <button type="button" (click)="autoGenerateIso()"
                         class="text-[11px] font-bold text-[#00a6f4] hover:text-[#008fd3] bg-sky-50 dark:bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 hover:border-[#00a6f4] transition cursor-pointer shrink-0">
                         Auto
@@ -3158,7 +3158,7 @@
                       </span>
                       <input type="text" maxlength="3" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)" name="isoCode3" required
                         placeholder="e.g. ARE"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
@@ -3169,7 +3169,7 @@
                       <span class="floating-notch-label">ISO Numeric Code</span>
                       <input type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)" name="isoNumeric"
                         placeholder="e.g. 784"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
@@ -3181,7 +3181,7 @@
                       <span class="floating-notch-label">International Dialing Code</span>
                       <input type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="isd"
                         placeholder="e.g. +971"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
@@ -3192,7 +3192,7 @@
                       <span class="floating-notch-label">Default Currency</span>
                       <input type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)" name="currency"
                         placeholder="e.g. AED"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
@@ -3203,14 +3203,14 @@
                       <span class="floating-notch-label">Nationality</span>
                       <input type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)" name="nationality"
                         placeholder="e.g. Emirati"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
                   <!-- 11. Default Country switch pill -->
                   <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group">
                     <div id="field-default"
-                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 select-none">
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all select-none">
                       <span class="floating-notch-label">Default Country</span>
                       <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Set as Default</span>
                       <label class="form-switch m-0 flex items-center cursor-pointer">
@@ -3228,7 +3228,7 @@
                       <span class="floating-notch-label">Continent</span>
                       <input type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)" name="continent"
                         placeholder="e.g. Asia"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
@@ -3239,7 +3239,7 @@
                       <span class="floating-notch-label">Capital City</span>
                       <input type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)" name="capital"
                         placeholder="e.g. Abu Dhabi"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
@@ -3250,14 +3250,14 @@
                       <span class="floating-notch-label">Subregion</span>
                       <input type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)" name="subregion"
                         placeholder="e.g. Middle East"
-                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+                        class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
 
                   <!-- 15. Flag Thumbnail & Upload -->
                   <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group">
                     <div id="field-flag"
-                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                      class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Flag</span>
                       <div class="flex items-center gap-2 min-w-0">
                         @if (formFlag()) {
@@ -3359,61 +3359,61 @@
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Short Name (Code)</span>
                           <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="tab_shortName" placeholder="e.g. UAE" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Alpha-2 Code</span>
                           <input type="text" [ngModel]="formIsoCode2()" (ngModelChange)="onIsoCode2Change($event)" name="tab_iso2" placeholder="e.g. AE" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Alpha-3 Code</span>
                           <input type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)" name="tab_iso3" placeholder="e.g. ARE" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Numeric Code</span>
                           <input type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)" name="tab_numeric" placeholder="e.g. 784" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Dialing Code (ISD)</span>
                           <input type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="tab_isd" placeholder="e.g. +971" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Currency</span>
                           <input type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)" name="tab_currency" placeholder="e.g. AED" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Nationality</span>
                           <input type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)" name="tab_nationality" placeholder="e.g. Emirati" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Continent</span>
                           <input type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)" name="tab_continent" placeholder="e.g. Asia" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Capital City</span>
                           <input type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)" name="tab_capital" placeholder="e.g. Abu Dhabi" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Subregion</span>
                           <input type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)" name="tab_subregion" placeholder="e.g. Middle East" class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -3432,43 +3432,43 @@
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Official Languages</span>
                           <input type="text" [value]="formOfficialLanguages()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Language</span>
                           <input type="text" [value]="formDefaultLanguage()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Time Zone</span>
                           <input type="text" [value]="formDefaultTimeZone()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Date Format</span>
                           <input type="text" [value]="formDefaultDateFormat()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Number Format</span>
                           <input type="text" [value]="formDefaultNumberFormat()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Postal Code Required</span>
                           <input type="text" [value]="formPostalCodeRequired()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-12 md:col-span-8 lg:col-span-6 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Address Format</span>
                           <input type="text" [value]="formAddressFormat()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none truncate" />
                         </div>
@@ -3487,49 +3487,49 @@
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Tax Config Required</span>
                           <input type="text" [value]="formTaxRequired()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Tax Authority</span>
                           <input type="text" [value]="formTaxAuthority()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">TRN Format</span>
                           <input type="text" [value]="formTrnFormat()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Electronic Invoicing</span>
                           <input type="text" [value]="formElectronicInvoicing()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Approval Status</span>
                           <input type="text" [value]="formApprovalStatus()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Withholding Tax</span>
                           <input type="text" [value]="formWithholdingTax()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Customs Regime</span>
                           <input type="text" [value]="formCustomsRegime()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Trade Treaty</span>
                           <input type="text" [value]="formTradeTreaty()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -3548,43 +3548,43 @@
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Geographic Region</span>
                           <input type="text" [value]="formGeographicRegion()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Admin Division Name</span>
                           <input type="text" [value]="formAdminDivision()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Currency Formatting</span>
                           <input type="text" [value]="formCurrencyFormatting()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Fiscal Year Start</span>
                           <input type="text" [value]="formFiscalYear()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Business Days</span>
                           <input type="text" value="Monday – Friday" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Weekend Definition</span>
                           <input type="text" value="Saturday – Sunday" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Public Holidays Calendar</span>
                           <input type="text" value="Standard National Calendar" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -3603,49 +3603,49 @@
                     }
                     <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Record ID</span>
                           <input type="text" [value]="currentCountryId() || 'NEW-REC'" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Created Date</span>
                           <input type="text" [value]="viewCountry()?.createdAt || '2023-01-01'" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Created By</span>
                           <input type="text" value="System Administrator" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Modified Date</span>
                           <input type="text" [value]="viewCountry()?.updatedAt || '2023-01-01'" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Modified By</span>
                           <input type="text" value="Admin (System Admin)" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Record Origin</span>
                           <input type="text" [value]="formRecordOrigin()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Audit</span>
                           <input type="text" [value]="formLastAudit()" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
                       <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
-                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
+                        <div class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Master Record Version</span>
                           <input type="text" value="v2.4.0" readonly class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
                         </div>

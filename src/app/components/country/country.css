@@ -6,7 +6,7 @@
 }
 
 /* ========================================================================= */
-/* 1. FLOATING NOTCH LABEL (Matches Login Page Username UI Specification)    */
+/* 1. FLOATING NOTCH LABEL (Matches Item & Country UI Specification)         */
 /* ========================================================================= */
 .floating-notch-label {
   position: absolute;
@@ -14,27 +14,45 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   z-index: 10;
-}
-
-/* Resting State: Inside the pill input */
-.floating-notch-label.resting {
-  top: 50%;
+  top: 0;
   transform: translateY(-50%);
   left: 20px;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0 8px;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  color: #64748b;
+}
+
+/* RTL Arabic input label fix: never allow left to override right on RTL */
+.floating-notch-label-rtl,
+[dir="rtl"] .floating-notch-label {
+  left: auto !important;
+  right: 18px !important;
+}
+
+:host-context(.dark) .floating-notch-label,
+.dark .floating-notch-label {
+  background-color: #1e293b;
   color: #94a3b8;
-  font-weight: 400;
-  background: transparent;
-  padding: 0;
 }
 
-@media (min-width: 640px) {
-  .floating-notch-label.resting {
-    font-size: 16px; /* Section 8.2 desktop standard 16px */
-  }
+.group:focus-within .floating-notch-label {
+  color: #00a6f4;
 }
 
-/* Floating State: Jump onto top border notch with white background */
+:host-context(.dark) .group:focus-within .floating-notch-label,
+.dark .group:focus-within .floating-notch-label {
+  color: #38bdf8;
+}
+
+.floating-notch-label.is-error {
+  color: #DC2626 !important; /* Section 4.2 exact error color */
+}
+
+/* Legacy class compatibility */
+.floating-notch-label.resting,
 .floating-notch-label.floating-top {
   top: 0;
   transform: translateY(-50%);
@@ -45,28 +63,39 @@
   background-color: #ffffff;
   border-radius: 9999px;
   color: #64748b;
-  transition: color 0.15s ease-in-out;
 }
 
-/* Dark mode floating label background */
-:host-context(.dark) .floating-notch-label.floating-top,
-.dark .floating-notch-label.floating-top {
-  background-color: #1e293b;
-  color: #94a3b8;
+/* Mobile responsive adjustments for notch label */
+@media (max-width: 640px) {
+  .floating-notch-label {
+    left: 14px;
+    right: auto;
+    font-size: 0.7rem;
+    padding: 0 5px;
+  }
+
+  .floating-notch-label-rtl,
+  [dir="rtl"] .floating-notch-label,
+  .floating-notch-label[dir="rtl"] {
+    left: auto !important;
+    right: 14px !important;
+  }
 }
 
-/* When parent group/input is focused */
-.group:focus-within .floating-notch-label.floating-top {
-  color: #00a6f4;
+/* SOFTEN INPUT VALUE BLACK COLOR (Exact Item match) */
+input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(.text-emerald-600):not(.text-emerald-400),
+select,
+textarea {
+  color: rgba(15, 23, 42, 0.72) !important;
 }
 
-:host-context(.dark) .group:focus-within .floating-notch-label.floating-top,
-.dark .group:focus-within .floating-notch-label.floating-top {
-  color: #38bdf8;
-}
-
-.floating-notch-label.is-error {
-  color: #DC2626 !important; /* Section 4.2 exact error color */
+:host-context(.dark) input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(.text-emerald-600):not(.text-emerald-400),
+:host-context(.dark) select,
+:host-context(.dark) textarea,
+.dark input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(.text-emerald-600):not(.text-emerald-400),
+.dark select,
+.dark textarea {
+  color: rgba(241, 245, 249, 0.82) !important;
 }
 
 /* ========================================================================= */
