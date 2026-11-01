@@ -320,7 +320,7 @@
 
             <!-- Center Zone: Centered Search Input with voice mic -->
             <div class="flex-1 max-w-xs sm:max-w-md mx-2 sm:mx-4 relative flex items-center">
-              <input aria-label="Search" #countrySearchInput id="countrySearchInput" type="text" [ngModel]="searchQuery()"
+              <input aria-label="text input" #countrySearchInput id="countrySearchInput" type="text" [ngModel]="searchQuery()"
                 (ngModelChange)="searchQuery.set($event)" placeholder="Search" 
                 class="w-full h-8 sm:h-9 pl-9 pr-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
               <svg xmlns="http://www.w3.org/2000/svg"
@@ -550,7 +550,7 @@
 
                   <!-- Rows scroll here; horizontal scrollbar displays across scrollable columns only -->
                   <div
-                    role="region" aria-label="Country records list" class="country-table-scroll overflow-x-hidden overflow-y-auto md:flex-1 md:min-h-0 outline-none focus:outline-none" (wheel)="onTableWheel($event)"
+                    class="country-table-scroll overflow-x-hidden overflow-y-auto md:flex-1 md:min-h-0 outline-none focus:outline-none" (wheel)="onTableWheel($event)"
                     [class.no-select-col]="!isSelectColumnVisible()"
                     [class.no-status-col]="hiddenColumns().has('status')" (scroll)="onTableScroll($event)">
                     <table class="country-table w-full text-start text-xs min-w-[2130px]"
@@ -562,7 +562,7 @@
                           <th
                             class="col-select sticky-col sticky-left-0 w-12 py-2.5 px-3 text-center bg-[#f8fafc] dark:bg-slate-800">
                             <label class="custom-checkbox-wrap">
-                              <input aria-label="checkbox input" type="checkbox" class="sr-only custom-checkbox-input"
+                              <input aria-label="toggle checkbox" type="checkbox" class="sr-only custom-checkbox-input"
                                 [checked]="isPageAllSelected()" [indeterminate]="isPagePartlySelected()"
                                 (change)="togglePageSelection()" title="Select" />
                               <span class="custom-checkbox-box">
@@ -656,7 +656,7 @@
                             <div class="rounded-md p-0.5 inline-flex items-center justify-center transition-all"
                               [class.cell-focus-box]="isCellFocused(rIdx, 'select')">
                               <label class="custom-checkbox-wrap" (click)="$event.stopPropagation()">
-                                <input aria-label="checkbox input" type="checkbox" class="sr-only custom-checkbox-input"
+                                <input aria-label="toggle checkbox" type="checkbox" class="sr-only custom-checkbox-input"
                                   [checked]="selectedIds().has(c.id)" (change)="toggleRowSelection(c.id)" />
                                 <span class="custom-checkbox-box">
                                   <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
@@ -677,7 +677,8 @@
                             (dblclick)="onCellDblClick(c, rIdx, 'name', $event)">
                             @if (isCellEditing(c.id, 'name')) {
                             <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                              <input type="text" aria-label="Edit cell value" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
+                              <input aria-label="text input" type="text" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
                                 (keydown.enter)="saveCellEdit(c, 'name', $event)"
                                 (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'name', $event)"
                                 class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-36 shadow-xs"
@@ -708,7 +709,7 @@
                             (dblclick)="onCellDblClick(c, rIdx, 'code', $event)">
                             @if (isCellEditing(c.id, 'code')) {
                             <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                              <input type="text" aria-label="Edit code" maxlength="3" [ngModel]="editingCellValue()"
+                              <input aria-label="text input" type="text" maxlength="3" [ngModel]="editingCellValue()"
                                 (ngModelChange)="editingCellValue.set($event.toUpperCase())"
                                 (keydown.enter)="saveCellEdit(c, 'code', $event)"
                                 (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'code', $event)"
@@ -739,7 +740,8 @@
                             (dblclick)="onCellDblClick(c, rIdx, 'isd', $event)">
                             @if (isCellEditing(c.id, 'isd')) {
                             <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                              <input type="text" aria-label="Edit cell value" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
+                              <input aria-label="text input" type="text" [ngModel]="editingCellValue()"
+                                (ngModelChange)="editingCellValue.set($event)"
                                 (keydown.enter)="saveCellEdit(c, 'isd', $event)"
                                 (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'isd', $event)"
                                 class="px-2 py-1 text-xs font-mono border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-20 shadow-xs"
@@ -806,7 +808,7 @@
                             (dblclick)="onCellDblClick(c, rIdx, 'states', $event)">
                             @if (isCellEditing(c.id, 'states')) {
                             <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                              <input aria-label="number input" type="number" min="0" [ngModel]="editingCellValue()"
+                              <input aria-label="input field" type="number" min="0" [ngModel]="editingCellValue()"
                                 (ngModelChange)="editingCellValue.set($event)"
                                 (keydown.enter)="saveCellEdit(c, 'states', $event)"
                                 (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'states', $event)"
@@ -837,7 +839,7 @@
                             (dblclick)="onCellDblClick(c, rIdx, 'cities', $event)">
                             @if (isCellEditing(c.id, 'cities')) {
                             <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                              <input aria-label="number input" type="number" min="0" [ngModel]="editingCellValue()"
+                              <input aria-label="input field" type="number" min="0" [ngModel]="editingCellValue()"
                                 (ngModelChange)="editingCellValue.set($event)"
                                 (keydown.enter)="saveCellEdit(c, 'cities', $event)"
                                 (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'cities', $event)"
@@ -868,7 +870,7 @@
                             (dblclick)="onCellDblClick(c, rIdx, 'areas', $event)">
                             @if (isCellEditing(c.id, 'areas')) {
                             <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                              <input aria-label="number input" type="number" min="0" [ngModel]="editingCellValue()"
+                              <input aria-label="input field" type="number" min="0" [ngModel]="editingCellValue()"
                                 (ngModelChange)="editingCellValue.set($event)"
                                 (keydown.enter)="saveCellEdit(c, 'areas', $event)"
                                 (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(c, 'areas', $event)"
@@ -924,7 +926,7 @@
                               [class.cell-focus-box]="isCellFocused(rIdx, 'isDefault')">
                               <label class="form-switch m-0 cursor-pointer shrink-0" (click)="$event.stopPropagation()"
                                 [title]="c.isDefault ? 'Default' : 'Set'">
-                                <input type="checkbox" class="sr-only" [attr.aria-label]="'Default country ' + c.name" [checked]="c.isDefault"
+                                <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="c.isDefault"
                                   (change)="toggleCountryDefault(c, $event)" />
                                 <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                               </label>
@@ -1175,7 +1177,7 @@
                           <circle cx="11" cy="11" r="8" />
                           <path d="m21 21-4.35-4.35" />
                         </svg>
-                        <input aria-label="Search..." type="text" [ngModel]="columnMenuSearch()" (ngModelChange)="columnMenuSearch.set($event)"
+                        <input aria-label="text input" type="text" [ngModel]="columnMenuSearch()" (ngModelChange)="columnMenuSearch.set($event)"
                           placeholder="Search..." (click)="$event.stopPropagation()"
                           class="w-full pl-8 pr-2.5 py-1.5 text-xs rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#00a6f4] focus:ring-1 focus:ring-[#00a6f4]/20" />
                       </div>
@@ -1186,7 +1188,7 @@
                       <label
                         class="flex items-center gap-2 py-1 cursor-pointer select-none font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700/60 pb-1.5 mb-1">
                         <span class="custom-checkbox-wrap">
-                          <input aria-label="checkbox input" type="checkbox" class="sr-only custom-checkbox-input"
+                          <input aria-label="toggle checkbox" type="checkbox" class="sr-only custom-checkbox-input"
                             [checked]="isColumnAllSelected(colKey)" (change)="toggleColumnSelectAll(colKey)" />
                           <span class="custom-checkbox-box">
                             <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
@@ -1201,7 +1203,7 @@
                       <label
                         class="flex items-center gap-2 py-0.5 cursor-pointer select-none text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
                         <span class="custom-checkbox-wrap">
-                          <input aria-label="checkbox input" type="checkbox" class="sr-only custom-checkbox-input"
+                          <input aria-label="toggle checkbox" type="checkbox" class="sr-only custom-checkbox-input"
                             [checked]="isColumnValueSelected(colKey, val)" (change)="toggleColumnValue(colKey, val)" />
                           <span class="custom-checkbox-box">
                             <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
@@ -1298,7 +1300,7 @@
                           } @else {
                           <div class="flex flex-col gap-1.5 pt-1 border-t border-sky-100 dark:border-slate-700">
                             <div class="flex items-center gap-1.5">
-                              <input aria-label="10 - 999" type="number" min="10" max="999" [value]="customPageSizeInput()"
+                              <input aria-label="input field" type="number" min="10" max="999" [value]="customPageSizeInput()"
                                 (input)="onCustomPageSizeChange($any($event.target).value)"
                                 (keydown.enter)="isCustomPageSizeValid() && applyCustomPageSize()"
                                 placeholder="10 - 999" 
@@ -1361,7 +1363,7 @@
                         <div (click)="togglePageDropdown($event)"
                           class="h-8 w-16 px-2 rounded-full border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-slate-800 flex items-center justify-center cursor-pointer select-none transition hover:border-[#0070ba] shadow-xs"
                           title="Page">
-                          <input aria-label="number input" type="number" min="1" [max]="totalPages()" [value]="pageInputValue()"
+                          <input aria-label="input field" type="number" min="1" [max]="totalPages()" [value]="pageInputValue()"
                             (input)="onPageInputKey($any($event.target).value)"
                             (keydown.enter)="commitPageInput(); isPageDropdownOpen.set(false)"
                             (blur)="commitPageInput()" (click)="togglePageDropdown($event)"
@@ -1436,7 +1438,7 @@
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.3-4.3" />
                   </svg>
-                  <input aria-label="Search" type="text" [ngModel]="visibilitySearch()" (ngModelChange)="visibilitySearch.set($event)"
+                  <input aria-label="text input" type="text" [ngModel]="visibilitySearch()" (ngModelChange)="visibilitySearch.set($event)"
                     placeholder="Search"
                     class="w-full pl-8 pr-8 py-1.5 rounded-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4]" />
                   <svg class="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer"
@@ -1519,7 +1521,7 @@
 
               <div class="p-3 pt-8 border-b border-slate-100 dark:border-slate-700 shrink-0">
                 <div class="relative">
-                  <input aria-label="Search" type="text" [ngModel]="filterSearch()" (ngModelChange)="filterSearch.set($event)"
+                  <input aria-label="text input" type="text" [ngModel]="filterSearch()" (ngModelChange)="filterSearch.set($event)"
                     placeholder="Search"
                     class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
                   <svg xmlns="http://www.w3.org/2000/svg"
@@ -1537,7 +1539,7 @@
                   <label
                     class="flex items-center gap-2.5 px-1 py-1.5 border-b border-slate-100 dark:border-slate-700 cursor-pointer">
                     <span class="custom-checkbox-wrap">
-                      <input aria-label="checkbox input" type="checkbox" class="sr-only custom-checkbox-input"
+                      <input aria-label="toggle checkbox" type="checkbox" class="sr-only custom-checkbox-input"
                         [checked]="filterFieldState(f.key) === 'all'"
                         [indeterminate]="filterFieldState(f.key) === 'some'" (change)="toggleFilterField(f.key)" />
                       <span class="custom-checkbox-box">
@@ -1559,7 +1561,7 @@
                       class="flex items-center justify-between gap-2.5 py-1 px-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-750 cursor-pointer transition-colors">
                       <div class="flex items-center gap-2.5 min-w-0">
                         <span class="custom-checkbox-wrap">
-                          <input aria-label="checkbox input" type="checkbox" class="sr-only custom-checkbox-input"
+                          <input aria-label="toggle checkbox" type="checkbox" class="sr-only custom-checkbox-input"
                             [checked]="isFilterValueChecked(f.key, v)" (change)="toggleFilterValue(f.key, v)" />
                           <span class="custom-checkbox-box">
                             <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
@@ -1610,7 +1612,7 @@
 
               <div class="p-3 pt-8 border-b border-slate-100 dark:border-slate-700 shrink-0">
                 <div class="relative">
-                  <input aria-label="Search" type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
+                  <input aria-label="text input" type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
                     placeholder="Search"
                     class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
                   <svg xmlns="http://www.w3.org/2000/svg"
@@ -1625,7 +1627,7 @@
               <label
                 class="form-switch justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 shrink-0">
                 <span class="form-switch-label">Select All</span>
-                <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
+                <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
                   (change)="setAllExportFields($any($event.target).checked)" />
                 <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
               </label>
@@ -1636,7 +1638,7 @@
                   <label
                     class="form-switch justify-between px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60">
                     <span class="form-switch-label font-medium!">{{ f.label }}</span>
-                    <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
+                    <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
                       (change)="toggleExportField(f.key)" />
                     <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                   </label>
@@ -1806,7 +1808,7 @@
                 stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input aria-label="Find field" #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
+              <input aria-label="text input" #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
                 (ngModelChange)="fieldSearchQuery.set($event); isFieldSearchOpen.set(true)"
                 (focus)="isFieldSearchOpen.set(true)" placeholder="Find field"
                 class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
@@ -1951,7 +1953,7 @@
               class="relative z-20 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-3 pb-2 sm:px-3 sm:pt-3.5 sm:pb-2.5 flex-1 sm:flex-initial min-h-0 sm:shrink-0 flex flex-col overflow-hidden sm:overflow-visible transition-all">
 
               <!-- Hidden flag input for upload -->
-              <input aria-label="file input" #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)" class="hidden" />
+              <input aria-label="input field" #flagFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)" class="hidden" />
 
               <div
                 class="general-info-fields-scroll flex-1 sm:flex-initial min-h-0 overflow-y-auto sm:overflow-visible custom-scrollbar overscroll-contain touch-pan-y pr-1 my-0.5 transition-all">
@@ -1962,8 +1964,10 @@
                   <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative group">
                     <div id="field-nameEn"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                      <span class="floating-notch-label">Country Name (EN) <span class="text-slate-400 dark:text-slate-500">*</span></span>
-                      <input aria-label="Country Name (EN)" type="text" [ngModel]="formName()" (ngModelChange)="onCountryNameInput($event)"
+                      <span class="floating-notch-label">
+                        Country Name (EN) <span class="text-slate-400 dark:text-slate-500">*</span>
+                      </span>
+                      <input aria-label="text input" type="text" [ngModel]="formName()" (ngModelChange)="onCountryNameInput($event)"
                         name="countryNameEn" required placeholder="e.g. United Arab Emirates" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
 
@@ -2062,7 +2066,7 @@
                       <span class="floating-notch-label right-5 left-auto">
                         اسم الدولة (بالعربية)
                       </span>
-                      <input aria-label="مثال: الإمارات العربية المتحدة" type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
+                      <input aria-label="text input" type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
                         name="countryNameAr" placeholder="مثال: الإمارات العربية المتحدة" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
                     </div>
@@ -2074,7 +2078,7 @@
                     <div id="field-shortName"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Short Name</span>
-                      <input aria-label="Short Name" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="shortName"
+                      <input aria-label="shortName" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="shortName"
                         placeholder="e.g. UAE"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2084,8 +2088,10 @@
                   <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group">
                     <div id="field-iso2"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                      <span class="floating-notch-label">ISO Code 2 <span class="text-slate-400 dark:text-slate-500">*</span></span>
-                      <input aria-label="ISO Code 2" type="text" maxlength="2" [ngModel]="formIsoCode2()"
+                      <span class="floating-notch-label">
+                        ISO Code 2 <span class="text-slate-400 dark:text-slate-500">*</span>
+                      </span>
+                      <input aria-label="text input" type="text" maxlength="2" [ngModel]="formIsoCode2()"
                         (ngModelChange)="onIsoCode2Change($event)" name="isoCode2" required placeholder="e.g. AE"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                       <button type="button" (click)="autoGenerateIso()"
@@ -2099,8 +2105,10 @@
                   <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group">
                     <div id="field-iso3"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                      <span class="floating-notch-label">ISO Code 3 <span class="text-slate-400 dark:text-slate-500">*</span></span>
-                      <input aria-label="ISO Code 3" type="text" maxlength="3" [ngModel]="formIsoCode3()"
+                      <span class="floating-notch-label">
+                        ISO Code 3 <span class="text-slate-400 dark:text-slate-500">*</span>
+                      </span>
+                      <input aria-label="text input" type="text" maxlength="3" [ngModel]="formIsoCode3()"
                         (ngModelChange)="formIsoCode3.set($event)" name="isoCode3" required placeholder="e.g. ARE"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2111,7 +2119,7 @@
                     <div id="field-isoNumeric"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">ISO Numeric Code</span>
-                      <input aria-label="ISO Numeric Code" type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)"
+                      <input aria-label="text input" type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)"
                         name="isoNumeric" placeholder="e.g. 784"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2123,7 +2131,7 @@
                     <div id="field-isd"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">International Dialing Code</span>
-                      <input aria-label="International Dialing Code" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="isd"
+                      <input aria-label="isd" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="isd"
                         placeholder="e.g. +971"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2134,7 +2142,7 @@
                     <div id="field-currency"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Default Currency</span>
-                      <input aria-label="Default Currency" type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
+                      <input aria-label="text input" type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
                         name="currency" placeholder="e.g. AED"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2145,7 +2153,7 @@
                     <div id="field-nationality"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Nationality</span>
-                      <input aria-label="Nationality" type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)"
+                      <input aria-label="text input" type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)"
                         name="nationality" placeholder="e.g. Emirati"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2158,11 +2166,11 @@
                       <span class="floating-notch-label">Default Country</span>
                       <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Set as Default</span>
                       <label class="form-switch m-0 flex items-center cursor-pointer">
-                        <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
+                        <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
                           (change)="toggleDefault($event)" />
                         <span class="form-switch-track scale-90 origin-right"><span
                             class="form-switch-thumb"></span></span>
-                      </span>
+                      </label>
                     </div>
                   </div>
 
@@ -2171,21 +2179,8 @@
                   <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative group">
                     <div id="field-continent"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
-                      <span class="floating-notch-label">Continent</label>
-                      <input aria-label="Default Country
-                      Set as Default
-                      
-                        
-                        
-                      
-                    
-                  
-
-                  
-                  
-                  
-                    
-                      Continent" type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)"
+                      <span class="floating-notch-label">Continent</span>
+                      <input aria-label="text input" type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)"
                         name="continent" placeholder="e.g. Asia"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2196,7 +2191,7 @@
                     <div id="field-capital"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Capital City</span>
-                      <input aria-label="Capital City" type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)"
+                      <input aria-label="text input" type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)"
                         name="capital" placeholder="e.g. Abu Dhabi"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2207,7 +2202,7 @@
                     <div id="field-subregion"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Subregion</span>
-                      <input aria-label="Subregion" type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)"
+                      <input aria-label="text input" type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)"
                         name="subregion" placeholder="e.g. Middle East"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -2319,78 +2314,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Short Name (Code)</span>
-                      <input aria-label="Flag
-                      
-                        @if (formFlag()) {
-                        
-                        Flag
-                          Attached
-                        } @else {
-                        No flag uploaded
-                        }
-                      
-                      
-                        
-                          
-                        
-                      
-                    
-                  
-
-                
-              
-            
-
-            
-            
-            
-            
-
-              
-              
-                
-                  
-                    
-                      
-                    
-                  
-
-                  
-                    @for (tab of sectionTabs; track tab.id) {
-                    
-                      {{ tab.shortName }}
-                    
-                    }
-
-                    
-                      All Sections
-                    
-                  
-
-                  
-                    
-                      
-                    
-                  
-                
-              
-
-              
-              
-                
-
-                  
-                  @if (activeTab() === 'identity' || activeTab() === 'all') {
-                  
-                    @if (activeTab() === 'all') {
-                    
-                      Identity & Codes
-                    
-                    }
-                    
-                      
-                        
-                          Short Name (Code)" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)"
                             name="tab_shortName" placeholder="e.g. UAE"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2399,7 +2323,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Alpha-2 Code</span>
-                      <input aria-label="ISO Alpha-2 Code" type="text" [ngModel]="formIsoCode2()" (ngModelChange)="onIsoCode2Change($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formIsoCode2()" (ngModelChange)="onIsoCode2Change($event)"
                             name="tab_iso2" placeholder="e.g. AE"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2408,7 +2332,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Alpha-3 Code</span>
-                      <input aria-label="ISO Alpha-3 Code" type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)"
                             name="tab_iso3" placeholder="e.g. ARE"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2417,7 +2341,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Numeric Code</span>
-                      <input aria-label="ISO Numeric Code" type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)"
                             name="tab_numeric" placeholder="e.g. 784"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2426,7 +2350,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Dialing Code (ISD)</span>
-                      <input aria-label="Dialing Code (ISD)" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="tab_isd"
+                          <input aria-label="tab_isd" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="tab_isd"
                             placeholder="e.g. +971"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2435,7 +2359,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Currency</span>
-                      <input aria-label="Default Currency" type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
                             name="tab_currency" placeholder="e.g. AED"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2444,7 +2368,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Nationality</span>
-                      <input aria-label="Nationality" type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)"
                             name="tab_nationality" placeholder="e.g. Emirati"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2453,7 +2377,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Continent</span>
-                      <input aria-label="Continent" type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)"
                             name="tab_continent" placeholder="e.g. Asia"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2462,7 +2386,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Capital City</span>
-                      <input aria-label="Capital City" type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)"
                             name="tab_capital" placeholder="e.g. Abu Dhabi"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2471,7 +2395,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Subregion</span>
-                      <input aria-label="Subregion" type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)"
+                          <input aria-label="text input" type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)"
                             name="tab_subregion" placeholder="e.g. Middle East"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -2494,7 +2418,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Official Languages</span>
-                      <input aria-label="Official Languages" type="text" [value]="formOfficialLanguages()" readonly
+                          <input aria-label="text input" type="text" [value]="formOfficialLanguages()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2502,7 +2426,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Language</span>
-                      <input aria-label="Default Language" type="text" [value]="formDefaultLanguage()" readonly
+                          <input aria-label="text input" type="text" [value]="formDefaultLanguage()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2510,7 +2434,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Time Zone</span>
-                      <input aria-label="Default Time Zone" type="text" [value]="formDefaultTimeZone()" readonly
+                          <input aria-label="text input" type="text" [value]="formDefaultTimeZone()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2518,7 +2442,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Date Format</span>
-                      <input aria-label="Default Date Format" type="text" [value]="formDefaultDateFormat()" readonly
+                          <input aria-label="text input" type="text" [value]="formDefaultDateFormat()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2526,7 +2450,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Number Format</span>
-                      <input aria-label="Default Number Format" type="text" [value]="formDefaultNumberFormat()" readonly
+                          <input aria-label="text input" type="text" [value]="formDefaultNumberFormat()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2534,7 +2458,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Postal Code Required</span>
-                      <input aria-label="Postal Code Required" type="text" [value]="formPostalCodeRequired()" readonly
+                          <input aria-label="text input" type="text" [value]="formPostalCodeRequired()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2542,7 +2466,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Address Format</span>
-                      <input aria-label="Address Format" type="text" [value]="formAddressFormat()" readonly
+                          <input aria-label="text input" type="text" [value]="formAddressFormat()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none truncate" />
                         </div>
                       </div>
@@ -2564,7 +2488,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Tax Config Required</span>
-                      <input aria-label="Tax Config Required" type="text" [value]="formTaxRequired()" readonly
+                          <input aria-label="text input" type="text" [value]="formTaxRequired()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2572,7 +2496,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Tax Authority</span>
-                      <input aria-label="Tax Authority" type="text" [value]="formTaxAuthority()" readonly
+                          <input aria-label="text input" type="text" [value]="formTaxAuthority()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2580,7 +2504,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">TRN Format</span>
-                      <input aria-label="TRN Format" type="text" [value]="formTrnFormat()" readonly
+                          <input aria-label="text input" type="text" [value]="formTrnFormat()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2588,7 +2512,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Electronic Invoicing</span>
-                      <input aria-label="Electronic Invoicing" type="text" [value]="formElectronicInvoicing()" readonly
+                          <input aria-label="text input" type="text" [value]="formElectronicInvoicing()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2596,7 +2520,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Approval Status</span>
-                      <input aria-label="Approval Status" type="text" [value]="formApprovalStatus()" readonly
+                          <input aria-label="text input" type="text" [value]="formApprovalStatus()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2604,7 +2528,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Withholding Tax</span>
-                      <input aria-label="Withholding Tax" type="text" [value]="formWithholdingTax()" readonly
+                          <input aria-label="text input" type="text" [value]="formWithholdingTax()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2612,7 +2536,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Customs Regime</span>
-                      <input aria-label="Customs Regime" type="text" [value]="formCustomsRegime()" readonly
+                          <input aria-label="text input" type="text" [value]="formCustomsRegime()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2620,7 +2544,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Trade Treaty</span>
-                      <input aria-label="Trade Treaty" type="text" [value]="formTradeTreaty()" readonly
+                          <input aria-label="text input" type="text" [value]="formTradeTreaty()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2642,7 +2566,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Geographic Region</span>
-                      <input aria-label="Geographic Region" type="text" [value]="formGeographicRegion()" readonly
+                          <input aria-label="text input" type="text" [value]="formGeographicRegion()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2650,7 +2574,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Admin Division Name</span>
-                      <input aria-label="Admin Division Name" type="text" [value]="formAdminDivision()" readonly
+                          <input aria-label="text input" type="text" [value]="formAdminDivision()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2658,7 +2582,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Currency Formatting</span>
-                      <input aria-label="Currency Formatting" type="text" [value]="formCurrencyFormatting()" readonly
+                          <input aria-label="text input" type="text" [value]="formCurrencyFormatting()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2666,7 +2590,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Fiscal Year Start</span>
-                      <input aria-label="Fiscal Year Start" type="text" [value]="formFiscalYear()" readonly
+                          <input aria-label="text input" type="text" [value]="formFiscalYear()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2674,7 +2598,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Business Days</span>
-                      <input aria-label="Business Days" type="text" value="Monday – Friday" readonly
+                          <input aria-label="text input" type="text" value="Monday – Friday" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2682,7 +2606,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Weekend Definition</span>
-                      <input aria-label="Weekend Definition" type="text" value="Saturday – Sunday" readonly
+                          <input aria-label="text input" type="text" value="Saturday – Sunday" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2690,7 +2614,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Public Holidays Calendar</span>
-                      <input aria-label="Public Holidays Calendar" type="text" value="Standard National Calendar" readonly
+                          <input aria-label="text input" type="text" value="Standard National Calendar" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2712,7 +2636,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Record ID</span>
-                      <input aria-label="Record ID" type="text" [value]="currentCountryId() || 'NEW-REC'" readonly
+                          <input aria-label="text input" type="text" [value]="currentCountryId() || 'NEW-REC'" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
                         </div>
                       </div>
@@ -2720,7 +2644,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Created Date</span>
-                      <input aria-label="Created Date" type="text" [value]="viewCountry()?.createdAt || '2023-01-01'" readonly
+                          <input aria-label="text input" type="text" [value]="viewCountry()?.createdAt || '2023-01-01'" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2728,7 +2652,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Created By</span>
-                      <input aria-label="Created By" type="text" value="System Administrator" readonly
+                          <input aria-label="text input" type="text" value="System Administrator" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2736,7 +2660,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Modified Date</span>
-                      <input aria-label="Last Modified Date" type="text" [value]="viewCountry()?.updatedAt || '2023-01-01'" readonly
+                          <input aria-label="text input" type="text" [value]="viewCountry()?.updatedAt || '2023-01-01'" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2744,7 +2668,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Modified By</span>
-                      <input aria-label="Last Modified By" type="text" value="Admin (System Admin)" readonly
+                          <input aria-label="text input" type="text" value="Admin (System Admin)" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2752,7 +2676,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Record Origin</span>
-                      <input aria-label="Record Origin" type="text" [value]="formRecordOrigin()" readonly
+                          <input aria-label="text input" type="text" [value]="formRecordOrigin()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2760,7 +2684,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Last Audit</span>
-                      <input aria-label="Last Audit" type="text" [value]="formLastAudit()" readonly
+                          <input aria-label="text input" type="text" [value]="formLastAudit()" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2768,7 +2692,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Master Record Version</span>
-                      <input aria-label="Master Record Version" type="text" value="v2.4.0" readonly
+                          <input aria-label="text input" type="text" value="v2.4.0" readonly
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
                         </div>
                       </div>
@@ -3081,7 +3005,7 @@
           <!-- Left: Stay on Page Switch -->
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <label class="form-switch m-0 flex items-center gap-1.5 sm:gap-2 cursor-pointer">
-              <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="keepOnPage()"
+              <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="keepOnPage()"
                 (change)="keepOnPage.set($any($event.target).checked)" />
               <span class="form-switch-track scale-90 sm:scale-100 origin-left"><span
                   class="form-switch-thumb"></span></span>
@@ -3203,7 +3127,7 @@
         } @else {
         <div class="share-field">
           <span class="floating-notch-label floating-top select-none">To <span class="text-rose-500">*</span></span>
-          <input aria-label="name@company.com, …" type="text" [ngModel]="emailTo()" (ngModelChange)="emailTo.set($event)"
+          <input aria-label="text input" type="text" [ngModel]="emailTo()" (ngModelChange)="emailTo.set($event)"
             placeholder="name@company.com, …" class="share-input text-slate-500 dark:text-slate-400" />
         </div>
         <div class="grid grid-cols-2 gap-4">
@@ -3227,7 +3151,7 @@
 
         <div class="share-field rounded-2xl!">
           <span class="floating-notch-label floating-top select-none">Body</span>
-          <textarea aria-label="Text input" rows="5" [ngModel]="shareBody()" (ngModelChange)="shareBody.set($event)"
+          <textarea id="shareBodyTextarea" aria-label="Share email body" rows="5" [ngModel]="shareBody()" (ngModelChange)="shareBody.set($event)"
             class="share-input text-slate-500 dark:text-slate-400 resize-none"></textarea>
         </div>
 
@@ -3236,7 +3160,7 @@
           <div class="flex flex-wrap items-center gap-5">
             @for (a of shareAttachmentOptions; track a.id) {
             <label class="form-switch">
-              <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="shareAttachments().has(a.id)"
+              <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="shareAttachments().has(a.id)"
                 (change)="toggleShareAttachment(a.id)" />
               <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
               <span class="form-switch-label">{{ a.label }}</span>
@@ -3341,7 +3265,7 @@
           <p class="text-base text-[#00a6f4] mt-3">Note: Only .CSV format is accepted.</p>
           }
 
-          <input aria-label="file input" #importFileInput type="file" accept=".csv,text/csv" class="hidden"
+          <input aria-label="input field" #importFileInput type="file" accept=".csv,text/csv" class="hidden"
             (change)="onImportFileSelected($event)" />
         </div>
         }
@@ -3581,7 +3505,7 @@
                 <!-- Country with circular selection -->
                 <td class="py-3.5 px-5 whitespace-nowrap">
                   <label class="flex items-center gap-3 cursor-pointer select-none">
-                    <input aria-label="checkbox input" type="checkbox" [checked]="selectedBinIds().has(c.id)" (change)="toggleBinSelection(c.id)"
+                    <input aria-label="toggle checkbox" type="checkbox" [checked]="selectedBinIds().has(c.id)" (change)="toggleBinSelection(c.id)"
                       class="sr-only" />
                     <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all"
                       [class.border-[#00a6f4]]="selectedBinIds().has(c.id)"
@@ -3760,7 +3684,7 @@
                   <path d="M4 6h16M7 12h10m-8 6h6" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </div>
-              <select aria-label="Selection menu" [ngModel]="historyActivityFilter()" (ngModelChange)="historyActivityFilter.set($event)"
+              <select id="historyActivitySelect" aria-label="Filter history by activity" [ngModel]="historyActivityFilter()" (ngModelChange)="historyActivityFilter.set($event)"
                 class="w-full h-10 pl-10 pr-9 text-xs font-semibold rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs appearance-none cursor-pointer transition">
                 <option value="All Activities">All Activities</option>
                 <option value="Created">Created</option>
@@ -3823,13 +3747,13 @@
             <!-- From Date & To Date Inputs -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
               <div class="relative">
-                <label for="historyStartDateInput" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1.5">From Date</label>
-                <input id="historyStartDateInput" aria-label="From Date" type="date" [ngModel]="historyStartDate()" (ngModelChange)="historyStartDate.set($event)"
+                <label for="histFromDate" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1.5">From Date</label>
+                <input aria-label="date input" id="histFromDate" type="date" [ngModel]="historyStartDate()" (ngModelChange)="historyStartDate.set($event)"
                   class="w-full h-9 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
               </div>
               <div class="relative">
-                <label for="historyEndDateInput" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1.5">To Date</label>
-                <input id="historyEndDateInput" aria-label="To Date" type="date" [ngModel]="historyEndDate()" (ngModelChange)="historyEndDate.set($event)"
+                <label for="histToDate" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1.5">To Date</label>
+                <input aria-label="date input" id="histToDate" type="date" [ngModel]="historyEndDate()" (ngModelChange)="historyEndDate.set($event)"
                   class="w-full h-9 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
               </div>
             </div>
@@ -3887,7 +3811,7 @@
                           d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                       </svg>
                     </span>
-                    <select aria-label="Selection menu" [ngModel]="countryAuditSummary().country.id"
+                    <select id="historyCountrySelect" aria-label="Select country for audit history" [ngModel]="countryAuditSummary().country.id"
                       (ngModelChange)="onHistoryCountryChange($event)"
                       class="h-8.5 pl-8 pr-8 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-white hover:border-[#00a6f4] focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-xs cursor-pointer appearance-none transition-all">
                       @for (c of sortedCountries(); track c.id) {
@@ -4193,7 +4117,7 @@
       <!-- Search & Select All Bar -->
       <div class="px-5 py-3 border-b border-slate-100 dark:border-slate-700/60 bg-white dark:bg-slate-800 space-y-2.5">
         <div class="relative w-full">
-          <input aria-label="Search fields..." type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
+          <input aria-label="text input" type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
             placeholder="Search fields..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
             class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -4204,7 +4128,7 @@
         </div>
         <div class="flex items-center justify-between pt-0.5">
           <label class="form-switch flex items-center gap-2.5 cursor-pointer select-none">
-            <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
+            <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
               (change)="setAllExportFields($any($event.target).checked)" />
             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
             <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Select All</span>
@@ -4231,7 +4155,7 @@
           [class.border-[#00a6f4]/50]="exportFields().has(f.key)" [class.bg-white]="!exportFields().has(f.key)"
           [class.dark:bg-slate-800]="!exportFields().has(f.key)">
           <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate pr-3">{{ f.label }}</span>
-          <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
+          <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
             (change)="toggleExportField(f.key)" />
           <span class="form-switch-track shrink-0"><span class="form-switch-thumb"></span></span>
         </label>
@@ -4248,7 +4172,7 @@
           <div class="flex items-center gap-4 shrink-0">
             <!-- PDF Toggle -->
             <label class="form-switch flex items-center gap-2 cursor-pointer select-none">
-              <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="exportPdfToggle()"
+              <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="exportPdfToggle()"
                 (change)="exportPdfToggle.set($any($event.target).checked)" />
               <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
               <span class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
@@ -4263,7 +4187,7 @@
 
             <!-- Print Toggle -->
             <label class="form-switch flex items-center gap-2 cursor-pointer select-none">
-              <input aria-label="checkbox input" type="checkbox" class="sr-only" [checked]="exportPrintToggle()"
+              <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="exportPrintToggle()"
                 (change)="exportPrintToggle.set($any($event.target).checked)" />
               <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
               <span class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
@@ -4345,8 +4269,8 @@
       <div class="py-4 space-y-4">
         <!-- Status -->
         <div>
-          <label for="bulkStatusSelect" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Status</label>
-          <select id="bulkStatusSelect" aria-label="Status selection" [(ngModel)]="bulkUpdateStatusValue"
+          <label for="bulkStatusSel" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Status</label>
+          <select id="bulkStatusSel" [(ngModel)]="bulkUpdateStatusValue"
             class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 text-xs text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-700 focus:outline-none focus:border-[#00a6f4]">
             <option value="">(Keep unchanged)</option>
             <option value="Active">Active</option>
@@ -4358,8 +4282,8 @@
 
         <!-- Currency -->
         <div>
-          <label for="bulkCurrencySelect" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Currency</label>
-          <select id="bulkCurrencySelect" aria-label="Currency selection" [(ngModel)]="bulkUpdateCurrencyValue"
+          <label for="bulkCurrencySel" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Currency</label>
+          <select id="bulkCurrencySel" [(ngModel)]="bulkUpdateCurrencyValue"
             class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 text-xs text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-700 focus:outline-none focus:border-[#00a6f4]">
             <option value="">(Keep unchanged)</option>
             <option value="USD">USD - US Dollar</option>
@@ -4485,7 +4409,7 @@
           Raw Country Information / Unstructured Notes
         </label>
         <div class="relative flex-1 flex flex-col">
-          <textarea aria-label="Type or paste country notes (e.g., Bangladesh, code BD, currency BDT, status active)..." id="ai-textarea" rows="12" [ngModel]="aiInputText()" (ngModelChange)="aiInputText.set($event)"
+          <textarea id="ai-textarea" rows="12" [ngModel]="aiInputText()" (ngModelChange)="aiInputText.set($event)"
             placeholder="Type or paste country notes (e.g., Bangladesh, code BD, currency BDT, status active)..."
             
             class="w-full flex-1 min-h-[260px] p-4 pr-12 rounded-2xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 transition resize-none"></textarea>
@@ -4518,38 +4442,37 @@
         <span class="text-xs font-bold text-slate-700 dark:text-slate-200">Interactive Layout Fields Entry</span>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           <div>
-            <label for="quickFormCountryName" class="block text-[11px] font-semibold text-slate-500 mb-1">Country Name</label>
-            <input id="quickFormCountryName" aria-label="Country Name" type="text" [ngModel]="formName()" (ngModelChange)="onCountryNameInput($event)"
-              placeholder="e.g. Bangladesh"
+            <label for="qfName" class="block text-[11px] font-semibold text-slate-500 mb-1">Country Name</label>
+            <input aria-label="text input" type="text" [ngModel]="formName()" (ngModelChange)="onCountryNameInput($event)"
+              id="qfName" placeholder="e.g. Bangladesh"
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
-            <label for="quickFormIso2" class="block text-[11px] font-semibold text-slate-500 mb-1">ISO Code (2)</label>
-            <input id="quickFormIso2" aria-label="ISO Code 2" type="text" [ngModel]="formIsoCode2()" (ngModelChange)="formIsoCode2.set($event)"
-              placeholder="e.g. BD" maxlength="2"
+            <label for="qfIso2" class="block text-[11px] font-semibold text-slate-500 mb-1">ISO Code (2)</label>
+            <input aria-label="text input" type="text" [ngModel]="formIsoCode2()" (ngModelChange)="formIsoCode2.set($event)"
+              id="qfIso2" placeholder="e.g. BD" maxlength="2"
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold uppercase text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
-            <label for="quickFormIso3" class="block text-[11px] font-semibold text-slate-500 mb-1">ISO Code (3)</label>
-            <input id="quickFormIso3" aria-label="ISO Code 3" type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)"
-              placeholder="e.g. BGD" maxlength="3"
+            <label for="qfIso3" class="block text-[11px] font-semibold text-slate-500 mb-1">ISO Code (3)</label>
+            <input aria-label="text input" type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)"
+              id="qfIso3" placeholder="e.g. BGD" maxlength="3"
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold uppercase text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
-            <label for="quickFormIsd" class="block text-[11px] font-semibold text-slate-500 mb-1">Phone Dial Code</label>
-            <input id="quickFormIsd" aria-label="Phone Dial Code" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" placeholder="e.g. +880"
+            <label for="qfIsd" class="block text-[11px] font-semibold text-slate-500 mb-1">Phone Dial Code</label>
+            <input aria-label="e.g. +880" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" id="qfIsd" placeholder="e.g. +880"
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
-            <label for="quickFormCurrency" class="block text-[11px] font-semibold text-slate-500 mb-1">Currency</label>
-            <input id="quickFormCurrency" aria-label="Currency" type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
-              placeholder="e.g. BDT — Taka"
+            <label for="qfCurr" class="block text-[11px] font-semibold text-slate-500 mb-1">Currency</label>
+            <input aria-label="text input" type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
+              id="qfCurr" placeholder="e.g. BDT — Taka"
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
-            <label for="quickFormStatus" class="block text-[11px] font-semibold text-slate-500 mb-1">Status</label>
-            <select id="quickFormStatus" aria-label="Status" [ngModel]="formStatus()" (ngModelChange)="formStatus.set($event)"
-              class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]">
+            <label for="qfStat" class="block text-[11px] font-semibold text-slate-500 mb-1">Status</label>
+            <select id="qfStat" [ngModel]="formStatus()" (ngModelChange)="formStatus.set($event)" class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]">
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
               <option value="Draft">Draft</option>
@@ -4862,7 +4785,7 @@
         class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40 shrink-0 space-y-3">
         <!-- Search bar is round shape with permanent voice input (Points 15 & 21) -->
         <div class="relative w-full">
-          <input aria-label="Search" id="lookup-search-input" type="text" [ngModel]="lookupSearch()"
+          <input aria-label="text input" id="lookup-search-input" type="text" [ngModel]="lookupSearch()"
             (ngModelChange)="lookupSearch.set($event); lookupSelectedIndex.set(-1)" placeholder="Search"
             class="w-full h-11 pl-10 pr-16 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 transition" />
           <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none"
@@ -5057,7 +4980,7 @@
         <div class="space-y-4">
           <!-- Search Bar with Voice Input -->
           <div class="relative w-full">
-            <input aria-label="Search by country name or code..." type="text" [(ngModel)]="gallerySearch" [ngModelOptions]="{ standalone: true }"
+            <input aria-label="text input" type="text" [(ngModel)]="gallerySearch" [ngModelOptions]="{ standalone: true }"
               placeholder="Search by country name or code..." autocomplete="off" autocorrect="off" autocapitalize="none"
               spellcheck="false"
               class="w-full h-11 pl-10 pr-12 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
@@ -5129,7 +5052,7 @@
         <!-- TAB 2: Upload File -->
         @if (flagLookupTab() === 'upload') {
         <div class="py-6 flex flex-col items-center justify-center">
-          <input aria-label="file input" #flagPopupFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
+          <input aria-label="input field" #flagPopupFileInput type="file" accept="image/*" (change)="onFlagFileSelected($event)"
             class="hidden" />
           <div (click)="flagPopupFileInput.click()"
             class="w-full max-w-lg p-8 rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-[#00a6f4] bg-slate-50/60 dark:bg-slate-900/40 hover:bg-sky-50/30 flex flex-col items-center justify-center text-center gap-4 cursor-pointer transition-all duration-200 group">
@@ -5463,7 +5386,7 @@
                   <!-- Toggle Checkbox -->
                   <td class="py-3 px-4 text-center">
                     <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input aria-label="checkbox input" type="checkbox"
+                      <input aria-label="toggle checkbox" type="checkbox"
                         [checked]="tenantService.isFieldAllowedForTenant(tenantService.selectedTenantIdForConfig(), f.key)"
                         (change)="tenantService.toggleTenantFieldSetting(tenantService.selectedTenantIdForConfig(), f.key)"
                         class="w-4.5 h-4.5 rounded-md border-slate-300 text-[#00a6f4] focus:ring-[#00a6f4] cursor-pointer" />
@@ -5605,7 +5528,7 @@
                   <!-- User Permission Checkbox -->
                   <td class="py-3 px-4 text-center">
                     <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input aria-label="checkbox input" type="checkbox"
+                      <input aria-label="toggle checkbox" type="checkbox"
                         [checked]="tenantService.isFieldPermittedForUser(tenantService.selectedUserIdForConfig(), f.key)"
                         (change)="tenantService.toggleUserFieldPermission(tenantService.selectedUserIdForConfig(), f.key)"
                         class="w-4.5 h-4.5 rounded-md border-slate-300 text-[#00a6f4] focus:ring-[#00a6f4] cursor-pointer" />
@@ -5676,29 +5599,24 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Field Label -->
               <div class="space-y-1.5">
-                <label for="newFieldNameInputId" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                  Field Display Name <span class="text-rose-500">*</span>
-                </label>
-                <input id="newFieldNameInputId" aria-label="Field Display Name" type="text" [ngModel]="newFieldNameInput()" (ngModelChange)="newFieldNameInput.set($event)"
-                  placeholder="e.g. Region Code, Emergency Hotline, Capital"
+                <label for="cfDispName" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Field Display Name <span class="text-rose-500">*</span></label>
+                <input aria-label="text input" type="text" [ngModel]="newFieldNameInput()" (ngModelChange)="newFieldNameInput.set($event)"
+                  id="cfDispName" placeholder="e.g. Region Code, Emergency Hotline, Capital"
                   class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
               </div>
 
               <!-- Field Key -->
               <div class="space-y-1.5">
-                <label for="newFieldKeyInputId" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                  Field Key (Optional / Auto-slug)
-                </label>
-                <input id="newFieldKeyInputId" aria-label="Field Key" type="text" [ngModel]="newFieldKeyInput()" (ngModelChange)="newFieldKeyInput.set($event)"
-                  placeholder="e.g. regionCode, hotline"
+                <label for="cfKey" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Field Key (Optional / Auto-slug)</label>
+                <input aria-label="text input" type="text" [ngModel]="newFieldKeyInput()" (ngModelChange)="newFieldKeyInput.set($event)"
+                  id="cfKey" placeholder="e.g. regionCode, hotline"
                   class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
               </div>
 
               <!-- Field Data Type -->
               <div class="space-y-1.5">
-                <label for="newFieldTypeSelectId" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Data Type</label>
-                <select id="newFieldTypeSelectId" aria-label="Data Type" [ngModel]="newFieldTypeInput()" (ngModelChange)="newFieldTypeInput.set($event)"
-                  class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4] cursor-pointer">
+                <label for="cfType" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Data Type</label>
+                <select id="cfType" [ngModel]="newFieldTypeInput()" (ngModelChange)="newFieldTypeInput.set($event)" class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4] cursor-pointer">
                   <option value="text">Text (String)</option>
                   <option value="number">Number (Numeric)</option>
                   <option value="boolean">Boolean (Yes / No Toggle)</option>
@@ -5708,9 +5626,8 @@
 
               <!-- Category -->
               <div class="space-y-1.5">
-                <label for="newFieldCatSelectId" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Category</label>
-                <select id="newFieldCatSelectId" aria-label="Category" [ngModel]="newFieldCategoryInput()" (ngModelChange)="newFieldCategoryInput.set($event)"
-                  class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4] cursor-pointer">
+                <label for="cfCat" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Category</label>
+                <select id="cfCat" [ngModel]="newFieldCategoryInput()" (ngModelChange)="newFieldCategoryInput.set($event)" class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4] cursor-pointer">
                   <option value="custom">Custom Field</option>
                   <option value="core">Core Master Field</option>
                   <option value="codes">Identification Codes</option>
@@ -5721,7 +5638,7 @@
 
             <!-- Is Required Checkbox -->
             <label class="flex items-center gap-2 cursor-pointer select-none pt-1">
-              <input aria-label="checkbox input" type="checkbox" [checked]="newFieldRequiredInput()"
+              <input aria-label="toggle checkbox" type="checkbox" [checked]="newFieldRequiredInput()"
                 (change)="newFieldRequiredInput.set(!newFieldRequiredInput())"
                 class="w-4 h-4 rounded-md border-slate-300 text-[#00a6f4] focus:ring-[#00a6f4]" />
               <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Mark as Mandatory (Required)
@@ -5863,7 +5780,7 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
           <!-- Auto-focused search input (Requirement 11) -->
-          <input aria-label="Search" id="translation-search-input" #translationSearchInput type="text" 
+          <input aria-label="text input" id="translation-search-input" #translationSearchInput type="text" 
             [ngModel]="translationSearch()" (ngModelChange)="translationSearch.set($event)" placeholder="Search"
             class="w-full bg-transparent text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 font-normal outline-none" />
           @if (translationSearch()) {
@@ -5890,7 +5807,7 @@
       <div
         class="border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 shadow-xs flex flex-col flex-1 min-h-0">
         <div class="overflow-y-auto max-h-[420px] custom-scrollbar relative flex-1">
-          <table role="grid" aria-label="Translation table" tabindex="0" (keydown)="onTranslationTableKeyDown($event)"
+          <table (keydown)="onTranslationTableKeyDown($event)"
             class="w-full border-collapse select-none focus:outline-none">
             <thead
               class="sticky top-0 z-10 bg-[#f8fafc] dark:bg-slate-800 shadow-[0_1px_0_0_rgba(226,232,240,1)] dark:shadow-[0_1px_0_0_rgba(51,65,85,1)]">
