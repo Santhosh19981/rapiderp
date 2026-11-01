@@ -101,6 +101,72 @@ export class StateComponent implements OnInit {
   isTranslationModalOpen = signal<boolean>(false);
   isExportDrawerOpen = signal<boolean>(false);
 
+  // Action Panel Dock Page State (matching Item & Country vertical dock)
+  actionPanelPage = signal<'top' | 'bottom'>('top');
+  activeFilterTab = signal<string>('all');
+  lastUpdatedTime = signal<string>('30 mins');
+  lastDeletedTime = signal<string>('40 mins');
+
+  scrollActionPanel(direction: 'up' | 'down'): void {
+    this.actionPanelPage.set(direction === 'down' ? 'bottom' : 'top');
+  }
+
+  setFilterTab(tab: string): void {
+    this.activeFilterTab.set(tab);
+    if (tab === 'all') {
+      this.statusFilter.set('all');
+    } else if (tab === 'active') {
+      this.statusFilter.set('Active');
+    } else if (tab === 'inactive') {
+      this.statusFilter.set('Inactive');
+    } else if (tab === 'draft') {
+      this.statusFilter.set('Draft');
+    }
+  }
+
+  openEditForActiveState(): void {
+    const id = this.editingStateId();
+    if (id) {
+      const s = this.stateService.getStateById(id);
+      if (s) this.openEdit(s);
+    }
+  }
+
+  openViewForActiveState(): void {
+    const id = this.editingStateId();
+    if (id) {
+      const s = this.stateService.getStateById(id);
+      if (s) this.openView(s);
+    }
+  }
+
+  toggleStateStatus(s: StateMaster, event: MouseEvent): void {
+    event.stopPropagation();
+    const newStatus = s.status === 'Active' ? 'Inactive' : 'Active';
+    this.stateService.updateState(s.id, { status: newStatus });
+    this.showToast(`State "${s.name}" is now ${newStatus}`, 'info');
+  }
+
+  openVideoTutorial(): void {
+    this.showToast('Video Tutorial', 'info');
+  }
+
+  openHistoryModal(type?: string): void {
+    this.showToast('State History', 'info');
+  }
+
+  openRecycleBinModal(): void {
+    this.showToast('Recycle Bin', 'info');
+  }
+
+  openGuidanceTour(): void {
+    this.showToast('Guidance Tour started', 'info');
+  }
+
+  openShareModalUnified(channel: string): void {
+    this.showToast(`Sharing via ${channel}`, 'info');
+  }
+
   // Toast Notification
   toastMessage = signal<string | null>(null);
   toastType = signal<'success' | 'error' | 'info'>('success');

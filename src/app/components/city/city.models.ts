@@ -50,3 +50,4 @@ export interface MinimizedCityForm {
   title: string;
   formState: Partial<CityMaster>;
 }
+

@@ -53,3 +53,4 @@ export interface MinimizedStateForm {
   title: string;
   formState: Partial<StateMaster>;
 }
+

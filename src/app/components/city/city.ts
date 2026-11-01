@@ -99,6 +99,72 @@ export class CityComponent implements OnInit {
   deleteTargetId = signal<string | null>(null);
   isTranslationModalOpen = signal<boolean>(false);
 
+  // Action Panel Dock Page State (matching Item & Country vertical dock)
+  actionPanelPage = signal<'top' | 'bottom'>('top');
+  activeFilterTab = signal<string>('all');
+  lastUpdatedTime = signal<string>('30 mins');
+  lastDeletedTime = signal<string>('40 mins');
+
+  scrollActionPanel(direction: 'up' | 'down'): void {
+    this.actionPanelPage.set(direction === 'down' ? 'bottom' : 'top');
+  }
+
+  setFilterTab(tab: string): void {
+    this.activeFilterTab.set(tab);
+    if (tab === 'all') {
+      this.statusFilter.set('all');
+    } else if (tab === 'active') {
+      this.statusFilter.set('Active');
+    } else if (tab === 'inactive') {
+      this.statusFilter.set('Inactive');
+    } else if (tab === 'draft') {
+      this.statusFilter.set('Draft');
+    }
+  }
+
+  openEditForActiveCity(): void {
+    const id = this.editingCityId();
+    if (id) {
+      const c = this.cityService.getCityById(id);
+      if (c) this.openEdit(c);
+    }
+  }
+
+  openViewForActiveCity(): void {
+    const id = this.editingCityId();
+    if (id) {
+      const c = this.cityService.getCityById(id);
+      if (c) this.openView(c);
+    }
+  }
+
+  toggleCityStatus(c: CityMaster, event: MouseEvent): void {
+    event.stopPropagation();
+    const newStatus = c.status === 'Active' ? 'Inactive' : 'Active';
+    this.cityService.updateCity(c.id, { status: newStatus });
+    this.showToast(`City "${c.name}" is now ${newStatus}`, 'info');
+  }
+
+  openVideoTutorial(): void {
+    this.showToast('Video Tutorial', 'info');
+  }
+
+  openHistoryModal(type?: string): void {
+    this.showToast('City History', 'info');
+  }
+
+  openRecycleBinModal(): void {
+    this.showToast('Recycle Bin', 'info');
+  }
+
+  openGuidanceTour(): void {
+    this.showToast('Guidance Tour started', 'info');
+  }
+
+  openShareModalUnified(channel: string): void {
+    this.showToast(`Sharing via ${channel}`, 'info');
+  }
+
   // Toast
   toastMessage = signal<string | null>(null);
   toastType = signal<'success' | 'error' | 'info'>('success');
@@ -577,6 +643,18 @@ export class CityComponent implements OnInit {
     this.toastTimer = setTimeout(() => {
       this.toastMessage.set(null);
     }, 3200);
+  }
+
+  openExportModal(): void {
+    this.exportData('csv');
+  }
+
+  openAiModal(): void {
+    this.showToast('AI Assistant ready to help with City data', 'info');
+  }
+
+  openClearModal(): void {
+    this.confirmResetForm();
   }
 
   exportData(format: 'pdf' | 'csv' | 'xlsx' | 'print'): void {
