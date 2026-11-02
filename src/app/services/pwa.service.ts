@@ -26,9 +26,10 @@ export class PwaService {
     const standalone = isStandaloneDisplay || isIosStandalone;
     this.isStandalone.set(standalone);
 
-    // If already installed and running standalone, do not show banner
-    if (standalone) {
-      this.showInstallBanner.set(false);
+    // If not standalone and not explicitly dismissed, display the PWA banner
+    const dismissed = sessionStorage.getItem('rapiderp_pwa_dismissed');
+    if (!standalone && !dismissed) {
+      this.showInstallBanner.set(true);
     }
   }
 
@@ -37,18 +38,24 @@ export class PwaService {
     const isIosDevice = /iphone|ipad|ipod/.test(ua) && !(window as any).MSStream;
     this.isIos.set(isIosDevice);
 
-    // If iOS and not standalone and not dismissed, allow install guidance
     const dismissed = sessionStorage.getItem('rapiderp_pwa_dismissed');
-    if (isIosDevice && !this.isStandalone() && !dismissed) {
+    if (!this.isStandalone() && !dismissed) {
       this.canInstall.set(true);
       this.showInstallBanner.set(true);
     }
   }
 
   private initInstallPromptListener(): void {
+    // Check if early event was captured globally
+    if ((window as any).__pwa_deferredPrompt) {
+      this.deferredPrompt = (window as any).__pwa_deferredPrompt;
+      this.canInstall.set(true);
+    }
+
     window.addEventListener('beforeinstallprompt', (e: Event) => {
       e.preventDefault();
       this.deferredPrompt = e;
+      (window as any).__pwa_deferredPrompt = e;
       this.canInstall.set(true);
 
       const dismissed = sessionStorage.getItem('rapiderp_pwa_dismissed');
@@ -79,7 +86,7 @@ export class PwaService {
       }
       this.deferredPrompt = null;
     } else {
-      // Fallback for browsers that don't support beforeinstallprompt
+      // Fallback for desktop Chrome or iOS
       this.showIosInstructions.set(true);
     }
   }
@@ -95,4 +102,3 @@ export class PwaService {
     this.showIosInstructions.set(false);
   }
 }
-
