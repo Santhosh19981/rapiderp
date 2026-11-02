@@ -637,8 +637,36 @@ button.accordion-trigger-btn:not(:disabled):hover div,
     white-space: nowrap !important;
     flex-shrink: 0 !important;
   }
+}/* PWA Header Install Button Hover Contrast Fix */
+.pwa-header-install-btn {
+  background-image: none !important;
+  background-color: #f0f9ff !important;
+  color: #008fd3 !important;
+  border: 1px solid #bae6fd !important;
 }
 
+.pwa-header-install-btn:hover {
+  background-image: none !important;
+  background-color: #00a6f4 !important;
+  color: #ffffff !important;
+  border-color: #00a6f4 !important;
+}
 
+.pwa-header-install-btn:hover span {
+  color: #ffffff !important;
+}
 
+.dark .pwa-header-install-btn {
+  background-image: none !important;
+  background-color: rgba(51, 65, 85, 0.8) !important;
+  color: #7dd3fc !important;
+  border: 1px solid #475569 !important;
+}
+
+.dark .pwa-header-install-btn:hover {
+  background-image: none !important;
+  background-color: #00a6f4 !important;
+  color: #ffffff !important;
+  border-color: #00a6f4 !important;
+}
 

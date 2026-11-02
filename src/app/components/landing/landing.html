@@ -807,10 +807,10 @@
 
           <!-- PWA Install Action Button with Official App Icon (Visible on Mobile, Tablet & Desktop) -->
           <button type="button" (click)="pwaService.promptInstall()" title="Install RapidERP App (PWA)"
-            class="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-50 to-blue-50 dark:from-slate-700/90 dark:to-slate-800/90 text-[#00a6f4] dark:text-sky-300 hover:text-white hover:bg-[#00a6f4] border border-sky-300/80 dark:border-sky-700 text-xs font-bold transition-all shadow-2xs cursor-pointer shrink-0 group">
+            class="pwa-header-install-btn flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-[#00a6f4] text-[#008fd3] hover:text-white border border-sky-200 hover:border-[#00a6f4] dark:bg-slate-700/80 dark:hover:bg-[#00a6f4] dark:text-sky-300 dark:hover:text-white dark:border-slate-600 text-xs font-bold transition-all shadow-2xs cursor-pointer shrink-0 group">
             <img src="/assets/icons/icon-72x72.png" alt="RapidERP App Icon" class="w-5 h-5 rounded-md object-contain shrink-0 shadow-2xs group-hover:scale-105 transition-transform" />
-            <span class="hidden sm:inline">Install App</span>
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse hidden xs:inline-block" title="Ready to install"></span>
+            <span class="hidden sm:inline font-bold">Install App</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 group-hover:bg-white animate-pulse hidden xs:inline-block" title="Ready to install"></span>
           </button>
 
           <!-- 8. User Profile Avatar 👤 with active user display -->
