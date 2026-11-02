@@ -44,3 +44,6 @@ __screenshots__/
 Thumbs.db
 .vercel
 .env*
+
+.scannerwork/
+scratch/

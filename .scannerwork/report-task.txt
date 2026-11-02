@@ -1,6 +1,0 @@
-projectKey=rapiderp
-serverUrl=http://localhost:9000
-serverVersion=26.10.0.133078
-dashboardUrl=http://localhost:9000/dashboard?id=rapiderp
-ceTaskId=ed5c4b3a-941a-4d2f-996a-ebad507a5418
-ceTaskUrl=http://localhost:9000/api/ce/task?id=ed5c4b3a-941a-4d2f-996a-ebad507a5418
