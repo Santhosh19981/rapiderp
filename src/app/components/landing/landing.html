@@ -805,18 +805,13 @@
             }
           </button>
 
-          <!-- PWA Install Action Button (Desktop & Tablet) -->
-          @if (!pwaService.isStandalone()) {
-          <button type="button" (click)="pwaService.promptInstall()" title="Install RapidERP App"
-            class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-slate-700/80 text-[#00a6f4] hover:text-white hover:bg-[#00a6f4] border border-sky-200 dark:border-sky-800 text-xs font-bold transition-all shadow-2xs cursor-pointer shrink-0">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            <span>Install App</span>
+          <!-- PWA Install Action Button with Official App Icon (Visible on Mobile, Tablet & Desktop) -->
+          <button type="button" (click)="pwaService.promptInstall()" title="Install RapidERP App (PWA)"
+            class="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-50 to-blue-50 dark:from-slate-700/90 dark:to-slate-800/90 text-[#00a6f4] dark:text-sky-300 hover:text-white hover:bg-[#00a6f4] border border-sky-300/80 dark:border-sky-700 text-xs font-bold transition-all shadow-2xs cursor-pointer shrink-0 group">
+            <img src="/assets/icons/icon-72x72.png" alt="RapidERP App Icon" class="w-5 h-5 rounded-md object-contain shrink-0 shadow-2xs group-hover:scale-105 transition-transform" />
+            <span class="hidden sm:inline">Install App</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse hidden xs:inline-block" title="Ready to install"></span>
           </button>
-          }
 
           <!-- 8. User Profile Avatar 👤 with active user display -->
           <div class="relative ml-0.5 sm:ml-1 pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center shrink-0">
@@ -1961,12 +1956,21 @@
       <span class="font-bold text-[#00a6f4] dark:text-[#38bdf8]">Rapid</span>
     </div>
 
-    <!-- Center: Need help? (Clean flex alignment preventing mobile collision) -->
-    <div class="flex items-center gap-2 px-2">
+    <!-- Center: Need help? & App Install Button -->
+    <div class="flex items-center gap-2 sm:gap-4 px-2">
       <button type="button" (click)="toggleHelpModal()"
         class="text-[11px] sm:text-xs text-slate-600 hover:text-[#00a6f4] dark:text-slate-300 dark:hover:text-[#38bdf8] font-normal transition-colors cursor-pointer flex items-center gap-1.5 group"
         title="Docs">
         <span>{{ navService.translateText('Need help?') }}</span>
+      </button>
+
+      <span class="text-slate-300 dark:text-slate-600">|</span>
+
+      <button type="button" (click)="pwaService.promptInstall()"
+        class="text-[11px] sm:text-xs text-[#00a6f4] dark:text-[#38bdf8] hover:underline font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+        title="Install Mobile App">
+        <img src="/assets/icons/icon-72x72.png" alt="RapidERP App" class="w-3.5 h-3.5 rounded-xs object-contain" />
+        <span>{{ navService.translateText('Install App') }}</span>
       </button>
     </div>
 
@@ -1985,7 +1989,7 @@
   <!-- RAPIDERP PWA INSTALLATION BANNER (Android, iOS & Tablet Support)           -->
   <!-- ========================================================================= -->
   @if (pwaService.showInstallBanner() && !pwaService.isStandalone()) {
-  <div class="fixed bottom-12 sm:bottom-14 left-3 right-3 sm:left-auto sm:right-6 sm:w-96 z-[160] p-3 rounded-2xl bg-white/95 dark:bg-slate-850/95 backdrop-blur-md border border-sky-300 dark:border-sky-700 shadow-2xl animate-in slide-in-from-bottom duration-300 flex items-center gap-3">
+  <div class="fixed bottom-14 sm:bottom-16 left-3 right-3 sm:left-auto sm:right-6 sm:w-96 z-[160] p-3 rounded-2xl bg-white/95 dark:bg-slate-850/95 backdrop-blur-md border border-sky-300 dark:border-sky-700 shadow-2xl animate-in slide-in-from-bottom duration-300 flex items-center gap-3 mb-[env(safe-area-inset-bottom,0px)]">
     <img src="/assets/icons/icon-96x96.png" alt="RapidERP App Icon" class="w-11 h-11 rounded-xl shadow-sm shrink-0 object-contain" />
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-1.5">
@@ -2008,7 +2012,7 @@
   </div>
   }
 
-  <!-- iOS Safari Add to Home Screen Instructions Modal -->
+  <!-- PWA Install Guide Modal (iOS Safari, Android Chrome & Desktop Support) -->
   @if (pwaService.showIosInstructions()) {
   <div class="fixed inset-0 z-[220] bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200"
     (click)="pwaService.closeIosInstructions()">
@@ -2018,7 +2022,11 @@
         <div class="flex items-center gap-2.5">
           <img src="/assets/icons/icon-96x96.png" alt="RapidERP" class="w-9 h-9 rounded-xl shadow-sm" />
           <div>
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Install on iPhone / iPad</h3>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+              @if (pwaService.platformType() === 'ios') { Install on iPhone / iPad }
+              @else if (pwaService.platformType() === 'android') { Install on Android }
+              @else { Install RapidERP App }
+            </h3>
             <p class="text-[10px] text-slate-400">Add RapidERP to your Home Screen</p>
           </div>
         </div>
@@ -2029,6 +2037,9 @@
           </svg>
         </button>
       </div>
+
+      <!-- iOS Steps -->
+      @if (pwaService.platformType() === 'ios') {
       <div class="space-y-3 py-3 text-xs text-slate-700 dark:text-slate-300">
         <div class="flex items-start gap-3">
           <span class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-950 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0">1</span>
@@ -2040,9 +2051,47 @@
         </div>
         <div class="flex items-start gap-3">
           <span class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-950 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0">3</span>
-          <p class="leading-relaxed">Tap <strong class="text-slate-900 dark:text-white">Add</strong> in the top right. RapidERP will appear as a full-screen app icon on your home screen!</p>
+          <p class="leading-relaxed">Tap <strong class="text-slate-900 dark:text-white">Add</strong> in the top right. RapidERP will appear as an app icon on your home screen!</p>
         </div>
       </div>
+      }
+
+      <!-- Android Steps -->
+      @if (pwaService.platformType() === 'android') {
+      <div class="space-y-3 py-3 text-xs text-slate-700 dark:text-slate-300">
+        <div class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-950 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0">1</span>
+          <p class="leading-relaxed">Tap the <strong class="text-slate-900 dark:text-white">three dots menu (⋮)</strong> in Chrome at the top right.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-950 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0">2</span>
+          <p class="leading-relaxed">Tap <strong class="text-slate-900 dark:text-white">Install app</strong> or <strong class="text-slate-900 dark:text-white">Add to Home screen</strong>.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-950 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0">3</span>
+          <p class="leading-relaxed">Confirm <strong class="text-slate-900 dark:text-white">Install</strong>. RapidERP will appear on your device launcher!</p>
+        </div>
+      </div>
+      }
+
+      <!-- Desktop Steps -->
+      @if (pwaService.platformType() === 'desktop') {
+      <div class="space-y-3 py-3 text-xs text-slate-700 dark:text-slate-300">
+        <div class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-950 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0">1</span>
+          <p class="leading-relaxed">Click the <strong class="text-slate-900 dark:text-white">Install icon (⍈)</strong> on the right side of your Chrome/Edge address bar.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-950 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0">2</span>
+          <p class="leading-relaxed">Or click Chrome Menu <strong class="text-slate-900 dark:text-white">(⋮) &gt; Save and share &gt; Install RapidERP</strong>.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-950 text-[#00a6f4] font-bold text-xs flex items-center justify-center shrink-0">3</span>
+          <p class="leading-relaxed">Click <strong class="text-slate-900 dark:text-white">Install</strong>. RapidERP launches in its own standalone window!</p>
+        </div>
+      </div>
+      }
+
       <button type="button" (click)="pwaService.closeIosInstructions()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#00a6f4] to-[#0070ba] text-white font-bold text-xs shadow-md shadow-sky-500/20 active:scale-98 transition">
         Got it
       </button>

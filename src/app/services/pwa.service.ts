@@ -8,6 +8,7 @@ export class PwaService {
 
   isStandalone = signal<boolean>(false);
   isIos = signal<boolean>(false);
+  platformType = signal<'ios' | 'android' | 'desktop'>('desktop');
   canInstall = signal<boolean>(false);
   showInstallBanner = signal<boolean>(false);
   showIosInstructions = signal<boolean>(false);
@@ -36,7 +37,16 @@ export class PwaService {
   private detectPlatform(): void {
     const ua = window.navigator.userAgent.toLowerCase();
     const isIosDevice = /iphone|ipad|ipod/.test(ua) && !(window as any).MSStream;
+    const isAndroidDevice = /android/.test(ua);
     this.isIos.set(isIosDevice);
+
+    if (isIosDevice) {
+      this.platformType.set('ios');
+    } else if (isAndroidDevice) {
+      this.platformType.set('android');
+    } else {
+      this.platformType.set('desktop');
+    }
 
     const dismissed = sessionStorage.getItem('rapiderp_pwa_dismissed');
     if (!this.isStandalone() && !dismissed) {

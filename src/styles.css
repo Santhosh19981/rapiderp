@@ -595,32 +595,46 @@ button.accordion-trigger-btn:not(:disabled):hover div,
 }
 
 .pwa-footer-safe {
-  padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
-  padding-left: max(0.75rem, env(safe-area-inset-left));
-  padding-right: max(0.75rem, env(safe-area-inset-right));
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)) !important;
+  padding-left: max(0.75rem, env(safe-area-inset-left, 0px)) !important;
+  padding-right: max(0.75rem, env(safe-area-inset-right, 0px)) !important;
+  min-height: calc(2.75rem + env(safe-area-inset-bottom, 0px)) !important;
 }
 
 /* Responsive Capsule Stat Badges for Mobile (< 640px) */
 @media screen and (max-width: 639px) {
   .capsule-card {
-    height: 42px !important;
+    height: 44px !important;
     min-width: 0 !important;
+    padding-right: 6px !important;
     overflow: hidden !important;
   }
   .capsule-circle-icon {
-    width: 42px !important;
-    height: 42px !important;
+    width: 44px !important;
+    height: 44px !important;
     flex-shrink: 0 !important;
   }
+  .capsule-circle-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
   .capsule-title {
-    font-size: 11px !important;
-    max-width: 65px !important;
+    font-size: 10px !important;
+    max-width: 50px !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
   }
   .capsule-count {
-    font-size: 13px !important;
+    font-size: 12px !important;
+    flex-shrink: 0 !important;
+  }
+  .capsule-time {
+    font-size: 10px !important;
+    max-width: 52px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
     flex-shrink: 0 !important;
   }
 }

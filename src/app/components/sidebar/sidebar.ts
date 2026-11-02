@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../services/navigation.service';
 import { AuthService } from '../../services/auth.service';
+import { PwaService } from '../../services/pwa.service';
 
 export interface SubMenuItem {
   id: string;
@@ -29,6 +30,7 @@ export class Sidebar {
   private router = inject(Router);
   public navService = inject(NavigationService);
   private authService = inject(AuthService);
+  public pwaService = inject(PwaService);
 
   isCollapsed = signal<boolean>(false);
   isHoverExpanded = signal<boolean>(false);

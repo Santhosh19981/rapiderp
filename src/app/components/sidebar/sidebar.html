@@ -177,6 +177,25 @@
       }
     </nav>
 
+    <!-- PWA Install Tile at bottom of Sidebar -->
+    <div class="p-2 border-t border-white/10 shrink-0">
+      <button
+        type="button"
+        (click)="pwaService.promptInstall()"
+        class="w-full flex items-center gap-2 p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer group"
+        [class.justify-center]="!effectiveExpanded()"
+        title="Install RapidERP Mobile App"
+      >
+        <img src="/assets/icons/icon-72x72.png" alt="RapidERP" class="w-6 h-6 rounded-md shadow-xs shrink-0 object-contain group-hover:scale-105 transition-transform" />
+        @if (effectiveExpanded()) {
+          <div class="flex flex-col text-start min-w-0">
+            <span class="text-xs font-bold leading-tight truncate">Install App</span>
+            <span class="text-[9px] text-sky-200/80 leading-tight truncate">Android & iOS</span>
+          </div>
+        }
+      </button>
+    </div>
+
     <!-- 4. Global Smooth Flyout Popover with Reversed RTL Sliding Positioning & Level 2 Tree Structure -->
     @if (getHoveredItem()?.subItems) {
       <div
