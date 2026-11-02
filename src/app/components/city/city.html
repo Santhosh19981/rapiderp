@@ -238,7 +238,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <input type="text" [ngModel]="searchQuery()"
+                <input id="city-search-input" aria-label="Search cities" type="text" [ngModel]="searchQuery()"
                   (ngModelChange)="searchQuery.set($event); currentPage.set(1)" placeholder="Search"
                   class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
                 @if (searchQuery()) {
@@ -390,7 +390,7 @@
                     <tr
                       class="bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-700 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
                       <th class="p-3 w-10 text-center">
-                        <input type="checkbox" (change)="toggleSelectAll()"
+                        <input id="city-select-all" aria-label="Select all cities" type="checkbox" (change)="toggleSelectAll()"
                           class="rounded text-[#00a6f4] cursor-pointer" />
                       </th>
                       <th class="p-3">City ID</th>
@@ -407,7 +407,7 @@
                     @for (c of paginatedCities(); track c.id) {
                     <tr class="hover:bg-sky-50/50 dark:hover:bg-slate-700/40 transition">
                       <td class="p-3 text-center">
-                        <input type="checkbox" [checked]="selectedIds().has(c.id)" (change)="toggleSelect(c.id, $event)"
+                        <input type="checkbox" [checked]="selectedIds().has(c.id)" (change)="toggleSelect(c.id, $event)" [attr.aria-label]="'Select city ' + c.name"
                           class="rounded text-[#00a6f4] cursor-pointer" />
                       </td>
                       <td class="p-3 font-mono font-medium text-sky-600 dark:text-sky-400">{{ c.id }}</td>
@@ -551,7 +551,7 @@
                 stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
+              <input #fieldSearchInput aria-label="Find field" type="text" [ngModel]="fieldSearchQuery()"
                 (ngModelChange)="fieldSearchQuery.set($event); isFieldSearchOpen.set(true)"
                 (focus)="isFieldSearchOpen.set(true)" placeholder="Find field"
                 class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
@@ -662,7 +662,7 @@
                       <span class="floating-notch-label">
                         City Name (EN) <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
-                      <input type="text" maxlength="100" [ngModel]="formName()"
+                      <input id="city-name-en" aria-label="City Name (EN)" type="text" maxlength="100" [ngModel]="formName()"
                         (ngModelChange)="onCityNameInput($event)" name="cityNameEn" required
                         placeholder="e.g. Dubai, Los Angeles" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
@@ -763,7 +763,7 @@
                       <span class="floating-notch-label right-5 left-auto">
                         اسم المدينة (بالعربية)
                       </span>
-                      <input type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
+                      <input id="city-name-ar" aria-label="City Name (AR)" type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
                         name="cityNameAr" placeholder="مثال: دبي" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
                     </div>
@@ -777,7 +777,7 @@
                       <span class="floating-notch-label">
                         City ID <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
-                      <input type="text" [ngModel]="formId()" readonly name="cityId" placeholder="e.g. CT-1001"
+                      <input id="city-id" aria-label="City ID" type="text" [ngModel]="formId()" readonly name="cityId" placeholder="e.g. CT-1001"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-mono font-bold text-sky-600 dark:text-sky-400 focus:outline-none cursor-default" />
                     </div>
                   </div>
@@ -789,7 +789,7 @@
                       <span class="floating-notch-label">
                         City Code <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
-                      <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="cityCode"
+                      <input id="city-code" aria-label="City Code" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="cityCode"
                         required placeholder="e.g. DXB, LAX" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                       @if (viewMode() !== 'view') {
@@ -899,8 +899,8 @@
                       <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200">
                         Set as Default
                       </span>
-                      <label class="form-switch m-0 flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
+                      <label class="form-switch m-0 flex items-center cursor-pointer"><span class="sr-only">Set as Default</span>
+                        <input aria-label="Set as Default" type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
                           [disabled]="viewMode() === 'view'" (change)="toggleDefault($event)" />
                         <span class="form-switch-track scale-90 sm:scale-100 origin-right"><span
                             class="form-switch-thumb"></span></span>
@@ -913,7 +913,7 @@
                     <div id="field-description"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Description</span>
-                      <input type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
+                      <input aria-label="City Description" type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
                         name="cityDesc" placeholder="Additional city information" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -999,7 +999,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">City ID</span>
-                        <input type="text" [ngModel]="formId()" readonly
+                        <input aria-label="City ID" type="text" [ngModel]="formId()" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none font-mono" />
                       </div>
                     </div>
@@ -1007,7 +1007,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">City Code</span>
-                        <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)"
+                        <input aria-label="City Code" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)"
                           [readonly]="viewMode() === 'view'"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold uppercase focus:outline-none" />
                       </div>
@@ -1029,7 +1029,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Country</span>
-                        <input type="text" [ngModel]="formCountry()" (ngModelChange)="formCountry.set($event)"
+                        <input aria-label="Country" type="text" [ngModel]="formCountry()" (ngModelChange)="formCountry.set($event)"
                           [readonly]="viewMode() === 'view'"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -1038,7 +1038,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">State</span>
-                        <input type="text" [ngModel]="formState()" (ngModelChange)="formState.set($event)"
+                        <input aria-label="State" type="text" [ngModel]="formState()" (ngModelChange)="formState.set($event)"
                           [readonly]="viewMode() === 'view'"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -1061,8 +1061,8 @@
                         class="relative flex items-center justify-between w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Default City</span>
                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Set as Default</span>
-                        <label class="form-switch m-0 flex items-center cursor-pointer">
-                          <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
+                        <label class="form-switch m-0 flex items-center cursor-pointer"><span class="sr-only">Set as Default</span>
+                          <input aria-label="Set as Default" type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
                             [disabled]="viewMode() === 'view'" (change)="toggleDefault($event)" />
                           <span class="form-switch-track scale-90 origin-right"><span
                               class="form-switch-thumb"></span></span>
@@ -1073,7 +1073,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Description</span>
-                        <input type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
+                        <input aria-label="City Description" type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
                           [readonly]="viewMode() === 'view'" placeholder="Additional city information"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>

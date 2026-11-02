@@ -30,6 +30,22 @@ import { NavigationService } from '../../services/navigation.service';
 import { DropdownOption } from '../select-dropdown/select-dropdown';
 import { ActivatedRoute, Router } from '@angular/router';
 
+function getRandomInt(min: number, max: number): number {
+  const randArr = new Uint32Array(1);
+  (globalThis.crypto || window.crypto).getRandomValues(randArr);
+  return min + (randArr[0] % (max - min + 1));
+}
+
+function getRandomItem<T>(arr: T[]): T {
+  return arr[getRandomInt(0, arr.length - 1)];
+}
+
+function getRandomToken(): string {
+  const randArr = new Uint32Array(1);
+  (globalThis.crypto || window.crypto).getRandomValues(randArr);
+  return randArr[0].toString(36).substring(0, 5);
+}
+
 export type ItemSectionTab =
   | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G'
   | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N'
@@ -579,7 +595,7 @@ export class ItemComponent implements OnInit {
         const v = it[def.key];
         if (v !== undefined && v !== null && String(v).trim()) vals.add(String(v).trim());
       });
-      map[def.key] = Array.from(vals).sort();
+      map[def.key] = Array.from(vals).sort((a, b) => a.localeCompare(b));
     }
     return map;
   });
@@ -869,7 +885,7 @@ export class ItemComponent implements OnInit {
       const v = it[key];
       if (v !== undefined && v !== null && String(v).trim()) vals.add(String(v).trim());
     });
-    return Array.from(vals).sort();
+    return Array.from(vals).sort((a, b) => a.localeCompare(b));
   }
 
   getFilteredDistinctValues(key: string): string[] {
@@ -1109,7 +1125,7 @@ export class ItemComponent implements OnInit {
     const n = Number(val);
     if (!val) {
       this.pageSizeErrorMessage.set('');
-    } else if (isNaN(n) || n < 10 || n > 999) {
+    } else if (Number.isNaN(n) || n < 10 || n > 999) {
       this.pageSizeErrorMessage.set('Must be 10 - 999');
     } else {
       this.pageSizeErrorMessage.set('');
@@ -1118,7 +1134,7 @@ export class ItemComponent implements OnInit {
 
   isCustomPageSizeValid(): boolean {
     const n = Number(this.customPageSizeInput());
-    return !isNaN(n) && n >= 10 && n <= 999;
+    return !Number.isNaN(n) && n >= 10 && n <= 999;
   }
 
   applyCustomPageSize(): void {
@@ -1145,8 +1161,8 @@ export class ItemComponent implements OnInit {
   }
 
   commitPageInput(): void {
-    const raw = parseInt(this.pageInputValue(), 10);
-    if (!isNaN(raw)) {
+    const raw = Number.parseInt(this.pageInputValue(), 10);
+    if (!Number.isNaN(raw)) {
       const clamped = Math.max(1, Math.min(this.totalPages(), raw));
       this.goToPage(clamped);
       this.pageInputValue.set(String(clamped));
@@ -1279,7 +1295,7 @@ export class ItemComponent implements OnInit {
     const rawVal = this.editingCellValue().trim();
     let parsedVal: any = rawVal;
     if (field === 'salesPrice' || field === 'costPrice') {
-      parsedVal = parseFloat(rawVal) || 0;
+      parsedVal = Number.parseFloat(rawVal) || 0;
     }
     if ((item as any)[field] !== parsedVal) {
       this.itemService.updateItemById(item.itemId, { [field]: parsedVal } as any);
@@ -1585,7 +1601,7 @@ export class ItemComponent implements OnInit {
   formatDate(value?: string | null): string {
     if (!value) return '-';
     const d = new Date(value);
-    if (isNaN(d.getTime())) return value;
+    if (Number.isNaN(d.getTime())) return value;
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
   }
@@ -1922,7 +1938,7 @@ export class ItemComponent implements OnInit {
     this.isFieldVoiceListening.set(true);
     this.isFieldSearchOpen.set(true);
     const sampleTerms = ['Sales Price', 'Barcode', 'Cost Price', 'Identity', 'Pricing', 'Inventory', 'Item Overview'];
-    const pick = sampleTerms[Math.floor(Math.random() * sampleTerms.length)];
+    const pick = getRandomItem(sampleTerms);
 
     setTimeout(() => {
       this.fieldSearchQuery.set(pick);
@@ -2492,7 +2508,7 @@ export class ItemComponent implements OnInit {
 
     // Alt+1 to Alt+8: Tab Jump
     if (event.altKey && event.key >= '1' && event.key <= '8') {
-      const idx = parseInt(event.key, 10) - 1;
+      const idx = Number.parseInt(event.key, 10) - 1;
       if (idx < this.sectionTabs.length) {
         event.preventDefault();
         this.selectTab(this.sectionTabs[idx].id);
@@ -3090,7 +3106,7 @@ export class ItemComponent implements OnInit {
       {
         id: 's_' + Date.now(),
         supplierName: 'New Approved Supplier',
-        supplierItemCode: 'SUP-' + Math.floor(100 + Math.random() * 900),
+        supplierItemCode: 'SUP-' + getRandomInt(100, 999),
         purchasePrice: this.formCostPrice(),
         leadTimeDays: 7,
         currency: 'AED'
@@ -3214,7 +3230,7 @@ export class ItemComponent implements OnInit {
       'Ultra Slim Power Bank 20000mAh',
       'Cold Brew Nitro Coffee 250ml Can'
     ];
-    const picked = retailSamples[Math.floor(Math.random() * retailSamples.length)];
+    const picked = getRandomItem(retailSamples);
 
     setTimeout(() => {
       this.formNameEn.set(picked);
@@ -3362,7 +3378,7 @@ export class ItemComponent implements OnInit {
     colors.forEach((col) => {
       sizes.forEach((sz) => {
         matrix.push({
-          id: 'vm_' + Math.random().toString(36).substring(2, 7),
+          id: 'vm_' + getRandomToken(),
           sku: `${this.formSku()}-${col.substring(0, 3).toUpperCase()}-${sz}`,
           color: col,
           size: sz,
@@ -3404,8 +3420,8 @@ export class ItemComponent implements OnInit {
   }
 
   onRecordInput(val: string): void {
-    const num = parseInt(val, 10);
-    if (!isNaN(num) && num >= 1 && num <= this.totalRecordsCount()) {
+    const num = Number.parseInt(val, 10);
+    if (!Number.isNaN(num) && num >= 1 && num <= this.totalRecordsCount()) {
       if (this.pageMode() !== 'view') {
         this.pageMode.set('edit');
       }
@@ -3432,7 +3448,7 @@ export class ItemComponent implements OnInit {
     this.formSku.set(sku);
 
     const newItem: ItemMaster = {
-      itemId: this.formItemId() === 'ITM-NEW' ? 'ITM-' + Math.floor(10000 + Math.random() * 90000) : this.formItemId(),
+      itemId: this.formItemId() === 'ITM-NEW' ? 'ITM-' + getRandomInt(10000, 99999) : this.formItemId(),
       itemType: this.formItemType(),
       nameEn: nameEn,
       nameAr: this.formNameAr().trim(),
@@ -3677,7 +3693,7 @@ export class ItemComponent implements OnInit {
 
   switchView(mode: 'grid' | 'table'): void {
     this.activeActionView.set(mode);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
         mode: mode === 'grid' ? null : mode,

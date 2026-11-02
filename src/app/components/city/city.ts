@@ -324,7 +324,7 @@ export class CityComponent implements OnInit {
   // Navigation & View changes
   switchView(mode: CityViewMode): void {
     this.viewMode.set(mode);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: mode === 'grid' ? null : mode, id: null },
       queryParamsHandling: 'merge',
@@ -337,7 +337,7 @@ export class CityComponent implements OnInit {
     this.resetFormFields();
     this.formId.set(this.cityService.generateCityId());
     this.formCode.set('');
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: 'add', id: null },
       queryParamsHandling: 'merge',
@@ -348,7 +348,7 @@ export class CityComponent implements OnInit {
     this.editingCityId.set(city.id);
     this.viewMode.set('edit');
     this.loadCityIntoForm(city);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: 'edit', id: city.id },
       queryParamsHandling: 'merge',
@@ -359,7 +359,7 @@ export class CityComponent implements OnInit {
     this.editingCityId.set(city.id);
     this.viewMode.set('view');
     this.loadCityIntoForm(city);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: 'view', id: city.id },
       queryParamsHandling: 'merge',
@@ -369,7 +369,7 @@ export class CityComponent implements OnInit {
   switchToEditFromView(): void {
     if (this.editingCityId()) {
       this.viewMode.set('edit');
-      this.router.navigate([], {
+      void this.router.navigate([], {
         relativeTo: this.route,
         queryParams: { mode: 'edit', id: this.editingCityId() },
         queryParamsHandling: 'merge',

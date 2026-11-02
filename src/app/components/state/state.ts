@@ -315,7 +315,7 @@ export class StateComponent implements OnInit {
   // Navigation & View changes
   switchView(mode: StateViewMode): void {
     this.viewMode.set(mode);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: mode === 'grid' ? null : mode, id: null },
       queryParamsHandling: 'merge',
@@ -328,7 +328,7 @@ export class StateComponent implements OnInit {
     this.resetFormFields();
     this.formId.set(this.stateService.generateStateId());
     this.formCode.set('');
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: 'add', id: null },
       queryParamsHandling: 'merge',
@@ -339,7 +339,7 @@ export class StateComponent implements OnInit {
     this.editingStateId.set(state.id);
     this.viewMode.set('edit');
     this.loadStateIntoForm(state);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: 'edit', id: state.id },
       queryParamsHandling: 'merge',
@@ -350,7 +350,7 @@ export class StateComponent implements OnInit {
     this.editingStateId.set(state.id);
     this.viewMode.set('view');
     this.loadStateIntoForm(state);
-    this.router.navigate([], {
+    void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { mode: 'view', id: state.id },
       queryParamsHandling: 'merge',
@@ -360,7 +360,7 @@ export class StateComponent implements OnInit {
   switchToEditFromView(): void {
     if (this.editingStateId()) {
       this.viewMode.set('edit');
-      this.router.navigate([], {
+      void this.router.navigate([], {
         relativeTo: this.route,
         queryParams: { mode: 'edit', id: this.editingStateId() },
         queryParamsHandling: 'merge',

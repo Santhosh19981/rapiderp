@@ -233,7 +233,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <input type="text" [ngModel]="searchQuery()"
+                <input id="state-search-input" aria-label="Search states" type="text" [ngModel]="searchQuery()"
                   (ngModelChange)="searchQuery.set($event); currentPage.set(1)" placeholder="Search"
                   class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
                 @if (searchQuery()) {
@@ -385,7 +385,7 @@
                     <tr
                       class="bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-700 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
                       <th class="p-3 w-10 text-center">
-                        <input type="checkbox" (change)="toggleSelectAll()"
+                        <input id="state-select-all" aria-label="Select all states" type="checkbox" (change)="toggleSelectAll()"
                           class="rounded text-[#00a6f4] cursor-pointer" />
                       </th>
                       <th class="p-3">State ID</th>
@@ -405,7 +405,7 @@
                     <tr class="hover:bg-sky-50/50 dark:hover:bg-slate-750 transition cursor-pointer"
                       (click)="openView(st)">
                       <td class="p-3 text-center" (click)="$event.stopPropagation()">
-                        <input type="checkbox" [checked]="selectedIds().has(st.id)"
+                        <input type="checkbox" [checked]="selectedIds().has(st.id)" [attr.aria-label]="'Select state ' + st.name"
                           (change)="toggleSelect(st.id, $event)" class="rounded text-[#00a6f4] cursor-pointer" />
                       </td>
                       <td class="p-3 font-mono font-bold text-sky-600 dark:text-sky-400">{{ st.id }}</td>
@@ -542,7 +542,7 @@
                 stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
+              <input #fieldSearchInput aria-label="Find field" type="text" [ngModel]="fieldSearchQuery()"
                 (ngModelChange)="fieldSearchQuery.set($event); isFieldSearchOpen.set(true)"
                 (focus)="isFieldSearchOpen.set(true)" placeholder="Find field"
                 class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
@@ -653,7 +653,7 @@
                       <span class="floating-notch-label">
                         State Name (EN) <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
-                      <input type="text" maxlength="100" [ngModel]="formName()"
+                      <input id="state-name-en" aria-label="State Name (EN)" type="text" maxlength="100" [ngModel]="formName()"
                         (ngModelChange)="onStateNameInput($event)" name="stateNameEn" required
                         placeholder="e.g. United Arab Emirates" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
@@ -754,7 +754,7 @@
                       <span class="floating-notch-label right-5 left-auto">
                         اسم الولاية / الإمارة (بالعربية)
                       </span>
-                      <input type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
+                      <input id="state-name-ar" aria-label="State Name (AR)" type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
                         name="stateNameAr" placeholder="مثال: الإمارات العربية المتحدة"
                         [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
@@ -769,7 +769,7 @@
                       <span class="floating-notch-label">
                         State ID <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
-                      <input type="text" [ngModel]="formId()" readonly name="stateId" placeholder="e.g. ST-1001"
+                      <input id="state-id" aria-label="State ID" type="text" [ngModel]="formId()" readonly name="stateId" placeholder="e.g. ST-1001"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-mono font-bold text-sky-600 dark:text-sky-400 focus:outline-none cursor-default" />
                     </div>
                   </div>
@@ -781,7 +781,7 @@
                       <span class="floating-notch-label">
                         State Code <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
-                      <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="stateCode"
+                      <input id="state-code" aria-label="State Code" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="stateCode"
                         required placeholder="e.g. DXB, CA" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                       @if (viewMode() !== 'view') {
@@ -799,7 +799,7 @@
                     <div id="field-abbreviation"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">State Abbreviation</span>
-                      <input type="text" [ngModel]="formAbbreviation()" (ngModelChange)="formAbbreviation.set($event)"
+                      <input id="state-abbr" aria-label="State Abbreviation" type="text" [ngModel]="formAbbreviation()" (ngModelChange)="formAbbreviation.set($event)"
                         name="stateAbbr" placeholder="e.g. DXB, AUH, CA" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -897,7 +897,7 @@
                     <div id="field-capital"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Capital City</span>
-                      <input type="text" [ngModel]="formCapitalCity()" (ngModelChange)="formCapitalCity.set($event)"
+                      <input id="state-capital" aria-label="Capital City" type="text" [ngModel]="formCapitalCity()" (ngModelChange)="formCapitalCity.set($event)"
                         name="capitalCity" placeholder="e.g. Dubai, Sacramento" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -909,8 +909,8 @@
                       class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all select-none">
                       <span class="floating-notch-label">Default State</span>
                       <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Set as Default</span>
-                      <label class="form-switch m-0 flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
+                      <label class="form-switch m-0 flex items-center cursor-pointer"><span class="sr-only">Set as Default</span>
+                        <input aria-label="Set as Default" type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
                           [disabled]="viewMode() === 'view'" (change)="toggleDefault($event)" />
                         <span class="form-switch-track scale-90 origin-right"><span
                             class="form-switch-thumb"></span></span>
@@ -923,7 +923,7 @@
                     <div id="field-description"
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Description</span>
-                      <input type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
+                      <input aria-label="State Description" type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
                         name="stateDesc" placeholder="Additional information" [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
@@ -1000,7 +1000,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-850">
                         <span class="floating-notch-label">State ID</span>
-                        <input type="text" [ngModel]="formId()" readonly
+                        <input aria-label="State ID" type="text" [ngModel]="formId()" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-mono font-bold text-sky-600 focus:outline-none" />
                       </div>
                     </div>
@@ -1008,7 +1008,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                         <span class="floating-notch-label">State Code</span>
-                        <input type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)"
+                        <input aria-label="State Code" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)"
                           [readonly]="viewMode() === 'view'" placeholder="e.g. DXB"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none uppercase" />
                       </div>
@@ -1017,7 +1017,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                         <span class="floating-notch-label">State Abbreviation</span>
-                        <input type="text" [ngModel]="formAbbreviation()" (ngModelChange)="formAbbreviation.set($event)"
+                        <input aria-label="State Abbreviation" type="text" [ngModel]="formAbbreviation()" (ngModelChange)="formAbbreviation.set($event)"
                           [readonly]="viewMode() === 'view'" placeholder="e.g. DXB, AUH"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none uppercase" />
                       </div>
@@ -1039,7 +1039,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Country</span>
-                        <input type="text" [ngModel]="formCountry()" (ngModelChange)="formCountry.set($event)"
+                        <input aria-label="Country" type="text" [ngModel]="formCountry()" (ngModelChange)="formCountry.set($event)"
                           [readonly]="viewMode() === 'view'"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -1048,7 +1048,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">State Type</span>
-                        <input type="text" [ngModel]="formStateType()" (ngModelChange)="formStateType.set($event)"
+                        <input aria-label="State Type" type="text" [ngModel]="formStateType()" (ngModelChange)="formStateType.set($event)"
                           [readonly]="viewMode() === 'view'"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -1057,7 +1057,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Capital City</span>
-                        <input type="text" [ngModel]="formCapitalCity()" (ngModelChange)="formCapitalCity.set($event)"
+                        <input aria-label="Capital City" type="text" [ngModel]="formCapitalCity()" (ngModelChange)="formCapitalCity.set($event)"
                           [readonly]="viewMode() === 'view'"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -1080,8 +1080,8 @@
                         class="relative flex items-center justify-between w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Default State</span>
                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Set as Default</span>
-                        <label class="form-switch m-0 flex items-center cursor-pointer">
-                          <input type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
+                        <label class="form-switch m-0 flex items-center cursor-pointer"><span class="sr-only">Set as Default</span>
+                          <input aria-label="Set as Default" type="checkbox" class="sr-only" [checked]="formDefault() === 'Yes'"
                             [disabled]="viewMode() === 'view'" (change)="toggleDefault($event)" />
                           <span class="form-switch-track scale-90 origin-right"><span
                               class="form-switch-thumb"></span></span>
@@ -1092,7 +1092,7 @@
                       <div
                         class="relative flex items-center w-full h-10 px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Description</span>
-                        <input type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
+                        <input aria-label="Description" type="text" [ngModel]="formDescription()" (ngModelChange)="formDescription.set($event)"
                           [readonly]="viewMode() === 'view'" placeholder="Additional information"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -1358,8 +1358,8 @@
       <h3 class="text-base font-bold text-slate-900 dark:text-white mb-3">Multi-Language Translations</h3>
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-500 mb-1">Arabic (العربية)</label>
-          <input type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)" dir="rtl"
+          <label for="state-modal-ar-input" class="block text-xs font-semibold text-slate-500 mb-1">Arabic (العربية)</label>
+          <input id="state-modal-ar-input" aria-label="Arabic (العربية)" type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)" dir="rtl"
             class="w-full h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none" />
         </div>
       </div>

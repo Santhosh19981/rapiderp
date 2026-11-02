@@ -26,14 +26,19 @@ export class ItemService {
   // SKU generator
   generateSku(category: string = 'Item'): string {
     const prefix = category ? category.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, 'ITM') : 'ITM';
-    const num = Math.floor(10000 + Math.random() * 90000);
+    const randArr = new Uint32Array(1);
+    (globalThis.crypto || window.crypto).getRandomValues(randArr);
+    const num = 10000 + (randArr[0] % 90000);
     return `${prefix}-${num}`;
   }
 
   // Generate Barcode
   generateBarcode(): string {
-    const rnd = Math.floor(100000000000 + Math.random() * 900000000000);
-    return `629${rnd.toString().substring(0, 10)}`;
+    const randArr = new Uint32Array(2);
+    (globalThis.crypto || window.crypto).getRandomValues(randArr);
+    const val = (BigInt(randArr[0]) << 32n) | BigInt(randArr[1]);
+    const numStr = (val % 900000000000n + 100000000000n).toString();
+    return `629${numStr.substring(0, 10)}`;
   }
 
   goToNext(): void {

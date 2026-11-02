@@ -215,8 +215,8 @@
 
             <!-- Center: Search Input with Voice Mic -->
             <div class="flex-1 max-w-xs sm:max-w-md mx-1 sm:mx-4 relative flex items-center">
-              <input type="text" [ngModel]="gridSearchQuery()" (ngModelChange)="gridSearchQuery.set($event)"
-                placeholder="Search" autofocus
+              <input aria-label="Search" type="text" [ngModel]="gridSearchQuery()" (ngModelChange)="gridSearchQuery.set($event)"
+                placeholder="Search"
                 class="w-full h-8 sm:h-9 pl-7 sm:pl-9 pr-7 sm:pr-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
               <svg xmlns="http://www.w3.org/2000/svg"
                 class="w-3.5 h-3.5 text-slate-400 absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -476,8 +476,8 @@
 
           <!-- Center Zone: Centered Search Input with voice mic -->
           <div class="flex-1 max-w-xs sm:max-w-md mx-2 sm:mx-4 relative flex items-center">
-            <input type="text" [ngModel]="itemListSearchQuery()" (ngModelChange)="itemListSearchQuery.set($event)"
-              placeholder="Search" autofocus
+            <input aria-label="Search" type="text" [ngModel]="itemListSearchQuery()" (ngModelChange)="itemListSearchQuery.set($event)"
+              placeholder="Search"
               class="w-full h-8 sm:h-9 pl-9 pr-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
             <svg xmlns="http://www.w3.org/2000/svg"
               class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none"
@@ -604,8 +604,8 @@
                     @if (isSelectColumnVisible()) {
                     <th
                       class="col-select sticky-col sticky-left-0 py-3 px-3 text-center bg-[#f8fafc] dark:bg-slate-800 whitespace-nowrap">
-                      <label class="custom-checkbox-wrap">
-                        <input type="checkbox" class="sr-only custom-checkbox-input" [checked]="isPageAllSelected()"
+                      <label class="custom-checkbox-wrap"><span class="sr-only">Select</span>
+                        <input aria-label="Select item" type="checkbox" class="sr-only custom-checkbox-input" [checked]="isPageAllSelected()"
                           [indeterminate]="isPagePartlySelected()" (change)="togglePageSelection()" title="Select" />
                         <span class="custom-checkbox-box">
                           <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
@@ -883,8 +883,8 @@
                       (click)="selectCell(rIdx, 'select', $event); $event.stopPropagation()">
                       <div class="rounded-md p-0.5 inline-flex items-center justify-center transition-all"
                         [class.cell-focus-box]="isCellFocused(rIdx, 'select')">
-                        <label class="custom-checkbox-wrap" (click)="$event.stopPropagation()">
-                          <input type="checkbox" class="sr-only custom-checkbox-input"
+                        <label class="custom-checkbox-wrap" (click)="$event.stopPropagation()"><span class="sr-only">Select</span>
+                          <input aria-label="Select item" type="checkbox" class="sr-only custom-checkbox-input"
                             [checked]="selectedItemIds().has(item.itemId)" (change)="toggleRowSelection(item.itemId)"
                             title="Select" />
                           <span class="custom-checkbox-box">
@@ -910,12 +910,12 @@
                         </div>
                         @if (isCellEditing(item.itemId, 'nameEn')) {
                         <div class="flex items-center gap-1.5 flex-1 min-w-0" (click)="$event.stopPropagation()">
-                          <input type="text" [ngModel]="editingCellValue()"
+                          <input aria-label="Edit cell value" type="text" [ngModel]="editingCellValue()"
                             (ngModelChange)="editingCellValue.set($event)"
                             (keydown.enter)="saveCellEdit(item, 'nameEn', $event)"
                             (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(item, 'nameEn', $event)"
                             class="px-2 py-1 text-xs font-semibold border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-full shadow-xs"
-                            autofocus />
+                            />
                         </div>
                         } @else {
                         <div
@@ -953,12 +953,12 @@
                       (dblclick)="onCellDblClick(item, rIdx, 'sku', $event)">
                       @if (isCellEditing(item.itemId, 'sku')) {
                       <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                        <input type="text" [ngModel]="editingCellValue()"
+                        <input aria-label="Edit cell value" type="text" [ngModel]="editingCellValue()"
                           (ngModelChange)="editingCellValue.set($event.toUpperCase())"
                           (keydown.enter)="saveCellEdit(item, 'sku', $event)" (keydown.escape)="cancelCellEdit($event)"
                           (blur)="saveCellEdit(item, 'sku', $event)"
                           class="px-2 py-1 text-xs font-mono font-bold border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-28 shadow-xs"
-                          autofocus />
+                          />
                       </div>
                       } @else {
                       <div
@@ -984,11 +984,11 @@
                       (dblclick)="onCellDblClick(item, rIdx, 'itemType', $event)">
                       @if (isCellEditing(item.itemId, 'itemType')) {
                       <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                        <select [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
+                        <select aria-label="Edit cell value" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
                           (change)="saveCellEdit(item, 'itemType', $event)"
                           (blur)="saveCellEdit(item, 'itemType', $event)"
                           class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none shadow-xs"
-                          autofocus>
+                         >
                           <option value="Stock Item">Stock Item</option>
                           <option value="Non-Stock Item">Non-Stock Item</option>
                           <option value="Service Item">Service Item</option>
@@ -1024,11 +1024,11 @@
                       (dblclick)="onCellDblClick(item, rIdx, 'category', $event)">
                       @if (isCellEditing(item.itemId, 'category')) {
                       <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                        <input type="text" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
+                        <input aria-label="Edit cell value" type="text" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
                           (keydown.enter)="saveCellEdit(item, 'category', $event)"
                           (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(item, 'category', $event)"
                           class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-36 shadow-xs"
-                          autofocus />
+                          />
                       </div>
                       } @else {
                       <div
@@ -1055,11 +1055,11 @@
                       (dblclick)="onCellDblClick(item, rIdx, 'brand', $event)">
                       @if (isCellEditing(item.itemId, 'brand')) {
                       <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                        <input type="text" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
+                        <input aria-label="Edit cell value" type="text" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
                           (keydown.enter)="saveCellEdit(item, 'brand', $event)"
                           (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(item, 'brand', $event)"
                           class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-32 shadow-xs"
-                          autofocus />
+                          />
                       </div>
                       } @else {
                       <div
@@ -1086,11 +1086,11 @@
                       (dblclick)="onCellDblClick(item, rIdx, 'baseUom', $event)">
                       @if (isCellEditing(item.itemId, 'baseUom')) {
                       <div class="flex items-center gap-1.5" (click)="$event.stopPropagation()">
-                        <input type="text" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
+                        <input aria-label="Edit cell value" type="text" [ngModel]="editingCellValue()" (ngModelChange)="editingCellValue.set($event)"
                           (keydown.enter)="saveCellEdit(item, 'baseUom', $event)"
                           (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(item, 'baseUom', $event)"
                           class="px-2 py-1 text-xs border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-24 shadow-xs"
-                          autofocus />
+                          />
                       </div>
                       } @else {
                       <div
@@ -1118,12 +1118,12 @@
                       @if (isCellEditing(item.itemId, 'salesPrice')) {
                       <div class="flex items-center justify-end gap-1.5" (click)="$event.stopPropagation()">
                         <span class="text-xs text-slate-400">AED</span>
-                        <input type="number" step="0.01" min="0" [ngModel]="editingCellValue()"
+                        <input aria-label="Edit cell value" type="number" step="0.01" min="0" [ngModel]="editingCellValue()"
                           (ngModelChange)="editingCellValue.set($event)"
                           (keydown.enter)="saveCellEdit(item, 'salesPrice', $event)"
                           (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(item, 'salesPrice', $event)"
                           class="px-2 py-1 text-xs font-mono font-bold border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-24 text-right shadow-xs"
-                          autofocus />
+                          />
                       </div>
                       } @else {
                       <div
@@ -1151,12 +1151,12 @@
                       @if (isCellEditing(item.itemId, 'costPrice')) {
                       <div class="flex items-center justify-end gap-1.5" (click)="$event.stopPropagation()">
                         <span class="text-xs text-slate-400">AED</span>
-                        <input type="number" step="0.01" min="0" [ngModel]="editingCellValue()"
+                        <input aria-label="Edit cell value" type="number" step="0.01" min="0" [ngModel]="editingCellValue()"
                           (ngModelChange)="editingCellValue.set($event)"
                           (keydown.enter)="saveCellEdit(item, 'costPrice', $event)"
                           (keydown.escape)="cancelCellEdit($event)" (blur)="saveCellEdit(item, 'costPrice', $event)"
                           class="px-2 py-1 text-xs font-mono border-2 border-[#00a6f4] rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none w-24 text-right shadow-xs"
-                          autofocus />
+                          />
                       </div>
                       } @else {
                       <div
@@ -1310,7 +1310,7 @@
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
                   </svg>
-                  <input type="text" [ngModel]="columnMenuSearch()" (ngModelChange)="columnMenuSearch.set($event)"
+                  <input aria-label="Search..." type="text" [ngModel]="columnMenuSearch()" (ngModelChange)="columnMenuSearch.set($event)"
                     placeholder="Search..." (click)="$event.stopPropagation()"
                     class="w-full pl-8 pr-2.5 py-1.5 text-xs rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#00a6f4] focus:ring-1 focus:ring-[#00a6f4]/20" />
                 </div>
@@ -1321,7 +1321,7 @@
                 <label
                   class="flex items-center gap-2 py-1 cursor-pointer select-none font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700/60 pb-1.5 mb-1">
                   <span class="custom-checkbox-wrap">
-                    <input type="checkbox" class="sr-only custom-checkbox-input" [checked]="isColumnAllSelected(colKey)"
+                    <input aria-label="Select item" type="checkbox" class="sr-only custom-checkbox-input" [checked]="isColumnAllSelected(colKey)"
                       (change)="toggleColumnSelectAll(colKey)" />
                     <span class="custom-checkbox-box">
                       <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
@@ -1336,7 +1336,7 @@
                 <label
                   class="flex items-center gap-2 py-0.5 cursor-pointer select-none text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
                   <span class="custom-checkbox-wrap">
-                    <input type="checkbox" class="sr-only custom-checkbox-input"
+                    <input aria-label="Select item" type="checkbox" class="sr-only custom-checkbox-input"
                       [checked]="isColumnValueSelected(colKey, val)" (change)="toggleColumnValue(colKey, val)" />
                     <span class="custom-checkbox-box">
                       <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
@@ -1426,10 +1426,10 @@
                     } @else {
                     <div class="flex flex-col gap-1.5 pt-1 border-t border-sky-100 dark:border-slate-700">
                       <div class="flex items-center gap-1.5">
-                        <input type="number" min="10" max="999" [value]="customPageSizeInput()"
+                        <input aria-label="10 - 999" type="number" min="10" max="999" [value]="customPageSizeInput()"
                           (input)="onCustomPageSizeChange($any($event.target).value)"
                           (keydown.enter)="isCustomPageSizeValid() && applyCustomPageSize()" placeholder="10 - 999"
-                          autofocus
+                         
                           class="w-20 px-2.5 py-1 text-center rounded-full border text-xs font-semibold focus:outline-none bg-white dark:bg-slate-750"
                           [class.border-rose-400]="pageSizeErrorMessage() && customPageSizeInput()"
                           [class.text-rose-600]="pageSizeErrorMessage() && customPageSizeInput()"
@@ -1481,7 +1481,7 @@
                   <div (click)="togglePageDropdown($event)"
                     class="h-8 w-16 px-2 rounded-full border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-slate-800 flex items-center justify-center cursor-pointer select-none transition hover:border-[#0070ba] shadow-xs"
                     title="Page">
-                    <input type="number" min="1" [max]="totalPages()" [value]="pageInputValue()"
+                    <input aria-label="Input field" type="number" min="1" [max]="totalPages()" [value]="pageInputValue()"
                       (input)="onPageInputKey($any($event.target).value)"
                       (keydown.enter)="commitPageInput(); isPageDropdownOpen.set(false)" (blur)="commitPageInput()"
                       (click)="togglePageDropdown($event)"
@@ -1544,7 +1544,7 @@
                   <circle cx="11" cy="11" r="8" />
                   <path d="m21 21-4.3-4.3" />
                 </svg>
-                <input type="text" [ngModel]="visibilitySearch()" (ngModelChange)="visibilitySearch.set($event)"
+                <input aria-label="Search" type="text" [ngModel]="visibilitySearch()" (ngModelChange)="visibilitySearch.set($event)"
                   placeholder="Search"
                   class="w-full pl-8 pr-8 py-1.5 rounded-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4]" />
                 <svg class="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer"
@@ -1627,7 +1627,7 @@
 
             <div class="p-3 pt-8 border-b border-slate-100 dark:border-slate-700 shrink-0">
               <div class="relative">
-                <input type="text" [ngModel]="filterSearch()" (ngModelChange)="filterSearch.set($event)"
+                <input aria-label="Search" type="text" [ngModel]="filterSearch()" (ngModelChange)="filterSearch.set($event)"
                   placeholder="Search"
                   class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -1645,7 +1645,7 @@
                 <label
                   class="flex items-center gap-2.5 px-1 py-1.5 border-b border-slate-100 dark:border-slate-700 cursor-pointer">
                   <span class="custom-checkbox-wrap">
-                    <input type="checkbox" class="sr-only custom-checkbox-input"
+                    <input aria-label="Select item" type="checkbox" class="sr-only custom-checkbox-input"
                       [checked]="filterFieldState(f.key) === 'all'" [indeterminate]="filterFieldState(f.key) === 'some'"
                       (change)="toggleFilterField(f.key)" />
                     <span class="custom-checkbox-box">
@@ -1667,7 +1667,7 @@
                     class="flex items-center justify-between gap-2.5 py-1 px-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-750 cursor-pointer transition-colors">
                     <div class="flex items-center gap-2.5 min-w-0">
                       <span class="custom-checkbox-wrap">
-                        <input type="checkbox" class="sr-only custom-checkbox-input"
+                        <input aria-label="Select item" type="checkbox" class="sr-only custom-checkbox-input"
                           [checked]="isFilterValueChecked(f.key, v)" (change)="toggleFilterValue(f.key, v)" />
                         <span class="custom-checkbox-box">
                           <svg class="custom-checkbox-icon check-icon" viewBox="0 0 16 16" fill="none"
@@ -1718,7 +1718,7 @@
 
             <div class="p-3 pt-8 border-b border-slate-100 dark:border-slate-700 shrink-0">
               <div class="relative">
-                <input type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
+                <input aria-label="Search" type="text" [ngModel]="exportSearch()" (ngModelChange)="exportSearch.set($event)"
                   placeholder="Search"
                   class="w-full h-9 pl-9 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20" />
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -1733,7 +1733,7 @@
             <label
               class="form-switch justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 shrink-0">
               <span class="form-switch-label">Select All</span>
-              <input type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
+              <input aria-label="Select item" type="checkbox" class="sr-only" [checked]="isAllExportFieldsSelected()"
                 (change)="setAllExportFields($any($event.target).checked)" />
               <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
             </label>
@@ -1744,7 +1744,7 @@
                 <label
                   class="form-switch justify-between px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60">
                   <span class="form-switch-label font-medium!">{{ f.label }}</span>
-                  <input type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
+                  <input aria-label="Select item" type="checkbox" class="sr-only" [checked]="exportFields().has(f.key)"
                     (change)="toggleExportField(f.key)" />
                   <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                 </label>
@@ -1881,7 +1881,7 @@
                     <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-700/30 transition-colors">
                       <td class="py-3.5 px-5 whitespace-nowrap">
                         <label class="flex items-center gap-3 cursor-pointer select-none">
-                          <input type="checkbox" [checked]="selectedBinIds().has(item.itemId)"
+                          <input aria-label="Select item" type="checkbox" [checked]="selectedBinIds().has(item.itemId)"
                             (change)="toggleBinSelection(item.itemId)" class="sr-only" />
                           <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all"
                             [class.border-[#00a6f4]]="selectedBinIds().has(item.itemId)"
@@ -2153,7 +2153,7 @@
             </svg>
 
             <!-- Search Input (Find field) -->
-            <input #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
+            <input aria-label="Find field" #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
               (ngModelChange)="fieldSearchQuery.set($event); isFieldSearchOpen.set(true)"
               (focus)="isFieldSearchOpen.set(true)" placeholder="Find field"
               class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
@@ -2383,7 +2383,7 @@
                     <span class="floating-notch-label">
                       Item Name (EN) <span class="text-slate-400 dark:text-slate-500">*</span>
                     </span>
-                    <input #nameEnInput type="text" [ngModel]="formNameEn()" (ngModelChange)="formNameEn.set($event)"
+                    <input aria-label="e.g. Colombian Coffee Beans 1kg" #nameEnInput type="text" [ngModel]="formNameEn()" (ngModelChange)="formNameEn.set($event)"
                       name="nameEn" placeholder="e.g. Colombian Coffee Beans 1kg" required
                       class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
 
@@ -2410,7 +2410,7 @@
                     <span class="floating-notch-label right-5 left-auto">
                       اسم الصنف (بالعربية)
                     </span>
-                    <input type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)" name="nameAr"
+                    <input aria-label="مثال: حبوب بن كولومبي فاخرة" type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)" name="nameAr"
                       placeholder="مثال: حبوب بن كولومبي فاخرة"
                       class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
                   </div>
@@ -2424,7 +2424,7 @@
                     <span class="floating-notch-label">
                       SKU <span class="text-slate-400 dark:text-slate-500">*</span>
                     </span>
-                    <input type="text" [ngModel]="formSku()" (ngModelChange)="formSku.set($event)" name="sku" required
+                    <input aria-label="e.g. COF-COL-001" type="text" [ngModel]="formSku()" (ngModelChange)="formSku.set($event)" name="sku" required
                       placeholder="e.g. COF-COL-001"
                       class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 focus:outline-none" />
                     <button type="button" (click)="autoGenerateSku()"
@@ -2498,7 +2498,7 @@
                   <div id="field-subcategory"
                     class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                     <span class="floating-notch-label">Subcategory</span>
-                    <input type="text" [ngModel]="formSubcategory()" (ngModelChange)="formSubcategory.set($event)"
+                    <input aria-label="e.g. Coffee Beans" type="text" [ngModel]="formSubcategory()" (ngModelChange)="formSubcategory.set($event)"
                       name="subcategory" placeholder="e.g. Coffee Beans"
                       class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white focus:outline-none" />
                   </div>
@@ -2625,7 +2625,7 @@
                     class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                     <span class="floating-notch-label">Sales Price</span>
                     <span class="text-[11px] font-bold text-slate-400 mr-1.5 shrink-0">AED</span>
-                    <input type="number" step="0.01" min="0" [ngModel]="formSalesPrice()"
+                    <input aria-label="0.00" type="number" step="0.01" min="0" [ngModel]="formSalesPrice()"
                       (ngModelChange)="formSalesPrice.set($event)" name="salesPrice" placeholder="0.00"
                       class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 focus:outline-none" />
                   </div>
@@ -2637,7 +2637,7 @@
                     class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                     <span class="floating-notch-label">Cost Price</span>
                     <span class="text-[11px] font-bold text-slate-400 mr-1.5 shrink-0">AED</span>
-                    <input type="number" step="0.01" min="0" [ngModel]="formCostPrice()"
+                    <input aria-label="0.00" type="number" step="0.01" min="0" [ngModel]="formCostPrice()"
                       (ngModelChange)="formCostPrice.set($event)" name="costPrice" placeholder="0.00"
                       class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 focus:outline-none" />
                   </div>
@@ -2665,7 +2665,7 @@
                   <div id="field-barcode"
                     class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                     <span class="floating-notch-label">Barcode / GTIN</span>
-                    <input #barcodeInput type="text" [ngModel]="formBarcode()" (ngModelChange)="formBarcode.set($event)"
+                    <input aria-label="Scan or type barcode" #barcodeInput type="text" [ngModel]="formBarcode()" (ngModelChange)="formBarcode.set($event)"
                       name="barcode" placeholder="Scan or type barcode"
                       class="w-full h-full bg-transparent text-xs sm:text-sm font-mono font-bold text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
                     <button type="button" (click)="openBarcodeScanner()"
@@ -2772,7 +2772,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Short Name</span>
-                        <input type="text" [ngModel]="formShortName()" (ngModelChange)="formShortName.set($event)"
+                        <input aria-label="Display name on receipts" type="text" [ngModel]="formShortName()" (ngModelChange)="formShortName.set($event)"
                           name="shortName" placeholder="Display name on receipts"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2783,7 +2783,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Manufacturer</span>
-                        <input type="text" [ngModel]="formManufacturer()" (ngModelChange)="formManufacturer.set($event)"
+                        <input aria-label="e.g. Sol Roasters Corp" type="text" [ngModel]="formManufacturer()" (ngModelChange)="formManufacturer.set($event)"
                           name="manufacturer" placeholder="e.g. Sol Roasters Corp"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2794,7 +2794,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Country of Origin</span>
-                        <input type="text" [ngModel]="formCountryOfOrigin()"
+                        <input aria-label="e.g. Colombia" type="text" [ngModel]="formCountryOfOrigin()"
                           (ngModelChange)="formCountryOfOrigin.set($event)" name="countryOfOrigin"
                           placeholder="e.g. Colombia"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -2807,7 +2807,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Model Number</span>
-                        <input type="text" [ngModel]="formModelNumber()" (ngModelChange)="formModelNumber.set($event)"
+                        <input aria-label="e.g. CDR-1000" type="text" [ngModel]="formModelNumber()" (ngModelChange)="formModelNumber.set($event)"
                           name="modelNumber" placeholder="e.g. CDR-1000"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2818,7 +2818,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Material / Fabric</span>
-                        <input type="text" [ngModel]="formMaterial()" (ngModelChange)="formMaterial.set($event)"
+                        <input aria-label="e.g. Organic Whole Bean" type="text" [ngModel]="formMaterial()" (ngModelChange)="formMaterial.set($event)"
                           name="material" placeholder="e.g. Organic Whole Bean"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2829,7 +2829,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Color / Roast</span>
-                        <input type="text" [ngModel]="formColor()" (ngModelChange)="formColor.set($event)" name="color"
+                        <input aria-label="e.g. Dark Roast" type="text" [ngModel]="formColor()" (ngModelChange)="formColor.set($event)" name="color"
                           placeholder="e.g. Dark Roast"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2841,7 +2841,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Size / Net Weight</span>
-                        <input type="text" [ngModel]="formSize()" (ngModelChange)="formSize.set($event)" name="size"
+                        <input aria-label="e.g. 1000g" type="text" [ngModel]="formSize()" (ngModelChange)="formSize.set($event)" name="size"
                           placeholder="e.g. 1000g"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2852,7 +2852,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Season / Collection</span>
-                        <input type="text" [ngModel]="formCollection()" (ngModelChange)="formCollection.set($event)"
+                        <input aria-label="e.g. Barista Reserve 2026" type="text" [ngModel]="formCollection()" (ngModelChange)="formCollection.set($event)"
                           name="collection" placeholder="e.g. Barista Reserve 2026"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2863,7 +2863,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Department</span>
-                        <input type="text" [ngModel]="formDepartment()" (ngModelChange)="formDepartment.set($event)"
+                        <input aria-label="e.g. Food & Beverage" type="text" [ngModel]="formDepartment()" (ngModelChange)="formDepartment.set($event)"
                           name="department" placeholder="e.g. Food & Beverage"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2874,7 +2874,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Description (EN)</span>
-                        <input type="text" [ngModel]="formDescEn()" (ngModelChange)="formDescEn.set($event)"
+                        <input aria-label="Detailed English description" type="text" [ngModel]="formDescEn()" (ngModelChange)="formDescEn.set($event)"
                           name="descEn" placeholder="Detailed English description"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2885,7 +2885,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-right">
                         <span class="floating-notch-label right-5 left-auto">الوصف (بالعربية)</span>
-                        <input type="text" [ngModel]="formDescAr()" (ngModelChange)="formDescAr.set($event)"
+                        <input aria-label="وصف تفصيلي للمنتج باللغة العربية" type="text" [ngModel]="formDescAr()" (ngModelChange)="formDescAr.set($event)"
                           name="descAr" placeholder="وصف تفصيلي للمنتج باللغة العربية"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
                       </div>
@@ -2942,7 +2942,7 @@
                         </span>
                         }
                         <div class="flex items-center gap-1.5">
-                          <input type="text" [ngModel]="newTagInput()" (ngModelChange)="newTagInput.set($event)"
+                          <input aria-label="+ Add keyword" type="text" [ngModel]="newTagInput()" (ngModelChange)="newTagInput.set($event)"
                             (keydown.enter)="addTag(); $event.preventDefault()" placeholder="+ Add keyword"
                             class="h-8 px-3 rounded-full text-xs border border-slate-300 dark:border-slate-600 bg-transparent focus:outline-none focus:border-[#00a6f4]" />
                           <button type="button" (click)="addTag()"
@@ -2972,7 +2972,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Department</span>
-                        <input type="text" [ngModel]="formDepartment()" (ngModelChange)="formDepartment.set($event)"
+                        <input aria-label="e.g. Food & Beverage" type="text" [ngModel]="formDepartment()" (ngModelChange)="formDepartment.set($event)"
                           name="dept" placeholder="e.g. Food & Beverage"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2983,7 +2983,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Product Group</span>
-                        <input type="text" [ngModel]="formProductGroup()" (ngModelChange)="formProductGroup.set($event)"
+                        <input aria-label="e.g. Dry Groceries" type="text" [ngModel]="formProductGroup()" (ngModelChange)="formProductGroup.set($event)"
                           name="pgroup" placeholder="e.g. Dry Groceries"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -2994,7 +2994,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Product Class</span>
-                        <input type="text" [ngModel]="formProductClass()" (ngModelChange)="formProductClass.set($event)"
+                        <input aria-label="e.g. Specialty Beverages" type="text" [ngModel]="formProductClass()" (ngModelChange)="formProductClass.set($event)"
                           name="pclass" placeholder="e.g. Specialty Beverages"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3006,7 +3006,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Product Subclass</span>
-                        <input type="text" [ngModel]="formProductSubclass()"
+                        <input aria-label="e.g. Whole Bean" type="text" [ngModel]="formProductSubclass()"
                           (ngModelChange)="formProductSubclass.set($event)" name="psubclass"
                           placeholder="e.g. Whole Bean"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -3018,7 +3018,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Merchandise Hierarchy</span>
-                        <input type="text" [ngModel]="formMerchandiseHierarchy()"
+                        <input aria-label="m Hierarchy" type="text" [ngModel]="formMerchandiseHierarchy()"
                           (ngModelChange)="formMerchandiseHierarchy.set($event)" name="mHierarchy"
                           placeholder="e.g. Grocery > Packaged > Coffee"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -3030,7 +3030,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Country of Origin</span>
-                        <input type="text" [ngModel]="formCountryOfOrigin()"
+                        <input aria-label="e.g. Colombia" type="text" [ngModel]="formCountryOfOrigin()"
                           (ngModelChange)="formCountryOfOrigin.set($event)" name="coo" placeholder="e.g. Colombia"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3042,7 +3042,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Season</span>
-                        <input type="text" [ngModel]="formSeason()" (ngModelChange)="formSeason.set($event)"
+                        <input aria-label="e.g. All Season" type="text" [ngModel]="formSeason()" (ngModelChange)="formSeason.set($event)"
                           name="season" placeholder="e.g. All Season"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3053,7 +3053,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Collection</span>
-                        <input type="text" [ngModel]="formCollection()" (ngModelChange)="formCollection.set($event)"
+                        <input aria-label="e.g. Barista Reserve 2026" type="text" [ngModel]="formCollection()" (ngModelChange)="formCollection.set($event)"
                           name="collection" placeholder="e.g. Barista Reserve 2026"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3064,7 +3064,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Target Audience</span>
-                        <input type="text" [ngModel]="formTargetAudience()"
+                        <input aria-label="e.g. All Demographics / Unisex" type="text" [ngModel]="formTargetAudience()"
                           (ngModelChange)="formTargetAudience.set($event)" name="targetAudience"
                           placeholder="e.g. All Demographics / Unisex"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -3075,7 +3075,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Product Material</span>
-                        <input type="text" [ngModel]="formMaterial()" (ngModelChange)="formMaterial.set($event)"
+                        <input aria-label="e.g. Organic Whole Bean" type="text" [ngModel]="formMaterial()" (ngModelChange)="formMaterial.set($event)"
                           name="mat" placeholder="e.g. Organic Whole Bean"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3086,7 +3086,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Color</span>
-                        <input type="text" [ngModel]="formColor()" (ngModelChange)="formColor.set($event)" name="color"
+                        <input aria-label="Dark Roast" type="text" [ngModel]="formColor()" (ngModelChange)="formColor.set($event)" name="color"
                           placeholder="Dark Roast"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3097,7 +3097,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Size</span>
-                        <input type="text" [ngModel]="formSize()" (ngModelChange)="formSize.set($event)" name="size"
+                        <input aria-label="1000g" type="text" [ngModel]="formSize()" (ngModelChange)="formSize.set($event)" name="size"
                           placeholder="1000g"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3108,7 +3108,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Style / Packaging Style</span>
-                        <input type="text" [ngModel]="formStyle()" (ngModelChange)="formStyle.set($event)" name="style"
+                        <input aria-label="Vacuum Sealed Pouch" type="text" [ngModel]="formStyle()" (ngModelChange)="formStyle.set($event)" name="style"
                           placeholder="Vacuum Sealed Pouch"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3129,7 +3129,7 @@
                             class="w-48 h-9 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-bold flex items-center">
                             {{ attr.name }}
                           </div>
-                          <input type="text" [(ngModel)]="attr.value" [name]="'attr_' + attr.id"
+                          <input aria-label="Input field" type="text" [(ngModel)]="attr.value" [name]="'attr_' + attr.id"
                             class="flex-1 h-9 px-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-semibold focus:outline-none focus:border-[#00a6f4]" />
                           <button type="button" (click)="removeCustomAttribute(attr.id)"
                             class="text-slate-400 hover:text-red-500 cursor-pointer">✕</button>
@@ -3137,10 +3137,10 @@
                         }
                         <!-- Add New Attribute Row -->
                         <div class="flex items-center gap-3 pt-1">
-                          <input type="text" [ngModel]="newCustomAttrName()"
+                          <input aria-label="Attribute Name (e.g. Storage)" type="text" [ngModel]="newCustomAttrName()"
                             (ngModelChange)="newCustomAttrName.set($event)" placeholder="Attribute Name (e.g. Storage)"
                             class="w-48 h-9 px-3 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-xs focus:outline-none focus:border-[#00a6f4]" />
-                          <input type="text" [ngModel]="newCustomAttrValue()"
+                          <input aria-label="Value (e.g. 256GB)" type="text" [ngModel]="newCustomAttrValue()"
                             (ngModelChange)="newCustomAttrValue.set($event)" placeholder="Value (e.g. 256GB)"
                             class="flex-1 h-9 px-3 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-xs focus:outline-none focus:border-[#00a6f4]" />
                           <button type="button" (click)="addCustomAttribute()"
@@ -3170,7 +3170,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Primary Barcode</span>
-                        <input type="text" [ngModel]="formPrimaryBarcode()"
+                        <input aria-label="prim Barcode" type="text" [ngModel]="formPrimaryBarcode()"
                           (ngModelChange)="formPrimaryBarcode.set($event)" name="primBarcode"
                           class="w-full bg-transparent text-xs sm:text-sm font-mono font-bold focus:outline-none" />
                         <button type="button" (click)="openBarcodeScanner()"
@@ -3246,7 +3246,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">GTIN / EAN / UPC</span>
-                        <input type="text" [ngModel]="formGtin()" (ngModelChange)="formGtin.set($event)" name="gtin"
+                        <input aria-label="Global Trade Identification Number" type="text" [ngModel]="formGtin()" (ngModelChange)="formGtin.set($event)" name="gtin"
                           placeholder="Global Trade Identification Number"
                           class="w-full bg-transparent text-xs sm:text-sm font-mono font-semibold focus:outline-none" />
                       </div>
@@ -3258,7 +3258,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">QR Code Payload</span>
-                        <input type="text" [ngModel]="formQrCode()" (ngModelChange)="formQrCode.set($event)"
+                        <input aria-label="Auto-generated QR payload" type="text" [ngModel]="formQrCode()" (ngModelChange)="formQrCode.set($event)"
                           name="qrCode" placeholder="Auto-generated QR payload"
                           class="w-full bg-transparent text-xs sm:text-sm font-mono font-semibold focus:outline-none" />
                       </div>
@@ -3269,7 +3269,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Manufacturer Part Number (MPN)</span>
-                        <input type="text" [ngModel]="formMpn()" (ngModelChange)="formMpn.set($event)" name="mpn"
+                        <input aria-label="e.g. COL-ARABICA-1KG" type="text" [ngModel]="formMpn()" (ngModelChange)="formMpn.set($event)" name="mpn"
                           placeholder="e.g. COL-ARABICA-1KG"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3280,7 +3280,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Supplier Item Code</span>
-                        <input type="text" [ngModel]="formSupplierItemCode()"
+                        <input aria-label="e.g. SUP-COF-78" type="text" [ngModel]="formSupplierItemCode()"
                           (ngModelChange)="formSupplierItemCode.set($event)" name="supCode"
                           placeholder="e.g. SUP-COF-78"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -3331,8 +3331,8 @@
                         <div class="text-xs font-bold text-slate-800 dark:text-white">Serial Number Tracking</div>
                         <div class="text-[10px] text-slate-400">Capture serial on POS / Goods Receipt</div>
                       </div>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formSerialTracking()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formSerialTracking()"
                           (change)="formSerialTracking.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -3343,8 +3343,8 @@
                         <div class="text-xs font-bold text-slate-800 dark:text-white">Lot / Batch Tracking</div>
                         <div class="text-[10px] text-slate-400">Track production batches & FIFO</div>
                       </div>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formBatchTracking()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formBatchTracking()"
                           (change)="formBatchTracking.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -3355,8 +3355,8 @@
                         <div class="text-xs font-bold text-slate-800 dark:text-white">Expiry Date Tracking</div>
                         <div class="text-[10px] text-slate-400">Mandatory for perishables & cosmetics</div>
                       </div>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formExpiryTracking()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formExpiryTracking()"
                           (change)="formExpiryTracking.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -3562,8 +3562,8 @@
                     <div
                       class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 flex items-center justify-between h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50">
                       <span class="text-xs font-bold text-slate-800 dark:text-white">Allow Fractional Qty</span>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formAllowFractionalQty()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formAllowFractionalQty()"
                           (change)="formAllowFractionalQty.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -3636,7 +3636,7 @@
                       <div
                         class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Net Weight</span>
-                        <input type="number" step="0.01" [ngModel]="formNetWeight()"
+                        <input aria-label="net W" type="number" step="0.01" [ngModel]="formNetWeight()"
                           (ngModelChange)="formNetWeight.set($event)" name="netW"
                           class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
                         <span class="text-xs font-bold text-slate-400 shrink-0">{{ formWeightUom() }}</span>
@@ -3646,7 +3646,7 @@
                       <div
                         class="relative flex items-center w-full h-[52px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Gross Weight</span>
-                        <input type="number" step="0.01" [ngModel]="formGrossWeight()"
+                        <input aria-label="gross W" type="number" step="0.01" [ngModel]="formGrossWeight()"
                           (ngModelChange)="formGrossWeight.set($event)" name="grossW"
                           class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
                         <span class="text-xs font-bold text-slate-400 shrink-0">{{ formWeightUom() }}</span>
@@ -3656,7 +3656,7 @@
                       <div
                         class="relative flex items-center w-full h-[52px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Length (cm)</span>
-                        <input type="number" [ngModel]="formLength()" (ngModelChange)="formLength.set($event)"
+                        <input aria-label="len" type="number" [ngModel]="formLength()" (ngModelChange)="formLength.set($event)"
                           name="len" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
                       </div>
                     </div>
@@ -3664,7 +3664,7 @@
                       <div
                         class="relative flex items-center w-full h-[52px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Width (cm)</span>
-                        <input type="number" [ngModel]="formWidth()" (ngModelChange)="formWidth.set($event)" name="wid"
+                        <input aria-label="wid" type="number" [ngModel]="formWidth()" (ngModelChange)="formWidth.set($event)" name="wid"
                           class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
                       </div>
                     </div>
@@ -3672,7 +3672,7 @@
                       <div
                         class="relative flex items-center w-full h-[52px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Height (cm)</span>
-                        <input type="number" [ngModel]="formHeight()" (ngModelChange)="formHeight.set($event)"
+                        <input aria-label="hgt" type="number" [ngModel]="formHeight()" (ngModelChange)="formHeight.set($event)"
                           name="hgt" class="w-full bg-transparent text-sm font-semibold focus:outline-none" />
                       </div>
                     </div>
@@ -3749,7 +3749,7 @@
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Minimum Selling Price</span>
                         <span class="text-xs font-bold text-slate-400 mr-1.5">AED</span>
-                        <input type="number" step="0.01" [ngModel]="formMinSellingPrice()"
+                        <input aria-label="min Price" type="number" step="0.01" [ngModel]="formMinSellingPrice()"
                           (ngModelChange)="formMinSellingPrice.set($event)" name="minPrice"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3760,7 +3760,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Max Discount %</span>
-                        <input type="number" min="0" max="100" [ngModel]="formMaxDiscountPct()"
+                        <input aria-label="max Disc" type="number" min="0" max="100" [ngModel]="formMaxDiscountPct()"
                           (ngModelChange)="formMaxDiscountPct.set($event)" name="maxDisc"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         <span class="text-xs font-bold text-slate-400">%</span>
@@ -3773,7 +3773,7 @@
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Wholesale Price</span>
                         <span class="text-xs font-bold text-slate-400 mr-1.5">AED</span>
-                        <input type="number" step="0.01" [ngModel]="formWholesalePrice()"
+                        <input aria-label="ws Price" type="number" step="0.01" [ngModel]="formWholesalePrice()"
                           (ngModelChange)="formWholesalePrice.set($event)" name="wsPrice"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -3902,8 +3902,8 @@
                     <div
                       class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 flex items-center justify-between h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50">
                       <span class="text-xs font-bold text-slate-800 dark:text-white">Price Includes Tax</span>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formPriceIncludesTax()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formPriceIncludesTax()"
                           (change)="formPriceIncludesTax.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -3944,7 +3944,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Effective From</span>
-                          <input type="date" [ngModel]="formPriceEffectiveFrom()"
+                          <input aria-label="eff From" type="date" [ngModel]="formPriceEffectiveFrom()"
                             (ngModelChange)="formPriceEffectiveFrom.set($event)" name="effFrom"
                             class="w-full bg-transparent text-xs font-semibold focus:outline-none cursor-pointer" />
                         </div>
@@ -3953,7 +3953,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Effective To</span>
-                          <input type="date" [ngModel]="formPriceEffectiveTo()"
+                          <input aria-label="eff To" type="date" [ngModel]="formPriceEffectiveTo()"
                             (ngModelChange)="formPriceEffectiveTo.set($event)" name="effTo"
                             class="w-full bg-transparent text-xs font-semibold focus:outline-none cursor-pointer" />
                         </div>
@@ -3967,8 +3967,8 @@
                         <div class="text-xs font-bold text-slate-800 dark:text-white">Promotional Pricing Eligible
                         </div>
                       </div>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formPromotionalPricingEligible()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formPromotionalPricingEligible()"
                           (change)="formPromotionalPricingEligible.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -4105,7 +4105,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Min Stock</span>
-                        <input type="number" [ngModel]="formMinStock()" (ngModelChange)="formMinStock.set($event)"
+                        <input aria-label="min Stk" type="number" [ngModel]="formMinStock()" (ngModelChange)="formMinStock.set($event)"
                           name="minStk"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4116,7 +4116,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Reorder Point</span>
-                        <input type="number" [ngModel]="formReorderPoint()"
+                        <input aria-label="reorder Pt" type="number" [ngModel]="formReorderPoint()"
                           (ngModelChange)="formReorderPoint.set($event)" name="reorderPt"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4127,7 +4127,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Reorder Qty</span>
-                        <input type="number" [ngModel]="formReorderQuantity()"
+                        <input aria-label="reorder Qty" type="number" [ngModel]="formReorderQuantity()"
                           (ngModelChange)="formReorderQuantity.set($event)" name="reorderQty"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4139,7 +4139,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Max Stock</span>
-                        <input type="number" [ngModel]="formMaxStock()" (ngModelChange)="formMaxStock.set($event)"
+                        <input aria-label="max Stk" type="number" [ngModel]="formMaxStock()" (ngModelChange)="formMaxStock.set($event)"
                           name="maxStk"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4150,7 +4150,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Safety Stock</span>
-                        <input type="number" [ngModel]="formSafetyStock()" (ngModelChange)="formSafetyStock.set($event)"
+                        <input aria-label="saf Stk" type="number" [ngModel]="formSafetyStock()" (ngModelChange)="formSafetyStock.set($event)"
                           name="safStk"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4161,7 +4161,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">EOQ</span>
-                        <input type="number" [ngModel]="formEoq()" (ngModelChange)="formEoq.set($event)" name="eoq"
+                        <input aria-label="eoq" type="number" [ngModel]="formEoq()" (ngModelChange)="formEoq.set($event)" name="eoq"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
                     </div>
@@ -4172,7 +4172,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Default Warehouse</span>
-                        <input type="text" [ngModel]="formDefaultWarehouse()"
+                        <input aria-label="wh" type="text" [ngModel]="formDefaultWarehouse()"
                           (ngModelChange)="formDefaultWarehouse.set($event)" name="wh"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4181,7 +4181,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Default Bin / Rack</span>
-                        <input type="text" [ngModel]="formDefaultBin()" (ngModelChange)="formDefaultBin.set($event)"
+                        <input aria-label="e.g. RACK-A04-SHELF-2" type="text" [ngModel]="formDefaultBin()" (ngModelChange)="formDefaultBin.set($event)"
                           name="bin" placeholder="e.g. RACK-A04-SHELF-2"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4190,7 +4190,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Preferred Picking Location</span>
-                        <input type="text" [ngModel]="formPreferredPickingLocation()"
+                        <input aria-label="e.g. ZONE-A-FAST-MOVER" type="text" [ngModel]="formPreferredPickingLocation()"
                           (ngModelChange)="formPreferredPickingLocation.set($event)" name="pickLoc"
                           placeholder="e.g. ZONE-A-FAST-MOVER"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -4321,7 +4321,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Shelf Life (Days)</span>
-                          <input type="number" [ngModel]="formShelfLifeDays()"
+                          <input aria-label="s Life" type="number" [ngModel]="formShelfLifeDays()"
                             (ngModelChange)="formShelfLifeDays.set($event)" name="sLife"
                             class="w-full bg-transparent text-xs font-semibold focus:outline-none" />
                         </div>
@@ -4330,7 +4330,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Lead Time (Days)</span>
-                          <input type="number" [ngModel]="formLeadTimeDays()"
+                          <input aria-label="l Time" type="number" [ngModel]="formLeadTimeDays()"
                             (ngModelChange)="formLeadTimeDays.set($event)" name="lTime"
                             class="w-full bg-transparent text-xs font-semibold focus:outline-none" />
                         </div>
@@ -4345,8 +4345,8 @@
                         <div class="text-[10px] text-slate-400">Permit billing even if on-hand physical stock is zero
                         </div>
                       </div>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formAllowNegativeStock()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formAllowNegativeStock()"
                           (change)="formAllowNegativeStock.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -4357,8 +4357,8 @@
                         <div class="text-xs font-bold text-slate-800 dark:text-white">Cycle Count Required</div>
                         <div class="text-[10px] text-slate-400">Include in scheduled warehouse physical audits</div>
                       </div>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formCycleCountRequired()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formCycleCountRequired()"
                           (change)="formCycleCountRequired.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -4381,8 +4381,8 @@
                     <div
                       class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 flex items-center justify-between h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-slate-50/50">
                       <span class="text-xs font-bold text-slate-800 dark:text-white">Purchasing Allowed</span>
-                      <label class="form-switch m-0 cursor-pointer">
-                        <input type="checkbox" class="sr-only" [checked]="formPurchasingAllowed()"
+                      <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                        <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formPurchasingAllowed()"
                           (change)="formPurchasingAllowed.set($any($event.target).checked)" />
                         <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                       </label>
@@ -4393,7 +4393,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Preferred Supplier</span>
-                        <input type="text" [ngModel]="formPreferredSupplier()"
+                        <input aria-label="pref Sup" type="text" [ngModel]="formPreferredSupplier()"
                           (ngModelChange)="formPreferredSupplier.set($event)" name="prefSup"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4404,7 +4404,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Supplier Item Code</span>
-                        <input type="text" [ngModel]="formSupplierItemCode()"
+                        <input aria-label="sup Code" type="text" [ngModel]="formSupplierItemCode()"
                           (ngModelChange)="formSupplierItemCode.set($event)" name="supCode"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4476,7 +4476,7 @@
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Default Purchase Price</span>
                         <span class="text-xs font-bold text-slate-400 mr-1.5">AED</span>
-                        <input type="number" step="0.01" [ngModel]="formDefaultPurchasePrice()"
+                        <input aria-label="def P Price" type="number" step="0.01" [ngModel]="formDefaultPurchasePrice()"
                           (ngModelChange)="formDefaultPurchasePrice.set($event)" name="defPPrice"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4487,7 +4487,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Min Order Qty (MOQ)</span>
-                        <input type="number" [ngModel]="formMinOrderQuantity()"
+                        <input aria-label="moq" type="number" [ngModel]="formMinOrderQuantity()"
                           (ngModelChange)="formMinOrderQuantity.set($event)" name="moq"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4499,7 +4499,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Max Order Qty</span>
-                        <input type="number" [ngModel]="formMaxOrderQuantity()"
+                        <input aria-label="max Oq" type="number" [ngModel]="formMaxOrderQuantity()"
                           (ngModelChange)="formMaxOrderQuantity.set($event)" name="maxOq"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4510,7 +4510,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Purchase Multiple</span>
-                        <input type="number" [ngModel]="formPurchaseMultiple()"
+                        <input aria-label="p Mult" type="number" [ngModel]="formPurchaseMultiple()"
                           (ngModelChange)="formPurchaseMultiple.set($event)" name="pMult"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4521,7 +4521,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Supplier Lead Time (Days)</span>
-                        <input type="number" [ngModel]="formSupplierLeadTime()"
+                        <input aria-label="s Lead" type="number" [ngModel]="formSupplierLeadTime()"
                           (ngModelChange)="formSupplierLeadTime.set($event)" name="sLead"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4532,7 +4532,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Country of Supply</span>
-                        <input type="text" [ngModel]="formCountryOfSupply()"
+                        <input aria-label="c Supply" type="text" [ngModel]="formCountryOfSupply()"
                           (ngModelChange)="formCountryOfSupply.set($event)" name="cSupply"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4608,7 +4608,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">POS Display Name</span>
-                        <input type="text" [ngModel]="formPosDisplayName()"
+                        <input aria-label="pos Name" type="text" [ngModel]="formPosDisplayName()"
                           (ngModelChange)="formPosDisplayName.set($event)" name="posName"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4620,7 +4620,7 @@
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Recommended Retail Price</span>
                         <span class="text-xs font-bold text-slate-400 mr-1.5">AED</span>
-                        <input type="number" step="0.01" [ngModel]="formRecommendedRetailPrice()"
+                        <input aria-label="rrp" type="number" step="0.01" [ngModel]="formRecommendedRetailPrice()"
                           (ngModelChange)="formRecommendedRetailPrice.set($event)" name="rrp"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4631,7 +4631,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Display Order</span>
-                        <input type="number" [ngModel]="formDisplayOrder()"
+                        <input aria-label="disp Ord" type="number" [ngModel]="formDisplayOrder()"
                           (ngModelChange)="formDisplayOrder.set($event)" name="dispOrd"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4643,7 +4643,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Commission Rule</span>
-                        <input type="text" [ngModel]="formCommissionRule()"
+                        <input aria-label="comm Rule" type="text" [ngModel]="formCommissionRule()"
                           (ngModelChange)="formCommissionRule.set($event)" name="commRule"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4654,7 +4654,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Warranty Period (Months)</span>
-                        <input type="number" [ngModel]="formWarrantyPeriodMonths()"
+                        <input aria-label="w Months" type="number" [ngModel]="formWarrantyPeriodMonths()"
                           (ngModelChange)="formWarrantyPeriodMonths.set($event)" name="wMonths"
                           class="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4685,8 +4685,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Sales Allowed</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formSalesAllowed()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formSalesAllowed()"
                               (change)="formSalesAllowed.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4695,8 +4695,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">POS Enabled</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formPosEnabled()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formPosEnabled()"
                               (change)="formPosEnabled.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4705,8 +4705,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Weighable Scale</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formWeighableItem()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formWeighableItem()"
                               (change)="formWeighableItem.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4715,8 +4715,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Sold by Weight/Len</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formSoldByWeightLength()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formSoldByWeightLength()"
                               (change)="formSoldByWeightLength.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4725,8 +4725,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Open Price</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formOpenPriceAllowed()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formOpenPriceAllowed()"
                               (change)="formOpenPriceAllowed.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4735,8 +4735,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Discount Allowed</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formDiscountAllowed()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formDiscountAllowed()"
                               (change)="formDiscountAllowed.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4745,8 +4745,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Return Allowed</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formReturnAllowed()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formReturnAllowed()"
                               (change)="formReturnAllowed.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4755,8 +4755,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Age Restriction</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formAgeRestrictionRequired()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formAgeRestrictionRequired()"
                               (change)="formAgeRestrictionRequired.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4765,8 +4765,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Warranty Req.</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formWarrantyRequired()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formWarrantyRequired()"
                               (change)="formWarrantyRequired.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4775,8 +4775,8 @@
                         <div
                           class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                           <span class="text-xs font-bold">Commission</span>
-                          <label class="form-switch m-0 cursor-pointer">
-                            <input type="checkbox" class="sr-only" [checked]="formCommissionEligible()"
+                          <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                            <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formCommissionEligible()"
                               (change)="formCommissionEligible.set($any($event.target).checked)" />
                             <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                           </label>
@@ -4804,8 +4804,8 @@
                         class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Item Has Variants</span>
                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Enable Variants</span>
-                        <label class="form-switch m-0 cursor-pointer">
-                          <input type="checkbox" class="sr-only" [checked]="formHasVariants()"
+                        <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                          <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formHasVariants()"
                             (change)="formHasVariants.set($any($event.target).checked)" />
                           <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                         </label>
@@ -4817,7 +4817,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Parent Item SKU / Name</span>
-                        <input type="text" [ngModel]="formParentItem()" (ngModelChange)="formParentItem.set($event)"
+                        <input aria-label="Leave blank if parent master" type="text" [ngModel]="formParentItem()" (ngModelChange)="formParentItem.set($event)"
                           name="parentItm" placeholder="Leave blank if parent master"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4828,7 +4828,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Variant Dimension Types</span>
-                        <input type="text" value="Size, Color, Material" readonly
+                        <input aria-label="Input field" type="text" value="Size, Color, Material" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -4839,7 +4839,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Primary Packaging Level</span>
-                        <input type="text" value="Retail Base Unit (Piece)" readonly
+                        <input aria-label="Input field" type="text" value="Retail Base Unit (Piece)" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -4849,7 +4849,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Units / Inner Pack</span>
-                        <input type="text" value="12 pcs / Inner Box" readonly
+                        <input aria-label="Input field" type="text" value="12 pcs / Inner Box" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -4859,7 +4859,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Units / Master Carton</span>
-                        <input type="text" value="144 pcs / Master Carton" readonly
+                        <input aria-label="Input field" type="text" value="144 pcs / Master Carton" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -4988,7 +4988,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Tax Category</span>
-                        <input type="text" [ngModel]="formTaxCategory()" (ngModelChange)="formTaxCategory.set($event)"
+                        <input aria-label="tax Cat" type="text" [ngModel]="formTaxCategory()" (ngModelChange)="formTaxCategory.set($event)"
                           name="taxCat"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -4999,7 +4999,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">HS Code (Customs Tariff)</span>
-                        <input type="text" [ngModel]="formHsCode()" (ngModelChange)="formHsCode.set($event)" name="hs"
+                        <input aria-label="e.g. 0901.21.00" type="text" [ngModel]="formHsCode()" (ngModelChange)="formHsCode.set($event)" name="hs"
                           placeholder="e.g. 0901.21.00"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-mono font-semibold focus:outline-none" />
                       </div>
@@ -5010,7 +5010,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Regulatory Classification</span>
-                        <input type="text" [ngModel]="formRegulatoryClassification()"
+                        <input aria-label="reg Class" type="text" [ngModel]="formRegulatoryClassification()"
                           (ngModelChange)="formRegulatoryClassification.set($event)" name="regClass"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -5031,7 +5031,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Tax Exemption Reason</span>
-                        <input type="text" [ngModel]="formTaxExemptionReason()"
+                        <input aria-label="Statutory exemption code" type="text" [ngModel]="formTaxExemptionReason()"
                           (ngModelChange)="formTaxExemptionReason.set($event)" name="exReason"
                           placeholder="Statutory exemption code"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -5044,8 +5044,8 @@
                         class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Exemption Eligible</span>
                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Exempt from Tax</span>
-                        <label class="form-switch m-0 cursor-pointer">
-                          <input type="checkbox" class="sr-only" [checked]="formTaxExemptionEligible()"
+                        <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                          <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formTaxExemptionEligible()"
                             (change)="formTaxExemptionEligible.set($any($event.target).checked)" />
                           <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                         </label>
@@ -5057,8 +5057,8 @@
                       <div
                         class="col-span-12 sm:col-span-6 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                         <span class="text-xs font-bold">Requires Import Docs</span>
-                        <label class="form-switch m-0 cursor-pointer">
-                          <input type="checkbox" class="sr-only" [checked]="formRequiresImportDoc()"
+                        <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                          <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formRequiresImportDoc()"
                             (change)="formRequiresImportDoc.set($any($event.target).checked)" />
                           <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                         </label>
@@ -5067,8 +5067,8 @@
                       <div
                         class="col-span-12 sm:col-span-6 flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50">
                         <span class="text-xs font-bold">Certification Required</span>
-                        <label class="form-switch m-0 cursor-pointer">
-                          <input type="checkbox" class="sr-only" [checked]="formCertificationRequired()"
+                        <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                          <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formCertificationRequired()"
                             (change)="formCertificationRequired.set($any($event.target).checked)" />
                           <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                         </label>
@@ -5079,7 +5079,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Certification Details</span>
-                          <input type="text" [ngModel]="formCertificationDetails()"
+                          <input aria-label="e.g. Halal, FDA, CE, ISO 22000" type="text" [ngModel]="formCertificationDetails()"
                             (ngModelChange)="formCertificationDetails.set($event)" name="certDet"
                             placeholder="e.g. Halal, FDA, CE, ISO 22000"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -5091,7 +5091,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Compliance Notes</span>
-                          <input type="text" [ngModel]="formComplianceNotes()"
+                          <input aria-label="Regulatory labeling or storage mandate" type="text" [ngModel]="formComplianceNotes()"
                             (ngModelChange)="formComplianceNotes.set($event)" name="compNotes"
                             placeholder="Regulatory labeling or storage mandate"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
@@ -5117,7 +5117,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Inventory Asset Account</span>
-                        <input type="text" [ngModel]="formInventoryAssetAccount()"
+                        <input aria-label="asset Acc" type="text" [ngModel]="formInventoryAssetAccount()"
                           (ngModelChange)="formInventoryAssetAccount.set($event)" name="assetAcc"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -5128,7 +5128,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Sales Revenue Account</span>
-                        <input type="text" [ngModel]="formSalesRevenueAccount()"
+                        <input aria-label="rev Acc" type="text" [ngModel]="formSalesRevenueAccount()"
                           (ngModelChange)="formSalesRevenueAccount.set($event)" name="revAcc"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -5139,7 +5139,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Sales Returns Account</span>
-                        <input type="text" [ngModel]="formSalesReturnsAccount()"
+                        <input aria-label="ret Acc" type="text" [ngModel]="formSalesReturnsAccount()"
                           (ngModelChange)="formSalesReturnsAccount.set($event)" name="retAcc"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -5151,7 +5151,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Cost of Goods Sold (COGS)</span>
-                        <input type="text" [ngModel]="formCogsAccount()" (ngModelChange)="formCogsAccount.set($event)"
+                        <input aria-label="cogs Acc" type="text" [ngModel]="formCogsAccount()" (ngModelChange)="formCogsAccount.set($event)"
                           name="cogsAcc"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -5162,7 +5162,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Purchase Expense Account</span>
-                        <input type="text" [ngModel]="formPurchaseExpenseAccount()"
+                        <input aria-label="p Exp Acc" type="text" [ngModel]="formPurchaseExpenseAccount()"
                           (ngModelChange)="formPurchaseExpenseAccount.set($event)" name="pExpAcc"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -5173,7 +5173,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Purchase Returns Account</span>
-                        <input type="text" [ngModel]="formPurchaseReturnsAccount()"
+                        <input aria-label="p Ret Acc" type="text" [ngModel]="formPurchaseReturnsAccount()"
                           (ngModelChange)="formPurchaseReturnsAccount.set($event)" name="pRetAcc"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
@@ -5186,7 +5186,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Inventory Adjustment Account</span>
-                          <input type="text" [ngModel]="formInvAdjustmentAccount()"
+                          <input aria-label="inv Adj Acc" type="text" [ngModel]="formInvAdjustmentAccount()"
                             (ngModelChange)="formInvAdjustmentAccount.set($event)" name="invAdjAcc"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -5197,7 +5197,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Price Difference Account</span>
-                          <input type="text" [ngModel]="formPriceDiffAccount()"
+                          <input aria-label="p Diff Acc" type="text" [ngModel]="formPriceDiffAccount()"
                             (ngModelChange)="formPriceDiffAccount.set($event)" name="pDiffAcc"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -5208,7 +5208,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Tax Account Mapping</span>
-                          <input type="text" [ngModel]="formTaxAccountMapping()"
+                          <input aria-label="tax Map" type="text" [ngModel]="formTaxAccountMapping()"
                             (ngModelChange)="formTaxAccountMapping.set($event)" name="taxMap"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -5219,7 +5219,7 @@
                         <div
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                           <span class="floating-notch-label">Costing Method Override</span>
-                          <input type="text" [ngModel]="formCostingMethodOverride()"
+                          <input aria-label="cost Meth" type="text" [ngModel]="formCostingMethodOverride()"
                             (ngModelChange)="formCostingMethodOverride.set($event)" name="costMeth"
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
@@ -5244,7 +5244,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Document Reference</span>
-                        <input type="text" placeholder="e.g. DOC-SPEC-001"
+                        <input aria-label="e.g. DOC-SPEC-001" type="text" placeholder="e.g. DOC-SPEC-001"
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                       </div>
                     </div>
@@ -5254,7 +5254,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Document Category</span>
-                        <input type="text" value="Technical & Compliance" readonly
+                        <input aria-label="Input field" type="text" value="Technical & Compliance" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -5264,7 +5264,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Access Level</span>
-                        <input type="text" value="Internal & Supplier Shared" readonly
+                        <input aria-label="Input field" type="text" value="Internal & Supplier Shared" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -5350,7 +5350,7 @@
                       <div class="col-span-12 sm:col-span-6">
                         <div class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Internal Product Notes:
                         </div>
-                        <textarea [ngModel]="formInternalNotes()" (ngModelChange)="formInternalNotes.set($event)"
+                        <textarea aria-label="Special handling instructions, procurement notes, internal audit caveats..." [ngModel]="formInternalNotes()" (ngModelChange)="formInternalNotes.set($event)"
                           name="intNotes" rows="5"
                           class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent text-xs focus:outline-none focus:border-[#00a6f4]"
                           placeholder="Special handling instructions, procurement notes, internal audit caveats..."></textarea>
@@ -5376,7 +5376,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Available Companies</span>
-                        <input type="text" [value]="formAvailableCompanies().join(', ')" readonly
+                        <input aria-label="Input field" type="text" [value]="formAvailableCompanies().join(', ')" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
                       </div>
                     </div>
@@ -5386,7 +5386,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Available Branches</span>
-                        <input type="text" [value]="formAvailableBranches().join(', ')" readonly
+                        <input aria-label="Input field" type="text" [value]="formAvailableBranches().join(', ')" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
                       </div>
                     </div>
@@ -5396,7 +5396,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Available Warehouses</span>
-                        <input type="text" [value]="formAvailableWarehouses().join(', ')" readonly
+                        <input aria-label="Input field" type="text" [value]="formAvailableWarehouses().join(', ')" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
                       </div>
                     </div>
@@ -5407,7 +5407,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Sales Channels</span>
-                        <input type="text" [value]="formSalesChannels().join(', ')" readonly
+                        <input aria-label="Input field" type="text" [value]="formSalesChannels().join(', ')" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
                       </div>
                     </div>
@@ -5418,8 +5418,8 @@
                         class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Online Store</span>
                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Store Active</span>
-                        <label class="form-switch m-0 cursor-pointer">
-                          <input type="checkbox" class="sr-only" [checked]="formOnlineStoreEnabled()"
+                        <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                          <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formOnlineStoreEnabled()"
                             (change)="formOnlineStoreEnabled.set($any($event.target).checked)" />
                           <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                         </label>
@@ -5432,8 +5432,8 @@
                         class="relative flex items-center justify-between w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Publish Online</span>
                         <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Catalog Visible</span>
-                        <label class="form-switch m-0 cursor-pointer">
-                          <input type="checkbox" class="sr-only" [checked]="formPublishOnline()"
+                        <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                          <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formPublishOnline()"
                             (change)="formPublishOnline.set($any($event.target).checked)" />
                           <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                         </label>
@@ -5448,7 +5448,7 @@
                           <div
                             class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                             <span class="floating-notch-label">E-Commerce Category</span>
-                            <input type="text" [ngModel]="formEcommerceCategory()"
+                            <input aria-label="ecom Cat" type="text" [ngModel]="formEcommerceCategory()"
                               (ngModelChange)="formEcommerceCategory.set($event)" name="ecomCat"
                               class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                           </div>
@@ -5461,8 +5461,8 @@
                             <span class="floating-notch-label">Approval Policy</span>
                             <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Approval
                               Required</span>
-                            <label class="form-switch m-0 cursor-pointer">
-                              <input type="checkbox" class="sr-only" [checked]="formItemApprovalRequired()"
+                            <label class="form-switch m-0 cursor-pointer"><span class="sr-only">Toggle</span>
+                              <input type="checkbox" aria-label="Toggle" class="sr-only" [checked]="formItemApprovalRequired()"
                                 (change)="formItemApprovalRequired.set($any($event.target).checked)" />
                               <span class="form-switch-track"><span class="form-switch-thumb"></span></span>
                             </label>
@@ -5475,7 +5475,7 @@
                             <div
                               class="relative flex items-center w-full h-10 sm:h-[42px] px-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                               <span class="floating-notch-label">Available From</span>
-                              <input type="date" [ngModel]="formAvailEffectiveFrom()"
+                              <input aria-label="av From" type="date" [ngModel]="formAvailEffectiveFrom()"
                                 (ngModelChange)="formAvailEffectiveFrom.set($event)" name="avFrom"
                                 class="w-full bg-transparent text-xs font-semibold focus:outline-none cursor-pointer" />
                             </div>
@@ -5484,7 +5484,7 @@
                             <div
                               class="relative flex items-center w-full h-10 sm:h-[42px] px-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                               <span class="floating-notch-label">Available To</span>
-                              <input type="date" [ngModel]="formAvailEffectiveTo()"
+                              <input aria-label="av To" type="date" [ngModel]="formAvailEffectiveTo()"
                                 (ngModelChange)="formAvailEffectiveTo.set($event)" name="avTo"
                                 class="w-full bg-transparent text-xs font-semibold focus:outline-none cursor-pointer" />
                             </div>
@@ -5557,7 +5557,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Item System ID</span>
-                        <input type="text" [value]="formItemId()" readonly
+                        <input aria-label="Input field" type="text" [value]="formItemId()" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-mono font-bold text-slate-800 dark:text-white focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -5567,7 +5567,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Master Status</span>
-                        <input type="text" [value]="formStatus()" readonly
+                        <input aria-label="Input field" type="text" [value]="formStatus()" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-[#00a6f4] focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -5577,7 +5577,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Record Version</span>
-                        <input type="text" [value]="'Version ' + formRecordVersion() + '.0 (Active Revision)'" readonly
+                        <input aria-label="Input field" type="text" [value]="'Version ' + formRecordVersion() + '.0 (Active Revision)'" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -5588,7 +5588,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Created By / Date</span>
-                        <input type="text" [value]="formCreatedBy() + ' • ' + formCreatedAt()" readonly
+                        <input aria-label="Input field" type="text" [value]="formCreatedBy() + ' • ' + formCreatedAt()" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
                       </div>
                     </div>
@@ -5598,7 +5598,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Last Updated By</span>
-                        <input type="text" [value]="formUpdatedBy() + ' • ' + formUpdatedAt()" readonly
+                        <input aria-label="Input field" type="text" [value]="formUpdatedBy() + ' • ' + formUpdatedAt()" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-default truncate" />
                       </div>
                     </div>
@@ -5608,7 +5608,7 @@
                       <div
                         class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800">
                         <span class="floating-notch-label">Concurrency & Lock</span>
-                        <input type="text" value="Unlocked • Ready for Modifications" readonly
+                        <input aria-label="Input field" type="text" value="Unlocked • Ready for Modifications" readonly
                           class="w-full h-full bg-transparent text-xs sm:text-sm font-bold text-emerald-600 focus:outline-none cursor-default" />
                       </div>
                     </div>
@@ -6064,7 +6064,7 @@
         <!-- Left: Stay on Page Switch -->
         <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <label class="form-switch m-0 flex items-center gap-1.5 sm:gap-2 cursor-pointer">
-            <input type="checkbox" class="sr-only" [checked]="stayOnPage()"
+            <input aria-label="Select item" type="checkbox" class="sr-only" [checked]="stayOnPage()"
               (change)="stayOnPage.set($any($event.target).checked)" />
             <span class="form-switch-track scale-90 sm:scale-100 origin-left"><span
                 class="form-switch-thumb"></span></span>
@@ -6215,7 +6215,7 @@
 
       <!-- Custom Prompt Input -->
       <div class="relative">
-        <textarea [ngModel]="aiInputText()" (ngModelChange)="aiInputText.set($event)" rows="3"
+        <textarea aria-label="Speak or describe the product (e.g. Sony Wireless Gaming Mouse, Black, AED 299, Cost AED 180)..." [ngModel]="aiInputText()" (ngModelChange)="aiInputText.set($event)" rows="3"
           placeholder="Speak or describe the product (e.g. Sony Wireless Gaming Mouse, Black, AED 299, Cost AED 180)..."
           class="w-full p-4 rounded-2xl border border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50 text-sm font-medium focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 resize-none"></textarea>
       </div>

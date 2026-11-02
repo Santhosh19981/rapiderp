@@ -276,16 +276,18 @@ export class CityService {
     const nums = existing
       .map((c) => {
         const match = c.id.match(/\d+/);
-        return match ? parseInt(match[0], 10) : 0;
+        return match ? Number.parseInt(match[0], 10) : 0;
       })
-      .filter((n) => !isNaN(n));
+      .filter((n) => !Number.isNaN(n));
     const next = nums.length > 0 ? Math.max(...nums) + 1 : 1001;
     return `CT-${next}`;
   }
 
   generateCityCode(name: string): string {
     if (!name || !name.trim()) {
-      return `CT-${Math.floor(10 + Math.random() * 90)}`;
+      const randArr = new Uint32Array(1);
+      (globalThis.crypto || window.crypto).getRandomValues(randArr);
+      return `CT-${10 + (randArr[0] % 90)}`;
     }
     const clean = name.replace(/[^a-zA-Z]/g, '').toUpperCase();
     if (clean.length >= 3) {
