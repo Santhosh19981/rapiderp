@@ -1,12 +1,22 @@
 {
   "name": "rapiderp",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Rapid ERP Enterprise Desktop Application",
+  "author": "Rapid ERP Team",
+  "main": "electron/main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "electron:build": "ng build --base-href ./",
+    "electron:start": "electron .",
+    "electron:dev": "electron . --dev",
+    "pack:win": "npm run electron:build && electron-builder --win",
+    "pack:mac": "npm run electron:build && electron-builder --mac",
+    "pack:linux": "npm run electron:build && electron-builder --linux",
+    "pack:all": "npm run electron:build && electron-builder -wml"
   },
   "private": true,
   "packageManager": "npm@11.17.0",
@@ -17,7 +27,7 @@
     "@angular/forms": "^22.2.0",
     "@angular/platform-browser": "^22.2.0",
     "@angular/router": "^22.2.0",
-    "@angular/service-worker": "^22.2.0",
+    "@angular/service-worker": "^22.2.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -28,6 +38,8 @@
     "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.6.1",
     "docx": "^9.13.0",
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0",
     "postcss": "^8.5.30",
     "prettier": "^3.8.1",
     "puppeteer-core": "^25.14.0",

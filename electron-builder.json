@@ -1,0 +1,40 @@
+{
+  "appId": "com.rapiderp.desktop",
+  "productName": "RapidERP",
+  "copyright": "Copyright © 2026 Rapid ERP",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist/rapiderp/browser/**/*",
+    "electron/**/*",
+    "package.json"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Rapid ERP"
+  },
+  "mac": {
+    "target": ["zip"],
+    "category": "public.app-category.business"
+  },
+  "linux": {
+    "target": ["zip"],
+    "category": "Office"
+  }
+}
