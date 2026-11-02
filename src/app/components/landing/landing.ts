@@ -11,6 +11,7 @@ import { AuditHistoryComponent } from '../audit-history/audit-history';
 import { NavigationService, SearchEntry } from '../../services/navigation.service';
 import { AuthService } from '../../services/auth.service';
 import { TenantService } from '../../services/tenant.service';
+import { PwaService } from '../../services/pwa.service';
 
 @Component({
   selector: 'app-landing',
@@ -25,6 +26,7 @@ export class Landing implements OnInit {
   public navService = inject(NavigationService);
   public authService = inject(AuthService);
   public tenantService = inject(TenantService);
+  public pwaService = inject(PwaService);
 
   @ViewChild('fileInput') fileInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('cameraInput') cameraInputRef?: ElementRef<HTMLInputElement>;

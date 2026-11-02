@@ -10,10 +10,9 @@
 
   html, body {
     margin: 0;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
+    padding: 0;
+    height: 100%;
+    width: 100%;
     -webkit-tap-highlight-color: transparent;
     background-color: #ffffff !important;
     color: #0f172a;
@@ -587,6 +586,42 @@ button.accordion-trigger-btn:not(:disabled):hover div,
   select,
   textarea {
     font-size: 16px !important;
+  }
+}
+
+/* PWA Safe Area Utilities for Mobile Header & Footer */
+.pwa-header-safe {
+  padding-top: max(0px, env(safe-area-inset-top));
+}
+
+.pwa-footer-safe {
+  padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+  padding-left: max(0.75rem, env(safe-area-inset-left));
+  padding-right: max(0.75rem, env(safe-area-inset-right));
+}
+
+/* Responsive Capsule Stat Badges for Mobile (< 640px) */
+@media screen and (max-width: 639px) {
+  .capsule-card {
+    height: 42px !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+  .capsule-circle-icon {
+    width: 42px !important;
+    height: 42px !important;
+    flex-shrink: 0 !important;
+  }
+  .capsule-title {
+    font-size: 11px !important;
+    max-width: 65px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  .capsule-count {
+    font-size: 13px !important;
+    flex-shrink: 0 !important;
   }
 }
 
