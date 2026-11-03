@@ -9,7 +9,7 @@ export class AuthService {
 
   // Required credentials for Admin
   private readonly AUTHORIZED_USERNAME = 'Rapiderpadmin';
-  private readonly AUTHORIZED_PASSWORD = 'RapidErp123';
+  private readonly AUTHORIZED_PASSWORD = 'Rapiderp@123';
 
   currentUser = signal<string | null>(this.getStoredUser());
   isAuthenticated = signal<boolean>(!!this.getStoredUser());
