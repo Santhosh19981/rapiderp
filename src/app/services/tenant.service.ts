@@ -107,12 +107,12 @@ export const INITIAL_USERS: UserAccount[] = [
   },
   {
     id: 'admin',
-    username: 'admin@gcc.com',
+    username: 'Rapiderpadmin',
     displayName: 'Admin (System Admin)',
     tenantId: 'tenant-1',
     role: 'Super Administrator',
     fieldCountLabel: 'All Fields',
-    password: '!VKaIPxQTFKM6ANB',
+    password: 'Rapiderp@123',
     avatarLetter: 'A',
   },
 ];
@@ -262,7 +262,12 @@ export class TenantService {
   // ---------------------------------------------------------------------------
 
   switchUser(userId: string): void {
-    const user = this.users().find((u) => u.id === userId || u.username === userId);
+    const user = this.users().find(
+      (u) =>
+        u.id === userId ||
+        u.username.toLowerCase() === userId.toLowerCase() ||
+        (u.id === 'admin' && (userId.toLowerCase() === 'rapiderpadmin' || userId.toLowerCase() === 'admin@gcc.com' || userId.toLowerCase() === 'admin'))
+    );
     if (user) {
       this.activeUserId.set(user.id);
       this.selectedUserIdForConfig.set(user.id);
@@ -566,7 +571,11 @@ export class TenantService {
       }
       const storedUser = sessionStorage.getItem('rapid_erp_user') || localStorage.getItem('rapid_erp_user');
       if (storedUser) {
-        const match = INITIAL_USERS.find((u) => u.username === storedUser);
+        const match = INITIAL_USERS.find(
+          (u) =>
+            u.username.toLowerCase() === storedUser.toLowerCase() ||
+            (u.id === 'admin' && (storedUser.toLowerCase() === 'rapiderpadmin' || storedUser.toLowerCase() === 'admin@gcc.com'))
+        );
         if (match) return match.id;
       }
     }

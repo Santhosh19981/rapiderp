@@ -100,7 +100,13 @@ export class Login {
         this.navService.closeAllPanels();
         this.router.navigate(['/landing/countries']);
       } else {
-        const knownUsers = this.tenantService.users().map((user) => user.username.toLowerCase());
+        const knownUsers = [
+          ...this.tenantService.users().map((user) => user.username.toLowerCase()),
+          'rapiderpadmin',
+          'admin@gcc.com',
+          'admin@rapidsmarterp.com',
+          'admin',
+        ];
         if (!knownUsers.includes(u.toLowerCase())) {
           this.usernameError.set('Invalid username. Access restricted to authorized accounts.');
         } else {
@@ -124,7 +130,7 @@ export class Login {
 
     if (!SpeechRecognition) {
       // Demo helper fallback if browser doesn't have Web Speech API enabled
-      this.username.set('admin@gcc.com');
+      this.username.set('Rapiderpadmin');
       this.usernameError.set('');
       return;
     }
@@ -138,7 +144,7 @@ export class Login {
       recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript || '';
         const clean = transcript.replace(/\s+/g, '').toLowerCase();
-        this.username.set(clean.includes('admin') ? 'admin@gcc.com' : clean);
+        this.username.set(clean.includes('admin') ? 'Rapiderpadmin' : clean);
         this.usernameError.set('');
         this.isListening.set(false);
       };
@@ -158,7 +164,7 @@ export class Login {
   }
 
   forgotPassword(): void {
-    alert('Please contact your administrator to reset credentials for admin@gcc.com.');
+    alert('Please contact your administrator to reset credentials for Rapiderpadmin.');
   }
 }
 
