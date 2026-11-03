@@ -1813,7 +1813,9 @@ export class ItemComponent implements OnInit {
     }
 
     setTimeout(() => {
-      const el = document.getElementById(field.id);
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      const targetId = isMobile ? `${field.id}-mobile` : field.id;
+      const el = document.getElementById(targetId) || document.getElementById(field.id);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) {
@@ -2014,7 +2016,8 @@ export class ItemComponent implements OnInit {
   }
 
   focusItemNameField(): void {
-    const el = document.getElementById('field-nameEn') || document.querySelector('input[name="nameEn"]') as HTMLElement;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const el = (isMobile ? document.getElementById('field-nameEn-mobile') : null) || document.getElementById('field-nameEn') || document.querySelector('input[name="nameEn"]') as HTMLElement;
     if (el) {
       el.focus();
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });

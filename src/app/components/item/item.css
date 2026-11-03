@@ -567,7 +567,7 @@ button.tab-pill-unselected:hover * {
 /* ========================================================================= */
 /* 11. MOBILE RESPONSIVE ADAPTATIONS                                          */
 /* ========================================================================= */
-@media (max-width: 639px) {
+@media (max-width: 767px) {
   .mobile-section-hide {
     display: none !important;
   }
