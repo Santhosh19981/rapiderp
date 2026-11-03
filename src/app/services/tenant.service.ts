@@ -574,7 +574,7 @@ export class TenantService {
         const match = INITIAL_USERS.find(
           (u) =>
             u.username.toLowerCase() === storedUser.toLowerCase() ||
-            (u.id === 'admin' && (storedUser.toLowerCase() === 'rapiderpadmin' || storedUser.toLowerCase() === 'admin@gcc.com'))
+            (u.id === 'admin' && (storedUser.toLowerCase() === 'rapiderpadmin' || storedUser.toLowerCase() === 'admin' || storedUser.toLowerCase() === 'admin@gcc.com'))
         );
         if (match) return match.id;
       }

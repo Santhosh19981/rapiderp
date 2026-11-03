@@ -6464,21 +6464,8 @@
 
         <!-- Right: Clear & Save Action Buttons -->
         <div class="flex items-center gap-2 sm:gap-3 ml-auto shrink-0">
-          @if (pageMode() !== 'view') {
-          <button type="button" (click)="openClearModal()"
-            class="px-5 sm:w-28 h-8.5 sm:h-9 rounded-full border-2 border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] text-xs font-bold flex items-center justify-center transition cursor-pointer shadow-2xs hover:bg-sky-50 dark:hover:bg-slate-700 active:scale-95">
-            <span>Clear</span>
-          </button>
-          }
-          <button type="button" (click)="onSubmitForm()"
-            class="px-6 sm:w-32 h-8.5 sm:h-9 rounded-full bg-[#0070ba] hover:bg-[#005c9e] text-white text-xs font-bold flex items-center justify-center transition cursor-pointer shadow-md shadow-[#00a6f4]/25 active:scale-95">
-            <span>{{ pageMode() === 'add' ? 'Save' : (pageMode() === 'view' ? 'Edit' : 'Update')
-              }}</span>
-          </button>
-        </div>
-
-        <!-- Center: Mobile Tools Dock Toggle Icon Button (Requirement 1) -->
-        <button type="button" (click)="toggleMobileTools()"
+          <!-- Mobile Tools Dock Toggle Icon Button (Left side of Clear button) -->
+          <button type="button" (click)="toggleMobileTools()"
           [title]="showMobileTools() ? 'Hide quick actions' : 'Show quick actions'"
           [attr.aria-label]="showMobileTools() ? 'Hide quick actions' : 'Show quick actions'"
           class="md:hidden flex items-center justify-center w-8.5 h-8.5 rounded-xl border transition-all cursor-pointer shadow-2xs active:scale-95"
@@ -6505,6 +6492,21 @@
           </svg>
           }
         </button>
+
+          @if (pageMode() !== 'view') {
+          <button type="button" (click)="openClearModal()"
+            class="px-5 sm:w-28 h-8.5 sm:h-9 rounded-full border-2 border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] text-xs font-bold flex items-center justify-center transition cursor-pointer shadow-2xs hover:bg-sky-50 dark:hover:bg-slate-700 active:scale-95">
+            <span>Clear</span>
+          </button>
+          }
+          <button type="button" (click)="onSubmitForm()"
+            class="px-6 sm:w-32 h-8.5 sm:h-9 rounded-full bg-[#0070ba] hover:bg-[#005c9e] text-white text-xs font-bold flex items-center justify-center transition cursor-pointer shadow-md shadow-[#00a6f4]/25 active:scale-95">
+            <span>{{ pageMode() === 'add' ? 'Save' : (pageMode() === 'view' ? 'Edit' : 'Update')
+              }}</span>
+          </button>
+        </div>
+
+        
       </div>
 
       }
