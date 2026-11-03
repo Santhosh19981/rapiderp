@@ -13,6 +13,7 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 700,
     title: 'Rapid ERP Enterprise',
+    autoHideMenuBar: true,
     icon: path.join(__dirname, '../public/favicon.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -24,8 +25,9 @@ function createWindow() {
     show: false // Show gracefully once ready
   });
 
-  // Remove default menu for clean enterprise look, or keep standard shortcuts
-  // Menu.setApplicationMenu(null);
+  // Completely remove top menu bar (File, Edit, View, Window) for clean enterprise look
+  Menu.setApplicationMenu(null);
+  mainWindow.setMenu(null);
 
   // Check if development server or local built file
   const devUrl = process.env.ELECTRON_START_URL || 'http://localhost:4200';
