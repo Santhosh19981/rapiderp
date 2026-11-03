@@ -2173,35 +2173,7 @@
             </div>
           </div>
 
-          <!-- Row 3: Segmented Tab Controller (General Info & Specifications matching reference) -->
-          <div class="mt-2.5 bg-[#edf4fe] dark:bg-slate-800/80 rounded-full p-1 border border-white/80 dark:border-slate-700 shadow-xs flex items-center">
-            <!-- Active Tab: General Info -->
-            <button type="button" (click)="mobileSection.set('general')"
-              class="flex-1 py-1.5 px-3 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
-              [class.bg-[#037bec]]="mobileSection() === 'general'" [class.text-white]="mobileSection() === 'general'"
-              [class.shadow-xs]="mobileSection() === 'general'" [class.text-[#44516e]]="mobileSection() !== 'general'">
-              <span>General Info</span>
-              <span class="text-[10px] font-extrabold px-1.5 py-0.2 rounded-full transition"
-                [class.bg-[#c2e1fe]]="mobileSection() === 'general'" [class.text-[#006bd8]]="mobileSection() === 'general'"
-                [class.bg-[#c8dbfe]]="mobileSection() !== 'general'" [class.text-[#44516e]]="mobileSection() !== 'general'">
-                12
-              </span>
-            </button>
-
-            <!-- Inactive Tab: Specifications -->
-            <button type="button" (click)="mobileSection.set('tabs')"
-              class="flex-1 py-1.5 px-3 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
-              [class.bg-[#037bec]]="mobileSection() === 'tabs'" [class.text-white]="mobileSection() === 'tabs'"
-              [class.shadow-xs]="mobileSection() === 'tabs'" [class.text-[#44516e]]="mobileSection() !== 'tabs'">
-              <span>Specifications</span>
-              <span class="text-[10px] font-extrabold px-1.5 py-0.2 rounded-full transition"
-                [class.bg-[#c2e1fe]]="mobileSection() === 'tabs'" [class.text-[#006bd8]]="mobileSection() === 'tabs'"
-                [class.bg-[#c8dbfe]]="mobileSection() !== 'tabs'" [class.text-[#44516e]]="mobileSection() !== 'tabs'">
-                14
-              </span>
-            </button>
           </div>
-        </div>
       </div>
 
       <!-- 1B. DESKTOP TOP HEADER (md+ only: Title, Mode, Tutorial, Shortcuts, Pager) -->
@@ -2334,7 +2306,7 @@
           <!-- MOBILE SECTION: GENERAL INFORMATION CARDS (Matching Reference UI)     -->
           <!-- ===================================================================== -->
           <div id="section-mobile-general-info"
-              [class.hidden]="mobileSection() === 'tabs'"
+              
               class="block md:hidden flex-1 min-h-0 overflow-y-auto px-2 pt-2 pb-3 space-y-3 custom-scrollbar overscroll-contain touch-pan-y">
 
               <!-- CARD 1: Item Type * (Pill Dropdown) -->
@@ -2625,6 +2597,73 @@
                     </svg>
                   </button>
                 </div>
+              </div>
+
+              <!-- SPECIFICATIONS MODULES (Accordion / Collapsible on Mobile) -->
+              <div class="pt-4 pb-2 space-y-2.5">
+                <div class="flex items-center justify-between px-1 mb-1">
+                  <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-4 rounded-full bg-[#00a6f4]"></div>
+                    <span class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Specifications</span>
+                    <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-sky-100 text-[#006bd8] dark:bg-sky-950/60 dark:text-sky-300">14 Modules</span>
+                  </div>
+                </div>
+
+                @for (tab of sectionTabs; track tab.id) {
+                <div class="rounded-2xl border transition-all duration-200 select-none overflow-hidden"
+                  [class.border-[#00a6f4]]="isSectionExpanded(tab.sectionKey)"
+                  [class.bg-sky-50/20]="isSectionExpanded(tab.sectionKey)"
+                  [class.shadow-2xs]="isSectionExpanded(tab.sectionKey)"
+                  [class.border-slate-300]="!isSectionExpanded(tab.sectionKey)"
+                  [class.dark:border-slate-600]="!isSectionExpanded(tab.sectionKey)"
+                  [class.bg-white]="!isSectionExpanded(tab.sectionKey)"
+                  [class.dark:bg-slate-800]="!isSectionExpanded(tab.sectionKey)">
+
+                  <!-- Normal Button Form (Module Trigger) -->
+                  <button type="button" (click)="toggleSection(tab.sectionKey)"
+                    class="w-full h-11 px-4 flex items-center justify-between text-left cursor-pointer transition select-none active:scale-[0.99]">
+                    <div class="flex items-center gap-2.5">
+                      <span class="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold transition"
+                        [class.bg-[#00a6f4]]="isSectionExpanded(tab.sectionKey)"
+                        [class.text-white]="isSectionExpanded(tab.sectionKey)"
+                        [class.bg-sky-100]="!isSectionExpanded(tab.sectionKey)"
+                        [class.text-[#00a6f4]]="!isSectionExpanded(tab.sectionKey)"
+                        [class.dark:bg-slate-700]="!isSectionExpanded(tab.sectionKey)">
+                        {{ tab.letter }}
+                      </span>
+                      <span class="text-xs font-bold text-slate-800 dark:text-white">{{ tab.name }}</span>
+                      <span class="text-[10px] font-medium text-slate-400 dark:text-slate-500">{{ tab.fieldCount }}</span>
+                    </div>
+                    <svg class="w-4 h-4 text-slate-400 transition-transform duration-200"
+                      [class.rotate-180]="isSectionExpanded(tab.sectionKey)"
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  <!-- Collapsible Fields Area -->
+                  @if (isSectionExpanded(tab.sectionKey)) {
+                  <div class="px-2.5 pb-3.5 pt-2 border-t border-slate-100 dark:border-slate-700/60 animate-in fade-in slide-in-from-top-1 duration-150">
+                    @switch (tab.id) {
+                      @case ('A') { <ng-container *ngTemplateOutlet="sectionAFields"></ng-container> }
+                      @case ('B') { <ng-container *ngTemplateOutlet="sectionBFields"></ng-container> }
+                      @case ('C') { <ng-container *ngTemplateOutlet="sectionCFields"></ng-container> }
+                      @case ('D') { <ng-container *ngTemplateOutlet="sectionDFields"></ng-container> }
+                      @case ('E') { <ng-container *ngTemplateOutlet="sectionEFields"></ng-container> }
+                      @case ('F') { <ng-container *ngTemplateOutlet="sectionFFields"></ng-container> }
+                      @case ('G') { <ng-container *ngTemplateOutlet="sectionGFields"></ng-container> }
+                      @case ('H') { <ng-container *ngTemplateOutlet="sectionHFields"></ng-container> }
+                      @case ('I') { <ng-container *ngTemplateOutlet="sectionIFields"></ng-container> }
+                      @case ('J') { <ng-container *ngTemplateOutlet="sectionJFields"></ng-container> }
+                      @case ('K') { <ng-container *ngTemplateOutlet="sectionKFields"></ng-container> }
+                      @case ('L') { <ng-container *ngTemplateOutlet="sectionLFields"></ng-container> }
+                      @case ('M') { <ng-container *ngTemplateOutlet="sectionMFields"></ng-container> }
+                      @case ('N') { <ng-container *ngTemplateOutlet="sectionNFields"></ng-container> }
+                    }
+                  </div>
+                  }
+                </div>
+                }
               </div>
 
             </div>
@@ -3013,7 +3052,7 @@
           <section id="section-tabwise-info"
             [class.spotlight-active-ring]="isGuidanceTourOpen() && guidanceTourStep() === 2"
             [class.mobile-section-hide]="mobileSection() === 'general'"
-            class="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-2 pb-2.5 sm:px-3 sm:pt-2 sm:pb-3 flex-1 min-h-0 flex flex-col overflow-hidden transition-all">
+            class="hidden md:flex bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] px-2.5 pt-2 pb-2.5 sm:px-3 sm:pt-2 sm:pb-3 -1 min-h-0  -col overflow- transition-all">
 
             <!-- 5. FIFTH ROW: HORIZONTAL TABS BAR (Pill-Style matching Reference UI) -->
             <div class="shrink-0 border-b border-slate-200 dark:border-slate-700/80 select-none pb-1.5 mb-1">
@@ -3083,14 +3122,9 @@
               <div class="space-y-3">
 
                 <!-- SECTION A: Product Identity -->
-                @if (activeTab() === 'A' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Product Identity</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionAFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 6 (Tab Row 1) -->
                     <!-- 1. Short Name (col 4) -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -3278,19 +3312,24 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'A' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Product Identity</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionAFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION B: Classification & Attributes -->
-                @if (activeTab() === 'B' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Classification & Attributes
-                    </h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionBFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 6 (Tab Row 1) -->
                     <!-- 1. Department -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -3476,18 +3515,25 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'B' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Classification & Attributes
+                    </h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionBFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION C: Barcode & Identification -->
-                @if (activeTab() === 'C' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Barcode & Identification</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionCFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Primary Barcode (Live synced) -->
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Primary Barcode -->
@@ -3687,18 +3733,24 @@
                       </label>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'C' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Barcode & Identification</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionCFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION D: Units of Measure -->
-                @if (activeTab() === 'D' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Units of Measure</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionDFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Sales UOM (Modern Custom Dropdown) -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group" data-dropdown>
@@ -4055,18 +4107,24 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'D' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Units of Measure</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionDFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION E: Pricing & Rules -->
-                @if (activeTab() === 'E' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Pricing & Rules</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionEFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Minimum Selling Price -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -4412,18 +4470,24 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'E' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Pricing & Rules</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionEFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION F: Inventory & Stock Control -->
-                @if (activeTab() === 'F' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Inventory & Stock Control</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionFFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Min Stock -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -4689,18 +4753,24 @@
                       </label>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'F' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Inventory & Stock Control</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionFFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION G: Purchasing & Suppliers -->
-                @if (activeTab() === 'G' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Purchasing & Suppliers</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionGFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. Purchasing Allowed Toggle -->
                     <div
@@ -4915,18 +4985,24 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'G' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Purchasing & Suppliers</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionGFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION H: Sales & Retail POS -->
-                @if (activeTab() === 'H' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Sales & Retail POS</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionHFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- ROW 1 (3 columns) -->
                     <!-- 1. POS Display Name -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -5109,19 +5185,24 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'H' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Sales & Retail POS</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionHFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION I: Product Variants & Packaging -->
-                @if (activeTab() === 'I' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Product Variants & Packaging
-                    </h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionIFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Has Variants Switch -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -5294,19 +5375,25 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'I' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Product Variants & Packaging
+                    </h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionIFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION J: Tax, Compliance & Regulatory -->
-                @if (activeTab() === 'J' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Tax, Compliance & Regulatory
-                    </h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionJFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Tax Category -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -5424,18 +5511,25 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'J' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Tax, Compliance & Regulatory
+                    </h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionJFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION K: Accounting Integration -->
-                @if (activeTab() === 'K' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Accounting Integration</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionKFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Inventory Asset Account -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -5551,18 +5645,24 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'K' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Accounting Integration</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionKFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION L: Documents & Attachments -->
-                @if (activeTab() === 'L' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Documents & Attachments</h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionLFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Document Title / Ref -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -5682,19 +5782,24 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'L' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Documents & Attachments</h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionLFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION M: Organization & Availability -->
-                @if (activeTab() === 'M' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Organization & Availability
-                    </h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionMFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. Available Companies -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -5863,19 +5968,25 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'M' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Organization & Availability
+                    </h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionMFields"></ng-container>
+
                 </div>
                 }
 
                 <!-- SECTION N: Audit & System Information -->
-                @if (activeTab() === 'N' || activeTab() === 'all') {
-                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
-                  @if (activeTab() === 'all') {
-                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
-                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Audit & System Information
-                    </h3>
-                  </div>
-                  }
-                  <div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
+                
+                <ng-template #sectionNFields>
+<div class="grid grid-cols-12 gap-x-4 gap-y-5 sm:gap-y-5.5 items-center">
                     <!-- Row 1: 3 fields (col 4 each) -->
                     <!-- 1. System ID -->
                     <div class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 relative group">
@@ -5997,6 +6108,18 @@
                       </div>
                     </div>
                   </div>
+                </ng-template>
+@if (activeTab() === 'N' || activeTab() === 'all') {
+                <div class="tab-pane space-y-2 animate-in fade-in duration-150">
+                  @if (activeTab() === 'all') {
+                  <div class="flex items-center gap-2 pt-2 pb-1 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xs font-bold text-[#00a6f4] uppercase tracking-wider">Audit & System Information
+                    </h3>
+                  </div>
+                  }
+                  
+                  <ng-container *ngTemplateOutlet="sectionNFields"></ng-container>
+
                 </div>
                 }
 
@@ -6172,7 +6295,7 @@
       </form>
 
       <!-- Mobile Quick Actions Dock (All Tools Horizontally Scrollable with new squircle UI) -->
-      @if (activeActionView() === 'form') {
+      @if (activeActionView() === 'form' && showMobileTools()) {
       <div
         class="block md:hidden shrink-0 px-2 py-1 bg-slate-100/70 dark:bg-slate-900/60 select-none">
         <div
@@ -6353,6 +6476,35 @@
               }}</span>
           </button>
         </div>
+
+        <!-- Center: Mobile Tools Dock Toggle Icon Button (Requirement 1) -->
+        <button type="button" (click)="toggleMobileTools()"
+          [title]="showMobileTools() ? 'Hide quick actions' : 'Show quick actions'"
+          [attr.aria-label]="showMobileTools() ? 'Hide quick actions' : 'Show quick actions'"
+          class="md:hidden flex items-center justify-center w-8.5 h-8.5 rounded-xl border transition-all cursor-pointer shadow-2xs active:scale-95"
+          [class.bg-[#00a6f4]]="showMobileTools()"
+          [class.border-[#00a6f4]]="showMobileTools()"
+          [class.text-white]="showMobileTools()"
+          [class.bg-sky-50]="!showMobileTools()"
+          [class.border-sky-200]="!showMobileTools()"
+          [class.text-[#00a6f4]]="!showMobileTools()"
+          [class.dark:bg-slate-700]="!showMobileTools()"
+          [class.dark:border-slate-600]="!showMobileTools()"
+          [class.dark:text-sky-400]="!showMobileTools()">
+          @if (!showMobileTools()) {
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+          </svg>
+          } @else {
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+          }
+        </button>
       </div>
 
       }

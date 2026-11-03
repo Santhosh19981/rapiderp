@@ -155,6 +155,13 @@ export class ItemComponent implements OnInit {
   // Stay on page toggle
   stayOnPage = signal<boolean>(true);
 
+  // Toggle visibility of bottom mobile tool actions dock (hidden by default)
+  showMobileTools = signal<boolean>(false);
+
+  toggleMobileTools(): void {
+    this.showMobileTools.update((v) => !v);
+  }
+
   // Form Signals for Essential Information
   formItemType = signal<ItemType>('Stock Item');
   formNameEn = signal<string>('Premium Colombian Coffee Beans 1kg');
