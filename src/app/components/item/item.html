@@ -2335,7 +2335,7 @@
           <!-- ===================================================================== -->
           <div id="section-mobile-general-info"
             [class.hidden]="mobileSection() === 'tabs'"
-            class="block md:hidden flex-1 min-h-0 overflow-y-auto px-2 pt-1 pb-4 space-y-3.5 custom-scrollbar overscroll-contain touch-pan-y">
+            class="block md:hidden flex-1 min-h-0 overflow-y-auto px-2 pt-0.5 pb-3 space-y-2 custom-scrollbar overscroll-contain touch-pan-y">
 
             <!-- CARD 1: Item Type * (3D Cube Icon, Value, Down Chevron) -->
             <div class="relative group" data-dropdown>
@@ -2343,20 +2343,20 @@
                 (click)="toggleDropdown('itemType', $event)"
                 (keydown.enter)="toggleDropdown('itemType', $event)"
                 (keydown.space)="$event.preventDefault(); toggleDropdown('itemType', $event)"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none shadow-[0_2px_8px_rgba(0,112,186,0.04)]"
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none shadow-[0_2px_8px_rgba(0,112,186,0.04)]"
                 [class.border-[#00a6f4]]="activeDropdown() === 'itemType'"
                 [class.ring-2]="activeDropdown() === 'itemType'"
                 [class.ring-[#00a6f4]/20]="activeDropdown() === 'itemType'"
                 [class.border-slate-200]="activeDropdown() !== 'itemType'"
                 [class.dark:border-slate-700]="activeDropdown() !== 'itemType'">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">
                   Item Type <span class="text-amber-500 font-bold">*</span>
                 </span>
-                <div class="flex items-center gap-3 min-w-0 flex-1">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                   </svg>
-                  <span class="text-[13.5px] font-bold text-slate-800 dark:text-white truncate">
+                  <span class="text-xs font-bold text-slate-800 dark:text-white truncate">
                     {{ formItemType() }}
                   </span>
                 </div>
@@ -2388,18 +2388,18 @@
             <!-- CARD 2: Item Name (EN) * (Price Tag Icon, Input, Voice Microphone) -->
             <div class="relative group">
               <div id="field-nameEn-mobile"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">
                   Item Name (EN) <span class="text-amber-500 font-bold">*</span>
                 </span>
-                <div class="flex items-center gap-3 min-w-0 flex-1 h-full">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <div class="flex items-center gap-2 min-w-0 flex-1 h-full">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
                     <circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" />
                   </svg>
                   <input aria-label="Item Name EN" type="text" [ngModel]="formNameEn()" (ngModelChange)="formNameEn.set($event)"
                     placeholder="e.g. Premium Barista Coffee Beans 1kg" required
-                    class="w-full h-full bg-transparent text-[13.5px] font-bold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
+                    class="w-full h-full bg-transparent text-xs font-bold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                 </div>
                 <button type="button" (click)="toggleVoiceRecognition($event)" aria-label="Voice input"
                   class="p-1 rounded-full text-slate-500 hover:text-[#00a6f4] transition cursor-pointer relative shrink-0 ml-2"
@@ -2417,17 +2417,17 @@
             <!-- CARD 3: Item Name (AR) / اسم الصنف (بالعربية) (Translation Icon, RTL Input) -->
             <div class="relative group" dir="rtl">
               <div id="field-nameAr-mobile"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)] text-right">
-                <span class="floating-notch-label !right-4 !left-auto !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)] text-right">
+                <span class="floating-notch-label !right-4 !left-auto !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">
                   اسم الصنف (بالعربية)
                 </span>
-                <div class="flex items-center gap-3 min-w-0 flex-1 h-full" dir="ltr">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <div class="flex items-center gap-2 min-w-0 flex-1 h-full" dir="ltr">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896 3.064 2.457 5.86 4.541 8.166" />
                   </svg>
                   <input aria-label="اسم الصنف بالعربية" type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
                     placeholder="مثال: حبوب بن كولومبي فاخرة" dir="rtl"
-                    class="w-full h-full bg-transparent text-[13.5px] font-bold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
+                    class="w-full h-full bg-transparent text-xs font-bold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
                 </div>
               </div>
             </div>
@@ -2435,17 +2435,17 @@
             <!-- CARD 4: SKU * (Barcode Icon, Input, Auto Button) -->
             <div class="relative group">
               <div id="field-sku-mobile"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">
                   SKU <span class="text-amber-500 font-bold">*</span>
                 </span>
-                <div class="flex items-center gap-3 min-w-0 flex-1 h-full">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <div class="flex items-center gap-2 min-w-0 flex-1 h-full">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 4v16M7 4v16M11 4v16M15 4v16M17 4v16M21 4v16" />
                   </svg>
                   <input aria-label="SKU" type="text" [ngModel]="formSku()" (ngModelChange)="formSku.set($event)"
                     placeholder="e.g. COF-COL-001" required
-                    class="w-full h-full bg-transparent text-[13.5px] font-bold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
+                    class="w-full h-full bg-transparent text-xs font-bold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                 </div>
                 <button type="button" (click)="autoGenerateSku()"
                   class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#dff3fd] hover:bg-sky-200 dark:bg-sky-950/70 text-[#0070ba] dark:text-[#38bdf8] text-xs font-bold transition cursor-pointer shrink-0 ml-2 shadow-2xs active:scale-95">
@@ -2463,21 +2463,21 @@
                 (click)="toggleDropdown('category', $event)"
                 (keydown.enter)="toggleDropdown('category', $event)"
                 (keydown.space)="$event.preventDefault(); toggleDropdown('category', $event)"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none shadow-[0_2px_8px_rgba(0,112,186,0.04)]"
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none shadow-[0_2px_8px_rgba(0,112,186,0.04)]"
                 [class.border-[#00a6f4]]="activeDropdown() === 'category'"
                 [class.ring-2]="activeDropdown() === 'category'"
                 [class.ring-[#00a6f4]/20]="activeDropdown() === 'category'"
                 [class.border-slate-200]="activeDropdown() !== 'category'"
                 [class.dark:border-slate-700]="activeDropdown() !== 'category'">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">
                   Category <span class="text-amber-500 font-bold">*</span>
                 </span>
-                <div class="flex items-center gap-3 min-w-0 flex-1">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m12 3 9 4.5-9 4.5-9-4.5L12 3Z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="m3 12 9 4.5 9-4.5M3 16.5l9 4.5 9-4.5" />
                   </svg>
-                  <span class="text-[13.5px] font-bold text-slate-800 dark:text-white truncate">
+                  <span class="text-xs font-bold text-slate-800 dark:text-white truncate">
                     {{ formCategory() }}
                   </span>
                 </div>
@@ -2509,12 +2509,12 @@
             <!-- CARD 6: Subcategory (4-Squares Grid Icon, Input) -->
             <div class="relative group">
               <div id="field-subcategory-mobile"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">
                   Subcategory
                 </span>
-                <div class="flex items-center gap-3 min-w-0 flex-1 h-full">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <div class="flex items-center gap-2 min-w-0 flex-1 h-full">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <rect x="3" y="3" width="7" height="7" rx="1.5" />
                     <rect x="14" y="3" width="7" height="7" rx="1.5" />
                     <rect x="3" y="14" width="7" height="7" rx="1.5" />
@@ -2522,7 +2522,7 @@
                   </svg>
                   <input aria-label="Subcategory" type="text" [ngModel]="formSubcategory()" (ngModelChange)="formSubcategory.set($event)"
                     placeholder="e.g. Beverages & Hot Drinks"
-                    class="w-full h-full bg-transparent text-[13.5px] font-bold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
+                    class="w-full h-full bg-transparent text-xs font-bold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                 </div>
               </div>
             </div>
@@ -2533,21 +2533,21 @@
                 (click)="toggleDropdown('brand', $event)"
                 (keydown.enter)="toggleDropdown('brand', $event)"
                 (keydown.space)="$event.preventDefault(); toggleDropdown('brand', $event)"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none shadow-[0_2px_8px_rgba(0,112,186,0.04)]"
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none shadow-[0_2px_8px_rgba(0,112,186,0.04)]"
                 [class.border-[#00a6f4]]="activeDropdown() === 'brand'"
                 [class.ring-2]="activeDropdown() === 'brand'"
                 [class.ring-[#00a6f4]/20]="activeDropdown() === 'brand'"
                 [class.border-slate-200]="activeDropdown() !== 'brand'"
                 [class.dark:border-slate-700]="activeDropdown() !== 'brand'">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">
                   Brand
                 </span>
-                <div class="flex items-center gap-3 min-w-0 flex-1">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
                     <circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" />
                   </svg>
-                  <span class="text-[13.5px] font-bold text-slate-800 dark:text-white truncate">
+                  <span class="text-xs font-bold text-slate-800 dark:text-white truncate">
                     {{ formBrand() }}
                   </span>
                 </div>
@@ -2582,20 +2582,20 @@
                 (click)="toggleDropdown('baseUom', $event)"
                 (keydown.enter)="toggleDropdown('baseUom', $event)"
                 (keydown.space)="$event.preventDefault(); toggleDropdown('baseUom', $event)"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none shadow-[0_2px_8px_rgba(0,112,186,0.04)]"
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border bg-white dark:bg-slate-800 transition-all cursor-pointer select-none shadow-[0_2px_8px_rgba(0,112,186,0.04)]"
                 [class.border-[#00a6f4]]="activeDropdown() === 'baseUom'"
                 [class.ring-2]="activeDropdown() === 'baseUom'"
                 [class.ring-[#00a6f4]/20]="activeDropdown() === 'baseUom'"
                 [class.border-slate-200]="activeDropdown() !== 'baseUom'"
                 [class.dark:border-slate-700]="activeDropdown() !== 'baseUom'">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">
                   Base UOM <span class="text-amber-500 font-bold">*</span>
                 </span>
-                <div class="flex items-center gap-3 min-w-0 flex-1">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                   </svg>
-                  <span class="text-[13.5px] font-bold text-slate-800 dark:text-white truncate">
+                  <span class="text-xs font-bold text-slate-800 dark:text-white truncate">
                     {{ formBaseUom() }}
                   </span>
                 </div>
@@ -2627,13 +2627,13 @@
             <!-- CARD 9: Sales Price (Scrollable) -->
             <div class="relative group">
               <div id="field-salesPrice-mobile"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">Sales Price</span>
-                <div class="flex items-center gap-3 min-w-0 flex-1 h-full">
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">Sales Price</span>
+                <div class="flex items-center gap-2 min-w-0 flex-1 h-full">
                   <span class="text-xs font-bold text-slate-400 shrink-0">AED</span>
                   <input aria-label="Sales Price" type="number" step="0.01" min="0" [ngModel]="formSalesPrice()" (ngModelChange)="formSalesPrice.set($event)"
                     placeholder="0.00"
-                    class="w-full h-full bg-transparent text-[13.5px] font-bold text-emerald-600 dark:text-emerald-400 placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
+                    class="w-full h-full bg-transparent text-xs font-bold text-emerald-600 dark:text-emerald-400 placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                 </div>
               </div>
             </div>
@@ -2641,21 +2641,21 @@
             <!-- CARD 10: Cost Price (Scrollable) -->
             <div class="relative group">
               <div id="field-costPrice-mobile"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">Cost Price</span>
-                <div class="flex items-center gap-3 min-w-0 flex-1 h-full">
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">Cost Price</span>
+                <div class="flex items-center gap-2 min-w-0 flex-1 h-full">
                   <span class="text-xs font-bold text-slate-400 shrink-0">AED</span>
                   <input aria-label="Cost Price" type="number" step="0.01" min="0" [ngModel]="formCostPrice()" (ngModelChange)="formCostPrice.set($event)"
                     placeholder="0.00"
-                    class="w-full h-full bg-transparent text-[13.5px] font-bold text-slate-700 dark:text-slate-200 placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
+                    class="w-full h-full bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                 </div>
               </div>
             </div>
 
             <!-- CARD 11: Margin & Markup (Scrollable) -->
             <div id="field-marginMarkup-mobile"
-              class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
-              <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">Margin & Markup</span>
+              class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
+              <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">Margin & Markup</span>
               <div class="flex items-center justify-between w-full text-xs font-bold px-2">
                 <div class="flex items-center gap-1.5">
                   <span class="text-slate-500">Margin:</span>
@@ -2672,15 +2672,15 @@
             <!-- CARD 12: Barcode / GTIN (Scrollable) -->
             <div class="relative group">
               <div id="field-barcode-mobile"
-                class="relative flex items-center justify-between w-full h-13 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
-                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[11px] !font-bold">Barcode / GTIN</span>
-                <div class="flex items-center gap-3 min-w-0 flex-1 h-full">
-                  <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                class="relative flex items-center justify-between w-full h-10.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-[0_2px_8px_rgba(0,112,186,0.04)]">
+                <span class="floating-notch-label !left-4 !bg-white dark:!bg-slate-800 !text-slate-500 dark:!text-slate-400 !text-[10px] !font-bold">Barcode / GTIN</span>
+                <div class="flex items-center gap-2 min-w-0 flex-1 h-full">
+                  <svg class="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 4v16M7 4v16M11 4v16M15 4v16M17 4v16M21 4v16" />
                   </svg>
                   <input aria-label="Barcode / GTIN" type="text" [ngModel]="formBarcode()" (ngModelChange)="formBarcode.set($event)"
                     placeholder="Scan or type barcode"
-                    class="w-full h-full bg-transparent text-[13.5px] font-mono font-bold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
+                    class="w-full h-full bg-transparent text-xs font-mono font-bold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                 </div>
                 <button type="button" (click)="openBarcodeScanner()" aria-label="Open barcode scanner"
                   class="p-1 rounded-lg text-slate-400 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer shrink-0 ml-2">
@@ -6240,148 +6240,148 @@
       <!-- Mobile Quick Actions Dock (All Tools Horizontally Scrollable with new squircle UI) -->
       @if (activeActionView() === 'form') {
       <div
-        class="block md:hidden shrink-0 px-2.5 pt-1.5 pb-2 bg-slate-100/70 dark:bg-slate-900/60 select-none">
+        class="block md:hidden shrink-0 px-2 py-1 bg-slate-100/70 dark:bg-slate-900/60 select-none">
         <div
           id="mobile-action-dock" class="flex items-center gap-2 overflow-x-auto custom-scrollbar-hide touch-pan-x py-1 px-1 bg-white/90 dark:bg-slate-800/90 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs select-none scroll-smooth">
 
           <!-- 1. Add -->
           <button type="button" (click)="handleAddClick()" aria-label="Add Item"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-emerald-200 bg-emerald-50/80 dark:bg-emerald-950/40 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-emerald-100/70"
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-emerald-200 bg-emerald-50/80 dark:bg-emerald-950/40 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-emerald-100/70"
             [class.ring-2]="pageMode() === 'add'" [class.ring-emerald-500]="pageMode() === 'add'">
-            <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
               <circle cx="12" cy="12" r="9" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8" />
             </svg>
-            <span class="text-[11px] font-bold">Add</span>
+            <span class="text-[9.5px] font-bold">Add</span>
           </button>
 
           <!-- 2. View -->
           <button type="button" (click)="handleViewClick()" aria-label="View Item"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-teal-200 bg-teal-50/80 dark:bg-teal-950/40 dark:border-teal-800 text-teal-600 dark:text-teal-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-teal-100/70"
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-teal-200 bg-teal-50/80 dark:bg-teal-950/40 dark:border-teal-800 text-teal-600 dark:text-teal-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-teal-100/70"
             [class.ring-2]="pageMode() === 'view'" [class.ring-teal-500]="pageMode() === 'view'">
-            <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
               <circle cx="12" cy="12" r="3" />
             </svg>
-            <span class="text-[11px] font-bold">View</span>
+            <span class="text-[9.5px] font-bold">View</span>
           </button>
 
           <!-- 3. Grid -->
           <button type="button" (click)="handleGridClick()" aria-label="Grid view"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-sky-200 bg-sky-50/80 dark:bg-sky-950/40 dark:border-sky-800 text-[#008fd3] dark:text-[#38bdf8] flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-sky-100/70">
-            <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-sky-200 bg-sky-50/80 dark:bg-sky-950/40 dark:border-sky-800 text-[#008fd3] dark:text-[#38bdf8] flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-sky-100/70">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
               <rect x="3" y="3" width="7" height="7" rx="1.5" />
               <rect x="14" y="3" width="7" height="7" rx="1.5" />
               <rect x="3" y="14" width="7" height="7" rx="1.5" />
               <rect x="14" y="14" width="7" height="7" rx="1.5" />
             </svg>
-            <span class="text-[11px] font-bold">Grid</span>
+            <span class="text-[9.5px] font-bold">Grid</span>
           </button>
 
           <!-- 4. Scan -->
           <button type="button" (click)="openBarcodeScanner()" aria-label="Scan barcode"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-sky-200 bg-sky-50/80 dark:bg-sky-950/40 dark:border-sky-800 text-[#008fd3] dark:text-[#38bdf8] flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-sky-100/70">
-            <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-sky-200 bg-sky-50/80 dark:bg-sky-950/40 dark:border-sky-800 text-[#008fd3] dark:text-[#38bdf8] flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-sky-100/70">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 7V5a2 2 0 0 1 2-2h2m10 0h2a2 2 0 0 1 2 2v2m0 10v2a2 2 0 0 1-2 2h-2m-10 0H5a2 2 0 01-2-2v-2" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 12h10" />
             </svg>
-            <span class="text-[11px] font-bold">Scan</span>
+            <span class="text-[9.5px] font-bold">Scan</span>
           </button>
 
           <!-- 5. Recycle -->
           <button type="button" (click)="handleRecycleClick()" aria-label="Recycle / Clear"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-rose-200 bg-rose-50/80 dark:bg-rose-950/40 dark:border-rose-800 text-rose-600 dark:text-rose-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-rose-100/70"
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-rose-200 bg-rose-50/80 dark:bg-rose-950/40 dark:border-rose-800 text-rose-600 dark:text-rose-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-rose-100/70"
             [class.ring-2]="isRecycleBinModalOpen()" [class.ring-rose-500]="isRecycleBinModalOpen()">
-            <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
             </svg>
-            <span class="text-[11px] font-bold">Recycle</span>
+            <span class="text-[9.5px] font-bold">Recycle</span>
           </button>
 
           <!-- 6. Edit -->
           <button type="button" (click)="handleEditClick()" aria-label="Edit Item"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-amber-200 bg-amber-50/80 dark:bg-amber-950/40 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-amber-100/70"
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-amber-200 bg-amber-50/80 dark:bg-amber-950/40 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-amber-100/70"
             [class.ring-2]="pageMode() === 'edit'" [class.ring-amber-500]="pageMode() === 'edit'">
-            <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
             </svg>
-            <span class="text-[11px] font-bold">Edit</span>
+            <span class="text-[9.5px] font-bold">Edit</span>
           </button>
 
           <!-- 7. History -->
           <button type="button" (click)="handleHistoryClick()" aria-label="History"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-indigo-200 bg-indigo-50/80 dark:bg-indigo-950/40 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-indigo-100/70"
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-indigo-200 bg-indigo-50/80 dark:bg-indigo-950/40 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-indigo-100/70"
             [class.ring-2]="activeActionView() === 'history'" [class.ring-indigo-500]="activeActionView() === 'history'">
-            <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
             </svg>
-            <span class="text-[11px] font-bold">History</span>
+            <span class="text-[9.5px] font-bold">History</span>
           </button>
 
           <!-- 8. Export -->
           <button type="button" (click)="handleExportClick()" aria-label="Export"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-purple-200 bg-purple-50/80 dark:bg-purple-950/40 dark:border-purple-800 text-purple-600 dark:text-purple-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-purple-100/70">
-            <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-purple-200 bg-purple-50/80 dark:bg-purple-950/40 dark:border-purple-800 text-purple-600 dark:text-purple-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-purple-100/70">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            <span class="text-[11px] font-bold">Export</span>
+            <span class="text-[9.5px] font-bold">Export</span>
           </button>
 
           <!-- 9. Share -->
           <button type="button" (click)="handleShareClick()" aria-label="Share"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-emerald-200 bg-emerald-50/80 dark:bg-emerald-950/40 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-emerald-100/70">
-            <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-emerald-200 bg-emerald-50/80 dark:bg-emerald-950/40 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-emerald-100/70">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="18" cy="5" r="3" />
               <circle cx="6" cy="12" r="3" />
               <circle cx="18" cy="19" r="3" />
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
             </svg>
-            <span class="text-[11px] font-bold">Share</span>
+            <span class="text-[9.5px] font-bold">Share</span>
           </button>
 
           <!-- 10. AI -->
           <button type="button" (click)="handleAiClick()" aria-label="AI Assistant"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-sky-200 bg-sky-50/80 dark:bg-sky-950/40 dark:border-sky-800 text-[#008fd3] dark:text-[#38bdf8] flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-sky-100/70"
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-sky-200 bg-sky-50/80 dark:bg-sky-950/40 dark:border-sky-800 text-[#008fd3] dark:text-[#38bdf8] flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-sky-100/70"
             [class.ring-2]="activeActionView() === 'ai'" [class.ring-sky-500]="activeActionView() === 'ai'">
-            <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
             </svg>
-            <span class="text-[11px] font-bold">AI</span>
+            <span class="text-[9.5px] font-bold">AI</span>
           </button>
 
           <!-- 11. Video -->
           <button type="button" (click)="openVideoTutorial()" aria-label="Video Tutorial"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-sky-200 bg-sky-50/80 dark:bg-sky-950/40 dark:border-sky-800 text-[#008fd3] dark:text-[#38bdf8] flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-sky-100/70">
-            <svg class="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24">
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-sky-200 bg-sky-50/80 dark:bg-sky-950/40 dark:border-sky-800 text-[#008fd3] dark:text-[#38bdf8] flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-sky-100/70">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
               <polygon points="6 3 20 12 6 21 6 3" />
             </svg>
-            <span class="text-[11px] font-bold">Video</span>
+            <span class="text-[9.5px] font-bold">Video</span>
           </button>
 
           <!-- 12. Guide -->
           <button type="button" (click)="openGuidanceTour()" aria-label="Guidance Assistant"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-amber-200 bg-amber-50/80 dark:bg-amber-950/40 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-amber-100/70"
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-amber-200 bg-amber-50/80 dark:bg-amber-950/40 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-amber-100/70"
             [class.ring-2]="isGuidanceTourOpen()" [class.ring-amber-500]="isGuidanceTourOpen()">
-            <svg class="w-4.5 h-4.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="9" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01" />
             </svg>
-            <span class="text-[11px] font-bold">Guide</span>
+            <span class="text-[9.5px] font-bold">Guide</span>
           </button>
 
           <!-- 13. Keys -->
           <button type="button" (click)="openShortcutsModal()" aria-label="Keyboard Shortcuts"
-            class="min-w-[62px] w-[62px] h-[64px] rounded-2xl border border-slate-200 bg-slate-50/80 dark:bg-slate-800/80 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-slate-100/70">
-            <svg class="w-4.5 h-4.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            class="min-w-[50px] w-[50px] h-[50px] rounded-xl border border-slate-200 bg-slate-50/80 dark:bg-slate-800/80 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex flex-col items-center justify-center gap-0.5 shrink-0 transition active:scale-95 cursor-pointer shadow-2xs hover:bg-slate-100/70">
+            <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8" />
             </svg>
-            <span class="text-[11px] font-bold">Keys</span>
+            <span class="text-[9.5px] font-bold">Keys</span>
           </button>
 
         </div>
