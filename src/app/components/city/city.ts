@@ -711,10 +711,10 @@ export class CityComponent implements OnInit {
   }
 
   scrollTabs(dir: 'left' | 'right'): void {
-    if (this.tabsContainerElement) {
+    if (this.tabsContainerElement?.nativeElement) {
       const el = this.tabsContainerElement.nativeElement;
-      const delta = dir === 'left' ? -180 : 180;
-      el.scrollBy({ left: delta, behavior: 'smooth' });
+      const scrollAmount = Math.max(200, Math.round(el.clientWidth * 0.8));
+      el.scrollBy({ left: dir === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
     }
   }
 

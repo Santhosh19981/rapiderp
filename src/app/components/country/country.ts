@@ -1147,7 +1147,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   scrollTabs(direction: 'left' | 'right'): void {
     if (!this.tabsContainerRef?.nativeElement) return;
     const el = this.tabsContainerRef.nativeElement;
-    const scrollAmount = 260;
+    const scrollAmount = Math.max(200, Math.round(el.clientWidth * 0.8));
     el.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth',
