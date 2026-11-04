@@ -21,7 +21,7 @@ import { AuditService } from '../../services/audit.service';
 import { TenantService, ConfigurableField } from '../../services/tenant.service';
 import { DropdownOption, SelectDropdown } from '../select-dropdown/select-dropdown';
 
-export type CountryViewMode = 'grid' | 'list' | 'add' | 'edit' | 'view';
+export type CountryViewMode = 'grid' | 'list' | 'add' | 'edit' | 'view' | 'overview';
 
 export type FormStatus = 'Active' | 'Inactive' | 'Draft' | 'Delete';
 
@@ -105,6 +105,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   pageHeaderTitle = computed<string>(() => {
     switch (this.viewMode()) {
+      case 'overview':
+        return 'Country Master Overview';
       case 'grid':
         return 'Country Grid View';
       case 'list':
@@ -3805,7 +3807,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         }
       }
 
-      if (mode && ['grid', 'list', 'add', 'edit', 'view'].includes(mode)) {
+      if (mode && ['grid', 'list', 'add', 'edit', 'view', 'overview'].includes(mode)) {
         if (mode === 'add') {
           this.currentCountryId.set(null);
           this.selectedMasterCountry.set(null);
