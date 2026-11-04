@@ -572,35 +572,45 @@ textarea {
   color: #e2e8f0;
 }
 
-/* Section 9: Keep Toggle specific styling */
+/* Section 9: Keep Toggle specific styling - Secondary Colour theme */
 .keep-switch .form-switch-track {
-  background: #bae6fd; /* light secondary blue default (Section 9.1) */
-  border: 1px solid #7dd3fc;
+  background: #f0f9ff; /* light sky matching unselected menu items in 2nd table */
+  border: 1px solid #00a2e8; /* secondary color border */
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 :host-context(.dark) .keep-switch .form-switch-track,
 .dark .keep-switch .form-switch-track {
-  background: #0369a1;
-  border: 1px solid #0284c7;
+  background: rgba(0, 162, 232, 0.15);
+  border: 1px solid #00a2e8;
+}
+
+.keep-switch .form-switch-thumb {
+  background: #00a2e8; /* secondary color thumb */
 }
 
 .keep-switch:hover .form-switch-track {
-  background: #7dd3fc;
-  border-color: #38bdf8;
+  background: #e0f2fe;
+  border-color: #008ecb;
 }
 
 .keep-switch input:checked + .form-switch-track {
-  background: #00a6f4; /* approved primary theme color (Section 9.2) */
-  border-color: #0284c7;
+  background: #00a2e8; /* secondary color when active */
+  border-color: #00a2e8;
+}
+
+.keep-switch input:checked + .form-switch-track .form-switch-thumb {
+  background: #ffffff;
+  transform: translateX(16px);
 }
 
 .keep-switch input:checked:hover + .form-switch-track {
-  background: #0284c7;
+  background: #008ecb;
+  border-color: #008ecb;
 }
 
 .keep-switch input:focus-visible + .form-switch-track {
-  outline: 2px solid #00a6f4;
+  outline: 2px solid #00a2e8;
   outline-offset: 2px;
 }
 

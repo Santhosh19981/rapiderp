@@ -1782,7 +1782,7 @@
 
               <div [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()"
                 data-tooltip-pos="bottom"
-                class="w-7 h-7 rounded-full bg-[#00a6f4] text-white border-2 border-[#00a6f4] flex items-center justify-center text-xs font-black select-none shadow-md shadow-[#00a6f4]/25">
+                class="w-7 h-7 rounded-full bg-[#00a2e8] text-white border-2 border-[#00a2e8] flex items-center justify-center text-xs font-black select-none shadow-md shadow-[#00a2e8]/25">
                 {{ currentCountryDisplayNumber() }}
               </div>
 
@@ -1796,72 +1796,6 @@
                 </svg>
               </button>
             </div>
-          </div>
-
-          <!-- Middle: Search Bar with Voice Input (Find field) -->
-          <div #fieldSearchContainer class="relative w-full sm:max-w-xs md:max-w-md mx-0 sm:mx-auto">
-            <div
-              class="relative flex items-center w-full h-8.5 px-3.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-2xs">
-              <svg class="w-4 h-4 text-slate-400 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input aria-label="text input" #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
-                (ngModelChange)="fieldSearchQuery.set($event); isFieldSearchOpen.set(true)"
-                (focus)="isFieldSearchOpen.set(true)" placeholder="Find field"
-                class="w-full h-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
-
-              @if (fieldSearchQuery()) {
-              <button type="button" (click)="fieldSearchQuery.set(''); isFieldSearchOpen.set(false)" aria-label="Clear field search" title="Clear field search"
-                class="p-1 rounded-full text-slate-400 hover:text-slate-600 transition cursor-pointer mr-1">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-              }
-
-              <button type="button" (click)="toggleFieldVoiceSearch($event)"
-                [attr.data-tooltip]="isFieldVoiceListening() ? 'Listening' : 'Voice'" data-tooltip-pos="bottom"
-                class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer relative shrink-0"
-                [class.text-red-500]="isFieldVoiceListening()" [class.animate-pulse]="isFieldVoiceListening()">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-                @if (isFieldVoiceListening()) {
-                <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                }
-              </button>
-            </div>
-
-            <!-- Search Results Dropdown -->
-            @if (isFieldSearchOpen() && filteredFormFields().length > 0) {
-            <div
-              class="absolute left-0 right-0 top-full mt-1.5 w-full max-h-60 sm:max-h-72 overflow-y-auto custom-scrollbar bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl z-50 p-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
-              <div class="py-0.5 space-y-0.5">
-                @for (field of filteredFormFields(); track field.id) {
-                <button type="button" (click)="selectSearchField(field)"
-                  class="w-full px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-slate-700/70 transition flex items-center justify-between group cursor-pointer">
-                  <div class="flex flex-col min-w-0 pr-2">
-                    <span
-                      class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 group-hover:text-[#00a6f4] transition truncate">
-                      {{ field.label }}
-                    </span>
-                    @if (field.location) {
-                    <span class="text-[10px] text-slate-400 dark:text-slate-500 truncate">{{ field.location }}</span>
-                    }
-                  </div>
-                  <svg
-                    class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:text-[#00a6f4] shrink-0 transition-transform group-hover:translate-x-1"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </button>
-                }
-              </div>
-            </div>
-            }
           </div>
 
           <!-- Mobile Segmented Controller (< sm only) -->
@@ -1890,20 +1824,7 @@
 
           <!-- Desktop Only (sm+): Grid/List Toggle & Record Pagination -->
           <div class="hidden sm:flex items-center gap-2 sm:gap-3 select-none shrink-0">
-            <div
-              class="flex items-center bg-slate-100 dark:bg-slate-700/80 p-0.5 rounded-full border border-slate-200/80 dark:border-slate-600">
-              <button type="button" (click)="switchView('grid')"
-                class="h-7 px-2.5 rounded-full text-xs font-semibold flex items-center gap-1 transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-[#00a6f4]"
-                title="Grid">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                  <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                  <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                  <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                </svg>
-              </button>
-
-            </div>
+            
 
             <div class="flex items-center gap-1.5 sm:gap-2">
               <button type="button" (click)="goToPreviousCountry()" [disabled]="currentCountryDisplayNumber() <= 1"
@@ -1917,7 +1838,7 @@
 
               <div [attr.data-tooltip]="currentCountryDisplayNumber() + ' of ' + totalRecordsCount()"
                 data-tooltip-pos="bottom"
-                class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-[#00a6f4] text-white border-2 border-[#00a6f4] flex items-center justify-center text-xs font-black select-none shadow-md shadow-[#00a6f4]/25">
+                class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-[#00a2e8] text-white border-2 border-[#00a2e8] flex items-center justify-center text-xs font-black select-none shadow-md shadow-[#00a2e8]/25">
                 {{ currentCountryDisplayNumber() }}
               </div>
 
@@ -1966,7 +1887,7 @@
                         Country Name (EN) <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
                       <input aria-label="text input" type="text" [ngModel]="formName()" (ngModelChange)="onCountryNameInput($event)"
-                        name="countryNameEn" required placeholder="e.g. United Arab Emirates" [readonly]="viewMode() === 'view'"
+                        name="countryNameEn" required  [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
 
                       <div class="flex items-center gap-1 shrink-0 ml-1.5">
@@ -2065,7 +1986,7 @@
                         اسم الدولة (بالعربية)
                       </span>
                       <input aria-label="text input" type="text" [ngModel]="formNameAr()" (ngModelChange)="formNameAr.set($event)"
-                        name="countryNameAr" placeholder="مثال: الإمارات العربية المتحدة" [readonly]="viewMode() === 'view'"
+                        name="countryNameAr"  [readonly]="viewMode() === 'view'"
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none text-right font-['Segoe_UI',Tahoma]" />
                     </div>
                   </div>
@@ -2077,7 +1998,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Short Name</span>
                       <input aria-label="shortName" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)" name="shortName"
-                        placeholder="e.g. UAE"
+                        
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2090,7 +2011,7 @@
                         ISO Code 2 <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
                       <input aria-label="text input" type="text" maxlength="2" [ngModel]="formIsoCode2()"
-                        (ngModelChange)="onIsoCode2Change($event)" name="isoCode2" required placeholder="e.g. AE"
+                        (ngModelChange)="onIsoCode2Change($event)" name="isoCode2" required 
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                       <button type="button" (click)="autoGenerateIso()"
                         class="text-[11px] font-bold text-[#00a6f4] hover:text-[#008fd3] bg-sky-50 dark:bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 hover:border-[#00a6f4] transition cursor-pointer shrink-0">
@@ -2107,7 +2028,7 @@
                         ISO Code 3 <span class="text-slate-400 dark:text-slate-500">*</span>
                       </span>
                       <input aria-label="text input" type="text" maxlength="3" [ngModel]="formIsoCode3()"
-                        (ngModelChange)="formIsoCode3.set($event)" name="isoCode3" required placeholder="e.g. ARE"
+                        (ngModelChange)="formIsoCode3.set($event)" name="isoCode3" required 
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white uppercase placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2118,7 +2039,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">ISO Numeric Code</span>
                       <input aria-label="text input" type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)"
-                        name="isoNumeric" placeholder="e.g. 784"
+                        name="isoNumeric" 
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2130,7 +2051,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">International Dialing Code</span>
                       <input aria-label="isd" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="isd"
-                        placeholder="e.g. +971"
+                        
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2141,7 +2062,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Default Currency</span>
                       <input aria-label="text input" type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
-                        name="currency" placeholder="e.g. AED"
+                        name="currency" 
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2152,7 +2073,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Nationality</span>
                       <input aria-label="text input" type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)"
-                        name="nationality" placeholder="e.g. Emirati"
+                        name="nationality" 
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2179,7 +2100,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Continent</span>
                       <input aria-label="text input" type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)"
-                        name="continent" placeholder="e.g. Asia"
+                        name="continent" 
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2190,7 +2111,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Capital City</span>
                       <input aria-label="text input" type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)"
-                        name="capital" placeholder="e.g. Abu Dhabi"
+                        name="capital" 
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2201,7 +2122,7 @@
                       class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                       <span class="floating-notch-label">Subregion</span>
                       <input aria-label="text input" type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)"
-                        name="subregion" placeholder="e.g. Middle East"
+                        name="subregion" 
                         class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold text-slate-800 dark:text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none" />
                     </div>
                   </div>
@@ -2283,6 +2204,73 @@
                     </button>
                   </div>
 
+<!-- Middle: Search Bar with Voice Input (Find field) - Moved to Bottom Table Tabs Bar -->
+                  <div #fieldSearchContainer class="relative shrink-0 w-44 sm:w-60 md:w-64 ml-1.5 sm:ml-2">
+                    <div
+                      class="relative flex items-center w-full h-7.5 sm:h-8 px-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all shadow-2xs">
+                      <svg class="w-3.5 h-3.5 text-slate-400 mr-1.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      <input aria-label="text input" #fieldSearchInput type="text" [ngModel]="fieldSearchQuery()"
+                        (ngModelChange)="fieldSearchQuery.set($event); isFieldSearchOpen.set(true)"
+                        (focus)="isFieldSearchOpen.set(true)" placeholder="Find field"
+                        class="w-full h-full bg-transparent text-xs font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none" />
+
+                      @if (fieldSearchQuery()) {
+                      <button type="button" (click)="fieldSearchQuery.set(''); isFieldSearchOpen.set(false)" aria-label="Clear field search" title="Clear field search"
+                        class="p-0.5 rounded-full text-slate-400 hover:text-slate-600 transition cursor-pointer mr-0.5">
+                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <line x1="18" y1="6" x2="6" y2="18" />
+                          <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                      </button>
+                      }
+
+                      <button type="button" (click)="toggleFieldVoiceSearch($event)"
+                        [attr.data-tooltip]="isFieldVoiceListening() ? 'Listening' : 'Voice'" data-tooltip-pos="bottom"
+                        class="p-0.5 rounded-full text-slate-400 hover:text-[#00a6f4] transition cursor-pointer relative shrink-0"
+                        [class.text-red-500]="isFieldVoiceListening()" [class.animate-pulse]="isFieldVoiceListening()">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                        </svg>
+                        @if (isFieldVoiceListening()) {
+                        <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                        }
+                      </button>
+                    </div>
+
+                    <!-- Search Results Dropdown -->
+                    @if (isFieldSearchOpen() && filteredFormFields().length > 0) {
+                    <div
+                      class="absolute right-0 top-full mt-1.5 w-64 sm:w-80 max-h-60 sm:max-h-72 overflow-y-auto custom-scrollbar bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl z-50 p-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
+                      <div class="py-0.5 space-y-0.5">
+                        @for (field of filteredFormFields(); track field.id) {
+                        <button type="button" (click)="selectSearchField(field)"
+                          class="w-full px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-slate-700/70 transition flex items-center justify-between group cursor-pointer">
+                          <div class="flex flex-col min-w-0 pr-2">
+                            <span
+                              class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 group-hover:text-[#00a6f4] transition truncate">
+                              {{ field.label }}
+                            </span>
+                            @if (field.location) {
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 truncate">{{ field.location }}</span>
+                            }
+                          </div>
+                          <svg
+                            class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:text-[#00a6f4] shrink-0 transition-transform group-hover:translate-x-1"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                          </svg>
+                        </button>
+                        }
+                      </div>
+                    </div>
+                    }
+                  </div>
+
+
                   <button type="button" (click)="scrollTabs('right')"
                     class="tab-nav-arrow flex items-center justify-center w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-[#00a2e8] text-white border border-[#00a2e8] hover:bg-[#008ecb] hover:border-[#008ecb] transition shrink-0 cursor-pointer ml-1 sm:ml-1.5 shadow-xs active:scale-95"
                     title="Right" aria-label="Scroll tabs right">
@@ -2313,7 +2301,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Short Name (Code)</span>
                           <input aria-label="text input" type="text" [ngModel]="formCode()" (ngModelChange)="formCode.set($event)"
-                            name="tab_shortName" placeholder="e.g. UAE"
+                            name="tab_shortName" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2322,7 +2310,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Alpha-2 Code</span>
                           <input aria-label="text input" type="text" [ngModel]="formIsoCode2()" (ngModelChange)="onIsoCode2Change($event)"
-                            name="tab_iso2" placeholder="e.g. AE"
+                            name="tab_iso2" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2331,7 +2319,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Alpha-3 Code</span>
                           <input aria-label="text input" type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)"
-                            name="tab_iso3" placeholder="e.g. ARE"
+                            name="tab_iso3" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2340,7 +2328,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">ISO Numeric Code</span>
                           <input aria-label="text input" type="text" [ngModel]="formIsoNumeric()" (ngModelChange)="formIsoNumeric.set($event)"
-                            name="tab_numeric" placeholder="e.g. 784"
+                            name="tab_numeric" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2349,7 +2337,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Dialing Code (ISD)</span>
                           <input aria-label="tab_isd" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" name="tab_isd"
-                            placeholder="e.g. +971"
+                            
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2358,7 +2346,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Default Currency</span>
                           <input aria-label="text input" type="text" [ngModel]="formCurrency()" (ngModelChange)="formCurrency.set($event)"
-                            name="tab_currency" placeholder="e.g. AED"
+                            name="tab_currency" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2367,7 +2355,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Nationality</span>
                           <input aria-label="text input" type="text" [ngModel]="formNationality()" (ngModelChange)="formNationality.set($event)"
-                            name="tab_nationality" placeholder="e.g. Emirati"
+                            name="tab_nationality" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2376,7 +2364,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Continent</span>
                           <input aria-label="text input" type="text" [ngModel]="formContinent()" (ngModelChange)="formContinent.set($event)"
-                            name="tab_continent" placeholder="e.g. Asia"
+                            name="tab_continent" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2385,7 +2373,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Capital City</span>
                           <input aria-label="text input" type="text" [ngModel]="formCapital()" (ngModelChange)="formCapital.set($event)"
-                            name="tab_capital" placeholder="e.g. Abu Dhabi"
+                            name="tab_capital" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -2394,7 +2382,7 @@
                           class="relative flex items-center w-full h-10 sm:h-[42px] px-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus-within:border-[#00a6f4] focus-within:ring-2 focus-within:ring-[#00a6f4]/20 transition-all">
                           <span class="floating-notch-label">Subregion</span>
                           <input aria-label="text input" type="text" [ngModel]="formSubregion()" (ngModelChange)="formSubregion.set($event)"
-                            name="tab_subregion" placeholder="e.g. Middle East"
+                            name="tab_subregion" 
                             class="w-full h-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none" />
                         </div>
                       </div>
@@ -3002,7 +2990,7 @@
           class="country-panel-footer shrink-0 flex items-center justify-between gap-2 px-3 sm:px-8 py-1.5 sm:py-2 border-t border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xs select-none transition-all sticky bottom-0 z-30 shadow-xs">
           <!-- Left: Stay on Page Switch -->
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <label class="form-switch m-0 flex items-center gap-1.5 sm:gap-2 cursor-pointer">
+            <label class="form-switch keep-switch m-0 flex items-center gap-1.5 sm:gap-2 cursor-pointer">
               <input aria-label="toggle checkbox" type="checkbox" class="sr-only" [checked]="keepOnPage()"
                 (change)="keepOnPage.set($any($event.target).checked)" />
               <span class="form-switch-track scale-90 sm:scale-100 origin-left"><span
@@ -4442,24 +4430,24 @@
           <div>
             <label for="qfName" class="block text-[11px] font-semibold text-slate-500 mb-1">Country Name</label>
             <input aria-label="text input" type="text" [ngModel]="formName()" (ngModelChange)="onCountryNameInput($event)"
-              id="qfName" placeholder="e.g. Bangladesh"
+              id="qfName" 
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
             <label for="qfIso2" class="block text-[11px] font-semibold text-slate-500 mb-1">ISO Code (2)</label>
             <input aria-label="text input" type="text" [ngModel]="formIsoCode2()" (ngModelChange)="formIsoCode2.set($event)"
-              id="qfIso2" placeholder="e.g. BD" maxlength="2"
+              id="qfIso2"  maxlength="2"
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold uppercase text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
             <label for="qfIso3" class="block text-[11px] font-semibold text-slate-500 mb-1">ISO Code (3)</label>
             <input aria-label="text input" type="text" [ngModel]="formIsoCode3()" (ngModelChange)="formIsoCode3.set($event)"
-              id="qfIso3" placeholder="e.g. BGD" maxlength="3"
+              id="qfIso3"  maxlength="3"
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold uppercase text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
             <label for="qfIsd" class="block text-[11px] font-semibold text-slate-500 mb-1">Phone Dial Code</label>
-            <input aria-label="e.g. +880" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" id="qfIsd" placeholder="e.g. +880"
+            <input aria-label="e.g. +880" type="text" [ngModel]="formIsd()" (ngModelChange)="formIsd.set($event)" id="qfIsd" 
               class="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
           </div>
           <div>
@@ -5599,7 +5587,7 @@
               <div class="space-y-1.5">
                 <label for="cfDispName" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Field Display Name <span class="text-rose-500">*</span></label>
                 <input aria-label="text input" type="text" [ngModel]="newFieldNameInput()" (ngModelChange)="newFieldNameInput.set($event)"
-                  id="cfDispName" placeholder="e.g. Region Code, Emergency Hotline, Capital"
+                  id="cfDispName" 
                   class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
               </div>
 
@@ -5607,7 +5595,7 @@
               <div class="space-y-1.5">
                 <label for="cfKey" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Field Key (Optional / Auto-slug)</label>
                 <input aria-label="text input" type="text" [ngModel]="newFieldKeyInput()" (ngModelChange)="newFieldKeyInput.set($event)"
-                  id="cfKey" placeholder="e.g. regionCode, hotline"
+                  id="cfKey" 
                   class="w-full h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-[#00a6f4]" />
               </div>
 

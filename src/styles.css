@@ -670,3 +670,13 @@ button.accordion-trigger-btn:not(:disabled):hover div,
   border-color: #00a6f4 !important;
 }
 
+
+/* ========================================================================= */
+/* Remove placeholders across all form text input boxes in the application    */
+/* ========================================================================= */
+input:not([type="checkbox"]):not([type="radio"]):not([type="search"]):not([id*="search"]):not([id*="Search"]):not([class*="search"]):not([placeholder*="Search"]):not([placeholder*="Find"])::placeholder,
+textarea:not([id*="search"]):not([id*="Search"]):not([placeholder*="Search"]):not([placeholder*="Find"])::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+  -webkit-text-fill-color: transparent !important;
+}
