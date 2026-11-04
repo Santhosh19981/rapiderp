@@ -16,7 +16,112 @@
         <!-- Left: Dynamic Title on top, Breadcrumb below Title across all pages -->
         <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
 
-          <!-- Left-Side Module Actions Launcher (9-Dots Icon matching Reference UI) -->
+          
+
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500/15 via-[#00a6f4]/20 to-blue-600/15 border border-sky-200/80 dark:border-sky-800 text-[#00a6f4] flex items-center justify-center shrink-0 shadow-xs cursor-pointer">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16" />
+              <path d="M1 21h22" />
+              <path d="M9 7h1" />
+              <path d="M9 11h1" />
+              <path d="M9 15h1" />
+              <path d="M14 7h1" />
+              <path d="M14 11h1" />
+              <path d="M14 15h1" />
+            </svg>
+          </div>
+          <div class="min-w-0 flex flex-col justify-center">
+            <!-- 1. First: Page Title -->
+            <div class="flex items-center gap-2">
+              <h1
+                class="text-[17px] sm:text-[19px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate cursor-default">
+                {{ viewMode() === 'overview' ? 'City Master Overview' : (viewMode() === 'list' ? 'City List View' : 'City Grid View') }}
+              </h1>
+            </div>
+
+            <!-- 2. Below: Dynamic Breadcrumb -->
+            <nav class="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium leading-none mt-1 select-none"
+              aria-label="Breadcrumb">
+              <button type="button" (click)="navService.navigateTo('dashboard')"
+                class="hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer">Administrator</button>
+              <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+              <span>General</span>
+              <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+              <span class="text-slate-500 dark:text-slate-300 font-medium">City Master</span>
+              <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+              <span class="text-[#00a6f4] font-bold truncate">
+                {{ viewMode() === 'overview' ? 'Overview' : (viewMode() === 'list' ? 'List View' : 'Grid View') }}
+              </span>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Right Side: Action buttons -->
+                <!-- Right Side: View Switcher (Grid / List) & Action buttons -->
+        <div class="flex items-center gap-2 sm:gap-2.5">
+          <!-- Header Toggle: Grid View <-> List View -->
+          <div class="inline-flex items-center p-0.5 rounded-full bg-slate-100 dark:bg-slate-700/80 border border-slate-200 dark:border-slate-600 shadow-2xs">
+            <button type="button" (click)="switchView('grid')"
+              [class.bg-[#00a6f4]]="viewMode() === 'grid'"
+              [class.text-white]="viewMode() === 'grid'"
+              [class.shadow-xs]="viewMode() === 'grid'"
+              [class.text-slate-600]="viewMode() !== 'grid'"
+              [class.dark:text-slate-300]="viewMode() !== 'grid'"
+              [class.hover:text-[#00a6f4]]="viewMode() !== 'grid'"
+              class="flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer"
+              title="Switch to Grid View">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+              </svg>
+              <span>Grid</span>
+            </button>
+            <button type="button" (click)="switchView('list')"
+              [class.bg-[#00a6f4]]="viewMode() === 'list'"
+              [class.text-white]="viewMode() === 'list'"
+              [class.shadow-xs]="viewMode() === 'list'"
+              [class.text-slate-600]="viewMode() !== 'list'"
+              [class.dark:text-slate-300]="viewMode() !== 'list'"
+              [class.hover:text-[#00a6f4]]="viewMode() !== 'list'"
+              class="flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer"
+              title="Switch to List View">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6" />
+                <line x1="8" y1="12" x2="21" y2="12" />
+                <line x1="8" y1="18" x2="21" y2="18" />
+                <line x1="3" y1="6" x2="3.01" y2="6" stroke-width="3" />
+                <line x1="3" y1="12" x2="3.01" y2="12" stroke-width="3" />
+                <line x1="3" y1="18" x2="3.01" y2="18" stroke-width="3" />
+              </svg>
+              <span>List</span>
+            </button>
+          </div>
+
+          <button type="button" (click)="openCreate()"
+            class="h-10 px-6 sm:px-7 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-[16px] sm:text-[18px] font-bold transition-all cursor-pointer shrink-0 shadow-2xs flex items-center gap-1.5"
+            data-tooltip="Add City" data-tooltip-pos="bottom">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <span>Add</span>
+          </button>
+
+          <!-- Right-Side Module Actions Launcher (9-Dots Icon) -->
           <div class="relative module-menu-container shrink-0">
             <button
               type="button"
@@ -40,7 +145,7 @@
             <!-- Module Options Popover (Exact Replica of Reference Image 2) -->
             @if (isModuleMenuOpen()) {
               <div
-                class="module-menu-popover absolute left-0 top-11 sm:top-12 z-[160] w-80 max-w-[92vw] bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md"
+                class="module-menu-popover absolute right-0 top-11 sm:top-12 z-[160] w-80 max-w-[92vw] bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md"
                 (click)="$event.stopPropagation()"
               >
                 <!-- 3x3 Grid of Module Options -->
@@ -157,7 +262,7 @@
                   <button type="button" (click)="onModuleActionClick('customize')" class="w-full h-9 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2 transition cursor-pointer">
                     <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="12" cy="12" r="3" />
-                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                     </svg>
                     <span>Customize navigation</span>
                   </button>
@@ -165,109 +270,6 @@
               </div>
             }
           </div>
-
-          <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500/15 via-[#00a6f4]/20 to-blue-600/15 border border-sky-200/80 dark:border-sky-800 text-[#00a6f4] flex items-center justify-center shrink-0 shadow-xs cursor-pointer">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16" />
-              <path d="M1 21h22" />
-              <path d="M9 7h1" />
-              <path d="M9 11h1" />
-              <path d="M9 15h1" />
-              <path d="M14 7h1" />
-              <path d="M14 11h1" />
-              <path d="M14 15h1" />
-            </svg>
-          </div>
-          <div class="min-w-0 flex flex-col justify-center">
-            <!-- 1. First: Page Title -->
-            <div class="flex items-center gap-2">
-              <h1
-                class="text-[17px] sm:text-[19px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate cursor-default">
-                {{ viewMode() === 'overview' ? 'City Master Overview' : (viewMode() === 'list' ? 'City List View' : 'City Grid View') }}
-              </h1>
-            </div>
-
-            <!-- 2. Below: Dynamic Breadcrumb -->
-            <nav class="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium leading-none mt-1 select-none"
-              aria-label="Breadcrumb">
-              <button type="button" (click)="navService.navigateTo('dashboard')"
-                class="hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer">Administrator</button>
-              <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <span>General</span>
-              <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <span class="text-slate-500 dark:text-slate-300 font-medium">City Master</span>
-              <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <span class="text-[#00a6f4] font-bold truncate">
-                {{ viewMode() === 'overview' ? 'Overview' : (viewMode() === 'list' ? 'List View' : 'Grid View') }}
-              </span>
-            </nav>
-          </div>
-        </div>
-
-        <!-- Right Side: Action buttons -->
-                <!-- Right Side: View Switcher (Grid / List) & Action buttons -->
-        <div class="flex items-center gap-2 sm:gap-2.5">
-          <!-- Header Toggle: Grid View <-> List View -->
-          <div class="inline-flex items-center p-0.5 rounded-full bg-slate-100 dark:bg-slate-700/80 border border-slate-200 dark:border-slate-600 shadow-2xs">
-            <button type="button" (click)="switchView('grid')"
-              [class.bg-[#00a6f4]]="viewMode() === 'grid'"
-              [class.text-white]="viewMode() === 'grid'"
-              [class.shadow-xs]="viewMode() === 'grid'"
-              [class.text-slate-600]="viewMode() !== 'grid'"
-              [class.dark:text-slate-300]="viewMode() !== 'grid'"
-              [class.hover:text-[#00a6f4]]="viewMode() !== 'grid'"
-              class="flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer"
-              title="Switch to Grid View">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                <rect x="3" y="14" width="7" height="7" rx="1.5" />
-              </svg>
-              <span>Grid</span>
-            </button>
-            <button type="button" (click)="switchView('list')"
-              [class.bg-[#00a6f4]]="viewMode() === 'list'"
-              [class.text-white]="viewMode() === 'list'"
-              [class.shadow-xs]="viewMode() === 'list'"
-              [class.text-slate-600]="viewMode() !== 'list'"
-              [class.dark:text-slate-300]="viewMode() !== 'list'"
-              [class.hover:text-[#00a6f4]]="viewMode() !== 'list'"
-              class="flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer"
-              title="Switch to List View">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6" />
-                <line x1="8" y1="12" x2="21" y2="12" />
-                <line x1="8" y1="18" x2="21" y2="18" />
-                <line x1="3" y1="6" x2="3.01" y2="6" stroke-width="3" />
-                <line x1="3" y1="12" x2="3.01" y2="12" stroke-width="3" />
-                <line x1="3" y1="18" x2="3.01" y2="18" stroke-width="3" />
-              </svg>
-              <span>List</span>
-            </button>
-          </div>
-
-          <button type="button" (click)="openCreate()"
-            class="h-10 px-6 sm:px-7 rounded-full border border-[#00a6f4] bg-white dark:bg-slate-800 text-[#00a6f4] hover:bg-[#00a6f4] hover:text-white text-[16px] sm:text-[18px] font-bold transition-all cursor-pointer shrink-0 shadow-2xs flex items-center gap-1.5"
-            data-tooltip="Add City" data-tooltip-pos="bottom">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-              stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            <span>Add</span>
-          </button>
         </div>
       </div>
       }
@@ -1122,7 +1124,67 @@
           <div class="flex items-center justify-between gap-2 w-full sm:w-auto shrink-0">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
 
-          <!-- Left-Side Module Actions Launcher (9-Dots Icon matching Reference UI) -->
+          
+
+              <button type="button" (click)="openVideoTutorial()" data-tooltip="Tutorial" data-tooltip-pos="bottom"
+                class="group relative w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-[#00a6f4]/30 hover:scale-105 hover:shadow-lg hover:shadow-[#00a6f4]/45 transition cursor-pointer">
+                <span class="absolute inset-0 rounded-xl bg-[#00a2e8] play-pulse-ring pointer-events-none"></span>
+                <svg class="w-4 h-4 fill-current ml-0.5 relative z-10 transition-transform group-hover:scale-110"
+                  viewBox="0 0 24 24">
+                  <polygon points="6 3 20 12 6 21 6 3" />
+                </svg>
+              </button>
+
+              <div class="min-w-0 flex flex-col justify-center">
+                <h1
+                  class="text-[15px] sm:text-[18px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
+                  {{ viewMode() === 'add' ? 'Add City' : (viewMode() === 'view' ? 'View City' : 'Edit City') }}
+                </h1>
+              </div>
+            </div>
+
+            <!-- Mobile Pager -->
+            <div class="flex sm:hidden items-center gap-1.5 select-none shrink-0">
+              <button type="button" (click)="goToPreviousCity()" [disabled]="currentCityDisplayNumber() <= 1"
+                data-tooltip="Prev" data-tooltip-pos="bottom"
+                class="w-7 h-7 rounded-full nav-circle-btn flex items-center justify-center disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
+                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <div [attr.data-tooltip]="currentCityDisplayNumber() + ' of ' + totalRecordsCount()" data-tooltip-pos="bottom"
+                class="w-7 h-7 rounded-full nav-circle-btn flex items-center justify-center text-xs font-black select-none shadow-xs transition cursor-default">
+                {{ currentCityDisplayNumber() }}
+              </div>
+              <button type="button" (click)="goToNextCity()"
+                [disabled]="currentCityDisplayNumber() >= totalRecordsCount()" data-tooltip="Next"
+                data-tooltip-pos="bottom"
+                class="w-7 h-7 rounded-full nav-circle-btn flex items-center justify-center disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
+                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Desktop Right: Record Pagination (Nav Circle Buttons) -->
+          <div class="hidden sm:flex items-center gap-2 sm:gap-3 select-none shrink-0">
+            <div class="flex items-center gap-1.5 sm:gap-2">
+              <button type="button" (click)="goToPreviousCity()" [disabled]="currentCityDisplayNumber() <= 1"
+                data-tooltip="Prev" data-tooltip-pos="bottom"
+                class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full nav-circle-btn flex items-center justify-center disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
+                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              <div [attr.data-tooltip]="currentCityDisplayNumber() + ' of ' + totalRecordsCount()"
+                data-tooltip-pos="bottom"
+                class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full nav-circle-btn flex items-center justify-center text-xs font-black select-none shadow-xs transition cursor-default">
+                {{ currentCityDisplayNumber() }}
+              </div>
+
+          <!-- Right-Side Module Actions Launcher (9-Dots Icon) -->
           <div class="relative module-menu-container shrink-0">
             <button
               type="button"
@@ -1146,7 +1208,7 @@
             <!-- Module Options Popover (Exact Replica of Reference Image 2) -->
             @if (isModuleMenuOpen()) {
               <div
-                class="module-menu-popover absolute left-0 top-11 sm:top-12 z-[160] w-80 max-w-[92vw] bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md"
+                class="module-menu-popover absolute right-0 top-11 sm:top-12 z-[160] w-80 max-w-[92vw] bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md"
                 (click)="$event.stopPropagation()"
               >
                 <!-- 3x3 Grid of Module Options -->
@@ -1263,7 +1325,7 @@
                   <button type="button" (click)="onModuleActionClick('customize')" class="w-full h-9 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2 transition cursor-pointer">
                     <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="12" cy="12" r="3" />
-                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                     </svg>
                     <span>Customize navigation</span>
                   </button>
@@ -1271,64 +1333,6 @@
               </div>
             }
           </div>
-
-              <button type="button" (click)="openVideoTutorial()" data-tooltip="Tutorial" data-tooltip-pos="bottom"
-                class="group relative w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-[#00a6f4]/30 hover:scale-105 hover:shadow-lg hover:shadow-[#00a6f4]/45 transition cursor-pointer">
-                <span class="absolute inset-0 rounded-xl bg-[#00a2e8] play-pulse-ring pointer-events-none"></span>
-                <svg class="w-4 h-4 fill-current ml-0.5 relative z-10 transition-transform group-hover:scale-110"
-                  viewBox="0 0 24 24">
-                  <polygon points="6 3 20 12 6 21 6 3" />
-                </svg>
-              </button>
-
-              <div class="min-w-0 flex flex-col justify-center">
-                <h1
-                  class="text-[15px] sm:text-[18px] font-black text-[#00a6f4] dark:text-[#38bdf8] tracking-tight leading-none truncate">
-                  {{ viewMode() === 'add' ? 'Add City' : (viewMode() === 'view' ? 'View City' : 'Edit City') }}
-                </h1>
-              </div>
-            </div>
-
-            <!-- Mobile Pager -->
-            <div class="flex sm:hidden items-center gap-1.5 select-none shrink-0">
-              <button type="button" (click)="goToPreviousCity()" [disabled]="currentCityDisplayNumber() <= 1"
-                data-tooltip="Prev" data-tooltip-pos="bottom"
-                class="w-7 h-7 rounded-full nav-circle-btn flex items-center justify-center disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
-                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <div [attr.data-tooltip]="currentCityDisplayNumber() + ' of ' + totalRecordsCount()" data-tooltip-pos="bottom"
-                class="w-7 h-7 rounded-full nav-circle-btn flex items-center justify-center text-xs font-black select-none shadow-xs transition cursor-default">
-                {{ currentCityDisplayNumber() }}
-              </div>
-              <button type="button" (click)="goToNextCity()"
-                [disabled]="currentCityDisplayNumber() >= totalRecordsCount()" data-tooltip="Next"
-                data-tooltip-pos="bottom"
-                class="w-7 h-7 rounded-full nav-circle-btn flex items-center justify-center disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
-                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Desktop Right: Record Pagination (Nav Circle Buttons) -->
-          <div class="hidden sm:flex items-center gap-2 sm:gap-3 select-none shrink-0">
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <button type="button" (click)="goToPreviousCity()" [disabled]="currentCityDisplayNumber() <= 1"
-                data-tooltip="Prev" data-tooltip-pos="bottom"
-                class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full nav-circle-btn flex items-center justify-center disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer shadow-xs active:scale-95">
-                <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <div [attr.data-tooltip]="currentCityDisplayNumber() + ' of ' + totalRecordsCount()"
-                data-tooltip-pos="bottom"
-                class="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full nav-circle-btn flex items-center justify-center text-xs font-black select-none shadow-xs transition cursor-default">
-                {{ currentCityDisplayNumber() }}
-              </div>
 
               <button type="button" (click)="goToNextCity()"
                 [disabled]="currentCityDisplayNumber() >= totalRecordsCount()" data-tooltip="Next"
