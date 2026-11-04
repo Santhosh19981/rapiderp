@@ -684,7 +684,7 @@
             </div>
 
             <!-- Center: Search Input with Voice Mic -->
-            <div class="flex-1 max-w-xs sm:max-w-md mx-1 sm:mx-4 relative flex items-center">
+            <div class="w-full max-w-xs sm:max-w-sm md:max-w-md ml-auto mr-0 relative flex items-center">
               <input aria-label="Search" type="text" [ngModel]="gridSearchQuery()" (ngModelChange)="gridSearchQuery.set($event)"
                 placeholder="Search"
                 class="w-full h-8 sm:h-9 pl-7 sm:pl-9 pr-7 sm:pr-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#00a6f4] focus:ring-2 focus:ring-[#00a6f4]/20 shadow-2xs transition" />
@@ -2546,7 +2546,10 @@
 
       </div>
       }
-      } @else {
+      }
+
+      <!-- VIEW B: ITEM MASTER FORM (ADD / EDIT / VIEW) -->
+      @if (activeActionView() === 'form') {
 
 
 
@@ -6597,7 +6600,7 @@
             <!-- PAGE 1: 5 Default Action Icons + Down Arrow evenly spaced to cover the entire space -->
             <div class="w-full h-full flex flex-col items-center justify-between">
               <!-- 1. Overview -->
-              <button type="button" (click)="handleOverviewClick()" data-tooltip="Overview" data-tooltip-pos="left"
+              <button type="button" (click)="handleOverviewClick()" data-tooltip="Overview" data-tooltip-pos="left" title="Overview"
                 class="group w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-[#00a6f4] dark:text-[#38bdf8] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="activeActionView() === 'overview'"
                 [class.ring-[#00a6f4]]="activeActionView() === 'overview'">
@@ -6611,7 +6614,7 @@
               </button>
 
               <!-- 2. Add Item -->
-              <button type="button" (click)="handleAddClick()" data-tooltip="Add" data-tooltip-pos="left"
+              <button type="button" (click)="handleAddClick()" data-tooltip="Add" data-tooltip-pos="left" title="Add Item"
                 class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-500 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="pageMode() === 'add' && activeActionView() === 'form'"
                 [class.ring-emerald-500]="pageMode() === 'add' && activeActionView() === 'form'">
@@ -6624,7 +6627,7 @@
               </button>
 
               <!-- 3. Edit Item -->
-              <button type="button" (click)="handleEditClick()" data-tooltip="Edit" data-tooltip-pos="left"
+              <button type="button" (click)="handleEditClick()" data-tooltip="Edit" data-tooltip-pos="left" title="Edit Item"
                 class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-amber-500 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="pageMode() === 'edit' && activeActionView() === 'form'"
                 [class.ring-amber-500]="pageMode() === 'edit' && activeActionView() === 'form'">
@@ -6636,7 +6639,7 @@
               </button>
 
               <!-- 4. View Item -->
-              <button type="button" (click)="handleViewClick()" data-tooltip="View" data-tooltip-pos="left"
+              <button type="button" (click)="handleViewClick()" data-tooltip="View" data-tooltip-pos="left" title="View Item"
                 class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-teal-500 text-teal-600 dark:text-teal-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="pageMode() === 'view' && activeActionView() === 'form'"
                 [class.ring-teal-500]="pageMode() === 'view' && activeActionView() === 'form'">
@@ -6648,7 +6651,7 @@
               </button>
 
               <!-- 5. Grid Item List -->
-              <button type="button" (click)="handleGridClick()" data-tooltip="Grid" data-tooltip-pos="left"
+              <button type="button" (click)="handleGridClick()" data-tooltip="Grid" data-tooltip-pos="left" title="Grid View"
                 class="group w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-[#00a6f4] dark:text-[#38bdf8] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                 [class.ring-2]="activeActionView() === 'grid'" [class.ring-[#00a6f4]]="activeActionView() === 'grid'">
                 <svg
@@ -6662,7 +6665,7 @@
               </button>
 
               <!-- 6th Icon: Down Arrow Button in grey color -->
-              <button type="button" (click)="scrollActionPanel('down')" data-tooltip="More" data-tooltip-pos="left"
+              <button type="button" (click)="scrollActionPanel('down')" data-tooltip="More" data-tooltip-pos="left" title="More Actions"
                 class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 border border-slate-300 dark:border-slate-600 flex items-center justify-center shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in duration-150">
                 <svg class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -6674,14 +6677,14 @@
             <!-- PAGE 2: Top Arrow + 6 Icons evenly spaced to cover the entire space -->
             <div class="w-full h-full flex flex-col items-center justify-between">
               <!-- Top Arrow Button in grey color -->
-              <button type="button" (click)="scrollActionPanel('up')" data-tooltip="Top" data-tooltip-pos="left"
+              <button type="button" (click)="scrollActionPanel('up')" data-tooltip="Top" data-tooltip-pos="left" title="Scroll to Top"
                 class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 border border-slate-300 dark:border-slate-600 flex items-center justify-center shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0 animate-in fade-in duration-150">
                 <svg class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
                 </svg>
               </button>
               <!-- 7. Recycle Bin / Clear Form -->
-              <button type="button" (click)="handleRecycleClick()" data-tooltip="Recycle" data-tooltip-pos="left"
+              <button type="button" (click)="handleRecycleClick()" data-tooltip="Recycle" data-tooltip-pos="left" title="Recycle Bin"
                 class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-rose-400 text-rose-600 dark:text-rose-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -6694,7 +6697,7 @@
               </button>
 
               <!-- 8. History / Audit -->
-              <button type="button" (click)="handleHistoryClick()" data-tooltip="History" data-tooltip-pos="left"
+              <button type="button" (click)="handleHistoryClick()" data-tooltip="History" data-tooltip-pos="left" title="Audit History"
                 class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-blue-400 text-blue-600 dark:text-blue-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -6704,7 +6707,7 @@
               </button>
 
               <!-- 9. Export / Download -->
-              <button type="button" (click)="handleExportClick()" data-tooltip="Export" data-tooltip-pos="left"
+              <button type="button" (click)="handleExportClick()" data-tooltip="Export" data-tooltip-pos="left" title="Export Data"
                 class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-violet-400 text-violet-600 dark:text-violet-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -6715,7 +6718,7 @@
               </button>
 
               <!-- 10. Share / Specs -->
-              <button type="button" (click)="handleShareClick()" data-tooltip="Share" data-tooltip-pos="left"
+              <button type="button" (click)="handleShareClick()" data-tooltip="Share" data-tooltip-pos="left" title="Share / Specifications"
                 class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-400 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -6728,7 +6731,7 @@
               </button>
 
               <!-- 11. AI Assistant -->
-              <button type="button" (click)="handleAiClick()" data-tooltip="AI" data-tooltip-pos="left"
+              <button type="button" (click)="handleAiClick()" data-tooltip="AI" data-tooltip-pos="left" title="AI Assistant"
                 class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-sky-400 text-[#00a6f4] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -6738,8 +6741,8 @@
               </button>
 
               <!-- 12. Guidance Assistant Icon (Styled with secondary color) -->
-              <button type="button" (click)="openGuidanceTour()" data-tooltip="Guidance" data-tooltip-pos="left"
-                class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-[#f0f9ff] dark:bg-sky-950/60 border border-[#00a2e8] text-[#00a2e8] dark:text-[#38bdf8] hover:bg-[#00a2e8] hover:text-white shadow-xs hover:shadow-md transition cursor-pointer shrink-0 focus:outline-none ring-2 ring-[#00a2e8]/30">
+              <button type="button" (click)="openGuidanceTour()" data-tooltip="Guidance" data-tooltip-pos="left" title="Guidance Tour"
+                class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-600 text-amber-500 dark:text-amber-400 hover:bg-amber-500 hover:text-white shadow-xs hover:shadow-md transition cursor-pointer shrink-0 focus:outline-none ring-2 ring-amber-400/30 flex items-center justify-center">
                 <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round"

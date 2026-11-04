@@ -489,7 +489,7 @@ export class ItemComponent implements OnInit {
 
   // Action Dock Panel State
   isMoreActionsOpen = signal<boolean>(false);
-  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('grid');
+  activeActionView = signal<'form' | 'overview' | 'grid' | 'table' | 'ai' | 'history'>('overview');
   actionPanelPage = signal<'top' | 'bottom'>('top');
 
   // Mobile Section Navigation ('general' info, 'tabs' specifications, or 'all')
@@ -2790,7 +2790,7 @@ export class ItemComponent implements OnInit {
       } else if (mode === 'table' || mode === 'list') {
         this.activeActionView.set('table');
       } else {
-        this.activeActionView.set('grid');
+        this.activeActionView.set('overview');
       }
     });
   }

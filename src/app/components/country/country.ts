@@ -101,7 +101,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   scrollableScrollWidth = signal<number>(1424);
 
   // Current view mode: 'grid' | 'list' | 'add' | 'edit' | 'view'
-  viewMode = signal<CountryViewMode>('grid');
+  viewMode = signal<CountryViewMode>('overview');
 
   pageHeaderTitle = computed<string>(() => {
     switch (this.viewMode()) {
@@ -3833,9 +3833,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
           }
         }
       } else {
-        if (this.viewMode() !== 'grid') {
-          this.viewMode.set('grid');
-        }
+        this.viewMode.set('overview');
       }
 
       if (tab && ['all', 'active', 'inactive', 'draft', 'deleted'].includes(tab)) {

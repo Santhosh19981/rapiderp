@@ -54,7 +54,7 @@ export class CityComponent implements OnInit {
   @ViewChild('tabsContainer') tabsContainerElement?: ElementRef<HTMLDivElement>;
 
   // View Mode
-  viewMode = signal<CityViewMode>('grid');
+  viewMode = signal<CityViewMode>('overview');
 
   // Filter & Search Signals
   searchQuery = signal<string>('');
@@ -221,7 +221,7 @@ export class CityComponent implements OnInit {
       } else if (mode === 'list') {
         this.viewMode.set('list');
       } else {
-        this.viewMode.set('grid');
+        this.viewMode.set('overview');
       }
     });
   }

@@ -251,7 +251,7 @@
 
           <!-- CONTROLS TOOLBAR (Exact layout matching Image 1: Left count, Center Search with mic) -->
           <div
-            class="shrink-0 flex items-center justify-between gap-3 flex-col xs:flex-row items-stretch xs:items-center px-3 sm:px-6 py-2 sm:py-2.5 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
+            class="shrink-0 flex items-center justify-between gap-3 flex-row px-3 sm:px-6 py-2 sm:py-2.5 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
             <!-- Left Zone: Showing X of Y -->
             <div class="flex items-center gap-2 shrink-0 min-w-0">
               <span class="text-xs sm:text-[13px] font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">
@@ -1129,7 +1129,7 @@
               <div class="w-full h-full flex flex-col items-center justify-between">
 
                 <!-- 1. Overview -->
-                <button type="button" (click)="switchView('overview')" data-tooltip="Overview" data-tooltip-pos="left"
+                <button type="button" (click)="switchView('overview')" data-tooltip="Overview" data-tooltip-pos="left" title="Overview"
                   class="group w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-[#00a6f4] dark:text-[#38bdf8] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                   [class.ring-2]="viewMode() === 'overview'" [class.ring-[#00a6f4]]="viewMode() === 'overview'">
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1142,7 +1142,7 @@
 
                 <!-- 2. Add (hidden in Add mode) -->
                 @if (viewMode() !== 'add') {
-                <button type="button" (click)="openCreate()" data-tooltip="Add" data-tooltip-pos="left"
+                <button type="button" (click)="openCreate()" data-tooltip="Add" data-tooltip-pos="left" title="Add State"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-emerald-500 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -1155,7 +1155,7 @@
 
                 <!-- 2. Edit (hidden in Edit mode) -->
                 @if (viewMode() !== 'edit') {
-                <button type="button" (click)="openEditForActiveState()" data-tooltip="Edit" data-tooltip-pos="left"
+                <button type="button" (click)="openEditForActiveState()" data-tooltip="Edit" data-tooltip-pos="left" title="Edit State"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-amber-500 text-amber-600 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -1167,7 +1167,7 @@
 
                 <!-- 3. View (hidden in View mode) -->
                 @if (viewMode() !== 'view') {
-                <button type="button" (click)="openViewForActiveState()" data-tooltip="View" data-tooltip-pos="left"
+                <button type="button" (click)="openViewForActiveState()" data-tooltip="View" data-tooltip-pos="left" title="View State"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-teal-500 text-teal-600 dark:text-teal-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -1178,7 +1178,7 @@
                 }
 
                 <!-- 4. Grid View (Atom Orbit Icon) -->
-                <button type="button" (click)="switchView('grid')" data-tooltip="Grid" data-tooltip-pos="left"
+                <button type="button" (click)="switchView('grid')" data-tooltip="Grid" data-tooltip-pos="left" title="Grid View"
                   class="group w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-[#00a6f4] text-[#00a6f4] dark:text-[#38bdf8] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95"
                   [class.ring-2]="viewMode() === 'grid'" [class.ring-[#00a6f4]]="viewMode() === 'grid'">
                   <svg class="w-6 h-6 transition-transform duration-700 group-hover:rotate-180 group-hover:scale-110"
@@ -1191,7 +1191,7 @@
                 </button>
 
                 <!-- 6. Down Arrow (More) -->
-                <button type="button" (click)="scrollActionPanel('down')" data-tooltip="More" data-tooltip-pos="left"
+                <button type="button" (click)="scrollActionPanel('down')" data-tooltip="More" data-tooltip-pos="left" title="More Actions"
                   class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 border border-slate-300 dark:border-slate-600 flex items-center justify-center shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0">
                   <svg class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -1203,7 +1203,7 @@
               <!-- PAGE 2: Top Arrow + Additional Tools -->
               <div class="w-full h-full flex flex-col items-center justify-between">
                 <!-- Top Arrow -->
-                <button type="button" (click)="scrollActionPanel('up')" data-tooltip="Top" data-tooltip-pos="left"
+                <button type="button" (click)="scrollActionPanel('up')" data-tooltip="Top" data-tooltip-pos="left" title="Scroll to Top"
                   class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 border border-slate-300 dark:border-slate-600 flex items-center justify-center shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0">
                   <svg class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
@@ -1211,7 +1211,7 @@
                 </button>
 
                 <!-- Recycle Bin -->
-                <button type="button" (click)="openRecycleBinModal()" data-tooltip="Recycle" data-tooltip-pos="left"
+                <button type="button" (click)="openRecycleBinModal()" data-tooltip="Recycle" data-tooltip-pos="left" title="Recycle Bin"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-rose-400 text-rose-600 dark:text-rose-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -1224,7 +1224,7 @@
                 </button>
 
                 <!-- History -->
-                <button type="button" (click)="openHistoryModal('all')" data-tooltip="History" data-tooltip-pos="left"
+                <button type="button" (click)="openHistoryModal('all')" data-tooltip="History" data-tooltip-pos="left" title="Audit History"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-blue-400 text-blue-600 dark:text-blue-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -1234,7 +1234,7 @@
                 </button>
 
                 <!-- Export -->
-                <button type="button" (click)="exportData('csv')" data-tooltip="Export" data-tooltip-pos="left"
+                <button type="button" (click)="exportData('csv')" data-tooltip="Export" data-tooltip-pos="left" title="Export Data"
                   class="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-xs hover:shadow-md hover:border-violet-400 text-violet-600 dark:text-violet-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none hover:scale-105 active:scale-95">
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -1259,8 +1259,8 @@
                 </button>
 
                 <!-- Guidance Tour -->
-                <button type="button" (click)="openGuidanceTour()" data-tooltip="Guidance" data-tooltip-pos="left"
-                  class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-[#f0f9ff] dark:bg-sky-950/60 border border-[#00a2e8] dark:border-[#00a2e8] shadow-xs hover:shadow-md hover:border-[#00a2e8] text-[#00a2e8] dark:text-[#38bdf8] flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none ring-2 ring-[#00a2e8]/30 hover:bg-[#00a2e8] hover:text-white">
+                <button type="button" (click)="openGuidanceTour()" data-tooltip="Guidance" data-tooltip-pos="left" title="Guidance Tour"
+                  class="relative w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-600 shadow-xs hover:shadow-md hover:border-amber-400 text-amber-500 dark:text-amber-400 flex items-center justify-center transition cursor-pointer shrink-0 focus:outline-none ring-2 ring-amber-400/30 hover:bg-amber-500 hover:text-white">
                   <svg class="w-6 h-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"

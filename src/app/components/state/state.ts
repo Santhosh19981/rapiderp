@@ -52,7 +52,7 @@ export class StateComponent implements OnInit {
   @ViewChild('tabsContainer') tabsContainerElement?: ElementRef<HTMLDivElement>;
 
   // View Mode
-  viewMode = signal<StateViewMode>('grid');
+  viewMode = signal<StateViewMode>('overview');
 
   // Filter / Search Signals for Grid & List
   searchQuery = signal<string>('');
@@ -228,7 +228,7 @@ export class StateComponent implements OnInit {
       } else if (mode === 'list') {
         this.viewMode.set('list');
       } else {
-        this.viewMode.set('grid');
+        this.viewMode.set('overview');
       }
     });
   }

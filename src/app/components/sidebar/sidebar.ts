@@ -692,16 +692,16 @@ export class Sidebar {
     }
     if (item.id === 'countries') {
       this.navService.navigateTo(item.id, '', item.label, '', false);
-      this.router.navigate(['/landing', 'countries'], { queryParams: {} });
+      this.router.navigate(['/landing', 'countries'], { queryParams: { mode: 'overview' } });
     } else if (item.id === 'states' || item.id === 'state') {
       this.navService.navigateTo(item.id, '', item.label, '', false);
-      this.router.navigate(['/landing', 'states'], { queryParams: {} });
+      this.router.navigate(['/landing', 'states'], { queryParams: { mode: 'overview' } });
     } else if (item.id === 'cities' || item.id === 'city') {
       this.navService.navigateTo(item.id, '', item.label, '', false);
-      this.router.navigate(['/landing', 'cities'], { queryParams: {} });
+      this.router.navigate(['/landing', 'cities'], { queryParams: { mode: 'overview' } });
     } else if (item.id === 'items' || item.id === 'item') {
       this.navService.navigateTo(item.id, '', item.label, '', false);
-      this.router.navigate(['/landing', 'items'], { queryParams: {} });
+      this.router.navigate(['/landing', 'items'], { queryParams: { mode: 'overview' } });
     } else if (item.subItems && item.subItems.length > 0) {
       // Navigate to first subitem or keep module active
       const firstSub = item.subItems[0];
