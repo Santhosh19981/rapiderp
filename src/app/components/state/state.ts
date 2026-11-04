@@ -346,6 +346,8 @@ export class StateComponent implements OnInit {
     const inactive = nonDeleted.filter((s) => s.status === 'Inactive').length;
     const draft = nonDeleted.filter((s) => s.status === 'Draft').length;
     const deleted = list.filter((s) => s.status === 'Deleted').length;
+    const withCountry = nonDeleted.filter((s) => s.country && s.country.trim().length > 0).length;
+    const countryCoveragePct = total > 0 ? Math.round((withCountry / total) * 100) : 100;
 
     const activePct = total > 0 ? +((active / total) * 100).toFixed(1) : 0;
     const inactivePct = total > 0 ? +((inactive / total) * 100).toFixed(1) : 0;
@@ -360,6 +362,7 @@ export class StateComponent implements OnInit {
       activePct,
       inactivePct,
       draftPct,
+      countryCoveragePct,
     };
   });
 
@@ -466,6 +469,43 @@ export class StateComponent implements OnInit {
       inactivePct: s.inactivePct,
       draftPct: s.draftPct,
     };
+  });
+
+  recentActivitiesList = computed(() => {
+    return [
+      {
+        label: 'States Created',
+        events: 28,
+        percentage: 38,
+        color: '#1863c0',
+        barClass: 'bg-[#1863c0]',
+        dotClass: 'bg-[#1863c0]',
+      },
+      {
+        label: 'States Updated',
+        events: 22,
+        percentage: 30,
+        color: '#00a2e8',
+        barClass: 'bg-[#00a2e8]',
+        dotClass: 'bg-[#00a2e8]',
+      },
+      {
+        label: 'States Deleted',
+        events: 12,
+        percentage: 16,
+        color: '#f43f5e',
+        barClass: 'bg-rose-500',
+        dotClass: 'bg-rose-500',
+      },
+      {
+        label: 'State Views',
+        events: 12,
+        percentage: 16,
+        color: '#8b5cf6',
+        barClass: 'bg-purple-500',
+        dotClass: 'bg-purple-500',
+      },
+    ];
   });
 
   recentStates = computed(() => {

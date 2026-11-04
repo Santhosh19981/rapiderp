@@ -355,6 +355,8 @@ export class CityComponent implements OnInit {
     const inactive = nonDeleted.filter((c) => c.status === 'Inactive').length;
     const draft = nonDeleted.filter((c) => c.status === 'Draft').length;
     const deleted = list.filter((c) => c.status === 'Deleted').length;
+    const withCountry = nonDeleted.filter((c) => c.country && c.country.trim().length > 0).length;
+    const countryCoveragePct = total > 0 ? Math.round((withCountry / total) * 100) : 100;
 
     const activePct = total > 0 ? +((active / total) * 100).toFixed(1) : 0;
     const inactivePct = total > 0 ? +((inactive / total) * 100).toFixed(1) : 0;
@@ -369,6 +371,7 @@ export class CityComponent implements OnInit {
       activePct,
       inactivePct,
       draftPct,
+      countryCoveragePct,
     };
   });
 
@@ -475,6 +478,43 @@ export class CityComponent implements OnInit {
       inactivePct: s.inactivePct,
       draftPct: s.draftPct,
     };
+  });
+
+  recentActivitiesList = computed(() => {
+    return [
+      {
+        label: 'Cities Created',
+        events: 35,
+        percentage: 35,
+        color: '#1863c0',
+        barClass: 'bg-[#1863c0]',
+        dotClass: 'bg-[#1863c0]',
+      },
+      {
+        label: 'Cities Updated',
+        events: 30,
+        percentage: 30,
+        color: '#00a2e8',
+        barClass: 'bg-[#00a2e8]',
+        dotClass: 'bg-[#00a2e8]',
+      },
+      {
+        label: 'Cities Deleted',
+        events: 18,
+        percentage: 18,
+        color: '#f43f5e',
+        barClass: 'bg-rose-500',
+        dotClass: 'bg-rose-500',
+      },
+      {
+        label: 'City Views',
+        events: 17,
+        percentage: 17,
+        color: '#8b5cf6',
+        barClass: 'bg-purple-500',
+        dotClass: 'bg-purple-500',
+      },
+    ];
   });
 
   recentCities = computed(() => {

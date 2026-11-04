@@ -517,6 +517,438 @@
         </div>
         }
 
+        
+        <!-- ======================================================================= -->
+        <!-- VIEW C: STATE MASTER OVERVIEW DASHBOARD                                 -->
+        <!-- ======================================================================= -->
+        @if (viewMode() === 'overview') {
+        <div
+          class="flex-1 min-h-0 flex flex-col overflow-y-auto custom-scrollbar p-3 sm:p-6 space-y-4 sm:space-y-6 bg-slate-50/60 dark:bg-slate-900/60">
+
+          <!-- TOP KPI CARDS: 4 Interactive Summary Capsules -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <!-- 1. Total States -->
+            <div (click)="openFilteredList('all')"
+              class="group/kpi p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs hover:shadow-md hover:border-sky-400 transition-all cursor-pointer">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Total States</span>
+                <span
+                  class="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center group-hover/kpi:scale-110 transition-transform">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="9" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="5" rx="1.5" />
+                    <rect x="14" y="12" width="7" height="9" rx="1.5" />
+                    <rect x="3" y="16" width="7" height="5" rx="1.5" />
+                  </svg>
+                </span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white leading-none">
+                {{ overviewStats().total }}
+              </div>
+              <div class="mt-2 text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                <span>Non-deleted records</span>
+                <span class="text-[#00a6f4] font-semibold group-hover/kpi:underline">View All →</span>
+              </div>
+            </div>
+
+            <!-- 2. Active States -->
+            <div (click)="openFilteredList('active')"
+              class="group/kpi p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs hover:shadow-md hover:border-emerald-400 transition-all cursor-pointer">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Active Records</span>
+                <span
+                  class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center group-hover/kpi:scale-110 transition-transform">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </span>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <div class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white leading-none">
+                  {{ overviewStats().active }}
+                </div>
+                <span
+                  class="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  {{ overviewStats().activePct }}%
+                </span>
+              </div>
+              <div class="mt-2 text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                <span>Production active</span>
+                <span class="text-emerald-600 font-semibold group-hover/kpi:underline">Filter Active →</span>
+              </div>
+            </div>
+
+            <!-- 3. Inactive States -->
+            <div (click)="openFilteredList('inactive')"
+              class="group/kpi p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs hover:shadow-md hover:border-slate-400 transition-all cursor-pointer">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Inactive Records</span>
+                <span
+                  class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center group-hover/kpi:scale-110 transition-transform">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                  </svg>
+                </span>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <div class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white leading-none">
+                  {{ overviewStats().inactive }}
+                </div>
+                <span
+                  class="text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-600">
+                  {{ overviewStats().inactivePct }}%
+                </span>
+              </div>
+              <div class="mt-2 text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                <span>Disabled from entry</span>
+                <span class="text-slate-600 dark:text-slate-300 font-semibold group-hover/kpi:underline">Filter Inactive
+                  →</span>
+              </div>
+            </div>
+
+            <!-- 4. Draft States -->
+            <div (click)="openFilteredList('draft')"
+              class="group/kpi p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs hover:shadow-md hover:border-amber-400 transition-all cursor-pointer">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Draft Records</span>
+                <span
+                  class="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center group-hover/kpi:scale-110 transition-transform">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                  </svg>
+                </span>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <div class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white leading-none">
+                  {{ overviewStats().draft }}
+                </div>
+                <span
+                  class="text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/60 px-1.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
+                  {{ overviewStats().draftPct }}%
+                </span>
+              </div>
+              <div class="mt-2 text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                <span>Pending submission</span>
+                <span class="text-amber-600 font-semibold group-hover/kpi:underline">Filter Draft →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDDLE ROW: Distribution Wave/Pillars Chart (Left) + Donut Ring Chart (Right) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <!-- Left: Status Distribution Chart -->
+            <div
+              class="lg:col-span-8 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-2xs flex flex-col justify-between">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700">
+                <div>
+                  <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">Status Distribution Analysis
+                  </h3>
+                  <p class="text-[11px] text-slate-400">Interactive comparative volume across lifecycle states</p>
+                </div>
+                <!-- Presentation Switcher (Wave vs Pillars) -->
+                <div
+                  class="inline-flex items-center p-0.5 rounded-full bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-xs font-semibold">
+                  <button type="button" (click)="setStatusChartPresentation('wave')"
+                    class="px-2.5 py-1 rounded-full transition cursor-pointer"
+                    [class.bg-[#00a6f4]]="statusChartPresentation() === 'wave'"
+                    [class.text-white]="statusChartPresentation() === 'wave'"
+                    [class.text-slate-600]="statusChartPresentation() !== 'wave'"
+                    [class.dark:text-slate-300]="statusChartPresentation() !== 'wave'">
+                    Wave
+                  </button>
+                  <button type="button" (click)="setStatusChartPresentation('pillars')"
+                    class="px-2.5 py-1 rounded-full transition cursor-pointer"
+                    [class.bg-[#00a6f4]]="statusChartPresentation() === 'pillars'"
+                    [class.text-white]="statusChartPresentation() === 'pillars'"
+                    [class.text-slate-600]="statusChartPresentation() !== 'pillars'"
+                    [class.dark:text-slate-300]="statusChartPresentation() !== 'pillars'">
+                    Pillars
+                  </button>
+                </div>
+              </div>
+
+              <!-- Interactive Chart Canvas Area -->
+              <div class="py-4">
+                @if (statusChartPresentation() === 'wave') {
+                <div class="relative w-full h-44 sm:h-52">
+                  <svg class="w-full h-full overflow-visible" viewBox="0 0 500 170" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="stateWaveGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#00a6f4" stop-opacity="0.35" />
+                        <stop offset="100%" stop-color="#00a6f4" stop-opacity="0.0" />
+                      </linearGradient>
+                    </defs>
+                    <!-- Horizontal Grid lines -->
+                    <line x1="40" y1="30" x2="480" y2="30" stroke="currentColor" stroke-opacity="0.08"
+                      stroke-dasharray="3 3" />
+                    <line x1="40" y1="80" x2="480" y2="80" stroke="currentColor" stroke-opacity="0.08"
+                      stroke-dasharray="3 3" />
+                    <line x1="40" y1="130" x2="480" y2="130" stroke="currentColor" stroke-opacity="0.08"
+                      stroke-dasharray="3 3" />
+                    <!-- Area fill -->
+                    <path [attr.d]="statusWaveChart().areaPath" fill="url(#stateWaveGradient)" />
+                    <!-- Stroke line -->
+                    <path [attr.d]="statusWaveChart().path" fill="none" stroke="#00a6f4" stroke-width="3"
+                      stroke-linecap="round" />
+                    <!-- Nodes -->
+                    @for (node of statusWaveChart().nodes; track node.label) {
+                    <g (click)="openFilteredList(node.tab)" class="cursor-pointer group/node">
+                      <circle [attr.cx]="node.x" [attr.cy]="node.y" r="6" [attr.fill]="node.color" stroke="#ffffff"
+                        stroke-width="2.5" class="transition-all group-hover/node:r-8 shadow-md" />
+                      <text [attr.x]="node.x" [attr.y]="node.y - 12" text-anchor="middle"
+                        class="text-[11px] font-bold fill-slate-700 dark:fill-slate-200">
+                        {{ node.count }}
+                      </text>
+                      <text [attr.x]="node.x" [attr.y]="165" text-anchor="middle"
+                        class="text-[11px] font-semibold fill-slate-400">
+                        {{ node.label }}
+                      </text>
+                    </g>
+                    }
+                  </svg>
+                </div>
+                } @else {
+                <!-- Vertical Pillars Mode -->
+                <div class="grid grid-cols-4 gap-3 h-44 sm:h-52 items-end pt-4 pb-2 px-3">
+                  @for (bar of statusDistributionBars(); track bar.key) {
+                  <div (click)="openFilteredList(bar.tab)"
+                    class="flex flex-col items-center h-full justify-end cursor-pointer group/pillar">
+                    <span
+                      class="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1 group-hover/pillar:text-[#00a6f4] transition">
+                      {{ bar.count }}
+                    </span>
+                    <div
+                      class="w-full max-w-[48px] rounded-t-xl transition-all duration-300 group-hover/pillar:scale-105"
+                      [ngClass]="bar.fillClass" [style.height.%]="bar.heightPct">
+                    </div>
+                    <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-2 truncate max-w-full">
+                      {{ bar.shortLabel }}
+                    </span>
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+
+              <!-- Distribution Legend Footnote -->
+              <div
+                class="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-xs text-slate-500">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-[#00a6f4]"></span>
+                  <span>Click any node to view filtered records</span>
+                </span>
+                <span class="font-semibold text-slate-700 dark:text-slate-300">
+                  Total Active Rate: {{ overviewStats().activePct }}%
+                </span>
+              </div>
+            </div>
+
+            <!-- Right: Donut Ring & Quality Health Card -->
+            <div
+              class="lg:col-span-4 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-2xs flex flex-col justify-between">
+              <div class="pb-3 border-b border-slate-100 dark:border-slate-700">
+                <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">Registry Health & Donut</h3>
+                <p class="text-[11px] text-slate-400">Quality ratio and country coverage</p>
+              </div>
+
+              <!-- Donut Center Graphic -->
+              <div class="relative flex items-center justify-center my-3">
+                <svg class="w-36 h-36 -rotate-90" viewBox="0 0 100 100">
+                  <!-- Base Track -->
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" stroke-opacity="0.08"
+                    stroke-width="12" />
+                  <!-- Active Arc (Emerald) -->
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="#10b981" stroke-width="12"
+                    [attr.stroke-dasharray]="donutMetrics().circumference"
+                    [attr.stroke-dashoffset]="donutMetrics().activeOffset" stroke-linecap="round" />
+                  <!-- Inactive Arc (Slate) -->
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="#64748b" stroke-width="12"
+                    [attr.stroke-dasharray]="donutMetrics().circumference"
+                    [attr.stroke-dashoffset]="donutMetrics().inactiveOffset" />
+                  <!-- Draft Arc (Amber) -->
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f59e0b" stroke-width="12"
+                    [attr.stroke-dasharray]="donutMetrics().circumference"
+                    [attr.stroke-dashoffset]="donutMetrics().draftOffset" />
+                </svg>
+                <!-- Center Info -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                  <span class="text-2xl font-black text-slate-800 dark:text-white leading-none">{{ overviewStats().total
+                    }}</span>
+                  <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Records</span>
+                </div>
+              </div>
+
+              <!-- Donut Legend & Country Progress -->
+              <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-700">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Active
+                  </span>
+                  <span class="font-bold text-slate-800 dark:text-slate-200">{{ overviewStats().active }} ({{
+                    overviewStats().activePct }}%)</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span> Inactive
+                  </span>
+                  <span class="font-bold text-slate-800 dark:text-slate-200">{{ overviewStats().inactive }} ({{
+                    overviewStats().inactivePct }}%)</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Draft
+                  </span>
+                  <span class="font-bold text-slate-800 dark:text-slate-200">{{ overviewStats().draft }} ({{
+                    overviewStats().draftPct }}%)</span>
+                </div>
+
+                <!-- Country Coverage Progress Bar -->
+                <div class="pt-2">
+                  <div class="flex items-center justify-between text-[11px] text-slate-500 mb-1">
+                    <span>Country Linked</span>
+                    <span class="font-bold text-[#00a6f4]">{{ overviewStats().countryCoveragePct }}%</span>
+                  </div>
+                  <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-sky-500 to-[#00a6f4] rounded-full"
+                      [style.width.%]="overviewStats().countryCoveragePct"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTTOM ROW: Activity Breakdown (Left) + Recently Updated States (Right) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <!-- Activity Breakdown -->
+            <div
+              class="lg:col-span-5 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-2xs">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700 mb-3">
+                <div>
+                  <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">Audit & Event Breakdown</h3>
+                  <p class="text-[11px] text-slate-400">Distribution of recent operations</p>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                @for (item of recentActivitiesList(); track item.label) {
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-1">
+                    <span class="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
+                      <span class="w-2 h-2 rounded-full" [ngClass]="item.dotClass"></span>
+                      {{ item.label }}
+                    </span>
+                    <span class="font-bold text-slate-800 dark:text-white">{{ item.events }} events ({{ item.percentage
+                      }}%)</span>
+                  </div>
+                  <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-500" [ngClass]="item.barClass"
+                      [style.width.%]="item.percentage"></div>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+
+            <!-- Recently Updated States Table -->
+            <div
+              class="lg:col-span-7 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div
+                  class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700 mb-3">
+                  <div>
+                    <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">Recently Modified States</h3>
+                    <p class="text-[11px] text-slate-400">Quick access to the latest master records</p>
+                  </div>
+                  <button type="button" (click)="switchView('grid')"
+                    class="text-xs font-semibold text-[#00a6f4] hover:underline cursor-pointer">
+                    View in Grid →
+                  </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                  <table class="w-full text-xs text-left">
+                    <thead>
+                      <tr class="text-slate-400 border-b border-slate-100 dark:border-slate-700 text-[11px]">
+                        <th class="py-2 px-2 font-semibold">State</th>
+                        <th class="py-2 px-2 font-semibold">Code</th>
+                        <th class="py-2 px-2 font-semibold">Country</th>
+                        <th class="py-2 px-2 font-semibold">Status</th>
+                        <th class="py-2 px-2 font-semibold text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60">
+                      @for (s of recentStates(); track s.id) {
+                      <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-750 transition group/row">
+                        <td class="py-2.5 px-2 font-medium text-slate-800 dark:text-slate-200">
+                          <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-sky-50 dark:bg-sky-950/60 border border-sky-200 text-[#00a6f4] flex items-center justify-center font-bold text-[10px]">
+                              {{ s.code ? s.code.substring(0, 2) : 'ST' }}
+                            </span>
+                            <span class="truncate max-w-[140px]">{{ s.name }}</span>
+                          </div>
+                        </td>
+                        <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">{{ s.code }}</td>
+                        <td class="py-2.5 px-2 text-slate-600 dark:text-slate-300">{{ s.country || '—' }}</td>
+                        <td class="py-2.5 px-2">
+                          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
+                            [class.bg-emerald-50]="s.status === 'Active'"
+                            [class.text-emerald-600]="s.status === 'Active'" [class.border]="true"
+                            [class.border-emerald-200]="s.status === 'Active'"
+                            [class.bg-slate-100]="s.status === 'Inactive'"
+                            [class.text-slate-600]="s.status === 'Inactive'"
+                            [class.border-slate-200]="s.status === 'Inactive'"
+                            [class.bg-amber-50]="s.status === 'Draft'" [class.text-amber-600]="s.status === 'Draft'"
+                            [class.border-amber-200]="s.status === 'Draft'">
+                            <span class="w-1.5 h-1.5 rounded-full" [class.bg-emerald-500]="s.status === 'Active'"
+                              [class.bg-slate-400]="s.status === 'Inactive'"
+                              [class.bg-amber-500]="s.status === 'Draft'"></span>
+                            {{ s.status }}
+                          </span>
+                        </td>
+                        <td class="py-2.5 px-2 text-right">
+                          <div class="flex items-center justify-end gap-1">
+                            <button type="button" (click)="openView(s)" title="View State"
+                              class="p-1 rounded-full text-slate-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-slate-700 transition cursor-pointer">
+                              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                                <circle cx="12" cy="12" r="3" />
+                              </svg>
+                            </button>
+                            <button type="button" (click)="openEdit(s)" title="Edit State"
+                              class="p-1 rounded-full text-slate-400 hover:text-[#00a6f4] hover:bg-sky-50 dark:hover:bg-slate-700 transition cursor-pointer">
+                              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div
+                class="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-xs text-slate-400 mt-2">
+                <span>Displaying 5 most recent master entries</span>
+                <button type="button" (click)="openSearchFromOverview()"
+                  class="text-[#00a6f4] font-semibold hover:underline cursor-pointer">
+                  Search Full Registry →
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        }
+
+
         <!-- ======================================================================= -->
         <!-- VIEW B: STATE ADD / EDIT / VIEW (Exact Replica of Country Image 2)      -->
         <!-- ======================================================================= -->
