@@ -101,6 +101,51 @@ export interface GuideTopic {
 export class ItemComponent implements OnInit {
   public itemService = inject(ItemService);
   public navService = inject(NavigationService);
+  isModuleMenuOpen = signal<boolean>(false);
+
+  toggleModuleMenu(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.isModuleMenuOpen.update((v) => !v);
+  }
+
+  closeModuleMenu(): void {
+    this.isModuleMenuOpen.set(false);
+  }
+
+  onModuleActionClick(action: string): void {
+    this.closeModuleMenu();
+    switch (action) {
+      case 'overview':
+        this.handleOverviewClick();
+        break;
+      case 'add':
+        this.switchToAddMode();
+        break;
+      case 'edit':
+        this.handleEditClick();
+        break;
+      case 'view':
+        this.handleViewClick();
+        break;
+      case 'grid':
+        this.switchView('grid');
+        break;
+      case 'list':
+        this.switchView('table');
+        break;
+      case 'recycle':
+        this.openRecycleBinModal();
+        break;
+      case 'history':
+        this.openHistoryModal();
+        break;
+      case 'ai':
+        this.openAiModal();
+        break;
+      case 'customize':
+        break;
+    }
+  }
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -2326,6 +2371,9 @@ export class ItemComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
+    if (!target.closest('.module-menu-container') && !target.closest('.module-menu-popover')) {
+      this.closeModuleMenu();
+    }
     if (this.isFieldSearchOpen()) {
       if (this.fieldSearchContainerRef && !this.fieldSearchContainerRef.nativeElement.contains(target)) {
         this.isFieldSearchOpen.set(false);

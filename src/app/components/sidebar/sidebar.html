@@ -175,6 +175,60 @@
           }
         </div>
       }
+
+      <!-- More Navigation Option (9 Dots Icon matching Reference Image 2) -->
+      <div class="module-item-container more-menu-container relative group mt-2 pt-2 border-t border-white/10">
+        <button
+          type="button"
+          (click)="toggleMoreMenu($event)"
+          class="module-nav-btn w-full flex items-center rounded-xl text-xs font-medium cursor-pointer relative transition-all duration-180"
+          [class.pl-1.5]="effectiveExpanded()"
+          [class.pr-2]="effectiveExpanded()"
+          [class.py-1.5]="effectiveExpanded()"
+          [class.px-0]="!effectiveExpanded()"
+          [class.py-2]="!effectiveExpanded()"
+          [class.justify-start]="effectiveExpanded()"
+          [class.justify-center]="!effectiveExpanded()"
+          [class.active-module]="isMoreMenuOpen()"
+          [class.inactive-module]="!isMoreMenuOpen()"
+          title="More Options"
+        >
+          <!-- 9-Dots Grid Icon -->
+          <div
+            class="module-icon-badge"
+            [class.active-badge]="isMoreMenuOpen()"
+            [class.inactive-badge]="!isMoreMenuOpen()"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+              <circle cx="5" cy="5" r="2" />
+              <circle cx="12" cy="5" r="2" />
+              <circle cx="19" cy="5" r="2" />
+              <circle cx="5" cy="12" r="2" />
+              <circle cx="12" cy="12" r="2" />
+              <circle cx="19" cy="12" r="2" />
+              <circle cx="5" cy="19" r="2" />
+              <circle cx="12" cy="19" r="2" />
+              <circle cx="19" cy="19" r="2" />
+            </svg>
+          </div>
+
+          <div
+            class="sidebar-item-label-wrap flex-1 min-w-0 overflow-hidden transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            [class.max-w-0]="!effectiveExpanded()"
+            [class.opacity-0]="!effectiveExpanded()"
+            [class.px-0]="!effectiveExpanded()"
+            [class.max-w-[125px]]="effectiveExpanded()"
+            [class.md:max-w-[170px]]="effectiveExpanded()"
+            [class.opacity-100]="effectiveExpanded()"
+            [class.mx-2.5]="effectiveExpanded()"
+          >
+            <span class="truncate block text-xs font-semibold whitespace-nowrap text-start">
+              More
+            </span>
+          </div>
+        </button>
+      </div>
+
     </nav>
 
     <!-- PWA Install Tile at bottom of Sidebar -->
@@ -195,6 +249,144 @@
         }
       </button>
     </div>
+
+
+    <!-- More Options Popover (Exact Replica of Reference Image 2) -->
+    @if (isMoreMenuOpen()) {
+      <div
+        class="more-menu-popover fixed z-[150] flex items-start"
+        [style.bottom.px]="64"
+        [style.left]="navService.isRtl() ? 'auto' : (effectiveExpanded() ? '264px' : '82px')"
+        [style.right]="navService.isRtl() ? (effectiveExpanded() ? '264px' : '82px') : 'auto'"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-2xl w-80 max-w-[92vw] animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md">
+          <!-- 3x3 Grid of Options matching Image 2 -->
+          <div class="grid grid-cols-3 gap-3">
+            <!-- 1. Chat -->
+            <button type="button" (click)="onMoreOptionClick('Chat')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-teal-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Chat</span>
+            </button>
+
+            <!-- 2. Docs -->
+            <button type="button" (click)="onMoreOptionClick('Docs')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-blue-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Docs</span>
+            </button>
+
+            <!-- 3. Dashboards -->
+            <button type="button" (click)="onMoreOptionClick('Dashboards')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-purple-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="9" rx="1.5" />
+                  <rect x="14" y="3" width="7" height="5" rx="1.5" />
+                  <rect x="14" y="12" width="7" height="9" rx="1.5" />
+                  <rect x="3" y="16" width="7" height="5" rx="1.5" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Dashboards</span>
+            </button>
+
+            <!-- 4. Whiteboards -->
+            <button type="button" (click)="onMoreOptionClick('Whiteboards')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-amber-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                  <path d="M2 2l7.586 7.586" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Whiteboards</span>
+            </button>
+
+            <!-- 5. Forms -->
+            <button type="button" (click)="onMoreOptionClick('Forms')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-indigo-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="16" rx="2" />
+                  <polyline points="9 11 12 14 22 4" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Forms</span>
+            </button>
+
+            <!-- 6. Clips -->
+            <button type="button" (click)="onMoreOptionClick('Clips')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-rose-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="23 7 16 12 23 17 23 7" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Clips</span>
+            </button>
+
+            <!-- 7. Goals -->
+            <button type="button" (click)="onMoreOptionClick('Goals')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-700 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-amber-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                  <path d="M4 22h16" />
+                  <path d="M10 14.66V17c0 .55-.45 1-1 1H7" />
+                  <path d="M14 14.66V17c0 .55.45 1 1 1h2" />
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Goals</span>
+            </button>
+
+            <!-- 8. Timesheets -->
+            <button type="button" (click)="onMoreOptionClick('Timesheets')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-950/60 text-orange-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-orange-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Timesheets</span>
+            </button>
+
+            <!-- 9. Apps -->
+            <button type="button" (click)="onMoreOptionClick('Apps')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+              <div class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-sky-200/60">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                  <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                  <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                  <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                </svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Apps</span>
+            </button>
+          </div>
+
+          <!-- Bottom Button: Customize navigation -->
+          <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700">
+            <button type="button" (click)="onMoreOptionClick('Customize navigation')" class="w-full h-9 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2 transition cursor-pointer">
+              <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+              <span>Customize navigation</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
 
     <!-- 4. Global Smooth Flyout Popover with Reversed RTL Sliding Positioning & Level 2 Tree Structure -->
     @if (getHoveredItem()?.subItems) {

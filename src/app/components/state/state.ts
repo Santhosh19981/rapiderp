@@ -43,6 +43,50 @@ export class StateComponent implements OnInit {
   readonly Math = Math;
   public stateService = inject(StateService);
   public navService = inject(NavigationService);
+  isModuleMenuOpen = signal<boolean>(false);
+
+  toggleModuleMenu(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.isModuleMenuOpen.update((v) => !v);
+  }
+
+  closeModuleMenu(): void {
+    this.isModuleMenuOpen.set(false);
+  }
+
+  onModuleActionClick(action: string): void {
+    this.closeModuleMenu();
+    switch (action) {
+      case 'overview':
+        this.switchView('overview');
+        break;
+      case 'add':
+        this.openCreate();
+        break;
+      case 'edit':
+        this.openEditForActiveState();
+        break;
+      case 'view':
+        this.openViewForActiveState();
+        break;
+      case 'grid':
+        this.switchView('grid');
+        break;
+      case 'list':
+        this.switchView('list');
+        break;
+      case 'recycle':
+        this.openRecycleBinModal();
+        break;
+      case 'history':
+        this.openHistoryModal('all');
+        break;
+      case 'ai':
+        break;
+      case 'customize':
+        break;
+    }
+  }
   public auditService = inject(AuditService);
   public tenantService = inject(TenantService);
   private route = inject(ActivatedRoute);
@@ -236,6 +280,9 @@ export class StateComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
+    if (!target.closest('.module-menu-container') && !target.closest('.module-menu-popover')) {
+      this.closeModuleMenu();
+    }
     if (!target.closest('[data-dropdown]') && !target.closest('.field-search-container')) {
       this.activeDropdown.set(null);
       this.isFieldSearchOpen.set(false);

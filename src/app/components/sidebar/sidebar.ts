@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Component, inject, signal, computed, effect, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../services/navigation.service';
@@ -34,6 +34,28 @@ export class Sidebar {
 
   isCollapsed = signal<boolean>(false);
   isHoverExpanded = signal<boolean>(false);
+  isMoreMenuOpen = signal<boolean>(false);
+
+  toggleMoreMenu(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.isMoreMenuOpen.update((v) => !v);
+  }
+
+  closeMoreMenu(): void {
+    this.isMoreMenuOpen.set(false);
+  }
+
+  onMoreOptionClick(label: string): void {
+    this.closeMoreMenu();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.more-menu-container') && !target.closest('.more-menu-popover')) {
+      this.closeMoreMenu();
+    }
+  }
 
   // Effective expanded state: cleanly driven by isCollapsed
   effectiveExpanded = computed(() => this.navService.isMobileMenuOpen() || !this.isCollapsed());

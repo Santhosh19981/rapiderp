@@ -38,6 +38,157 @@
 
         <!-- Left: Dynamic Title on top, Breadcrumb below Title across all pages -->
         <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+
+          <!-- Left-Side Module Actions Launcher (9-Dots Icon matching Reference UI) -->
+          <div class="relative module-menu-container shrink-0">
+            <button
+              type="button"
+              (click)="toggleModuleMenu($event)"
+              class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#00a6f4] text-slate-700 dark:text-slate-200 hover:text-[#00a6f4] flex items-center justify-center transition shadow-2xs cursor-pointer active:scale-95"
+              title="Module Actions & Navigation"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+                <circle cx="5" cy="5" r="2" />
+                <circle cx="12" cy="5" r="2" />
+                <circle cx="19" cy="5" r="2" />
+                <circle cx="5" cy="12" r="2" />
+                <circle cx="12" cy="12" r="2" />
+                <circle cx="19" cy="12" r="2" />
+                <circle cx="5" cy="19" r="2" />
+                <circle cx="12" cy="19" r="2" />
+                <circle cx="19" cy="19" r="2" />
+              </svg>
+            </button>
+
+            <!-- Module Options Popover (Exact Replica of Reference Image 2) -->
+            @if (isModuleMenuOpen()) {
+              <div
+                class="module-menu-popover absolute left-0 top-11 sm:top-12 z-[160] w-80 max-w-[92vw] bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md"
+                (click)="$event.stopPropagation()"
+              >
+                <!-- 3x3 Grid of Module Options -->
+                <div class="grid grid-cols-3 gap-3">
+                  <!-- 1. Overview -->
+                  <button type="button" (click)="onModuleActionClick('overview')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-sky-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="9" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="5" rx="1.5" />
+                        <rect x="14" y="12" width="7" height="9" rx="1.5" />
+                        <rect x="3" y="16" width="7" height="5" rx="1.5" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Overview</span>
+                  </button>
+
+                  <!-- 2. Add -->
+                  <button type="button" (click)="onModuleActionClick('add')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-emerald-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Add</span>
+                  </button>
+
+                  <!-- 3. Edit -->
+                  <button type="button" (click)="onModuleActionClick('edit')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-amber-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Edit</span>
+                  </button>
+
+                  <!-- 4. View -->
+                  <button type="button" (click)="onModuleActionClick('view')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-teal-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">View</span>
+                  </button>
+
+                  <!-- 5. Grid -->
+                  <button type="button" (click)="onModuleActionClick('grid')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-blue-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Grid</span>
+                  </button>
+
+                  <!-- 6. List -->
+                  <button type="button" (click)="onModuleActionClick('list')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-indigo-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6" />
+                        <line x1="8" y1="12" x2="21" y2="12" />
+                        <line x1="8" y1="18" x2="21" y2="18" />
+                        <line x1="3" y1="6" x2="3.01" y2="6" />
+                        <line x1="3" y1="12" x2="3.01" y2="12" />
+                        <line x1="3" y1="18" x2="3.01" y2="18" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">List</span>
+                  </button>
+
+                  <!-- 7. Recycle Bin -->
+                  <button type="button" (click)="onModuleActionClick('recycle')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-rose-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Recycle</span>
+                  </button>
+
+                  <!-- 8. History -->
+                  <button type="button" (click)="onModuleActionClick('history')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-violet-50 dark:bg-violet-950/60 text-violet-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-violet-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">History</span>
+                  </button>
+
+                  <!-- 9. AI Assistant -->
+                  <button type="button" (click)="onModuleActionClick('ai')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-sky-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">AI Tools</span>
+                  </button>
+                </div>
+
+                <!-- Bottom Button: Customize navigation -->
+                <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700">
+                  <button type="button" (click)="onModuleActionClick('customize')" class="w-full h-9 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2 transition cursor-pointer">
+                    <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                    <span>Customize navigation</span>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
           <div
             class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500/15 via-[#00a6f4]/20 to-blue-600/15 border border-sky-200/80 dark:border-sky-800 text-[#00a6f4] flex items-center justify-center shrink-0 shadow-xs cursor-pointer">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1791,6 +1942,157 @@
           <!-- Top Row on Mobile / Left Section on Desktop: Title + Mobile Pager -->
           <div class="flex items-center justify-between gap-2 w-full sm:w-auto shrink-0">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+
+          <!-- Left-Side Module Actions Launcher (9-Dots Icon matching Reference UI) -->
+          <div class="relative module-menu-container shrink-0">
+            <button
+              type="button"
+              (click)="toggleModuleMenu($event)"
+              class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#00a6f4] text-slate-700 dark:text-slate-200 hover:text-[#00a6f4] flex items-center justify-center transition shadow-2xs cursor-pointer active:scale-95"
+              title="Module Actions & Navigation"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+                <circle cx="5" cy="5" r="2" />
+                <circle cx="12" cy="5" r="2" />
+                <circle cx="19" cy="5" r="2" />
+                <circle cx="5" cy="12" r="2" />
+                <circle cx="12" cy="12" r="2" />
+                <circle cx="19" cy="12" r="2" />
+                <circle cx="5" cy="19" r="2" />
+                <circle cx="12" cy="19" r="2" />
+                <circle cx="19" cy="19" r="2" />
+              </svg>
+            </button>
+
+            <!-- Module Options Popover (Exact Replica of Reference Image 2) -->
+            @if (isModuleMenuOpen()) {
+              <div
+                class="module-menu-popover absolute left-0 top-11 sm:top-12 z-[160] w-80 max-w-[92vw] bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md"
+                (click)="$event.stopPropagation()"
+              >
+                <!-- 3x3 Grid of Module Options -->
+                <div class="grid grid-cols-3 gap-3">
+                  <!-- 1. Overview -->
+                  <button type="button" (click)="onModuleActionClick('overview')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-sky-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="9" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="5" rx="1.5" />
+                        <rect x="14" y="12" width="7" height="9" rx="1.5" />
+                        <rect x="3" y="16" width="7" height="5" rx="1.5" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Overview</span>
+                  </button>
+
+                  <!-- 2. Add -->
+                  <button type="button" (click)="onModuleActionClick('add')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-emerald-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Add</span>
+                  </button>
+
+                  <!-- 3. Edit -->
+                  <button type="button" (click)="onModuleActionClick('edit')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-amber-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Edit</span>
+                  </button>
+
+                  <!-- 4. View -->
+                  <button type="button" (click)="onModuleActionClick('view')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-teal-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">View</span>
+                  </button>
+
+                  <!-- 5. Grid -->
+                  <button type="button" (click)="onModuleActionClick('grid')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-blue-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Grid</span>
+                  </button>
+
+                  <!-- 6. List -->
+                  <button type="button" (click)="onModuleActionClick('list')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-indigo-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6" />
+                        <line x1="8" y1="12" x2="21" y2="12" />
+                        <line x1="8" y1="18" x2="21" y2="18" />
+                        <line x1="3" y1="6" x2="3.01" y2="6" />
+                        <line x1="3" y1="12" x2="3.01" y2="12" />
+                        <line x1="3" y1="18" x2="3.01" y2="18" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">List</span>
+                  </button>
+
+                  <!-- 7. Recycle Bin -->
+                  <button type="button" (click)="onModuleActionClick('recycle')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-rose-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">Recycle</span>
+                  </button>
+
+                  <!-- 8. History -->
+                  <button type="button" (click)="onModuleActionClick('history')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-violet-50 dark:bg-violet-950/60 text-violet-600 flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-violet-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">History</span>
+                  </button>
+
+                  <!-- 9. AI Assistant -->
+                  <button type="button" (click)="onModuleActionClick('ai')" class="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/60 transition group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] flex items-center justify-center group-hover:scale-105 transition shadow-2xs border border-sky-200/60">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                      </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1.5">AI Tools</span>
+                  </button>
+                </div>
+
+                <!-- Bottom Button: Customize navigation -->
+                <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700">
+                  <button type="button" (click)="onModuleActionClick('customize')" class="w-full h-9 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2 transition cursor-pointer">
+                    <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                    <span>Customize navigation</span>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
               <!-- Play Button -->
               <button type="button" (click)="openVideoTutorial()" data-tooltip="Tutorial" data-tooltip-pos="bottom"
                 class="group relative w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-gradient-to-tr from-[#00a6f4] via-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-[#00a6f4]/30 hover:scale-105 hover:shadow-lg hover:shadow-[#00a6f4]/45 transition cursor-pointer">
@@ -2735,7 +3037,7 @@
           <!-- 3. SLIM VERTICAL ACTION DOCK (Right Floating Toolbar)                   -->
           <!-- ======================================================================= -->
           <aside id="section-action-panel"
-            class="hidden md:flex flex-col items-center justify-start bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-1.5 shrink-0 select-none relative z-20 transition-all h-full min-h-[460px]">
+            style="display: none !important;" class="!hidden md:!hidden flex-col items-center justify-start bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-1.5 shrink-0 select-none relative z-20 transition-all h-full min-h-[460px]">
 
             <div
               class="w-[70px] sm:w-[74px] h-full flex flex-col items-center overflow-hidden side-toolbar-scroll pt-2 pb-2.5 sm:pb-3 px-1">

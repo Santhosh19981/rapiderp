@@ -88,6 +88,51 @@ export interface GalleryFlag {
 export class CountryComponent implements OnInit, AfterViewInit {
   public countryService = inject(CountryService);
   public navService = inject(NavigationService);
+  isModuleMenuOpen = signal<boolean>(false);
+
+  toggleModuleMenu(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.isModuleMenuOpen.update((v) => !v);
+  }
+
+  closeModuleMenu(): void {
+    this.isModuleMenuOpen.set(false);
+  }
+
+  onModuleActionClick(action: string): void {
+    this.closeModuleMenu();
+    switch (action) {
+      case 'overview':
+        this.switchView('overview');
+        break;
+      case 'add':
+        this.openCreate();
+        break;
+      case 'edit':
+        this.openEditForActiveCountry();
+        break;
+      case 'view':
+        this.openViewForActiveCountry();
+        break;
+      case 'grid':
+        this.switchView('grid');
+        break;
+      case 'list':
+        this.switchView('list');
+        break;
+      case 'recycle':
+        this.openActivityModal('deleted');
+        break;
+      case 'history':
+        this.openActivityModal('history');
+        break;
+      case 'ai':
+        this.openAiModal();
+        break;
+      case 'customize':
+        break;
+    }
+  }
   public auditService = inject(AuditService);
   public tenantService = inject(TenantService);
   private route = inject(ActivatedRoute);
@@ -3725,6 +3770,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if ((event.target as Element | null)?.closest('[data-popover]')) return;
+    const target = event.target as HTMLElement;
+    if (!target.closest('.module-menu-container') && !target.closest('.module-menu-popover')) {
+      this.closeModuleMenu();
+    }
     this.closePopovers();
   }
 
