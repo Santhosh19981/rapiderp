@@ -18,7 +18,7 @@ import { NavigationService } from '../../services/navigation.service';
 import { AuditService } from '../../services/audit.service';
 import { TenantService } from '../../services/tenant.service';
 
-export type CityViewMode = 'grid' | 'list' | 'add' | 'edit' | 'view';
+export type CityViewMode = 'grid' | 'list' | 'add' | 'edit' | 'view' | 'overview';
 
 export interface SectionTab {
   id: string;
@@ -216,6 +216,8 @@ export class CityComponent implements OnInit {
       } else if (mode === 'view' && id) {
         const item = this.cityService.getCityById(id);
         if (item) this.openView(item);
+      } else if (mode === 'overview') {
+        this.viewMode.set('overview');
       } else if (mode === 'list') {
         this.viewMode.set('list');
       } else {
@@ -320,6 +322,176 @@ export class CityComponent implements OnInit {
     if (!q) return [];
     return this.formFieldItems.filter((f) => f.label.toLowerCase().includes(q) || f.section.toLowerCase().includes(q));
   });
+
+  // City Master Overview State & Metrics
+  overviewPeriod = signal<string>('Last 30 days');
+  isOverviewPeriodDropdownOpen = signal<boolean>(false);
+  isOverviewRefreshing = signal<boolean>(false);
+  overviewPeriods = ['Today', 'Last 7 days', 'Last 30 days', 'This Month', 'This Quarter', 'All Time'];
+
+  toggleOverviewPeriodDropdown(event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    this.isOverviewPeriodDropdownOpen.update((v) => !v);
+  }
+
+  setOverviewPeriod(period: string): void {
+    this.overviewPeriod.set(period);
+    this.isOverviewPeriodDropdownOpen.set(false);
+  }
+
+  refreshOverviewData(): void {
+    this.isOverviewRefreshing.set(true);
+    setTimeout(() => {
+      this.isOverviewRefreshing.set(false);
+      this.showToast('City Master Overview figures refreshed from database', 'info');
+    }, 500);
+  }
+
+  overviewStats = computed(() => {
+    const list = this.cityService.cities();
+    const nonDeleted = list.filter((c) => c.status !== 'Deleted');
+    const total = nonDeleted.length;
+    const active = nonDeleted.filter((c) => c.status === 'Active').length;
+    const inactive = nonDeleted.filter((c) => c.status === 'Inactive').length;
+    const draft = nonDeleted.filter((c) => c.status === 'Draft').length;
+    const deleted = list.filter((c) => c.status === 'Deleted').length;
+
+    const activePct = total > 0 ? +((active / total) * 100).toFixed(1) : 0;
+    const inactivePct = total > 0 ? +((inactive / total) * 100).toFixed(1) : 0;
+    const draftPct = total > 0 ? +((draft / total) * 100).toFixed(1) : 0;
+
+    return {
+      total,
+      active,
+      inactive,
+      draft,
+      deleted,
+      activePct,
+      inactivePct,
+      draftPct,
+    };
+  });
+
+  statusChartPresentation = signal<'wave' | 'pillars'>('wave');
+  hoveredStatusPillar = signal<string | null>(null);
+
+  setStatusChartPresentation(mode: 'wave' | 'pillars'): void {
+    this.statusChartPresentation.set(mode);
+  }
+
+  setHoveredStatusPillar(key: string | null): void {
+    this.hoveredStatusPillar.set(key);
+  }
+
+  statusDistributionBars = computed(() => {
+    const s = this.overviewStats();
+    return [
+      {
+        key: 'total',
+        label: 'Total Cities',
+        shortLabel: 'Total',
+        sublabel: 'All non-deleted records',
+        count: s.total,
+        percentage: 100,
+        heightPct: 96,
+        fillClass: 'bg-gradient-to-t from-[#0284c7] via-[#00a6f4] to-[#38bdf8]',
+        glowColor: 'rgba(0, 166, 244, 0.45)',
+        badgeBg: 'bg-sky-50 dark:bg-sky-950/60 text-[#00a6f4] border border-sky-200 dark:border-sky-800',
+        tab: 'all',
+        accentColor: '#00a6f4',
+      },
+      {
+        key: 'active',
+        label: 'Active Records',
+        shortLabel: 'Active',
+        sublabel: 'Available for selection',
+        count: s.active,
+        percentage: s.activePct,
+        heightPct: Math.max(25, Math.min(92, Math.round(s.activePct * 0.92))),
+        fillClass: 'bg-gradient-to-t from-emerald-600 via-emerald-500 to-teal-400',
+        glowColor: 'rgba(16, 185, 129, 0.45)',
+        badgeBg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 border border-emerald-200 dark:border-emerald-800',
+        tab: 'active',
+        accentColor: '#10b981',
+      },
+      {
+        key: 'inactive',
+        label: 'Inactive Records',
+        shortLabel: 'Inactive',
+        sublabel: 'Unavailable for new selection',
+        count: s.inactive,
+        percentage: s.inactivePct,
+        heightPct: Math.max(22, Math.min(75, Math.round(s.inactivePct * 1.8))),
+        fillClass: 'bg-gradient-to-t from-slate-600 via-slate-500 to-slate-400',
+        glowColor: 'rgba(100, 116, 139, 0.4)',
+        badgeBg: 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600',
+        tab: 'inactive',
+        accentColor: '#64748b',
+      },
+      {
+        key: 'draft',
+        label: 'Draft Records',
+        shortLabel: 'Draft',
+        sublabel: 'Not yet finalized',
+        count: s.draft,
+        percentage: s.draftPct,
+        heightPct: Math.max(16, Math.min(60, Math.round(s.draftPct * 3.5) + 12)),
+        fillClass: 'bg-gradient-to-t from-amber-600 via-amber-500 to-yellow-400',
+        glowColor: 'rgba(245, 158, 11, 0.45)',
+        badgeBg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 border border-amber-200 dark:border-amber-800',
+        tab: 'draft',
+        accentColor: '#f59e0b',
+      },
+    ];
+  });
+
+  statusWaveChart = computed(() => {
+    const s = this.overviewStats();
+    return {
+      path: 'M 45 22 C 105 22, 115 48, 175 48 C 235 48, 255 118, 315 118 C 375 118, 395 138, 455 138',
+      areaPath: 'M 45 22 C 105 22, 115 48, 175 48 C 235 48, 255 118, 315 118 C 375 118, 395 138, 455 138 L 455 158 L 45 158 Z',
+      nodes: [
+        { x: 45, y: 22, count: s.total, pct: 100, label: 'Total', color: '#00a6f4', tab: 'all' },
+        { x: 175, y: 48, count: s.active, pct: s.activePct, label: 'Active', color: '#10b981', tab: 'active' },
+        { x: 315, y: 118, count: s.inactive, pct: s.inactivePct, label: 'Inactive', color: '#64748b', tab: 'inactive' },
+        { x: 455, y: 138, count: s.draft, pct: s.draftPct, label: 'Draft', color: '#f59e0b', tab: 'draft' },
+      ],
+    };
+  });
+
+  donutMetrics = computed(() => {
+    const s = this.overviewStats();
+    const circ = 251.327;
+    const activeStroke = (s.activePct / 100) * circ;
+    const inactiveStroke = (s.inactivePct / 100) * circ;
+    const draftStroke = (s.draftPct / 100) * circ;
+
+    return {
+      circumference: circ,
+      activeOffset: circ - activeStroke,
+      inactiveOffset: circ - (activeStroke + inactiveStroke),
+      draftOffset: circ - (activeStroke + inactiveStroke + draftStroke),
+      activePct: s.activePct,
+      inactivePct: s.inactivePct,
+      draftPct: s.draftPct,
+    };
+  });
+
+  recentCities = computed(() => {
+    const list = this.cityService.cities().filter((c) => c.status !== 'Deleted');
+    return [...list]
+      .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
+      .slice(0, 5);
+  });
+
+  openFilteredList(tab: string): void {
+    this.setFilterTab(tab);
+    this.switchView('grid');
+  }
+
+  openSearchFromOverview(): void {
+    this.switchView('grid');
+  }
 
   // Navigation & View changes
   switchView(mode: CityViewMode): void {

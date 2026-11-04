@@ -2783,6 +2783,8 @@ export class ItemComponent implements OnInit {
         this.activeActionView.set('form');
       } else if (mode === 'add') {
         this.switchToAddMode();
+      } else if (mode === 'overview') {
+        this.activeActionView.set('overview');
       } else if (mode === 'grid') {
         this.activeActionView.set('grid');
       } else if (mode === 'table' || mode === 'list') {
@@ -3701,7 +3703,7 @@ export class ItemComponent implements OnInit {
     this.isMoreActionsOpen.set(false);
   }
 
-  switchView(mode: 'grid' | 'table'): void {
+  switchView(mode: 'grid' | 'table' | 'overview'): void {
     this.activeActionView.set(mode);
     void this.router.navigate([], {
       relativeTo: this.route,
@@ -3714,7 +3716,8 @@ export class ItemComponent implements OnInit {
   }
 
   handleOverviewClick(): void {
-    this.handleGridClick();
+    this.switchView('overview');
+    this.showToast('Item Master Overview active');
   }
 
   handleGridClick(): void {
