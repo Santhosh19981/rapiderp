@@ -2066,3 +2066,44 @@ button.flag-gallery-card:hover .flag-card-name {
 }
 
 
+
+/* ========================================================================= */
+/* Round Containers matching Localization button style (Light Blue -> Dark Blue on hover) */
+/* ========================================================================= */
+.nav-circle-btn {
+  background-color: #f0f9ff !important;
+  border: 1px solid #00a6f4 !important;
+  color: #00a6f4 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.nav-circle-btn svg {
+  color: #00a6f4 !important;
+  stroke: #00a6f4 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+:host-context(.dark) .nav-circle-btn,
+.dark .nav-circle-btn {
+  background-color: rgba(14, 165, 233, 0.15) !important;
+  border: 1px solid #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+:host-context(.dark) .nav-circle-btn svg,
+.dark .nav-circle-btn svg {
+  color: #38bdf8 !important;
+  stroke: #38bdf8 !important;
+}
+
+.nav-circle-btn:not(:disabled):hover {
+  background-color: #0052cc !important; /* dark blue */
+  border-color: #0052cc !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px -2px rgba(0, 82, 204, 0.45) !important;
+}
+
+.nav-circle-btn:not(:disabled):hover svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
