@@ -102,10 +102,18 @@ export class Login {
       } else {
         const knownUsers = [
           ...this.tenantService.users().map((user) => user.username.toLowerCase()),
+          ...this.tenantService.users().map((user) => user.username.split('@')[0].toLowerCase()),
+          ...this.tenantService.users().map((user) => user.id.toLowerCase()),
+          ...this.tenantService.users().map((user) => user.id.replace('-', '').toLowerCase()),
           'rapiderpadmin',
           'admin@gcc.com',
           'admin@rapidsmarterp.com',
           'admin',
+          'rapiderp',
+          'user1a',
+          'user1b',
+          'user2a',
+          'user2b',
         ];
         if (!knownUsers.includes(u.toLowerCase())) {
           this.usernameError.set('Invalid username. Access restricted to authorized accounts.');

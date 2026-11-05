@@ -502,6 +502,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
   shareBody = signal<string>('');
   isImportModalOpen = signal<boolean>(false);
   isHistoryModalOpen = signal<boolean>(false);
+  historyModalTitle = signal<string>('Audit History');
+  historyModalSubtitle = signal<string>('Track changes and revisions for this country');
   isRecycleBinModalOpen = signal<boolean>(false);
   isDeleteModalOpen = signal<boolean>(false);
   selectedCountryForDelete = signal<Country | null>(null);
@@ -725,14 +727,24 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.historySelectedCountryId.set(idOrVal ? String(idOrVal) : null);
   }
 
-  openHistoryModal(scope?: 'current' | 'all'): void {
+  openHistoryModal(scopeOrType?: string): void {
+    if (scopeOrType === 'activities') {
+      this.historyModalTitle.set('Activities');
+      this.historyModalSubtitle.set('Track recent activities, user actions, and events in this module');
+    } else if (scopeOrType === 'workflow') {
+      this.historyModalTitle.set('Workflow');
+      this.historyModalSubtitle.set('Review workflow approval stages, status progressions, and transitions');
+    } else {
+      this.historyModalTitle.set('Audit History');
+      this.historyModalSubtitle.set('Track changes and revisions for this country');
+    }
     this.historySearch.set('');
     this.historyActivityFilter.set('All Activities');
     this.historyStartDate.set('');
     this.historyEndDate.set('');
     this.isHistoryDateFilterOpen.set(false);
     this.expandedHistoryIds.set(new Set(['H-004', 'H-003']));
-    this.historyScope.set(scope || (this.viewMode() === 'view' || this.viewMode() === 'edit' ? 'current' : 'all'));
+    this.historyScope.set(scopeOrType === 'current' ? 'current' : (this.viewMode() === 'view' || this.viewMode() === 'edit' ? 'current' : 'all'));
     const sc = this.selectedCountry();
     if (sc) {
       this.historySelectedCountryId.set(sc.id);
@@ -1632,7 +1644,13 @@ export class CountryComponent implements OnInit, AfterViewInit {
   activityModalTab = signal<'history' | 'deleted'>('history');
   isExportModalOpen = signal<boolean>(false);
 
-  openActivityModal(tab: 'history' | 'deleted' = 'history'): void {
+  openActivityModal(tab: 'history' | 'deleted' | 'activities' | 'workflow' = 'history'): void {
+    if (tab === 'activities' || tab === 'workflow') {
+      this.isRecycleBinModalOpen.set(false);
+      this.openHistoryModal(tab);
+      this.isActivityModalOpen.set(true);
+      return;
+    }
     this.activityModalTab.set(tab);
     if (tab === 'history') {
       this.isRecycleBinModalOpen.set(false);

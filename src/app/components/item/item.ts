@@ -6,7 +6,8 @@ import {
   HostListener,
   OnInit,
   ElementRef,
-  ViewChild
+  ViewChild,
+  TemplateRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -154,6 +155,7 @@ export class ItemComponent implements OnInit {
   @ViewChild('tabsContainer') tabsContainerRef?: ElementRef<HTMLDivElement>;
   @ViewChild('fieldSearchInput') fieldSearchInputRef?: ElementRef<HTMLInputElement>;
   @ViewChild('fieldSearchContainer') fieldSearchContainerRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('itemActionPanelTemplate') itemActionPanelTemplate?: TemplateRef<any>;
 
   // All 14 Enterprise Retail Section Tabs + All Sections (Single Word Tab Names)
   readonly sectionTabs: SectionTabItem[] = [
@@ -1051,10 +1053,22 @@ export class ItemComponent implements OnInit {
     this.showToast('Downloaded sample template.');
   }
 
-  // History Modal
+  // History Modal (Audit, Activities & Workflow - Req 9)
   isHistoryModalOpen = signal<boolean>(false);
+  historyModalTitle = signal<string>('Audit History');
+  historyModalSubtitle = signal<string>('Track all changes, imports, and updates in Items module');
 
   openHistoryModal(scope?: string): void {
+    if (scope === 'activities') {
+      this.historyModalTitle.set('Activities');
+      this.historyModalSubtitle.set('Track recent activities, user actions, and events in Items module');
+    } else if (scope === 'workflow') {
+      this.historyModalTitle.set('Workflow');
+      this.historyModalSubtitle.set('Review workflow approval stages, status progressions, and transitions');
+    } else {
+      this.historyModalTitle.set('Audit History');
+      this.historyModalSubtitle.set('Track all changes, imports, and updates in Items module');
+    }
     this.isHistoryModalOpen.set(true);
   }
 

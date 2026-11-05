@@ -889,7 +889,7 @@ export class CountryService {
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length) {
+          if (Array.isArray(parsed) && parsed.length && parsed.some((c: Country) => c && c.name && c.status !== 'Deleted')) {
             return parsed.map((c: Country) => ({
               ...c,
               isoCode2: c.isoCode2 || c.code || 'US',

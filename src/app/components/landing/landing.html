@@ -28,8 +28,8 @@
       <!-- Top Navigation Header with Action Items from Reference Image -->
       <header
         class="relative z-[100] h-14 sm:h-16 pwa-header-safe bg-white dark:bg-slate-800 border-b border-slate-200/90 dark:border-slate-700/80 px-2.5 sm:px-6 flex items-center justify-between shrink-0 shadow-xs gap-1 sm:gap-4">
-        <!-- Left side: Client Logo & Company Name Side by Side (Exact & Best Size) -->
-        <div class="flex items-center gap-1.5 sm:gap-2.5 select-none min-w-0 flex-1 sm:flex-initial">
+        <!-- Left side: Mobile Menu Hamburger Button (Logo & Company Name removed per Req 10) -->
+        <div class="flex items-center gap-1.5 sm:gap-2.5 select-none min-w-0">
           <!-- Mobile Menu Hamburger Button (Three-line menu replacing 'R' button on mobile view) -->
           <button type="button" (click)="navService.toggleMobileMenu()" title="Menu" aria-label="Toggle navigation menu"
             class="md:hidden w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#00a6f4] to-[#0052cc] text-white shadow-md shadow-blue-500/25 active:scale-95 transition-all cursor-pointer shrink-0">
@@ -40,22 +40,6 @@
               <line x1="4" y1="17" x2="20" y2="17" />
             </svg>
           </button>
-          <div
-            class="w-7 h-7 sm:w-11 sm:h-11 rounded-full overflow-hidden flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105"
-            title="Company">
-            <img src="assets/images/client-logo-extracted.png" alt="ABC TRADING LLC"
-              class="w-full h-full object-contain rounded-full select-none pointer-events-none" draggable="false" />
-          </div>
-          <div class="flex flex-col justify-center min-w-0 overflow-hidden">
-            <span
-              class="text-xs sm:text-[15px] font-black tracking-tight text-slate-800 dark:text-white leading-tight truncate max-w-[85px] xs:max-w-[125px] sm:max-w-none">
-              ABC TRADING LLC
-            </span>
-            <span
-              class="text-[9px] sm:text-[10px] font-bold text-[#00a2e8] dark:text-sky-400 tracking-wider uppercase leading-none mt-0.5 truncate">
-              Dubai, UAE
-            </span>
-          </div>
         </div>
 
         <!-- Right side: Top Action Icons -->
@@ -824,31 +808,20 @@
             }
           </button>
 
-          <!-- PWA Install Action Button with Official App Icon (Visible on Mobile, Tablet & Desktop) -->
-          <button type="button" (click)="pwaService.promptInstall()" title="Install RapidERP App"
-            class="pwa-header-install-btn flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-[#00a6f4] text-[#008fd3] hover:text-white border border-sky-200 hover:border-[#00a6f4] dark:bg-slate-700/80 dark:hover:bg-[#00a6f4] dark:text-sky-300 dark:hover:text-white dark:border-slate-600 text-xs font-bold transition-all shadow-2xs cursor-pointer shrink-0 group">
-            <img src="/assets/icons/icon-72x72.png" alt="RapidERP App Icon"
-              class="w-5 h-5 rounded-md object-contain shrink-0 shadow-2xs group-hover:scale-105 transition-transform" />
-            <span class="hidden sm:inline font-bold">Install App</span>
-            <span class="w-2 h-2 rounded-full bg-emerald-500 group-hover:bg-white animate-pulse hidden xs:inline-block"
-              title="Ready to install"></span>
-          </button>
-
-          <!-- 8. User Profile Avatar 👤 with active user display -->
+          <!-- 8. User Profile Avatar 👤 with active user display (Req 10: Just Name, Tooltip Admin (system engineer)) -->
           <div
             class="relative ml-0.5 sm:ml-1 pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center shrink-0">
             <button type="button" (click)="toggleProfile($event)"
+              title="Admin (system engineer)"
+              data-tooltip="Admin (system engineer)"
               class="profile-trigger-btn flex items-center gap-1.5 sm:gap-2 p-0.5 sm:p-1 rounded-lg sm:rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/80 transition cursor-pointer shrink-0">
               <div
                 class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sky-50 dark:bg-slate-700 text-[#00a6f4] dark:text-sky-300 border border-sky-200/90 dark:border-slate-600 font-extrabold flex items-center justify-center text-xs shadow-2xs shrink-0">
                 {{ tenantService.activeUser().avatarLetter }}
               </div>
-              <div class="hidden xl:flex flex-col text-left">
+              <div class="hidden xl:flex items-center text-left">
                 <span class="text-xs font-bold text-slate-800 dark:text-white leading-tight">
-                  {{ tenantService.activeUser().displayName }}
-                </span>
-                <span class="text-[10px] text-slate-400 leading-tight">
-                  {{ tenantService.activeUser().role }}
+                  Admin
                 </span>
               </div>
             </button>
